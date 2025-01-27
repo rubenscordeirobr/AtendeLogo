@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CBAF2D29-C961-4430-B55C-E2A0295659E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3C860474-B86B-447D-AAF6-0FBA1704FC2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{FCE58330-E5C6-4C7A-A31A-BAC57F183AC9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{364E8139-8CAB-493E-8DFD-81A3D371414E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{6F92CCFD-E702-4589-92C5-E9C7C728C52D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Domain", "src\AtendeLogo.Domain\AtendeLogo.Domain.csproj", "{DB90F0F0-95F5-472A-A414-C16933D61E96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Common", "src\AtendeLogo.Common\AtendeLogo.Common.csproj", "{BF1B9847-D57A-4481-8B7F-7EFD53A793B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Application", "src\AtendeLogo.Application\AtendeLogo.Application.csproj", "{59DA0D87-577F-4AC1-B5DA-3E35B33B957E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Infrastructure", "src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj", "{CA1BED2E-7736-40D6-855B-7B8065966C25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.UseCases", "src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj", "{D12ADE0C-85F0-4532-9CAC-8D47C7726613}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Persistence", "src\Application.Persistence\Application.Persistence.csproj", "{8096ECD9-C0D6-477E-8514-01C947F31375}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{96EF4AD2-84B0-439F-8F50-319460B0F133}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Persistence.Activities", "src\AtendeLogo.Persistence.Activities\AtendeLogo.Persistence.Activities.csproj", "{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB90F0F0-95F5-472A-A414-C16933D61E96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB90F0F0-95F5-472A-A414-C16933D61E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB90F0F0-95F5-472A-A414-C16933D61E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB90F0F0-95F5-472A-A414-C16933D61E96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1B9847-D57A-4481-8B7F-7EFD53A793B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1B9847-D57A-4481-8B7F-7EFD53A793B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1B9847-D57A-4481-8B7F-7EFD53A793B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1B9847-D57A-4481-8B7F-7EFD53A793B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59DA0D87-577F-4AC1-B5DA-3E35B33B957E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59DA0D87-577F-4AC1-B5DA-3E35B33B957E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59DA0D87-577F-4AC1-B5DA-3E35B33B957E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59DA0D87-577F-4AC1-B5DA-3E35B33B957E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA1BED2E-7736-40D6-855B-7B8065966C25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA1BED2E-7736-40D6-855B-7B8065966C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA1BED2E-7736-40D6-855B-7B8065966C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA1BED2E-7736-40D6-855B-7B8065966C25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D12ADE0C-85F0-4532-9CAC-8D47C7726613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12ADE0C-85F0-4532-9CAC-8D47C7726613}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12ADE0C-85F0-4532-9CAC-8D47C7726613}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12ADE0C-85F0-4532-9CAC-8D47C7726613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8096ECD9-C0D6-477E-8514-01C947F31375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8096ECD9-C0D6-477E-8514-01C947F31375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8096ECD9-C0D6-477E-8514-01C947F31375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8096ECD9-C0D6-477E-8514-01C947F31375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FCE58330-E5C6-4C7A-A31A-BAC57F183AC9} = {CBAF2D29-C961-4430-B55C-E2A0295659E7}
+		{364E8139-8CAB-493E-8DFD-81A3D371414E} = {CBAF2D29-C961-4430-B55C-E2A0295659E7}
+		{6F92CCFD-E702-4589-92C5-E9C7C728C52D} = {CBAF2D29-C961-4430-B55C-E2A0295659E7}
+		{DB90F0F0-95F5-472A-A414-C16933D61E96} = {FCE58330-E5C6-4C7A-A31A-BAC57F183AC9}
+		{BF1B9847-D57A-4481-8B7F-7EFD53A793B4} = {FCE58330-E5C6-4C7A-A31A-BAC57F183AC9}
+		{59DA0D87-577F-4AC1-B5DA-3E35B33B957E} = {96EF4AD2-84B0-439F-8F50-319460B0F133}
+		{CA1BED2E-7736-40D6-855B-7B8065966C25} = {364E8139-8CAB-493E-8DFD-81A3D371414E}
+		{D12ADE0C-85F0-4532-9CAC-8D47C7726613} = {96EF4AD2-84B0-439F-8F50-319460B0F133}
+		{8096ECD9-C0D6-477E-8514-01C947F31375} = {364E8139-8CAB-493E-8DFD-81A3D371414E}
+		{96EF4AD2-84B0-439F-8F50-319460B0F133} = {CBAF2D29-C961-4430-B55C-E2A0295659E7}
+		{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56} = {364E8139-8CAB-493E-8DFD-81A3D371414E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0DAAD8CB-2BC7-492A-A4D6-B0190130790B}
+	EndGlobalSection
+EndGlobal

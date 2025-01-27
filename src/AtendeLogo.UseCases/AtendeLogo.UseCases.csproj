@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Messaging\**" />
+    <EmbeddedResource Remove="Messaging\**" />
+    <None Remove="Messaging\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AtendeLogo.Application\AtendeLogo.Application.csproj" />
+    <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
+    <ProjectReference Include="..\AtendeLogo.Domain\AtendeLogo.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Identities\UserSessionContexts\Commands\" />
+    <Folder Include="Identities\UserSessionContexts\Queries\" />
+  </ItemGroup>
+
+</Project>
