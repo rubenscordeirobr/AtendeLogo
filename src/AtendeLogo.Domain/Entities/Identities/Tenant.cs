@@ -16,7 +16,7 @@ public class Tenant : EntityBase, ITenant
     public Guid AddressId { get; private set; }
     public BusinessType BusinessType { get; private set; }
     public TenantState TenantState { get; private set; }
-    public TentantStatus TenantStatus { get; private set; }
+    public TenantStatus TenantStatus { get; private set; }
     public TenantType TenantType { get; private set; }
 
     public Tenant(
@@ -30,7 +30,7 @@ public class Tenant : EntityBase, ITenant
         string phoneNumber,
         BusinessType businessType,
         TenantState tenantState,
-        TentantStatus tenantStatus,
+        TenantStatus tenantStatus,
         TenantType tenantType)
     {
         Name = name;
