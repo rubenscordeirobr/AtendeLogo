@@ -1,0 +1,15 @@
+/scripts/Set-WhatsAppEnvVars.ps1
+.vscode
+.vs
+/docs
+obj
+bin
+*.user
+*.suo
+*.cache
+*.log
+*.vspscc
+*.vssscc    
+*.pidb
+*.scc
+*.dll
