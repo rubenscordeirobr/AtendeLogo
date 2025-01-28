@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Domain.Interfaces;
+﻿namespace AtendeLogo.Shared.Interfaces.Identities;
 
 public interface IUser
 {

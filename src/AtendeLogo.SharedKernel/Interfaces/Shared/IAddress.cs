@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Domain.Interfaces;
+﻿namespace AtendeLogo.Shared.Interfaces.Shared;
 public interface IAddress
 {
     string Street { get; }

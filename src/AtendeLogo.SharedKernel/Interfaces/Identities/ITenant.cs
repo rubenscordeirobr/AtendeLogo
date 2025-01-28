@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.Domain.Entities.Identities;
+﻿using AtendeLogo.Shared.Interfaces.Shared;
+
+namespace AtendeLogo.Shared.Interfaces.Identities;
 public interface ITenant
 {
     string Name { get; }
@@ -6,12 +8,12 @@ public interface ITenant
     string ContactEmail { get; }
     string ContactPhone { get; }
     string Country { get; }
-    string DefaultLanguage { get; }
-    string DefaultCurrency { get; }
+    string Language { get; }
+    string Currency { get; }
     string PhoneNumber { get; }
     IAddress? Address { get; }
     BusinessType BusinessType { get; }
     TenantState TenantState { get; }
-    TentantStatus TenantStatus { get; }
+    TenantStatus TenantStatus { get; }
     TenantType TenantType { get; }
 }
