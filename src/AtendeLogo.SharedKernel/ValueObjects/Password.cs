@@ -1,6 +1,6 @@
-﻿using AtendeLogo.Domain.Constantes.Validations;
+﻿using AtendeLogo.Shared.Contantes;
 
-namespace AtendeLogo.Domain.ValueObjects;
+namespace AtendeLogo.Shared.ValueObjects;
 
 public sealed record Password
 {
@@ -26,28 +26,28 @@ public sealed record Password
     {
         if (string.IsNullOrWhiteSpace(salt))
         {
-            return Result.Failure<Password>(
+            return Result.ValidationFailure<Password>(
                 "Password.SaltEmpty",
                 "Salt cannot be empty.");
         }
 
         if (string.IsNullOrWhiteSpace(value))
         {
-            return Result.Failure<Password>(
+            return Result.ValidationFailure<Password>(
                 "Password.Empty",
                 "Password cannot be empty.");
         }
 
-        if (value.Length < UserValidationConstants.PasswordMinLength)
+        if (value.Length < ValidationConstants.PasswordMinLength)
         {
-            return Result.Failure<Password>(
+            return Result.ValidationFailure<Password>(
                 "Password.TooShort",
                 "Password must be at least 6 characters long.");
         }
 
-        if (value.Length > UserValidationConstants.PasswordMaxLength)
+        if (value.Length > ValidationConstants.PasswordMaxLength)
         {
-            return Result.Failure<Password>(
+            return Result.ValidationFailure<Password>(
                 "Password.TooLong",
                 "Password cannot be longer than 100 characters.");
         }
@@ -55,5 +55,4 @@ public sealed record Password
         var password = new Password(value, salt);
         return Result.Success(password);
     }
-
 }

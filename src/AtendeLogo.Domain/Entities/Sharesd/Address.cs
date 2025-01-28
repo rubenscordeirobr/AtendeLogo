@@ -1,6 +1,7 @@
-﻿using AtendeLogo.Domain.Domain;
+﻿using AtendeLogo.Domain.Primitives;
+using AtendeLogo.Shared.Interfaces.Shared;
 
-namespace AtendeLogo.Domain.Entities.Identities;
+namespace AtendeLogo.Domain.Entities.Sharesd;
 
 public class Address : EntityBase, IAddress
 {
