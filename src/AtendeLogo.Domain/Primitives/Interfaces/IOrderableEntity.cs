@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Domain.Domain.Interfaces;
+﻿namespace AtendeLogo.Domain.Primitives.Interfaces;
 
 public interface IOrderableEntity
 {

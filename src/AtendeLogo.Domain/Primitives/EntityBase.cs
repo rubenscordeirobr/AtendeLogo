@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Domain.Domain;
+﻿namespace AtendeLogo.Domain.Primitives;
 public abstract class EntityBase
 {
     public Guid Id { get; protected set; }
