@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Domain.Enums;
+﻿namespace AtendeLogo.Shared.Enums;
 
 public enum TenantUserRole
 {
