@@ -1,5 +1,4 @@
-﻿namespace AtendeLogo.Domain.Enums;
-
+﻿namespace AtendeLogo.Common.Enums;
 public enum PasswordStrength
 {
     Strong,
