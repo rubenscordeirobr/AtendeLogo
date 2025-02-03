@@ -53,7 +53,8 @@ internal static partial class PhoneNumberUtilsInternal
             nationalNumber = $"0{nationalNumber}";
         }
 
-        var provider = new MaskedTextProvider(countryMetedataInfo.NationalFormat, true);
+        var format = countryMetedataInfo.GetBetterNationalFormat(nationalNumber.Length);
+        var provider = new MaskedTextProvider(format, true);
         var isSucess = provider.Set(nationalNumber);
         if (!isSucess)
         {

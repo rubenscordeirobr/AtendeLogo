@@ -32,7 +32,7 @@ public static partial class PhoneNumberUtils
         }
 
         var countryCode = GetCountryCode(fullPhoneNumber);
-        var phoneFormatInfo = CountryPhoneFormatMetadata.TryGet(countryCode);
+        var phoneFormatInfo = PhoneFormatMetadata.TryGet(countryCode);
         if (phoneFormatInfo == null)
         {
             return false;
@@ -52,7 +52,7 @@ public static partial class PhoneNumberUtils
             return false;
         }
 
-        var phoneFormatInfo = CountryPhoneFormatMetadata.TryGet(countryCode);
+        var phoneFormatInfo = PhoneFormatMetadata.TryGet(countryCode);
         if (phoneFormatInfo == null)
         {
             return false;
@@ -64,8 +64,8 @@ public static partial class PhoneNumberUtils
         PhoneNumberFormatInfo phoneFormatInfo, 
         string nationalNumber)
     {
-        var minLenght = phoneFormatInfo.MinNumberLength;
-        var maxLength = phoneFormatInfo.MaxNumberLength;
+        var minLenght = phoneFormatInfo.MinNationalNumberLength;
+        var maxLength = phoneFormatInfo.MaxNationalNumberLength;
         return nationalNumber.Length >= minLenght
             && nationalNumber.Length <= maxLength;
     }
