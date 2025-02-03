@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Domain;
+﻿namespace AtendeLogo.Common;
 
 public class Result<T> where T : notnull
 {
@@ -7,9 +7,11 @@ public class Result<T> where T : notnull
     public Error? Error { get; }
     public T? Value { get; }
 
-    internal Result(Error? error)
+    internal Result(Error error)
     {
-        Error = error ?? throw new ArgumentNullException(nameof(error));
+        Guard.NotNull(error);
+
+        Error = error;
         IsSuccess = false;
     }
 
@@ -31,6 +33,7 @@ public class Result<T> where T : notnull
     {
         if (!IsSuccess || Value is null)
             throw new InvalidOperationException("Cannot get value from failed result");
+
         return Value;
     }
 }
@@ -41,9 +44,9 @@ public static class Result
         where T : notnull
         => new(value);
 
-    public static Result<T> Failure<T>(string code, string errorMessage)
+    public static Result<T> ValidationFailure<T>(string code, string errorMessage)
         where T : notnull
-        => new(new Error(code, errorMessage));
+        => new(new ValidationError(code, errorMessage));
     public static Result<T> Failure<T>(Error error)
         where T : notnull
         => new(error);
