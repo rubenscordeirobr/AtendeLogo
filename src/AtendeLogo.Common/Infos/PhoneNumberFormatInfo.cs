@@ -4,7 +4,7 @@ namespace AtendeLogo.Common.Infos;
 
 public partial record PhoneNumberFormatInfo
 {
-    public CountryCode CountryCode { get; init; }
+    public Country CountryCode { get; init; }
     public InternationalDialingCode InternationalDialingCode { get; init; }
     public int MinAreaCodeLength { get; init; }
     public int MaxAreaCodeLength { get; init; }

@@ -6,7 +6,7 @@ using AtendeLogo.Common.Resources;
 namespace AtendeLogo.Common.Utils;
 public static partial class PhoneNumberUtils
 {
-    public static CountryCode GetCountryCode(string fullNumber)
+    public static Country GetCountryCode(string fullNumber)
     {
         var onlyNumber = fullNumber.GetOnlyNumbers('+');
         var internationalDialingCode = GetInternationalDialingCode(fullNumber);
@@ -44,10 +44,10 @@ public static partial class PhoneNumberUtils
     }
      
     public static bool IsNationalNumberValid(
-        CountryCode countryCode,
+        Country countryCode,
         string nationalNumber)
     {
-        if(countryCode == CountryCode.Unknown)
+        if(countryCode == Country.Unknown)
         {
             return false;
         }

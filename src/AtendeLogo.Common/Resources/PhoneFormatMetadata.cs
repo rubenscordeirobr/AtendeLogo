@@ -5,15 +5,15 @@ namespace AtendeLogo.Common.Resources;
 
 internal class PhoneFormatMetadata
 {
-    public static PhoneNumberFormatInfo? TryGet(CountryCode countryCode)
+    public static PhoneNumberFormatInfo? TryGet(Country countryCode)
     {
         return Mapping.TryGetValue(countryCode, out var info) ? info : null;
     }
 
-    private static readonly Dictionary<CountryCode, PhoneNumberFormatInfo> _mapping = new()
+    private static readonly Dictionary<Country, PhoneNumberFormatInfo> _mapping = new()
     {
-        { CountryCode.USA,  new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.USA,
+        { Country.UnitedStates,  new PhoneNumberFormatInfo {
+            CountryCode = Country.UnitedStates,
             InternationalDialingCode = InternationalDialingCode.UnitedStatesOrCanada,
             InternationalDialingCodeLength = 1,
             MinAreaCodeLength = 3,
@@ -23,8 +23,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(###) ###-####",
         }},
-        { CountryCode.CAN, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.CAN,
+        { Country.Canada, new PhoneNumberFormatInfo {
+            CountryCode = Country.Canada,
             InternationalDialingCode = InternationalDialingCode.UnitedStatesOrCanada,
             InternationalDialingCodeLength = 1,
             MinAreaCodeLength = 3,
@@ -34,8 +34,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(###) ###-####",
         }},
-        { CountryCode.MEX,  new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.MEX,
+        { Country.Mexico,  new PhoneNumberFormatInfo {
+            CountryCode = Country.Mexico,
             InternationalDialingCode = InternationalDialingCode.Mexico,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -44,10 +44,10 @@ internal class PhoneFormatMetadata
             MaxNationalNumberLength = 11,
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(##) #### ####",  // Landline format
-            AlternateNationalFormats = [("(###) #### ####", 11)]  // Mobile format
+            AlternateNationalFormats = [("(###) #### ####", 11)],  // Mobile format
         }},
-        { CountryCode.ARG, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.ARG,
+        { Country.Argentina, new PhoneNumberFormatInfo {
+            CountryCode = Country.Argentina,
             InternationalDialingCode = InternationalDialingCode.Argentina,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -56,10 +56,10 @@ internal class PhoneFormatMetadata
             MaxNationalNumberLength = 13,  // (4-digit area code) + (7-digit number, mobile)
             IsLeadingZeroNeeded = true,  // Leading "0" required for domestic calls
             PrimaryNationalFormat = "0## #### ####",  // Landline format
-            AlternateNationalFormats = [("0### 15 #### ####", 13)]  // Mobile format
+            AlternateNationalFormats = [("0### 15 #### ####", 13)],  // Mobile format
         }},
-        { CountryCode.BOL, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.BOL,
+        { Country.Bolivia, new PhoneNumberFormatInfo {
+            CountryCode = Country.Bolivia,
             InternationalDialingCode = InternationalDialingCode.Bolivia,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 2,
@@ -70,8 +70,8 @@ internal class PhoneFormatMetadata
             PrimaryNationalFormat = "(##) ######",  // Landline format
             AlternateNationalFormats = [("(##) #######", 9)]  // Mobile format
         }},
-        { CountryCode.BRA, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.BRA,
+        { Country.Brazil, new PhoneNumberFormatInfo {
+            CountryCode = Country.Brazil,
             InternationalDialingCode = InternationalDialingCode.Brazil,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -82,8 +82,8 @@ internal class PhoneFormatMetadata
             PrimaryNationalFormat = "(##) #####-####",  // Mobile format (most common)
             AlternateNationalFormats = [("(##) ####-####", 10) ]  // Landline format
         }},
-        { CountryCode.CHL, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.CHL,
+        { Country.Chile, new PhoneNumberFormatInfo {
+            CountryCode = Country.Chile,
             InternationalDialingCode = InternationalDialingCode.Chile,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 2,
@@ -93,8 +93,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(##) #### ####"
         }},
-        { CountryCode.COL, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.COL,
+        { Country.Colombia, new PhoneNumberFormatInfo {
+            CountryCode = Country.Colombia,
             InternationalDialingCode = InternationalDialingCode.Colombia,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 3,
@@ -104,8 +104,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(###) #### ####"
         }},
-        { CountryCode.ECU, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.ECU,
+        { Country.Ecuador, new PhoneNumberFormatInfo {
+            CountryCode = Country.Ecuador,
             InternationalDialingCode = InternationalDialingCode.Ecuador,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 2,
@@ -115,8 +115,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = true,
             PrimaryNationalFormat = "0## #### ####"
         }},
-        { CountryCode.GUY, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.GUY,
+        { Country.Guyana, new PhoneNumberFormatInfo {
+            CountryCode = Country.Guyana,
             InternationalDialingCode = InternationalDialingCode.Guyana,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 2,
@@ -126,8 +126,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(##) #######"
         }},
-        { CountryCode.PER, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.PER,
+        { Country.Peru, new PhoneNumberFormatInfo {
+            CountryCode = Country.Peru,
             InternationalDialingCode = InternationalDialingCode.Peru,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 1,
@@ -137,8 +137,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(#) #### ####"
         }},
-        { CountryCode.PRY, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.PRY,
+        { Country.Paraguay, new PhoneNumberFormatInfo {
+            CountryCode = Country.Paraguay,
             InternationalDialingCode = InternationalDialingCode.Paraguay,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 2,
@@ -148,8 +148,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(##) #### ####"
         }},
-        { CountryCode.URY, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.URY,
+        { Country.Uruguay, new PhoneNumberFormatInfo {
+            CountryCode = Country.Uruguay,
             InternationalDialingCode = InternationalDialingCode.Uruguay,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 2,
@@ -159,8 +159,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(##) #### ####"
         }},
-        { CountryCode.SUR, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.SUR,
+        { Country.Suriname, new PhoneNumberFormatInfo {
+            CountryCode = Country.Suriname,
             InternationalDialingCode = InternationalDialingCode.Suriname,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 1,
@@ -170,8 +170,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(#) ######"
          }},
-        { CountryCode.VEN, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.VEN,
+        { Country.Venezuela, new PhoneNumberFormatInfo {
+            CountryCode = Country.Venezuela,
             InternationalDialingCode = InternationalDialingCode.Venezuela,
             InternationalDialingCodeLength = 3,
             MinAreaCodeLength = 3,
@@ -181,8 +181,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "(###) #######"
         }},
-        { CountryCode.ESP, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.ESP,
+        { Country.Spain, new PhoneNumberFormatInfo {
+            CountryCode = Country.Spain,
             InternationalDialingCode = InternationalDialingCode.Spain,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -192,8 +192,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = false,
             PrimaryNationalFormat = "### ### ###"
         }},
-        { CountryCode.DEU, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.DEU,
+        { Country.Germany, new PhoneNumberFormatInfo {
+            CountryCode = Country.Germany,
             InternationalDialingCode = InternationalDialingCode.Germany,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -204,8 +204,8 @@ internal class PhoneFormatMetadata
             PrimaryNationalFormat = "0### #######",
             AlternateNationalFormats = [ ( "0## #######", 10), ( "0#### ######", 11) ]
         }},
-        { CountryCode.FRA, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.FRA,
+        { Country.France, new PhoneNumberFormatInfo {
+            CountryCode = Country.France,
             InternationalDialingCode = InternationalDialingCode.France,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 1,
@@ -215,8 +215,8 @@ internal class PhoneFormatMetadata
             IsLeadingZeroNeeded = true,
             PrimaryNationalFormat = "0# ## ## ## ##"
         }},
-        { CountryCode.GBR, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.GBR,
+        { Country.UnitedKingdom, new PhoneNumberFormatInfo {
+            CountryCode = Country.UnitedKingdom,
             InternationalDialingCode = InternationalDialingCode.UnitedKingdom,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -227,8 +227,8 @@ internal class PhoneFormatMetadata
             PrimaryNationalFormat = "0## #### ####",
             AlternateNationalFormats =   [( "0#### ######" , 11), ( "0### ### ####", 10)]
          }},
-        { CountryCode.ITA, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.ITA,
+        { Country.Italy, new PhoneNumberFormatInfo {
+            CountryCode = Country.Italy,
             InternationalDialingCode = InternationalDialingCode.Italy,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -239,8 +239,8 @@ internal class PhoneFormatMetadata
             PrimaryNationalFormat = "0## #### ####",
             AlternateNationalFormats = [ ("0### ### ####", 10), ("0#### ### ###", 10)]
          }},
-        { CountryCode.PRT, new PhoneNumberFormatInfo {
-            CountryCode = CountryCode.PRT,
+        { Country.Portugal, new PhoneNumberFormatInfo {
+            CountryCode = Country.Portugal,
             InternationalDialingCode = InternationalDialingCode.Portugal,
             InternationalDialingCodeLength = 2,
             MinAreaCodeLength = 2,
@@ -252,5 +252,5 @@ internal class PhoneFormatMetadata
         }}
     };
 
-    public static Dictionary<CountryCode, PhoneNumberFormatInfo> Mapping => _mapping;
+    public static Dictionary<Country, PhoneNumberFormatInfo> Mapping => _mapping;
 }

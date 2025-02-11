@@ -2,13 +2,14 @@
 using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Common.Infos;
-public partial record PhoneNumberInfo
+
+public partial record PhoneNumberInfo(
+    Country CountryCode,
+    InternationalDialingCode InternationalDialingCode,
+    string AreaCode,
+    string NationalNumber,
+    string FormattedNationalNumber)
 {
-    public CountryCode CountryCode { get; init; }
-    public InternationalDialingCode InternationalDialingCode { get; init; }
-    public required string AreaCode { get; init; }
-    public required string NationalNumber { get; init; }
-    public required string FormattedNationalNumber { get; init; }
     public string FullNumber => $"+{(int)InternationalDialingCode}{NationalNumber}";
 }
 
@@ -17,20 +18,20 @@ public partial record PhoneNumberInfo
     public static PhoneNumberInfo Unknown(string numbers)
     {
         return new PhoneNumberInfo
-        {
-            CountryCode = CountryCode.Unknown,
-            InternationalDialingCode = Enums.InternationalDialingCode.Unknown,
-            NationalNumber = numbers,
-            AreaCode = string.Empty,
-            FormattedNationalNumber = numbers
-        };
+        (
+            CountryCode : Country.Unknown,
+            InternationalDialingCode: InternationalDialingCode.Unknown,
+            NationalNumber: numbers,
+            AreaCode: string.Empty,
+            FormattedNationalNumber: numbers
+        );
     }
 
     public static Result<PhoneNumberInfo> Create (string fullPhoneNumber)
     {
         var phoneNumberInfo = PhoneNumberInfoParser.Parse(fullPhoneNumber);
 
-        if (phoneNumberInfo.CountryCode == CountryCode.Unknown)
+        if (phoneNumberInfo.CountryCode == Country.Unknown)
         {
             return Result.ValidationFailure<PhoneNumberInfo>(
                 "PhoneNumberInfo.InvalidCountryCode",

@@ -20,7 +20,7 @@ public static partial class PhoneNumberInfoParser
         var countryCode = PhoneNumberUtilsInternal.GetCountryCodeInternal(internationalDialingCode, numbers);
         var countryMetedataInfo = PhoneFormatMetadata.TryGet(countryCode);
 
-        if (countryCode == CountryCode.Unknown ||
+        if (countryCode == Country.Unknown ||
             internationalDialingCode == InternationalDialingCode.Unknown ||
             countryMetedataInfo == null)
         {
@@ -33,13 +33,13 @@ public static partial class PhoneNumberInfoParser
         var formatterNumber = PhoneNumberUtilsInternal.FormatNatianalNumber(countryMetedataInfo, nationalNumber);
 
         return new PhoneNumberInfo
-        {
-            CountryCode = countryCode,
-            InternationalDialingCode = internationalDialingCode,
-            NationalNumber = nationalNumber,
-            AreaCode = areaCode,
-            FormattedNationalNumber = formatterNumber
-        };
+        (
+            CountryCode: countryCode,
+            InternationalDialingCode: internationalDialingCode,
+            NationalNumber : nationalNumber,
+            AreaCode: areaCode,
+            FormattedNationalNumber: formatterNumber
+        );
     }
 }
 
