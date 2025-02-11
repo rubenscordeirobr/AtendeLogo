@@ -118,4 +118,22 @@ public class ResultTests
         failureResult.Error.Should().Be(error);
         failureResult.Value.Should().Be(default);
     }
+
+    [Fact]
+    public void NotFoundFailure_ShouldReturnFailureResult_WhenCalledWithValidParameters()
+    {
+        // Arrange
+        var code = "NotFoundCode";
+        var message = "Not found error message";
+
+        // Act
+        var result = Result.NotFoundFailure<string>(code, message);
+
+        // Assert
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().BeOfType<NotFoundError>();
+        result.Error.Code.Should().Be(code);
+        result.Error.Message.Should().Be(message);
+        result.Value.Should().BeNull();
+    }
 }
