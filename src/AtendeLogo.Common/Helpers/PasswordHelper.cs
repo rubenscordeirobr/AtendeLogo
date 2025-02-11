@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Common.Enums;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace AtendeLogo.Common.Helpers;
 public static class PasswordHelper
@@ -36,7 +35,7 @@ public static class PasswordHelper
     public static string HashPassword(string password, string salt)
     {
         var passwordCombined = $"{password}::{salt}";
-        return HashHelper.CreateSha256Hash(passwordCombined);
+        return HashHelper.GenerateSha256HashFromString(passwordCombined);
     }
      
     public static bool VerifyPassword(
