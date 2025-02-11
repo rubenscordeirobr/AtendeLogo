@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Common.UnitTests.Utils;
 
-public class ValidationUtilsTest
+public class ValidationUtilsTests
 {
     [Theory]
     [InlineData(null)]

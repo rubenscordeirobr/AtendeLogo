@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Common.UnitTests;
 
-public class ResultTest
+public class ResultTests
 {
     [Theory]
     [InlineData(null)]

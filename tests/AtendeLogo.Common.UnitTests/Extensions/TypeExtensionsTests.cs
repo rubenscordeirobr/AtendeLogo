@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Common.UnitTests.Extensions;
 
-public class TypeExtensionsTest
+public class TypeExtensionsTests
 {
     public static IEnumerable<object[]> IsSubclassOfTestData
         => new List<object[]>
@@ -43,7 +43,7 @@ public class TypeExtensionsTest
         type.IsSubclassOfOrEquals(otherType).Should().Be(expectedResult);
     }
 
-    public static IEnumerable<object[]> IsAssignableToGenericTypeTestData
+    public static IEnumerable<object[]> IsImplementsGenericInterfaceDefinitionData
         => new List<object[]>
         {
             new object[] { typeof(List<string>), typeof(IEnumerable<>), true },
@@ -54,13 +54,13 @@ public class TypeExtensionsTest
         };
 
     [Theory]
-    [MemberData(nameof(IsAssignableToGenericTypeTestData))]
-    public void IsAssignableToGenericType_ShouldReturnExpectedResult(
+    [MemberData(nameof(IsImplementsGenericInterfaceDefinitionData))]
+    public void IsImplementsGenericInterfaceDefinition_ShouldReturnExpectedResult(
         Type givenType,
         Type genericType,
         bool expectedResult)
     {
-        givenType.IsAssignableToGenericType(genericType).Should().Be(expectedResult);
+        givenType.ImplementsGenericInterfaceDefinition(genericType).Should().Be(expectedResult);
     }
 
     public static IEnumerable<object[]> GetDeclaredPropertiesTestData

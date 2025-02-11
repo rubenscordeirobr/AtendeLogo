@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Common.UnitTests.Utils;
 
-public class EnumUtilsTest
+public class EnumUtilsTests
 {
     public enum TestEnum
     {

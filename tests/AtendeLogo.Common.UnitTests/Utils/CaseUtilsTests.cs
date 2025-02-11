@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Common.UnitTests.Utils;
 
-public class CaseUtilsTest
+public class CaseUtilsTests
 {
     [Theory]
 

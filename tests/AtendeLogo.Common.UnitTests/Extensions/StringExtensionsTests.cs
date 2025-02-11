@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Common.UnitTests.Extensions;
 
-public class StringExtensionsTest
+public class StringExtensionsTests
 {
     [Theory]
     [InlineData(null, true)]

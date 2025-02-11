@@ -1,12 +1,12 @@
 ﻿namespace AtendeLogo.Common.UnitTests.Utils;
 
-public class PhoneNumberUtilsTest
+public class PhoneNumberUtilsTests
 {
     [Theory]
-    [InlineData("+15551234567", CountryCode.USA)]
-    [InlineData("+521234567890", CountryCode.MEX)]
-    [InlineData("+5511987654321", CountryCode.BRA)]
-    public void GetCountryCode_ValidNumber_ReturnsExpectedCountryCode(string fullNumber, CountryCode expectedCountryCode)
+    [InlineData("+15551234567", Country.UnitedStates)]
+    [InlineData("+521234567890", Country.Mexico)]
+    [InlineData("+5511987654321", Country.Brazil)]
+    public void GetCountryCode_ValidNumber_ReturnsExpectedCountryCode(string fullNumber, Country expectedCountryCode)
     {
         var result = PhoneNumberUtils.GetCountryCode(fullNumber);
 
@@ -37,11 +37,11 @@ public class PhoneNumberUtilsTest
     }
 
     [Theory]
-    [InlineData(CountryCode.USA, "5551234567", true)]
-    [InlineData(CountryCode.MEX, "1234567890", true)]
-    [InlineData(CountryCode.BRA, "11987654321", true)]
-    [InlineData(CountryCode.Unknown, "123456", false)]
-    public void IsNationalNumberValid_VariousNumbers_ReturnsExpectedValidity(CountryCode countryCode, string nationalNumber, bool expectedValidity)
+    [InlineData(Country.UnitedStates, "5551234567", true)]
+    [InlineData(Country.Mexico, "1234567890", true)]
+    [InlineData(Country.Brazil, "11987654321", true)]
+    [InlineData(Country.Unknown, "123456", false)]
+    public void IsNationalNumberValid_VariousNumbers_ReturnsExpectedValidity(Country countryCode, string nationalNumber, bool expectedValidity)
     {
         var result = PhoneNumberUtils.IsNationalNumberValid(countryCode, nationalNumber);
         result.Should().Be(expectedValidity);
