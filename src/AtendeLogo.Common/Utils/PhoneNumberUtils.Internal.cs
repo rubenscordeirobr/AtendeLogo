@@ -16,27 +16,27 @@ internal static partial class PhoneNumberUtilsInternal
           "873", "902", "905"
         };
 
-    private static readonly Dictionary<InternationalDialingCode, CountryCode> _mappings = new() {
-            { InternationalDialingCode.Unknown, CountryCode.Unknown },
-            { InternationalDialingCode.Mexico, CountryCode.MEX },
-            { InternationalDialingCode.Argentina, CountryCode.ARG },
-            { InternationalDialingCode.Bolivia, CountryCode.BOL },
-            { InternationalDialingCode.Brazil, CountryCode.BRA },
-            { InternationalDialingCode.Chile, CountryCode.CHL },
-            { InternationalDialingCode.Colombia, CountryCode.COL },
-            { InternationalDialingCode.Ecuador, CountryCode.ECU },
-            { InternationalDialingCode.Guyana, CountryCode.GUY },
-            { InternationalDialingCode.Paraguay, CountryCode.PRY },
-            { InternationalDialingCode.Peru, CountryCode.PER },
-            { InternationalDialingCode.Suriname, CountryCode.SUR },
-            { InternationalDialingCode.Uruguay, CountryCode.URY },
-            { InternationalDialingCode.Venezuela, CountryCode.VEN },
-            { InternationalDialingCode.Italy, CountryCode.ITA },
-            { InternationalDialingCode.France, CountryCode.FRA },
-            { InternationalDialingCode.Germany, CountryCode.DEU },
-            { InternationalDialingCode.Spain, CountryCode.ESP },
-            { InternationalDialingCode.Portugal, CountryCode.PRT },
-            { InternationalDialingCode.UnitedKingdom, CountryCode.GBR }
+    private static readonly Dictionary<InternationalDialingCode, Country> _mappings = new() {
+            { InternationalDialingCode.Unknown, Country.Unknown },
+            { InternationalDialingCode.Mexico, Country.Mexico },
+            { InternationalDialingCode.Argentina, Country.Argentina },
+            { InternationalDialingCode.Bolivia, Country.Bolivia },
+            { InternationalDialingCode.Brazil, Country.Brazil },
+            { InternationalDialingCode.Chile, Country.Chile },
+            { InternationalDialingCode.Colombia, Country.Colombia },
+            { InternationalDialingCode.Ecuador, Country.Ecuador },
+            { InternationalDialingCode.Guyana, Country.Guyana },
+            { InternationalDialingCode.Paraguay, Country.Portugal },
+            { InternationalDialingCode.Peru, Country.Peru },
+            { InternationalDialingCode.Suriname, Country.Suriname },
+            { InternationalDialingCode.Uruguay, Country.Uruguay },
+            { InternationalDialingCode.Venezuela, Country.Venezuela },
+            { InternationalDialingCode.Italy, Country.Italy },
+            { InternationalDialingCode.France, Country.France },
+            { InternationalDialingCode.Germany, Country.Germany },
+            { InternationalDialingCode.Spain, Country.Spain },
+            { InternationalDialingCode.Portugal, Country.Portugal },
+            { InternationalDialingCode.UnitedKingdom, Country.UnitedKingdom }
         };
 
     internal static string FormatNatianalNumber(
@@ -63,7 +63,7 @@ internal static partial class PhoneNumberUtilsInternal
         return provider.ToDisplayString();
     }
 
-    internal static CountryCode GetCountryCodeInternal(
+    internal static Country GetCountryCodeInternal(
         InternationalDialingCode internationalDialingCode,
         string fullNumber)
     {
@@ -72,14 +72,14 @@ internal static partial class PhoneNumberUtilsInternal
             var areaCode = fullNumber.GetOnlyNumbers().Substring(1, 3);
             if (_canadianAreaCodes.Contains(areaCode))
             {
-                return CountryCode.CAN;
+                return Country.Canada;
             }
-            return CountryCode.USA;
+            return Country.UnitedStates;
         }
 
         return _mappings.TryGetValue(internationalDialingCode, out var countryCode)
              ? countryCode
-             : CountryCode.Unknown;
+             : Country.Unknown;
     }
 
     internal static InternationalDialingCode GetInternationalDialingCodeInternal(string numbers)
