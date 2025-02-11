@@ -3,15 +3,20 @@
 public class CaseUtilsTest
 {
     [Theory]
+
+    [InlineData("lowercase", CaseType.LowerCase)]
+    [InlineData("UPPERCASE", CaseType.UpperCase)]
     [InlineData("PascalCaseExample", CaseType.PascalCase)]
     [InlineData("UUPascalCaseExample", CaseType.PascalCase)]
     [InlineData("camelCaseExample", CaseType.CamelCase)]
     [InlineData("snake_case_example", CaseType.SnakeCase)]
     [InlineData("kebab-case-example", CaseType.KebabCase)]
-    [InlineData("UPPER_CASE_EXAMPLE", CaseType.UpperCase)]
-    [InlineData("UPPER", CaseType.UpperCase)]
-    [InlineData("UPPER-KEBEB", CaseType.KebabUpperCase)]
-    [InlineData("unknowncaseexample", CaseType.LowerCase)]
+    [InlineData("UPPER_CASE_EXAMPLE", CaseType.ScreamingSnakeCase)]
+    [InlineData("UPPER-KEBEB", CaseType.ScreamingKebabCase)]
+    [InlineData("Pascal_Snake_Case", CaseType.TitleSnakeCase)]
+    [InlineData("Pascal-Kebab-Case", CaseType.TitleKebabCase)]
+    [InlineData("camel_Snake_Case", CaseType.CamelSnakeCase)]
+    [InlineData("camel-Kebab-Case", CaseType.CamelKebabCase)]
     [InlineData("unknown%caseexample", CaseType.Unknown)]
     [InlineData("lower%lower", CaseType.Unknown)]
     [InlineData("UPPPR%lower", CaseType.Unknown)]
@@ -74,9 +79,9 @@ public class CaseUtilsTest
     [Theory]
     [InlineData("PascalCaseExample", "PASCALCASEEXAMPLE")]
     [InlineData("camelCaseExample", "CAMELCASEEXAMPLE")]
-    [InlineData("snake_case_example", "SNAKE-CASE-EXAMPLE")]
-    [InlineData("kebab-case-example", "KEBAB_CASE_EXAMPLE")]
-    [InlineData("upper_case_example", "UPPER-CASE-EXAMPLE")]
+    [InlineData("snake_case_example", "SNAKECASEEXAMPLE")]
+    [InlineData("kebab-case-example", "KEBABCASEEXAMPLE")]
+    [InlineData("upper_case_example", "UPPERCASEEXAMPLE")]
     public void ToUpperCase_ShouldConvertToUpperCase(string input, string expected)
     {
         var result = CaseUtils.ToUpperCase(input);
@@ -100,15 +105,7 @@ public class CaseUtilsTest
         Action act = () => CaseUtils.ToSnakeCase(input);
         act.Should().Throw<ArgumentException>();
     }
-
-    [Theory]
-    [InlineData("lower%lower")]
-    [InlineData("UPPPR%lower")]
-    public void ToSnakeCase_ShouldThrowNotSupportedException_WhenUnknownCase(string input)
-    {
-        Action act = () => CaseUtils.ToSnakeCase(input);
-        act.Should().Throw<NotSupportedException>();
-    }
+ 
 
     [Theory]
     [InlineData(null)]
@@ -118,16 +115,7 @@ public class CaseUtilsTest
         Action act = () => CaseUtils.ToKebabCase(input);
         act.Should().Throw<ArgumentException>();
     }
-
-    [Theory]
-    [InlineData("lower%lower")]
-    [InlineData("UPPPR%lower")]
-    public void ToKebabCase_ShouldThrowNotSupportedException_WhenUnknownCase(string input)
-    {
-        Action act = () => CaseUtils.ToKebabCase(input);
-        act.Should().Throw<NotSupportedException>();
-    }
-
+      
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -145,16 +133,7 @@ public class CaseUtilsTest
         Action act = () => CaseUtils.ToCamelCase(input);
         act.Should().Throw<ArgumentException>();
     }
-
-    [Theory]
-    [InlineData("lower%lower")]
-    [InlineData("UPPPR%lower")]
-    public void ToCamelCase_ShouldThrowNotSupportedException_WhenUnknownCase(string input)
-    {
-        Action act = () => CaseUtils.ToCamelCase(input);
-        act.Should().Throw<NotSupportedException>();
-    }
-
+     
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -162,14 +141,5 @@ public class CaseUtilsTest
     {
         Action act = () => CaseUtils.ToUpperCase(input);
         act.Should().Throw<ArgumentException>();
-    }
-
-    [Theory]
-    [InlineData("lower%lower")]
-    [InlineData("UPPPR%lower")]
-    public void ToUpperCase_ShouldThrowNotSupportedException_WhenUnknownCase(string input)
-    {
-        Action act = () => CaseUtils.ToUpperCase(input);
-        act.Should().Throw<NotSupportedException>();
     }
 }

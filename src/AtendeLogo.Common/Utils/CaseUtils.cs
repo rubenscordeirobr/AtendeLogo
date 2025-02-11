@@ -6,6 +6,11 @@ namespace AtendeLogo.Common.Utils;
 
 public static partial class CaseUtils
 {
+    [GeneratedRegex("^[A-Z0-9]+$")]
+    private static partial Regex UpperCaseRegex();
+
+    [GeneratedRegex("^[a-z0-9]+$")]
+    private static partial Regex LowerCaseRegex();
 
     [GeneratedRegex("^[A-Z]+[a-z0-9]+(?:[A-Z][a-z0-9]*)*$")]
     private static partial Regex PascalCaseRegex();
@@ -18,24 +23,31 @@ public static partial class CaseUtils
 
     [GeneratedRegex("^[a-z0-9]+(?:-[a-z0-9]+)*$")]
     private static partial Regex KebabCaseRegex();
-
+     
     [GeneratedRegex("^[A-Z0-9_]+$")]
-    private static partial Regex UpperCaseRegex();
+    private static partial Regex ScreamingSnakeCaseRegex();
 
     [GeneratedRegex("^[A-Z0-9-]+$")]
-    public static partial Regex KebabUpperCaseRegex();
+    public static partial Regex ScreamingKebabCaseRegex();
 
+    [GeneratedRegex("^[A-Z][a-z0-9]*(?:_[A-Z][a-z0-9]*)*$")]
+    public static partial Regex TitleSnakeCaseRegex();
 
-    [GeneratedRegex("([a-z])([A-Z])")]
-    private static partial Regex LowerToUpperRegex();
+    [GeneratedRegex("^[A-Z][a-z0-9]*(?:-[A-Z][a-z0-9]*)*$")]
+    public static partial Regex TitleTitleKebabCaseRegex();
 
-    // Regex to handle consecutive uppercase transitions
-    [GeneratedRegex("([A-Z])([A-Z][a-z])")]
-    private static partial Regex UpperToUpperRegex();
+    [GeneratedRegex("^[a-z][a-z0-9]*(?:_[A-Z][a-z0-9]*)*$")]
+    public static partial Regex CamelSnakeCaseRegex();
 
-    [GeneratedRegex("^[a-z0-9]+$")]
-    private static partial Regex LowerCaseRegex();
+    [GeneratedRegex("^[a-z][a-z0-9]*(?:-[A-Z][a-z0-9]*)*$")]
+    public static partial Regex CamelKebabCaseRegex();
 
+    [GeneratedRegex(@"[^A-Za-z0-9]+")]
+    private static partial Regex SpliPartsNoLetterOrDigitRegex();
+
+    [GeneratedRegex(@"([A-Z]+(?=[A-Z][a-z]))|([A-Z]?[a-z]+)|([A-Z]+)|(\d+)")]
+    private static partial Regex SplitRegex();
+     
     public static CaseType GetCaseType(string? input)
     {
         Guard.NotNullOrWhiteSpace(input);
@@ -45,6 +57,9 @@ public static partial class CaseUtils
 
         if (LowerCaseRegex().IsMatch(input))
             return CaseType.LowerCase;
+
+        if (UpperCaseRegex().IsMatch(input))
+            return CaseType.UpperCase;
 
         if (PascalCaseRegex().IsMatch(input))
             return CaseType.PascalCase;
@@ -56,17 +71,26 @@ public static partial class CaseUtils
             SnakeCaseRegex().IsMatch(input))
             return CaseType.SnakeCase;
 
-        if (input.Contains('-') &&
-            KebabCaseRegex().IsMatch(input))
+        if (KebabCaseRegex().IsMatch(input))
             return CaseType.KebabCase;
+         
+        if (ScreamingKebabCaseRegex().IsMatch(input))
+            return CaseType.ScreamingKebabCase;
 
-        if (UpperCaseRegex().IsMatch(input))
-            return CaseType.UpperCase;
+        if (ScreamingSnakeCaseRegex().IsMatch(input))
+            return CaseType.ScreamingSnakeCase;
 
-        if (KebabUpperCaseRegex().IsMatch(input))
-            return CaseType.KebabUpperCase;
+        if (TitleSnakeCaseRegex().IsMatch(input))
+            return CaseType.TitleSnakeCase;
 
-     
+        if (TitleTitleKebabCaseRegex().IsMatch(input))
+            return CaseType.TitleKebabCase;
+
+        if (CamelSnakeCaseRegex().IsMatch(input))
+            return CaseType.CamelSnakeCase;
+
+        if (CamelKebabCaseRegex().IsMatch(input))
+            return CaseType.CamelKebabCase;
 
         return CaseType.Unknown;
     }
@@ -75,169 +99,61 @@ public static partial class CaseUtils
     {
         Guard.NotNullOrWhiteSpace(input);
 
-        var caseType = GetCaseType(input);
-        switch (caseType)
-        {
-            case CaseType.UpperCase:
-
-                return input.ToLower();
-
-            case CaseType.KebabUpperCase:
-
-                return input.Replace('-', '_').ToLower();
-
-            case CaseType.PascalCase:
-            case CaseType.CamelCase:
-
-                return FromPascalCamelCaseToLowerCase(input, '_');
-
-            case CaseType.SnakeCase:
-
-                return input;
-            case CaseType.KebabCase:
-
-                return input.Replace('-', '_');
-
-            case CaseType.LowerCase:
-
-                return input;
-
-            default:
-
-                throw new NotSupportedException($"Format input '{input}' not supported");
-        }
+        var words = SplitWords(input);
+        return string.Join("_", words).ToLower();
     }
 
     public static string ToKebabCase(string? input)
     {
         Guard.NotNullOrWhiteSpace(input);
-
-        var caseType = GetCaseType(input);
-        switch (caseType)
-        {
-            case CaseType.UpperCase:
-                return input.Replace('_', '-').ToLower();
-            case CaseType.KebabUpperCase:
-                return input.ToLower();
-            case CaseType.PascalCase:
-            case CaseType.CamelCase:
-                return FromPascalCamelCaseToLowerCase(input, '-');
-            case CaseType.KebabCase:
-                return input;
-            case CaseType.SnakeCase:
-                return input.Replace('_', '-');
-
-            default:
-
-                throw new NotSupportedException($"Format input '{input}' not supported");
-        }
+        var words = SplitWords(input);
+        return string.Join("-", words).ToLower();
     }
 
     public static string ToPascalCase(string? input)
     {
         Guard.NotNullOrWhiteSpace(input);
 
-        var caseType = GetCaseType(input);
-        switch (caseType)
-        {
-            case CaseType.UpperCase:
-
-                return ToPascalCase(input.ToLower());
-
-            case CaseType.KebabUpperCase:
-
-                return ToPascalCase(input.ToLower());
-
-            case CaseType.PascalCase:
-
-                return input;
-            case CaseType.CamelCase:
-
-                return input.Capitalize();
-
-            case CaseType.SnakeCase:
-            case CaseType.KebabCase:
-
-                var splits = input.Split('_', '-');
-                return ToPascalCamelCaseInternal(splits);
-
-            default:
-                throw new NotSupportedException($"Format input '{input}' not supported");
-        }
-    }
+        var words = SplitWords(input);
+        return string.Join("", words.Select(x => x.Capitalize()));
+     }
 
     public static string ToCamelCase(string? input)
     {
         Guard.NotNullOrWhiteSpace(input);
-        var caseType = GetCaseType(input);
-        switch (caseType)
-        {
-            case CaseType.UpperCase:
-                return ToCamelCase(input.ToLower());
-            case CaseType.KebabUpperCase:
-                return ToCamelCase(input.ToLower());
-            case CaseType.PascalCase:
-                return input.Descapitalize();
-            case CaseType.CamelCase:
-                return input;
-            case CaseType.SnakeCase:
-            case CaseType.KebabCase:
-                var splits = input.Split('_', '-');
-                return ToCamelCaseInternal(splits);
-            default:
-                throw new NotSupportedException($"Format input '{input}' not supported");
-        }
+        var words = SplitWords(input);
+        return string.Join("", words.Select((x, i) => i == 0 ? x.Descapitalize() : x.Capitalize()));
     }
 
     public static string ToUpperCase(string? input)
     {
         Guard.NotNullOrWhiteSpace(input);
-        var caseType = GetCaseType(input);
-        switch (caseType)
+        var words = SplitWords(input);
+
+        return String.Join(String.Empty, words).ToUpper();
+    }
+     
+    private static string[] SplitWords(string input)
+    {
+        //Split the input into parts that contain no letters or digits.
+        string[] parts = SpliPartsNoLetterOrDigitRegex().Split(input);
+        var result = new List<string>();
+ 
+        // Process each part separated
+        foreach (var token in parts)
         {
-            case CaseType.UpperCase:
-                return input;
-            case CaseType.KebabUpperCase:
-                return input.Replace('-', '_');
-            case CaseType.PascalCase:
-            case CaseType.CamelCase:
-                return input.ToUpper();
-            case CaseType.SnakeCase:
-                return input.Replace('_', '-').ToUpper();
-            case CaseType.KebabCase:
-                return input.Replace('-', '_').ToUpper();
-            default:
-                throw new NotSupportedException($"Format input '{input}' not supported");
+            // This regex extracts words from camelCase, PascalCase, or ALLCAPS tokens.
+            // It matches:
+            // - groups of uppercase letters that are followed by another uppercase letter and then a lowercase letter
+            // - an optional uppercase letter followed by one or more lowercase letters
+            // - or one or more uppercase letters (for acronyms/numbers)
+
+            var matches = SplitRegex().Matches(token);
+            foreach (Match m in matches)
+            {
+                result.Add(m.Value);
+            }
         }
+        return result.ToArray();
     }
-
-    private static string ToPascalCamelCaseInternal(string[] splits)
-    {
-        return String.Concat(splits.Select(x => x.Capitalize()));
-    }
-    private static string ToCamelCaseInternal(string[] splits)
-    {
-        return String.Concat(splits.Select((x, i) => i == 0 ? x : x.Capitalize()));
-    }
-
-    private static string FromPascalCamelCaseToLowerCase(
-        string input, 
-        char separator)
-    {
-        Guard.NotNullOrWhiteSpace(input);
-
-        var result = input?.ToString();
-        if (String.IsNullOrEmpty(result))
-            return String.Empty;
-
-        result = LowerToUpperRegex()
-            .Replace(result, $"$1{separator}$2"); // Add separator between lowercase-uppercase
-        
-        result = UpperToUpperRegex()
-            .Replace(result, $"$1{separator}$2"); // Handle consecutive uppercase-uppercase transitions
-
-        return result.ToLower();
-    }
-
-   
 }

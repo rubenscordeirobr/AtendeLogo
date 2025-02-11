@@ -8,6 +8,11 @@ public enum CaseType
     CamelCase,
     SnakeCase,
     KebabCase,
+    ScreamingSnakeCase,
+    ScreamingKebabCase,
+    TitleSnakeCase,
+    TitleKebabCase,
+    CamelSnakeCase,
+    CamelKebabCase,
     UpperCase,
-    KebabUpperCase
 }
