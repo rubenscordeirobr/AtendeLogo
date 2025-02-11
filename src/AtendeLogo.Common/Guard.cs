@@ -26,6 +26,9 @@ public static class Guard
         [NotNull] string? fullNumber,
         [CallerArgumentExpression("fullNumber")] string? paramName = "")
     {
+        if (fullNumber is null)
+            throw new ArgumentNullException(paramName, $"{paramName} cannot be null.");
+
         if (!PhoneNumberUtils.IsFullPhoneNumberValid(fullNumber))
             throw new ArgumentException($"{paramName} is not a valid phone number.", paramName);
     }
@@ -42,7 +45,30 @@ public static class Guard
         [NotNull] string? value,
         [CallerArgumentExpression("value")] string paramName = "")
     {
+        if (value is null)
+            throw new ArgumentNullException(paramName, $"{paramName} cannot be null.");
+
         if (!ValidationUtils.IsSha256(value))
             throw new ArgumentException($"{paramName} must be a SHA-256 hash value.", paramName);
+    }
+
+    public static void NotEmpty<T>(T value,
+        [CallerArgumentExpression("value")] string paramName = "")
+    {
+        if (value is null)
+            throw new ArgumentNullException(paramName, $"{paramName} cannot be null.");
+
+        if (EqualityComparer<T>.Default.Equals(value, default))
+            throw new ArgumentException($"{paramName} cannot be empty.", paramName);
+    }
+     
+    public static void MustBeEmpty<T>(T value,
+        [CallerArgumentExpression("value")] string paramName = "")
+    {
+        if (value is null)
+            return;
+
+        if (!EqualityComparer<T>.Default.Equals(value, default))
+            throw new ArgumentException($"{paramName} must be empty.", paramName);
     }
 }
