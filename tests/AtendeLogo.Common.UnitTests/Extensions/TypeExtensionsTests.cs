@@ -23,7 +23,7 @@ public class TypeExtensionsTests
         type.IsSubclassOf(baseType).Should().Be(expectedResult);
     }
 
-    public static IEnumerable<object[]> IsSubclassOfOrEqualsTestData 
+    public static IEnumerable<object[]> IsSubclassOfOrEqualsTestData
         => new List<object[]>
         {
             new object[] { typeof(DerivedClass), typeof(BaseClass), true },
@@ -91,6 +91,65 @@ public class TypeExtensionsTests
             new object[] { typeof(TestClass), typeof(int), true, new[] { "Property2" } },
             new object[] { typeof(TestClass), typeof(string), false, new[] { "Property1", "NotMappedProperty" } },
         };
+
+    public static IEnumerable<object[]> GetAssignableTypesTestData
+        => new List<object[]>
+        {
+            new object[] { typeof(DerivedClass), new[] { typeof(DerivedClass), typeof(BaseClass) } },
+            new object[] { typeof(BaseClass), new[] { typeof(BaseClass) } },
+            new object[] { typeof(List<string>), new[] { typeof(List<string>), typeof(IEnumerable<string>), typeof(ICollection<string>), typeof(IList<string>) } },
+        };
+
+    [Theory]
+    [MemberData(nameof(GetAssignableTypesTestData))]
+    public void GetAssignableTypes_ShouldReturnExpectedResult(Type type, Type[] expectedTypes)
+    {
+        var result = type.GetAssignableTypes().ToArray();
+        result.Should().Contain(expectedTypes);
+    }
+
+    public static IEnumerable<object[]> GetQualifiedTypeNameTestData
+        => new List<object[]>
+        {
+            new object[] { typeof(string), "System.String" },
+            new object[] { typeof(List<string>), "List<System.String>" },
+            new object[] { typeof(Dictionary<int, string>), "Dictionary<System.Int32, System.String>" },
+        };
+
+    [Theory]
+    [MemberData(nameof(GetQualifiedTypeNameTestData))]
+    public void GetQualifiedTypeName_ShouldReturnExpectedResult(Type type, string expectedName)
+    {
+        var result = type.GetQualifiedTypeName();
+        result.Should().Be(expectedName);
+    }
+
+    public static IEnumerable<object[]> GetPropertiesFromInterfaceTestData
+        => new List<object[]>
+        {
+            new object[] { typeof(TestClassWithInterface), typeof(ITestInterface), new[] { "Property1", "Property2" } },
+        };
+
+    [Theory]
+    [MemberData(nameof(GetPropertiesFromInterfaceTestData))]
+    public void GetPropertiesFromInterface_ShouldReturnExpectedResult(Type type, Type interfaceType, string[] expectedProperties)
+    {
+        var result = type.GetPropertiesFromInterface(interfaceType).Keys.ToArray();
+        result.Should().BeEquivalentTo(expectedProperties);
+    }
+
+    private interface ITestInterface
+    {
+        string? Property1 { get; set; }
+        int Property2 { get; set; }
+    }
+
+    private class TestClassWithInterface : ITestInterface
+    {
+        public string? Property1 { get; set; }
+        public int Property2 { get; set; }
+        public string? Property3 { get; set; }
+    }
 
     [Theory]
     [MemberData(nameof(GetDeclaredPropertiesOfTypeTestData))]
