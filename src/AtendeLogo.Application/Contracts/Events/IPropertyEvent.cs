@@ -1,0 +1,18 @@
+﻿namespace AtendeLogo.Application.Contracts.Events;
+
+public interface IPropertyEvent
+{
+    string PropertyName { get; }
+}
+
+public interface IPropertyValueEvent: IPropertyEvent
+{
+    object? Value { get; }
+}
+
+public interface IChangedPropertyEvent : IPropertyEvent
+{
+    public object? OldValue { get; }
+    public object? NewValue { get; }
+}
+
