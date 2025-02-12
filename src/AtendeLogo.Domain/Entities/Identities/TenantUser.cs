@@ -1,33 +1,43 @@
-﻿
-using AtendeLogo.Domain.Domain.Interfaces;
+﻿namespace AtendeLogo.Domain.Entities.Identities;
 
-namespace AtendeLogo.Domain.Entities.Identities;
-
-public class TenantUser : User, IOrderableEntity
+public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
 {
-    public Guid TenantId { get; private set; }
+    public Guid Tenant_Id { get; private set; }
     public Tenant? Tenant { get; private set; }
     public TenantUserRole TenantUserRole { get; private set; }
-    public IList<TenantUser> TenantUsers { get; } = new List<TenantUser>();
-    public double? Order { get; private set; }
-  
-    public TenantUser(
-        string name,
-        string email,
-        string phoneNumber,
-        Password password,
-        UserState userState,
-        UserStatus userStatus,
-        Guid tenantId,
-        double? order = null
-        ) :
-        base(name, email, phoneNumber, password, userState, userStatus)
-    {
-        TenantId = tenantId;
+    public List<TenantUser> TenantUsers { get; } = [];
 
-        if (order is not null)
+    private TenantUser(
+       string name,
+       string email,
+       UserState userState,
+       UserStatus userStatus,
+       TenantUserRole tenantUserRole,
+       PhoneNumber phoneNumber) :
+       this(name, email, userState, userStatus, tenantUserRole, phoneNumber, Password.Empty)
+    {
+        TenantUserRole = tenantUserRole;
+    }
+
+    public TenantUser(
+        string name, 
+        string email, 
+        UserState userState, 
+        UserStatus userStatus,
+        TenantUserRole tenantUserRole, 
+        PhoneNumber phoneNumber, 
+        Password password)
+        :base(name, email, userState, userStatus, phoneNumber, password)
+    {
+    }
+
+    public void SetTenant(Tenant tenant)
+    {
+        if(Id!= default)
         {
-            Order = order;
+            throw new InvalidOperationException("Tenant can be set only for new user");
         }
+        Tenant = tenant;
+        Tenant_Id = tenant.Id;
     }
 }

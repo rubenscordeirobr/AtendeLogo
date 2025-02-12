@@ -1,36 +1,59 @@
-﻿using AtendeLogo.Domain.Domain;
-using AtendeLogo.Domain.Domain.Interfaces;
+﻿using AtendeLogo.Domain.Exceptions;
 
 namespace AtendeLogo.Domain.Entities.Identities;
 
-public abstract class User : EntityBase, IUser, IEntityDeleted
+public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscendingSortable, IEventAggregate
 {
+    private readonly List<IDomainEvent> _events = new();
     public string Name { get; protected set; }
-    public string Password { get; protected set; }
     public string Email { get; protected set; }
-    public string PhoneNumber { get; protected set; }
     public UserState UserState { get; protected set; }
     public UserStatus UserStatus { get; protected set; }
-    public PasswordStrength PasswordStrength { get; protected set; }
-    public UserSession? DeletedSession { get; protected set; }
-    public bool IsDeleted { get; set; }
-    public DateTime? DeletedAt { get; set; }
-    public Guid? DeletedSessionId { get; set; }
+    public PhoneNumber PhoneNumber { get; private set; }
+    public Password Password { get; private set; }
+    public List<UserSession> Sessions { get; } = [];
 
-    public User(string name,
+    protected User(
+        string name,
         string email,
-        string phoneNumber,
-        Password password,
         UserState userState,
-        UserStatus userStatus)
+        UserStatus userStatus,
+        PhoneNumber phoneNumber,
+        Password password)
     {
+        Guard.NotNullOrWhiteSpace(name);
+        Guard.NotNullOrWhiteSpace(email);
+        Guard.NotNull(phoneNumber);
+
         Name = name;
         Email = email;
-        PhoneNumber = phoneNumber;
         UserState = userState;
         UserStatus = userStatus;
-        Password = password.Value;
-        PasswordStrength = password.Strength;
+        PhoneNumber = phoneNumber;
+        Password = password;
     }
+
+    public void ChangePassword(Password password)
+    {
+        Guard.NotNull(password);
+
+        if (password.Strength < PasswordStrength.Medium)
+            throw new DomainException("Password must be strong");
+
+        Password = password;
+
+        _events.Add(new PasswordChangedEvent(this));
+    }
+
+    #region IEntityDeleted, IOrderableEntity, IDomainEventAggregate
+    public bool IsDeleted { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
+    public Guid? DeletedSession_Id { get; private set; }
+    public double? SortOrder { get; private set; }
+
+    IReadOnlyList<IDomainEvent> IEventAggregate.DomainEvents
+        => _events;
+
+    #endregion
 
 }

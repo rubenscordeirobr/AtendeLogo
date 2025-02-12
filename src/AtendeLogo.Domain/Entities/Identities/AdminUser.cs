@@ -1,17 +1,29 @@
-﻿
-namespace AtendeLogo.Domain.Entities.Identities;
+﻿namespace AtendeLogo.Domain.Entities.Identities;
 
-public class AdminUser : User
+public sealed class AdminUser : User
 {
     public AdminUserRole AdminUserRole { get; private set; }
+     
+    private AdminUser(
+        string name,
+        string email,
+        UserState userState,
+        UserStatus userStatus,
+        AdminUserRole adminUserRole,
+        PhoneNumber phoneNumber)  :
+        this(name, email, userState, userStatus, adminUserRole, phoneNumber, Password.Empty)
+    {
+        
+    }
     public AdminUser(
         string name,
         string email,
-        string phoneNumber,
-        Password password,
         UserState userState,
-        UserStatus userStatus) :
-        base(name, email, phoneNumber, password, userState, userStatus)
+        UserStatus userStatus,
+        AdminUserRole adminUserRole,
+        PhoneNumber phoneNumber,
+        Password password) : base(name, email, userState, userStatus, phoneNumber, password)
     {
+        AdminUserRole = adminUserRole;
     }
 }
