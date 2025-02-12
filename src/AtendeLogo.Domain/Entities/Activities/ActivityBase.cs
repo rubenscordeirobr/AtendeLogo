@@ -1,11 +1,11 @@
 ﻿namespace AtendeLogo.Domain.Entities.Activities;
 
-public abstract class ActivityBase
+public abstract record ActivityBase
 {
     public string? Id { get; init; }
-    public Guid? TenantId { get; init; }
-    public Guid UserSessionId { get; init; }
-    public DateTime ActivityDate { get; init; } 
-    public string? Description { get; init; }
-    public ActivityType ActivityType { get; protected set; }
+    public required Guid? Tenant_Id { get; init; }
+    public required Guid UserSession_Id { get; init; }
+    public required DateTime ActivityDate { get; init; }
+    public required string? Description { get; init; }
+    public abstract ActivityType ActivityType { get; }
 }
