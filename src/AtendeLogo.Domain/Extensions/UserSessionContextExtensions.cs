@@ -4,7 +4,7 @@ public static class UserSessionContextExtensions
 {
     public static bool IsAnonymous(this IUserSession userSession)
     {
-        ArgumentNullException.ThrowIfNull(userSession);
+        Guard.NotNull(userSession);
 
         return userSession.User_Id == AnonymousConstants.AnonymousUser_Id ||
             userSession.AuthenticationType == AuthenticationType.Anonymous;

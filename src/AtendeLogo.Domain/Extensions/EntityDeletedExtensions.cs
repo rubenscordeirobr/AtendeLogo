@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.Domain.Extensions;
+﻿using AtendeLogo.Domain.Exceptions;
+
+namespace AtendeLogo.Domain.Extensions;
 
 public static class EntityDeletedExtensions
 {
@@ -6,8 +8,8 @@ public static class EntityDeletedExtensions
         this ISoftDeletableEntity entity,
         IUserSession userSession)
     {
-        ArgumentNullException.ThrowIfNull(entity);
-        ArgumentNullException.ThrowIfNull(userSession);
+        Guard.NotNull(entity);
+        Guard.NotNull(userSession);
 
         if (userSession.IsAnonymous())
         {
@@ -18,7 +20,7 @@ public static class EntityDeletedExtensions
         {
             if (entityTenant.Tenant_Id != userSession.Tenant_Id)
             {
-                throw new InvalidOperationException("Cannot delete entity from another tenant");
+                throw new DomainSecurityException("Cannot delete entity from another tenant");
             }
         }
 

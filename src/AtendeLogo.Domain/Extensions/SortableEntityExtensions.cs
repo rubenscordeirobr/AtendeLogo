@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Domain.Extensions;
 
-public static class SortableEntityExtension
+public static class SortableEntityExtensions
 {
     public static void SetOrder(
         this ISortable entity,
