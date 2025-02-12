@@ -4,12 +4,18 @@ namespace AtendeLogo.Common;
 
 public class Result<T> where T : notnull
 {
+    [MemberNotNullWhen(true, nameof(Value))]
+    [MemberNotNullWhen(false, nameof(Error))]
     public bool IsSuccess { get; }
 
+    [MemberNotNullWhen(true, nameof(Error))]
     public bool IsFailure 
         => !IsSuccess;
 
+
     public Error? Error { get; }
+
+    [MemberNotNullWhen(true, nameof(IsSuccess))]
     public T? Value { get; }
 
     internal Result(Error error)
