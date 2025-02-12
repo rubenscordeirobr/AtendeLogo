@@ -1,9 +1,6 @@
-﻿using AtendeLogo.Domain.Primitives;
-using AtendeLogo.Shared.Interfaces.Shared;
+﻿namespace AtendeLogo.Domain.Entities.Shared;
 
-namespace AtendeLogo.Domain.Entities.Sharesd;
-
-public class Address : EntityBase, IAddress
+public sealed class Address : EntityBase, IAddress
 {
     public string Street { get; private set; }
     public string Number { get; private set; }
@@ -11,8 +8,8 @@ public class Address : EntityBase, IAddress
     public string Neighborhood { get; private set; }
     public string City { get; private set; }
     public string State { get; private set; }
-    public string Country { get; private set; }
     public string ZipCode { get; private set; }
+    public Country Country { get; private set; }
 
     public Address(
         string street,
@@ -21,8 +18,8 @@ public class Address : EntityBase, IAddress
         string neighborhood,
         string city,
         string state,
-        string country,
-        string zipCode)
+        string zipCode,
+        Country country)
     {
         Street = street;
         Number = number;
