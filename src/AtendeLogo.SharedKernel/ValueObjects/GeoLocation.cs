@@ -1,7 +1,13 @@
 ﻿namespace AtendeLogo.Shared.ValueObjects;
 
-public sealed record GeoLocation(double Latitude, double Longitude)
+public sealed record GeoLocation : ValueObjectBase
 {
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
+
+    public override string ToString()
+       => $"Latitude: {Latitude}, Longitude: {Longitude}";
+
     public static Result<GeoLocation> Create(double latitude, double longitude)
     {
         if (latitude is < -90 or > 90)
@@ -18,8 +24,14 @@ public sealed record GeoLocation(double Latitude, double Longitude)
                 "Longitude must be between -180 and 180 degrees.");
         }
 
-        return Result.Success(new GeoLocation(latitude, longitude));
+        return Result.Success(new GeoLocation
+        {
+            Latitude = latitude,
+            Longitude = longitude
+        });
     }
 
-    public override string ToString() => $"Latitude: {Latitude}, Longitude: {Longitude}";
+    public static GeoLocation Empty
+        => new GeoLocation();
 }
+

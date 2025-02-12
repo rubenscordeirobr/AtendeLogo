@@ -2,25 +2,44 @@
 
 namespace AtendeLogo.Shared.ValueObjects;
 
-public sealed record Password
+public sealed record Password : ValueObjectBase
 {
-    public string Value { get; }
-    public PasswordStrength Strength { get; }
+    public string HashValue { get; private set; }
+    public PasswordStrength Strength { get; private set; }
+
+    public bool IsEmpty 
+        => Strength == PasswordStrength.Empty;
 
     private Password(string value, string salt)
     {
         Strength = PasswordHelper.CalculateStrength(value);
-        Value = PasswordHelper.HashPassword(value, salt);
+        HashValue = PasswordHelper.HashPassword(value, salt);
+    }
+
+    public Password(string hashValue, PasswordStrength strength)
+    {
+        if (strength != PasswordStrength.Empty)
+        {
+            Guard.Sha256(hashValue);
+        }
+        HashValue = hashValue;
+        Strength = strength;
     }
 
     public bool Equals(Password? other)
-        => other is not null && Value == other.Value;
+        => other is not null && HashValue == other.HashValue;
 
     public override int GetHashCode()
-        => Value.GetHashCode();
+        => HashValue.GetHashCode();
 
     public override string ToString()
-        => Value;
+        => HashValue;
+
+    public static Password Empty
+        => new(string.Empty, PasswordStrength.Empty);
+
+    public static Password RandomPassword()
+        => new(PasswordHelper.GenerateRandomPassword(), PasswordStrength.Strong);
 
     public static Result<Password> Create(string value, string salt)
     {

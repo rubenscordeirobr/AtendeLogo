@@ -1,14 +1,14 @@
 ﻿namespace AtendeLogo.Shared.ValueObjects;
 
-public sealed record TimeZoneOffset
+public sealed record TimeZoneOffset : ValueObjectBase
 {
-    public string Offset { get; }
-    public string Location { get; }
-    public TimeSpan OffsetTimeSpan { get; }
-
-    private TimeZoneOffset(TimeSpan offsetTimeSpan, string offset, string location)
+    public string Offset { get; private set; }
+    public string Location { get; private set; }
+    public TimeSpan OffsetTimeSpan
+        => TimeSpan.Parse(Offset);
+     
+    private TimeZoneOffset(string offset, string location)
     {
-        OffsetTimeSpan = offsetTimeSpan;
         Offset = offset;
         Location = location;
     }
@@ -35,6 +35,9 @@ public sealed record TimeZoneOffset
                 "TimeZone.InvalidOffset",
                 $"Invalid offset. {offset}");
         }
-        return Result.Success(new TimeZoneOffset(offsetTimeSpan, offset, location));
+        return Result.Success(new TimeZoneOffset(offset, location));
     }
+
+    public static TimeZoneOffset Default
+        => new("00:00", "UTC");
 }
