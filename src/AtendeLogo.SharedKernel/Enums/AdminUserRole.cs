@@ -2,8 +2,8 @@
 
 public enum AdminUserRole
 {
-    SuperAdmin = 1,
+    Viewer,
     Manager,
     Operator,
-    Viewer
+    SuperAdmin,
 }

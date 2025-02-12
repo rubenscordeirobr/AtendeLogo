@@ -2,7 +2,9 @@
 
 public enum UserStatus
 {
-    Unknown = 0,
+    Unknown,
+    Anonymous,
+    System,
     Online,
     Offline,
     Away,

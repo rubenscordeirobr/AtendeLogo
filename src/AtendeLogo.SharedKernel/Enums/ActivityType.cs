@@ -2,12 +2,12 @@
 
 public enum ActivityType
 {
-    Create = 1,
-    Update = 2,
-    Delete = 3,
-    Read = 4,
-    Authenticate = 5,
-    SuccessfulAuthentication = 6,
-    Logout = 6,
-    FailedAuthentication = 7,
+    Created,
+    Updated,
+    Deleted,
+    Read,
+    Authenticated,
+    LoginSuccessful,
+    LoginFailed,
+    Logout,
 }
