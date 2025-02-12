@@ -7,6 +7,6 @@ public interface IAddress
     string Neighborhood { get; }
     string City { get; }
     string State { get; }
-    string Country { get; }
     string ZipCode { get; }
+    Country Country { get; }
 }
