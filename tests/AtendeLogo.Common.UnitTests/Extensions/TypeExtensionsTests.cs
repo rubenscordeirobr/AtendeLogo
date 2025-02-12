@@ -118,9 +118,9 @@ public class TypeExtensionsTests
 
     [Theory]
     [MemberData(nameof(GetQualifiedTypeNameTestData))]
-    public void GetQualifiedTypeName_ShouldReturnExpectedResult(Type type, string expectedName)
+    public void GetQualifiedName_ShouldReturnExpectedResult(Type type, string expectedName)
     {
-        var result = type.GetQualifiedTypeName();
+        var result = type.GetQualifiedName();
         result.Should().Be(expectedName);
     }
 

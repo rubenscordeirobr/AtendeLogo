@@ -92,7 +92,7 @@ public static class TypeExtensions
         return assignableTypes;
     }
 
-    public static string GetQualifiedTypeName(this Type type)
+    public static string GetQualifiedName(this Type type)
     {
         return GetQualifiedTypeNameInternal(type);
 
@@ -101,7 +101,7 @@ public static class TypeExtensions
             if (type.IsGenericType)
             {
                 var genericArguments = type.GetGenericArguments()
-                    .Select(GetQualifiedTypeName);
+                    .Select(GetQualifiedName);
 
                 return $"{type.Name.Split('`')[0]}<{string.Join(", ", genericArguments)}>";
             }

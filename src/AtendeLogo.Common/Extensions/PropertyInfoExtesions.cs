@@ -6,6 +6,6 @@ public static class PropertyInfoExtesions
 {
     public static string GetPropertyPath(this PropertyInfo propertyInfo)
     {
-        return $"{propertyInfo.DeclaringType?.GetQualifiedTypeName()}::{propertyInfo.Name}";
+        return $"{propertyInfo.DeclaringType?.GetQualifiedName()}::{propertyInfo.Name}";
     }
 }
