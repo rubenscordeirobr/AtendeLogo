@@ -26,7 +26,7 @@ I am creating this project to gain hands-on experience and explore new technolog
 
 The project is organized into multiple layers and services following Clean Architecture principles:
 
-### **1. Shared Layers **
+### 1. Shared Layers
 
 ### AtendeLogo.Common
 This project serves as a DRY (Don't Repeat Yourself) library containing common utilities:
@@ -34,23 +34,6 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
 - **Extensions** Utility extension methods
 - **Helpers** Complex utilities that depend on other dependencies (e.g., `PasswordHelper` using SHA256)
 - **Utils** Pure functions without dependencies
-
-#### AtendeLogo.Shared
-
-- **Purpose:**  
-  A layer containing shared components such as **DTOs** and **validation logic**. It acts as a bridge between the **Application Layer** and **UI layers** (Blazor and React).  
-
-- **Key Features:**
-  - **Decoupling:** Enables consistent data handling and validation across Blazor and React UIs without exposing the Domain layer.
-  - **DTOs:** Data Transfer Objects used for API communication.
-  - **Validation Logic:** Centralized validation rules for input data using FluentValidation or similar libraries.
-  - **Interfaces** Interfaces ensuring integrity, such as Automapper
-  - **Contracts** Services that will be used by the UI to communicate with the backend
- 
-- **Structure:**
-  - This project contains **DTOs**, **validation classes**, **interfaces**, and **contracts**.
-  - This project should reference AtendeLogo.SharedKernel and AtendeLogo.Common, but no other project in the solution.
-  
 #### AtendeLogo.SharedKernel
 
 - **Purpose:**  
@@ -61,7 +44,8 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
   - **Enums:** Shared enumerations used across multiple layers.
   - **Interfaces:** Shared contracts that multiple layers may implement.
 
-- - **Structure:**
+  - **Structure:**
+  
   - This project contains only **structs**, records, enums, and interfaces.
   - No methods or utility classes are included in this layer.
   - This layer should not reference any other project in the solution.
@@ -81,6 +65,8 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
 - **ValueObjects** Immutable domain value objects
 
 #### AtendeLogo.Application
+- **Purpose:**  
+  This layer contains application-specific, contracts and mediator for commands, queries, and domain events. It serves as a bridge between the Domain and Infrastructure layers.
 - **Contracts**
   - Notifications
   - Persistence
@@ -90,9 +76,29 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
 - **Validations** Input and business rule validations
 
 #### AtendeLogo.UseCases
-- **Identities** Handles identity-related operations
+- **Purpose:**  
+  This layer contains application-specific use cases, including backend implementations for commands, queries, and domain events.
+
+- - **Identities** Handles identity-related operations
 - **Activities** Business logic for activities
 - **Messages** Message handling and processing
+
+#### AtendeLogo.UseCases.Shared
+
+- **Purpose:**  
+  This layer contains shared use cases, including DTOs for requests and responses, as well as validators. These components are designed for use in both the frontend and backend.
+
+- **Key Features:**
+  - **Decoupling:** Enables consistent data handling and validation across Blazor and React UIs without exposing the Domain layer.
+  - **DTOs:** Data Transfer Objects used for API communication.
+  - **Validation Logic:** Centralized validation rules for input data using FluentValidation or similar libraries.
+  - **Interfaces** Interfaces ensuring integrity, such as Automapper
+  - **Contracts** Services that will be used by the UI to communicate with the backend
+ 
+- **Structure:**
+  - This project contains **DTOs**, **validation classes**, **interfaces**, and **contracts**.
+  - This project should reference AtendeLogo.SharedKernel and AtendeLogo.Common, but no other project in the solution.
+  
 
 ### **3. Infrastructure Layer**
 
@@ -102,21 +108,21 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
 - **NotificationServices** Services for sending notifications
 
 #### Application.Persistence
-- ** Database ** PostgreSQL database for entities management
+- **Database** PostgreSQL database for entities management
 - **Repositories** Data access layer for entities
 - **Migrations** Database migrations
 - **Configurations** Database configurations
 - **DbContext** Entity Framework DbContext
 
 #### AtendeLogo.Persistence.Activities
-- ** Database ** MongoDB database for activity storage
+- **Database** MongoDB database for activity storage
 - **/documents** Activity-related document management
 
 #### Application.Persistence.Messages
---** DataBase ** MongoDB database for message storage
+- **DataBase** MongoDB database for message storage
 - **/documents** Message-related document storage
 
-- ### **4. Presentation Layer**
+### **4. Presentation Layer**
 - In progress
 
 ## Future Enhancements
@@ -126,4 +132,4 @@ Potential improvements include:
 - Enhanced analytics and reporting
 
 ## Contribution
-This project is primarily for portfolio purposes, but contributions and suggestions are welcome. Feel free to open issues or submit pull requests.
+This project is primarily for portfolio purposes, but contributions and suggestions are welcome.
