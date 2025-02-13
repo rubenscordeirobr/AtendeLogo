@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>AtendeLogo.UseCases</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
+    <ProjectReference Include="..\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Identities\Tenants\Queries\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Identities\Users\SystemUsers\Commands\" />
+  </ItemGroup>
+
+</Project>
