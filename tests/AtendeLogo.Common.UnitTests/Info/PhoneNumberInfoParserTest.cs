@@ -17,12 +17,12 @@ public class PhoneNumberInfoParserTest
     }
 
     [Theory]
-    [InlineData("+5511987654321", CountryCode.BRA, InternationalDialingCode.Brazil, "11987654321", "11", "(11) 98765-4321")]
-    [InlineData("+551197654321", CountryCode.BRA, InternationalDialingCode.Brazil, "1197654321", "11", "(11) 9765-4321")]
-    [InlineData("+12345678901", CountryCode.USA, InternationalDialingCode.UnitedStatesOrCanada, "2345678901", "234", "(234) 567-8901")]
+    [InlineData("+5511987654321", Country.Brazil, InternationalDialingCode.Brazil, "11987654321", "11", "(11) 98765-4321")]
+    [InlineData("+551197654321", Country.Brazil, InternationalDialingCode.Brazil, "1197654321", "11", "(11) 9765-4321")]
+    [InlineData("+12345678901", Country.UnitedStates, InternationalDialingCode.UnitedStatesOrCanada, "2345678901", "234", "(234) 567-8901")]
     public void Parse_ShouldReturnCorrectPhoneNumberInfo_WhenInputIsValid(
         string fullNumber,
-        CountryCode expectedCountryCode,
+        Country expectedCountryCode,
         InternationalDialingCode expectedInternationalDialingCode,
         string expectedNationalNumber,
         string expectedAreaCode,
@@ -50,7 +50,7 @@ public class PhoneNumberInfoParserTest
         var result = PhoneNumberInfoParser.Parse(fullNumber);
 
         // Assert
-        result.CountryCode.Should().Be(CountryCode.Unknown);
+        result.CountryCode.Should().Be(Country.Unknown);
         result.InternationalDialingCode.Should().Be(InternationalDialingCode.Unknown);
         result.NationalNumber.Should().Be(fullNumber);
         result.AreaCode.Should().BeEmpty();
