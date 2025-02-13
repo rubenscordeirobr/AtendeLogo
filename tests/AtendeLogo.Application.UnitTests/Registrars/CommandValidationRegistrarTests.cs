@@ -26,6 +26,8 @@ public class CommandValidationRegistrarTests
         // Assert
         commandValidation.Should().NotBeNull();
         commandValidation.Should().BeOfType<MockCommandRequestValidation>();
+
+        app.Dispose();
     }
 
     [Fact]
