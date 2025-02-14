@@ -5,54 +5,21 @@ using AtendeLogo.Common;
 using AtendeLogo.Shared.Contracts;
 using AtendeLogo.UseCases;
 using FluentValidation;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Mediators;
 
-public class RequestMediatorTests : IDisposable
+public class RequestMediatorTests 
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IHost _app;
-    private readonly ICommandTrackingService _trackingService;
-
-    public RequestMediatorTests()
-    {
-        (_serviceProvider, _app) = CreateMockServiceProvider();
-        _trackingService = CreateMockTrackingService();
-
-    }
-
-    private (IServiceProvider, IHost _app) CreateMockServiceProvider()
-    {
-        var builder = Host.CreateApplicationBuilder();
-        var types = new Type[]
-        {
-            typeof(MockCommandHandler),
-            typeof(MockCommandRequest),
-            typeof(MockCommandRequestValidator),
-            typeof(MockHandlerNotRegistredCommandRequest),
-            typeof(MockHandlerNotRegistredCommandRequestValidator),
-        };
-
-        builder.Services.AddApplicationHandlersFromTypes(types);
-        builder.Services.AddCommandValidationServicesFromTypes(types);
-
-        var app = builder.Build();
-
-        var serviceProvider = app.Services;
-        return (serviceProvider, app);
-    }
-
+     
+ 
     [Fact]
     public async Task RequestMediator_ShouldRunCommandHandler()
     {
         // Arrange
+        var mediator = CreateMockRequestMediator();
         var request = new MockCommandRequest { Name = "Test" };
-
-        var mediator = new RequestMediator(
-            _serviceProvider,
-            _trackingService);
 
         // Act
         var result = await mediator.RunAsync(request);
@@ -67,11 +34,9 @@ public class RequestMediatorTests : IDisposable
     public async Task RequestMediator_ShouldReturnValidationFailure()
     {
         // Arrange
+        var mediator = CreateMockRequestMediator();
         var request = new MockCommandRequest { Name = "" };
-        var mediator = new RequestMediator(
-            _serviceProvider,
-            _trackingService);
-        
+
         // Act
         var result = await mediator.RunAsync(request);
 
@@ -93,10 +58,8 @@ public class RequestMediatorTests : IDisposable
     public void RequestMediator_ShouldThrowCommandValidatorNotFoundExeption()
     {
         // Arrange
+        var mediator = CreateMockRequestMediator();
         var request = new MockValidatorNotRegistredCommandRequest();
-        var mediator = new RequestMediator(
-            _serviceProvider,
-            _trackingService);
 
         // Act
         Func<Task> act = async () => await mediator.RunAsync(request);
@@ -109,11 +72,9 @@ public class RequestMediatorTests : IDisposable
     public void RequestMediator_ShouldThrowRequestHandlerNotFoundExeption()
     {
         // Arrange
+        var mediator =CreateMockRequestMediator();
         var request = new MockHandlerNotRegistredCommandRequest();
-        var mediator = new RequestMediator(
-            _serviceProvider,
-            _trackingService);
-
+        
         // Act
         Func<Task> act = async () => await mediator.RunAsync(request);
         // Assert
@@ -122,9 +83,33 @@ public class RequestMediatorTests : IDisposable
 
     }
 
-    public void Dispose()
+    private IRequestMediator CreateMockRequestMediator()
     {
-        _app?.Dispose();
+        var serviceProvider = CreateMockServiceProvider();
+        var trackingService = CreateMockTrackingService();
+        var loogerMock = new Mock<ILogger<RequestMediator>>().Object;
+       
+        return new RequestMediator(
+            serviceProvider,
+            trackingService,
+            loogerMock);
+    }
+
+    private IServiceProvider CreateMockServiceProvider()
+    {
+        var types = new Type[]
+        {
+            typeof(MockCommandHandler),
+            typeof(MockCommandRequest),
+            typeof(MockCommandRequestValidator),
+            typeof(MockHandlerNotRegistredCommandRequest),
+            typeof(MockHandlerNotRegistredCommandRequestValidator),
+        };
+
+        return new ServiceCollection()
+            .AddApplicationHandlersFromTypes(types)
+            .AddCommandValidationServicesFromTypes(types)
+            .BuildServiceProvider();
     }
 
     private ICommandTrackingService CreateMockTrackingService()

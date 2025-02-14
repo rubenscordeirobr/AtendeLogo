@@ -2,31 +2,42 @@
 using AtendeLogo.Common.Extensions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Application.Mediatores;
 
-internal class CommandValidorExecutor<TResponse>
+internal class CommandValidatorExecutor<TResponse>
     where TResponse : IResponse
 {
     private readonly IServiceProvider _serviceProvider;
     private ICommandRequest<TResponse> _command;
+    private readonly ILogger<RequestMediator> _logger;
 
-    public CommandValidorExecutor(
+    internal CommandValidatorExecutor(
         IServiceProvider serviceProvider,
-        ICommandRequest<TResponse> request)
+        ILogger<RequestMediator> logger,
+        ICommandRequest<TResponse> request )
     {
         _serviceProvider = serviceProvider;
         _command = request;
+        _logger = logger;
     }
 
     public async Task<Result<bool>> ValidateAsync(CancellationToken cancellationToken)
     {
         var commandValidatorType = typeof(IValidator<>).MakeGenericType(_command.GetType());
-        
-        var commandValidator =_serviceProvider.GetRequiredService(commandValidatorType) as IValidator 
-            ?? throw new CommandValidatorNotFoundException(
-                  $"Command Validator not found for command {_command.GetType().GetQualifiedName()}");
-        
+
+        var commandValidator = _serviceProvider.GetRequiredService(commandValidatorType) as IValidator;
+
+        if(commandValidator is null)
+        {
+            var commandTypeName = _command.GetType().GetQualifiedName();
+            var mensagem = "Command Validator not found for command {CommandTypeName}";
+            _logger.LogError(mensagem, commandTypeName);
+
+            throw new CommandValidatorNotFoundException(mensagem, commandTypeName);
+        }
+             
         var validationContext = CreateValidationContext();
         var result = await commandValidator.ValidateAsync(validationContext, cancellationToken);
 

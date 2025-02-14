@@ -2,6 +2,7 @@
 using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Application.Exceptions;
 using AtendeLogo.Common.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Application.Mediatores;
 
@@ -9,13 +10,16 @@ internal partial class RequestMediator : IRequestMediator
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ICommandTrackingService _tackingService;
+    private readonly ILogger<RequestMediator> _logger;
 
     public RequestMediator(
         IServiceProvider serviceProvider,
-        ICommandTrackingService requestTrackingService)
+        ICommandTrackingService requestTrackingService,
+        ILogger<RequestMediator> logger)
     {
         _serviceProvider = serviceProvider;
         _tackingService = requestTrackingService;
+        _logger = logger;
     }
 
     #region Command
@@ -33,7 +37,10 @@ internal partial class RequestMediator : IRequestMediator
         CancellationToken cancellationToken)
         where TResponse : IResponse
     {
-        var validator = new CommandValidorExecutor<TResponse>(_serviceProvider, command);
+        var validator = new CommandValidatorExecutor<TResponse>(
+            _serviceProvider,
+            _logger,
+            command);
 
         var validationResult = await validator.ValidateAsync(cancellationToken);
         if (validationResult.IsFailure)
@@ -57,8 +64,11 @@ internal partial class RequestMediator : IRequestMediator
         var result = await handler.RunAsync(command, cancellationToken);
         if (result == null)
         {
-            var message = $"Handler not found for command {command.GetType().GetQualifiedName()}";
-            throw new RequestHandlerNotFoundException(message);
+            var commandTypeName = command.GetType().GetQualifiedName();
+            var message = "Handler not found for command {CommandTypeName}";
+            _logger.LogError(message, commandTypeName);
+
+            throw new RequestHandlerNotFoundException(message, commandTypeName);
         }
 
         if (result.IsSuccess)
@@ -89,7 +99,6 @@ internal partial class RequestMediator : IRequestMediator
         var handler = GetRequestHandler<ICollectionQueryHandler<TResponse>, TResponse>(queryReqyest);
         return handler.GetManyAsync(queryReqyest, cancellationToken);
     }
-
 
     #endregion
 
