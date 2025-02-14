@@ -2,8 +2,10 @@
 
 public class RequestHandlerNotFoundException : Exception
 {
-    public RequestHandlerNotFoundException( string message) 
-        : base(message)
+    public RequestHandlerNotFoundException( 
+        string message,
+        params object[] args)
+        : base(string.Format(message, args))
     {
     }
 }

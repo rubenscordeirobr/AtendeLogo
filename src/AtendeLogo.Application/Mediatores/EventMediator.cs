@@ -1,7 +1,7 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
+using AtendeLogo.Application.Contracts.Registrars;
 using AtendeLogo.Application.Events;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Application.Registrars;
 using AtendeLogo.Common.Extensions;
 using AtendeLogo.Domain.Primitives.Contracts;
 using Microsoft.Extensions.Logging;

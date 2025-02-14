@@ -3,7 +3,8 @@
 public class CommandValidatorNotFoundException : Exception
 {
     public CommandValidatorNotFoundException(
-        string message) : base(message)
+        string message, params object[] args) 
+        : base(string.Format(message, args))
     {
     }
 }
