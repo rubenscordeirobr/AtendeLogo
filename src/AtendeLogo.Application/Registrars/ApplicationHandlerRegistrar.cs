@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using AtendeLogo.Application.Contracts.Handlers;
+using AtendeLogo.Application.Contracts.Registrars;
+using AtendeLogo.Application.Exceptions;
 using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Domain.Primitives;
@@ -11,21 +13,48 @@ namespace AtendeLogo.Application.Registrars;
 
 internal class ApplicationHandlerRegistrar
 {
+    private static readonly object _lock = new();
     private readonly IServiceCollection _services;
+    private readonly IEventHandlerRegistryService _eventRegistryService;
 
-    internal ApplicationHandlerRegistrar(
+    public ApplicationHandlerRegistrar(
         IServiceCollection services)
     {
         _services = services;
+        _eventRegistryService = InitializeEventHandlerRegistryService();
+    }
+
+    private IEventHandlerRegistryService InitializeEventHandlerRegistryService()
+    {
+        lock (_lock)
+        {
+            using var temp = _services.BuildServiceProvider();
+            var mappingService = temp.GetService<IEventHandlerRegistryService>();
+            if (mappingService is not null)
+            {
+                return mappingService;
+            }
+
+            // Check if it's already registered but not yet resolved
+            var serviceDescriptor = _services.FirstOrDefault(s => s.ServiceType == typeof(IEventHandlerRegistryService));
+            if (serviceDescriptor is not null)
+            {
+                throw new InvalidOperationException("The EventHandlerMappingManager is already registered but not yet resolved.");
+            }
+
+            _services.AddSingleton<IEventHandlerRegistryService>(new EventHandlerRegistryService());
+
+            return InitializeEventHandlerRegistryService();
+        }
     }
 
     internal void RegisterFromAssembly(Assembly assembly)
     {
         var assemblyTypes = assembly.GetTypes();
-        RegisterTypes(assemblyTypes);
+        RegisterHandlerFromTypes(assemblyTypes);
     }
 
-    private void RegisterTypes(Type[] types)
+    internal void RegisterHandlerFromTypes(Type[] types)
     {
         RegisterRequestHandlers(types);
         RegisterEventHandlers(types);
@@ -35,7 +64,7 @@ internal class ApplicationHandlerRegistrar
     {
         var handlerDefinitionType = typeof(IRequestHandler<,>);
         var handlersTypesMapped = TypeHelper.FindTypesImplementingInterface(assemblyTypes, handlerDefinitionType);
-        
+
         foreach (var (handlerType, handlerInterfaceType) in handlersTypesMapped)
         {
             CheckIfHasSubclassIn(handlerType, assemblyTypes);
@@ -56,8 +85,42 @@ internal class ApplicationHandlerRegistrar
             var serviceType = typeof(IRequestHandler<,>)
                 .MakeGenericType(requestType, responseType);
 
+            ThrowIfHasAnyOtherHandlerRegistradFor(serviceType, handlerType, requestType, responseType);
+
             _services.TryAddTransient(serviceType, handlerType);
         }
+    }
+
+    private void ThrowIfHasAnyOtherHandlerRegistradFor(
+        Type serviceType,
+        Type handlerType,
+        Type requestType,
+        Type responseType)
+    {
+        var registredServices = _services.Where(x => x.ServiceType == serviceType && x.ImplementationType != handlerType);
+        if (registredServices.Any())
+        {
+            var errorMessage = GetHandlerAlreadyRegistredErrorMessage(
+                registredServices,
+                handlerType,
+                requestType,
+                responseType);
+
+            throw new HandlerRegistrationAlreadyExistsException(errorMessage);
+        }
+    }
+
+    private string GetHandlerAlreadyRegistredErrorMessage(
+        IEnumerable<ServiceDescriptor> registredServices,
+        Type handlerType,
+        Type requestType,
+        Type responseType)
+    {
+        var implementationType = registredServices.First().ImplementationType!;
+        return $"The handler type {handlerType.GetQualifiedName()} can't be registrad for " +
+               $"the request type {requestType.GetQualifiedName()} and response type {responseType.GetQualifiedName()} " +
+               $"because there is already a handler registrad for this request type and response type. " +
+               $"The handler {implementationType.GetQualifiedName()} is already registrad for this request type and response type";
     }
 
     private void RegisterEventHandlers(Type[] assemblyTypes)
@@ -66,13 +129,13 @@ internal class ApplicationHandlerRegistrar
             assemblyTypes,
             typeof(IDomainEventHandler<>),
             HandlerKind.DomainEventHandler,
-            HandlerMappingManager.MapperDomainEventHandler);
+            _eventRegistryService.MapperDomainEventHandler);
 
         RegisterEventHandlers(
             assemblyTypes,
             typeof(IPreProcessorHandler<>),
             HandlerKind.PreProcessorHandler,
-            HandlerMappingManager.MapperDomainEventPreProcessorHandler);
+            _eventRegistryService.MapperDomainEventPreProcessorHandler);
     }
 
     private void RegisterEventHandlers(Type[] assemblyTypes,
