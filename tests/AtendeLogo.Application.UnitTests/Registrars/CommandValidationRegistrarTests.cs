@@ -2,7 +2,6 @@
 using AtendeLogo.UseCases;
 using AtendeLogo.UseCases.Excpetions;
 using FluentValidation;
-using Microsoft.Extensions.Hosting;
 
 namespace AtendeLogo.Application.UnitTests.Registrars;
 
@@ -14,31 +13,27 @@ public class CommandValidationRegistrarTests
         // Arrange
         Type[] validationsType = [typeof(MockCommandRequest), typeof(MockCommandRequestValidation)];
 
-        var builder = Host.CreateApplicationBuilder();
-        builder.Services.AddCommandValidationServicesFromTypes(validationsType);
-        
-        var app = builder.Build();
-        var serviceProvider = app.Services;
-
+        var serviceProvider = new ServiceCollection()
+            .AddCommandValidationServicesFromTypes(validationsType)
+            .BuildServiceProvider();
+ 
         // Act
         var commandValidation = serviceProvider.GetService<IValidator<MockCommandRequest>>();
 
         // Assert
         commandValidation.Should().NotBeNull();
         commandValidation.Should().BeOfType<MockCommandRequestValidation>();
-
-        app.Dispose();
-    }
+     }
 
     [Fact]
     public void CommandValidationRegistrar_ShouldThrowCommandValidatorNotFound()
     {
         // Arrange
         Type[] validationsType = [typeof(MockCommandRequest)];
-        var builder = Host.CreateApplicationBuilder();
+        var services = new ServiceCollection();
 
         // Act
-        Action act = () => builder.Services.AddCommandValidationServicesFromTypes(validationsType);
+        Action act = () => services.AddCommandValidationServicesFromTypes(validationsType);
 
         // Assert
         act.Should().Throw<CommandValidatorNotFoundException>();
@@ -54,10 +49,10 @@ public class CommandValidationRegistrarTests
             typeof(MockDuplicatedCommandRequestValidation)
         ];
 
-        var builder = Host.CreateApplicationBuilder();
+        var services = new ServiceCollection();
 
         // Act
-        Action act = () => builder.Services.AddCommandValidationServicesFromTypes(validationsType);
+        Action act = () => services.AddCommandValidationServicesFromTypes(validationsType);
 
         // Assert
         act.Should().Throw<CommandValidatorAlreadyExistsException>();

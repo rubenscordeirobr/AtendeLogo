@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.Application.Registrars;
+﻿using AtendeLogo.Application.Contracts.Registrars;
+
+namespace AtendeLogo.Application.Registrars;
 
 internal class EventHandlerRegistryService : IEventHandlerRegistryService
 {

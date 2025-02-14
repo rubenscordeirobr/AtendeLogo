@@ -6,7 +6,6 @@ using AtendeLogo.Application.Queries;
 using AtendeLogo.Common;
 using AtendeLogo.Domain.Primitives.Contracts;
 using AtendeLogo.Shared.Contracts;
-using Microsoft.Extensions.Hosting;
 
 namespace AtendeLogo.Application.UnitTests.Registrars;
 
@@ -28,12 +27,9 @@ public class ApplicationHandlerRegistrarTests
     {
         // Arrange
         var handlerTypes = GetHandlerTypes();
-
-        var builder = Host.CreateApplicationBuilder();
-        builder.Services.AddApplicationHandlersFromTypes(handlerTypes);
-
-        var app = builder.Build();
-        var serviceProvider = app.Services;
+        var serviceProvider = new ServiceCollection()
+            .AddApplicationHandlersFromTypes(handlerTypes)
+            .BuildServiceProvider();
 
         // Act
         var commandHandler = serviceProvider.GetService<IRequestHandler<MockCommandRequest, MockResponse>>();
@@ -49,7 +45,7 @@ public class ApplicationHandlerRegistrarTests
         singleQueryHandler.Should().BeOfType<MockSingleQueryHandler>();
         collectionQueryHandler.Should().BeOfType<MockCollectionQueryHandler>();
 
-        app.Dispose();
+         
     }
 
     [Fact]
@@ -57,10 +53,10 @@ public class ApplicationHandlerRegistrarTests
     {
         // Arrange
         Type[] dupliecatedHandlerTypes = [typeof(MockCommandHandler), typeof(MockCommandHandlerDuplicated)];
-        var builder = Host.CreateApplicationBuilder();
+        var services = new ServiceCollection();
 
         //Act
-        Action act = () => builder.Services.AddApplicationHandlersFromTypes(dupliecatedHandlerTypes);
+        Action act = () => services.AddApplicationHandlersFromTypes(dupliecatedHandlerTypes);
 
         // Assert
         act.Should().Throw<HandlerRegistrationAlreadyExistsException>();

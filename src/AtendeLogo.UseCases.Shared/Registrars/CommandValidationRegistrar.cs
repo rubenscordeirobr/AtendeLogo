@@ -25,7 +25,7 @@ internal class CommandValidationRegistrar
 
     internal void RegisterFromTypes(Type[] types)
     {
-        var commandTypes = types.Where(type=> type.ImplementsGenericInterfaceDefinition(typeof(ICommandRequest<>)))
+        var commandTypes = types.Where(type => type.IsConcrete() && type.ImplementsGenericInterfaceDefinition(typeof(ICommandRequest<>)))
             .ToList();
 
         var mappedTypes = TypeHelper.FindTypesImplementingInterface(
@@ -40,9 +40,7 @@ internal class CommandValidationRegistrar
                 throw new InvalidOperationException($"Validation not found for command: {commandType.Name}");
             }
             commandTypes.Remove(commandType);
-
-            
-
+             
             var serviceType = typeof(IValidator<>).MakeGenericType(commandType);
 
             ThrowIfHandAnyOtherCommandValidatorRegistredFor(
@@ -60,7 +58,7 @@ internal class CommandValidationRegistrar
     }
 
     private void ThrowIfHandAnyOtherCommandValidatorRegistredFor(
-        Type commandType, 
+        Type commandType,
         Type serviceType,
         Type validationType)
     {
@@ -76,8 +74,8 @@ internal class CommandValidationRegistrar
     }
 
     private string GetErrorMessage(IEnumerable<ServiceDescriptor> registredValidator,
-        Type commandType, 
-        Type serviceType, 
+        Type commandType,
+        Type serviceType,
         Type validationType)
     {
         var implementationType = registredValidator.First().ImplementationType!;
