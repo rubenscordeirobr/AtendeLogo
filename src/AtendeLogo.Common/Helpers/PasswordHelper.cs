@@ -6,15 +6,17 @@ public static class PasswordHelper
 {
     private static bool ContainsUpperCase(string input)
         => input.Any(char.IsUpper);
+   
     private static bool ContainsNumber(string input)
         => input.Any(char.IsDigit);
+ 
     private static bool ContainsSpecialChar(string input)
         => input.Any(ch => !char.IsLetterOrDigit(ch));
 
     public static PasswordStrength CalculateStrength(string password)
     {
         if (string.IsNullOrWhiteSpace(password))
-            return PasswordStrength.Weak;
+            return PasswordStrength.Empty;
 
         var score = 0;
         if (password.Length >= 8) score++;
@@ -50,7 +52,7 @@ public static class PasswordHelper
     public static string GenerateRandomPassword(int length = 12)
     {
         if (length < 4)
-            throw new ArgumentException("Password length must be at least 4", nameof(length));
+            throw new ArgumentException("Password length must be at least 4");
 
         // Define allowed character sets
         const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
