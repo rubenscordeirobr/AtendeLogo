@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Domain.Primitives;
+﻿using AtendeLogo.Domain.Enums;
+using AtendeLogo.Domain.Primitives;
 
 namespace AtendeLogo.Application.Contracts.Events;
 
@@ -7,5 +8,8 @@ public interface IEntityDeletedEvent<TEntity>
     where TEntity : EntityBase
 {
     IReadOnlyList<IPropertyValueEvent> PropertyValues { get; }
+
+    EntityChangeState IEntityStateChangedEvent.State
+        => EntityChangeState.Deleted;
 }
 
