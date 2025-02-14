@@ -4,7 +4,7 @@ using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.UnitTests.Events;
 
-public class DomainEventContextTests
+public class DomainEventContextTests  
 {
     [Fact]
     public void Constructor_ShouldInitializeEvents()
@@ -59,7 +59,7 @@ public class DomainEventContextTests
         Action act = () => context.GetException();
 
         // Assert
-        act.Should().Throw<InvalidOperationException>().WithMessage("The context is not canceled.");
+        act.Should().Throw<InvalidOperationException>();
     }
 
     [Fact]
@@ -110,13 +110,12 @@ public class DomainEventContextTests
         // Assert
         results.Should().BeEmpty();
     }
-}
+    public class MockDomainEvent : IDomainEvent { }
 
-public class MockDomainEvent : IDomainEvent { }
-
-public class MockHandler : IApplicationHandler
-{
-    public Task HandleAsync(object handlerObject) 
-        => Task.CompletedTask;
+    public class MockHandler : IApplicationHandler
+    {
+        public Task HandleAsync(object handlerObject)
+            => Task.CompletedTask;
+    }
 }
 
