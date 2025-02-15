@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NetArchTest.Rules" />
     <PackageReference Include="xunit" />
@@ -22,8 +21,10 @@
     <ProjectReference Include="..\..\src\AtendeLogo.Common\AtendeLogo.Common.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Domain\AtendeLogo.Domain.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activities\AtendeLogo.Persistence.Activities.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Persistence\AtendeLogo.Persistence.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
   </ItemGroup>
 
