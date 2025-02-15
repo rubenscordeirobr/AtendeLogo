@@ -1,4 +1,5 @@
 ﻿namespace AtendeLogo.Common.UnitTests.Extensions;
+
 public class DateTimeExtensionsTests
 {
     [Theory]

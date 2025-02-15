@@ -132,7 +132,7 @@ public class ResultTests
         // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().BeOfType<NotFoundError>();
-        result.Error.Code.Should().Be(code);
+        result.Error!.Code.Should().Be(code);
         result.Error.Message.Should().Be(message);
         result.Value.Should().BeNull();
     }
