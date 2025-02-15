@@ -42,7 +42,7 @@ public class SaveChangesResultTests
     {
         var affectedRows = 5;
 
-        var result = SaveChangesResult.Successo(_domainEventContext, affectedRows);
+        var result = SaveChangesResult.Success(_domainEventContext, affectedRows);
 
         result.IsSuccess.Should().BeTrue();
         result.Error.Should().BeNull();

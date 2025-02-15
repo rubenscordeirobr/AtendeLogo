@@ -56,7 +56,7 @@ public class SaveChangesResult
         };
     }
 
-    public static SaveChangesResult Successo(
+    public static SaveChangesResult Success(
        IDomainEventContext eventDomainContext,
        int rowAffects)
     {
