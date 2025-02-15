@@ -7,8 +7,8 @@ public class PropertyInfoExtesionsTests
     }
 
     [Theory]
-    [InlineData(typeof(NestedPropertyTestClass), nameof(NestedPropertyTestClass.TestProperty), "AtendeLogo.Common.UnitTests.Extensions.PropertyInfoExtesionsTests+NestedTestClass::TestProperty")]
-    [InlineData(typeof(TestPropertyPathClass), nameof(TestPropertyPathClass.TestProperty), "AtendeLogo.Common.UnitTests.Extensions.TestClass::TestProperty")]
+    [InlineData(typeof(NestedPropertyTestClass), nameof(NestedPropertyTestClass.TestProperty), "AtendeLogo.Common.UnitTests.Extensions.PropertyInfoExtesionsTests+NestedPropertyTestClass::TestProperty")]
+    [InlineData(typeof(TestPropertyPathClass), nameof(TestPropertyPathClass.TestProperty), "AtendeLogo.Common.UnitTests.Extensions.TestPropertyPathClass::TestProperty")]
     public void GetPropertyPath_ShouldReturnCorrectPath(Type type, string propertyName, string result)
     {
         // Arrange
