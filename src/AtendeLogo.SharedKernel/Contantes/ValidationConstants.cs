@@ -10,6 +10,7 @@ public static class ValidationConstants
     // User
     public const int PasswordMinLength = 6;
     public const int PasswordMaxLength = 50;
+    public const int PasswordHashLength = 64;
 
     // Tenant
     public const int CurrencyMaxLength = 3;
@@ -18,13 +19,17 @@ public static class ValidationConstants
     public const int DefaultTimeZoneMaxLength = 50;
 
     // Address
-    public const int AddressMaxLength = 255;
+    public const int StreetMaxLength = 255;
     public const int AddressComplementMaxLength = 100;
     public const int CityMaxLength = 100;
-    public const int StateMaxLength = 2;
+    public const int AddressStateMaxLength = 2;
     public const int CountryMaxLength = 2;
     public const int ZipCodeMaxLength = 10;
-    public const int NumberMaxLength = 10;
+    public const int AddressNumberMaxLength = 10;
     public const int NeighborhoodMaxLength = 100;
+
+    public const int IpAddressMaxLength = 15;
+    public const int TokenMaxLength = 1000;
+    public const int UserAgentMaxLength = 1000;
 }
 
