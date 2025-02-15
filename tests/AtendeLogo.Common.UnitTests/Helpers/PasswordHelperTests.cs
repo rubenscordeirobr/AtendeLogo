@@ -5,9 +5,9 @@ namespace AtendeLogo.Common.UnitTests.Helpers;
 public class PasswordHelperTests
 {
     [Theory]
-    [InlineData("", PasswordStrength.Weak)]
+    [InlineData("", PasswordStrength.Empty)]
     [InlineData("short", PasswordStrength.Weak)]
-    [InlineData("longerpassword", PasswordStrength.Medium)]
+    [InlineData("longerPassword", PasswordStrength.Medium)]
     [InlineData("LongerPassword1!", PasswordStrength.Strong)]
     public void CalculateStrength_ShouldReturnExpectedStrength(string password, PasswordStrength expectedStrength)
     {
@@ -65,6 +65,7 @@ public class PasswordHelperTests
     {
         Action act = () => PasswordHelper.GenerateRandomPassword(3);
 
-        act.Should().Throw<ArgumentException>().WithMessage("Password length must be at least 4");
+        act.Should().Throw<ArgumentException>() 
+            .WithMessage("Password length must be at least 4");
     }
 }
