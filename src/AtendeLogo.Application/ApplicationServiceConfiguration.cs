@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.Application;
 
-public static class ApplicationConfigurationsExtensions
+public static class ApplicationServiceConfiguration
 {
     public static IServiceCollection AddApplicationServices(
         this IServiceCollection services,

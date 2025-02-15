@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.UseCases;
 
-public static class UseCasesSharedConfigurationExtensions
+public static class SharedUseCasesServiceConfiguration
 {
     public static IServiceCollection AddUserCasesSharedServices(
         this IServiceCollection services,
