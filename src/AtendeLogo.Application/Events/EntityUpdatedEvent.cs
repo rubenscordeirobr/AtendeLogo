@@ -3,7 +3,7 @@ using AtendeLogo.Domain.Primitives;
 
 namespace AtendeLogo.Application.Events;
 
-public sealed record EntityUpdatedEventEvent<TEntity> 
+public sealed record EntityUpdatedEvent<TEntity> 
     : EntityChangeStateEvent<TEntity>, IEntityUpdatedEvent<TEntity>
     where TEntity : EntityBase
 {
@@ -12,7 +12,7 @@ public sealed record EntityUpdatedEventEvent<TEntity>
 
     public IReadOnlyList<IChangedPropertyEvent> ChangedProperties { get; }
 
-    public EntityUpdatedEventEvent(
+    public EntityUpdatedEvent(
         TEntity entity,
         IReadOnlyList<IChangedPropertyEvent> changedProperties)
         : base(entity)
