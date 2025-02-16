@@ -1,4 +1,6 @@
-﻿using AtendeLogo.Application.Events;
+﻿using AtendeLogo.Application.Contracts.Events;
+using AtendeLogo.Application.Events;
+using AtendeLogo.Domain.Entities.Identities;
 using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.Mediatores;
@@ -18,5 +20,13 @@ internal class DomainEventDataFactory
             throw new InvalidOperationException($"Failed to create DomainEventData instance {type}");
         }
         return instance;
+    }
+
+    internal static DomainEventData<TEvent> Create<TEvent>(
+       IDomainEventContext eventContext,
+       TEvent domainEvent)
+       where TEvent : IDomainEvent
+    {
+        return new DomainEventData<TEvent>(eventContext, domainEvent);
     }
 }
