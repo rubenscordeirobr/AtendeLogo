@@ -1,12 +1,17 @@
-﻿namespace AtendeLogo.Shared.ValueObjects;
+﻿using System.Text.Json;
+
+namespace AtendeLogo.Shared.ValueObjects;
 
 public sealed record GeoLocation : ValueObjectBase
 {
     public double? Latitude { get; init; }
     public double? Longitude { get; init; }
 
-    public override string ToString()
-       => $"Latitude: {Latitude}, Longitude: {Longitude}";
+    public sealed override string ToString()
+       => $"Latitude: {Latitude}, Longitude:{Longitude}";
+
+    public string ToJson()
+      => JsonSerializer.Serialize(this);
 
     public static Result<GeoLocation> Create(double latitude, double longitude)
     {
@@ -33,5 +38,14 @@ public sealed record GeoLocation : ValueObjectBase
 
     public static GeoLocation Empty
         => new GeoLocation();
+
+    public static GeoLocation Parse(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return Empty;
+        
+        var geoLocation = JsonSerializer.Deserialize<GeoLocation>(value);
+        return geoLocation ?? Empty;
+    }
 }
 
