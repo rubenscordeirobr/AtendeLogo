@@ -5,15 +5,25 @@ namespace AtendeLogo.Persistence.Identity.Seed;
 
 internal static class IdentityDbSeedExtensions
 {
+    private static readonly object _lock = new();
+    private static bool _isSeeding;
+
     internal static async Task SeedAsync(this IdentityDbContext dbContext)
     {
+        lock (_lock)
+        {
+            if (_isSeeding)
+            {
+                return;
+            }
+            _isSeeding = true;
+        }
+ 
         if (await dbContext.Users.AnyAsync())
         {
             return;
         }
-
         var strongPassword = "%ANONYMOUS@anymous%";
-
         var phoneNumber = PhoneNumber.Create("+5542999999999").GetValue();
         var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
         var anonymousSession_Id = AnonymousConstants.AnonymousSystemSession_Id;
@@ -58,4 +68,5 @@ internal static class IdentityDbSeedExtensions
             throw new InvalidOperationException("Seed failed");
         }
     }
+     
 }
