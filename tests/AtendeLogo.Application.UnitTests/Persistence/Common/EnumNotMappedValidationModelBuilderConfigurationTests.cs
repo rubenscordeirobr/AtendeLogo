@@ -1,11 +1,9 @@
-﻿using AtendeLogo.Domain.Primitives;
-using AtendeLogo.Persistence.Common.Configurations;
+﻿using AtendeLogo.Persistence.Common.Configurations;
 using AtendeLogo.Persistence.Common.Exceptions;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace AtendeLogo.Persistence.UnitTests.Common;
+namespace AtendeLogo.Application.UnitTests.Persistence.Common;
 
 public class EnumNotMappedValidationModelBuilderConfigurationTests
 
@@ -40,7 +38,7 @@ public class EnumNotMappedValidationModelBuilderConfigurationTests
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureModelDefaultConfiguration<EnumTestDbContext>();
+            modelBuilder.ConfigureModelDefaultConfiguration<EnumTestDbContext>(isInMemory: true);
             base.OnModelCreating(modelBuilder);
         }
     }

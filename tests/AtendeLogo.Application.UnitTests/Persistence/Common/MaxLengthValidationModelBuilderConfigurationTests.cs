@@ -1,11 +1,9 @@
-﻿using AtendeLogo.Domain.Primitives;
-using AtendeLogo.Persistence.Common.Configurations;
+﻿using AtendeLogo.Persistence.Common.Configurations;
 using AtendeLogo.Persistence.Common.Exceptions;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace AtendeLogo.Persistence.UnitTests.Common;
+namespace AtendeLogo.Application.UnitTests.Persistence.Common;
 
 public class MaxLengthValidationModelBuilderConfigurationTests
 
@@ -40,7 +38,7 @@ public class MaxLengthValidationModelBuilderConfigurationTests
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureModelDefaultConfiguration<MaxLengthTestDbContext>();
+            modelBuilder.ConfigureModelDefaultConfiguration<MaxLengthTestDbContext>(isInMemory:true);
             base.OnModelCreating(modelBuilder);
         }
     }
