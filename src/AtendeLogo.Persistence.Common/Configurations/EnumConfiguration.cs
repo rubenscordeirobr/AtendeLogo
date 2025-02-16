@@ -1,4 +1,6 @@
-﻿using AtendeLogo.Persistence.Common.Exceptions;
+﻿using System.Collections.Concurrent;
+using AtendeLogo.Persistence.Common.Exceptions;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 
@@ -6,21 +8,24 @@ namespace AtendeLogo.Persistence.Common.Configurations;
 
 public static class EnumConfiguration
 {
-    private static readonly Dictionary<Type, HashSet<Type>> _enumTypeMappings = new();
+    private static readonly ConcurrentDictionary<Type, HashSet<Type>> _enumTypeMappings = new();
 
-    public static NpgsqlDbContextOptionsBuilder AddMapEnum<TContext, TEnum>(
-        this NpgsqlDbContextOptionsBuilder optionsBuilder)
+    public static IRelationalDbContextOptionsBuilderInfrastructure AddMapEnum<TContext, TEnum>(
+         this IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder)
          where TContext : DbContext
          where TEnum : struct, Enum
     {
-        optionsBuilder.MapEnum<TEnum>();
+        if (optionsBuilder is NpgsqlDbContextOptionsBuilder npgsqlOptionsBuilder)
+        {
+            npgsqlOptionsBuilder.MapEnum<TEnum>();
+        }
 
 #if DEBUG
         EnumMappingsTracker<TContext>.AddEnumType<TEnum>();
 #endif
         return optionsBuilder;
     }
-    
+
     public static void CheckEnums<TContext>(
        this IMutableProperty mutableProperty)
        where TContext : DbContext
@@ -40,14 +45,14 @@ public static class EnumConfiguration
         }
 #endif
     }
- 
+
 #if DEBUG
-    private class EnumMappingsTracker<TContext> 
+    private class EnumMappingsTracker<TContext>
         where TContext : DbContext
     {
         private static readonly Type _dbContextType = typeof(TContext);
         private static HashSet<Type> _enumTypesMapped
-            => _enumTypeMappings.GetOrAdd(_dbContextType, () => new HashSet<Type>());
+            => _enumTypeMappings.GetOrAdd(_dbContextType, new HashSet<Type>());
 
         public static void AddEnumType<TEnum>()
             where TEnum : Enum

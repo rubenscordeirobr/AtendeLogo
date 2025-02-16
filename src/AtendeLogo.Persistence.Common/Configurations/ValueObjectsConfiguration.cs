@@ -9,7 +9,8 @@ public static class ValueObjectsConfiguration
 {
     public static IMutableEntityType ConfigureValueObjects(
         this IMutableEntityType mutableEntityType,
-        EntityTypeBuilder entityBuilder)
+        EntityTypeBuilder entityBuilder,
+        bool isInMemory)
     {
         var entityType = mutableEntityType.ClrType;
         if (!entityType.IsSubclassOf<EntityBase>())
@@ -20,15 +21,22 @@ public static class ValueObjectsConfiguration
         var valueObjectProperties = entityType.GetDeclaredPropertiesOfType<ValueObjectBase>();
         foreach (var property in valueObjectProperties)
         {
-            entityBuilder.ConfigureValueObjects(property);
+            entityBuilder.ConfigureValueObjects(property, isInMemory);
         }
         return mutableEntityType;
     }
 
+
     private static EntityTypeBuilder ConfigureValueObjects(
         this EntityTypeBuilder entityBuilder,
-        PropertyInfo property)
+        PropertyInfo property,
+        bool isDatabaseInMemory)
     {
+        if (isDatabaseInMemory)
+        {
+            return entityBuilder.ConfigureValueObjectsInMemory(property);
+        }
+
         switch (property.PropertyType)
         {
             case Type t when t == typeof(TimeZoneOffset):
@@ -61,6 +69,7 @@ public static class ValueObjectsConfiguration
         }
         return entityBuilder;
     }
+   
 
     public static void ConfigureTimeZoneOffset(
               ComplexPropertyBuilder<TimeZoneOffset> builder)

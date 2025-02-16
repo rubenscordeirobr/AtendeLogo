@@ -1,11 +1,10 @@
-﻿using AtendeLogo.Persistence.Common.Exceptions;
-
-namespace AtendeLogo.Persistence.Common.Configurations;
+﻿namespace AtendeLogo.Persistence.Common.Configurations;
 
 public static partial class ModelBuilderConfiguration
 {
-    public static void ConfigureModelDefaultConfiguration<TContext>(
-        this ModelBuilder modelBuilder)
+    public static ModelBuilder ConfigureModelDefaultConfiguration<TContext>(
+        this ModelBuilder modelBuilder,
+        bool isInMemory)
         where TContext : DbContext
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
@@ -39,15 +38,15 @@ public static partial class ModelBuilderConfiguration
             entityBuilder.ConfigureEntityDefaultSettings();
 
             mutableEntityType
-                .ConfigureValueObjects(entityBuilder)
+                .ConfigureValueObjects(entityBuilder, isInMemory)
                 .ConfigureProperties();
 
             mutableEntityType.Validate<TContext>();
         }
 
-       
-
         // Reapply naming convention to ensure consistency after potential index or configuration changes
         modelBuilder.UseSnakeCaseNamingConvention();
+
+        return modelBuilder;
     }
 }

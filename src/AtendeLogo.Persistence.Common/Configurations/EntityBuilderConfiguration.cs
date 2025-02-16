@@ -19,35 +19,38 @@ public static class EntityBuilderConfiguration
     private static EntityTypeBuilder ConfigureEntityBase(this EntityTypeBuilder entityBuilder)
     {
         var entityType = entityBuilder.Metadata.ClrType;
+
         Guard.NotNull(entityType);
 
-        if (entityType.IsSubclassOfOrEquals<EntityBase>())
+        if (!entityType.IsSubclassOfOrEquals<EntityBase>())
         {
-            var baseType = entityType.BaseType;
-            if (baseType == typeof(EntityBase))
-            {
-                entityBuilder.HasKey(nameof(EntityBase.Id));
-                entityBuilder.ConfigureNotEmptyGuidConstraint(baseType);
-            }
-
-            entityBuilder.Property(nameof(EntityBase.Id))
-                  .ValueGeneratedOnAdd()
-                  .HasDefaultValueSql("uuid_generate_v4()");
-
-            entityBuilder.Property(nameof(EntityBase.CreatedAt))
-                   .HasDefaultValueSql("now()")
-                   .ValueGeneratedOnAdd();
-
-            entityBuilder.Property(nameof(EntityBase.LastUpdatedAt))
-                .HasDefaultValueSql("now()")
-                .ValueGeneratedOnAdd();
-
-            entityBuilder.Property(nameof(EntityBase.CreatedSession_Id))
-                .IsRequired();
-
-            entityBuilder.Property(nameof(EntityBase.CreatedSession_Id))
-                .IsRequired();
+            throw new Exception($"The entity {entityType.Name} must be a subclass of EntityBase");
         }
+
+        var baseType = entityType.BaseType;
+        if (baseType == typeof(EntityBase))
+        {
+            entityBuilder.HasKey(nameof(EntityBase.Id));
+            entityBuilder.ConfigureNotEmptyGuidConstraint(baseType);
+        }
+
+        entityBuilder.Property(nameof(EntityBase.Id))
+              .ValueGeneratedOnAdd()
+              .HasDefaultValueSql("uuid_generate_v4()");
+
+        entityBuilder.Property(nameof(EntityBase.CreatedAt))
+               .HasDefaultValueSql("now()")
+               .ValueGeneratedOnAdd();
+
+        entityBuilder.Property(nameof(EntityBase.LastUpdatedAt))
+            .HasDefaultValueSql("now()")
+            .ValueGeneratedOnAdd();
+
+        entityBuilder.Property(nameof(EntityBase.CreatedSession_Id))
+            .IsRequired();
+
+        entityBuilder.Property(nameof(EntityBase.CreatedSession_Id))
+            .IsRequired();
         return entityBuilder;
     }
 
