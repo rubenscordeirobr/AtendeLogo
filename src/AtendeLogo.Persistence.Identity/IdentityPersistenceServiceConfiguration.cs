@@ -12,35 +12,46 @@ public static class IdentityPersistenceServiceConfiguration
 {
     public static IServiceCollection AddIdentityPersistenceServices(
         this IServiceCollection services,
-        IConfiguration configuration )
+        IConfiguration configuration)
+    {
+        return services.AddNpgsqlIdentityDbContext(configuration)
+            .AddIdentyRepositoryServices();
+    }
+
+    private static IServiceCollection AddNpgsqlIdentityDbContext(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("IdentityPostgresql");
 
-        services.AddDbContext<IdentityDbContext>(optionsBuilder =>
+        return services.AddDbContext<IdentityDbContext>(optionsBuilder =>
         {
-            optionsBuilder.UseNpgsql(connectionString, npgOptions =>
+            optionsBuilder.UseNpgsql(connectionString, npgOptionsBuilder =>
             {
-                npgOptions.ConfigureEnumMappings<IdentityDbContext>();
+                npgOptionsBuilder.ConfigureEnumMappings<IdentityDbContext>();
             });
 
             optionsBuilder.AddInterceptors(new DefaultValuesInterceptor())
                 .AddInterceptors(new DefaultSaveChangesInterceptor());
+
 #if DEBUG
             optionsBuilder.EnableSensitiveDataLogging();
 #endif
-        }, contextLifetime: ServiceLifetime.Scoped,
-           optionsLifetime: ServiceLifetime.Scoped
+
+        }, 
+        contextLifetime: ServiceLifetime.Scoped,
+        optionsLifetime: ServiceLifetime.Singleton
         );
-          
+    }
 
-        services.AddScoped<IAdminUserRepository, AdminUserRepository>()
-            .AddScoped<ITenantUserRepository, TenantUserRepository>()
-            .AddScoped<ISystemUserRepository, SystemUserRepository>()
-            .AddScoped<ITenantRepository, TenantRepository>()
-            .AddScoped<IUserSessionRepository, UserSessionRepository>()
-            .AddTransient<IIdentityUnitOfWork, IdentityUnitOfWork>();
-
-        return services;
+    internal static IServiceCollection AddIdentyRepositoryServices(this IServiceCollection services)
+    {
+        return services.AddScoped<IAdminUserRepository, AdminUserRepository>()
+             .AddScoped<ITenantUserRepository, TenantUserRepository>()
+             .AddScoped<ISystemUserRepository, SystemUserRepository>()
+             .AddScoped<ITenantRepository, TenantRepository>()
+             .AddScoped<IUserSessionRepository, UserSessionRepository>()
+             .AddTransient<IIdentityUnitOfWork, IdentityUnitOfWork>();
     }
 
     public static async Task ApplyMigrationsAsync(this IApplicationBuilder app)

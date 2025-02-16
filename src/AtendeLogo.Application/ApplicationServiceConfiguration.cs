@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using AtendeLogo.Application.Mediatores;
 using AtendeLogo.Application.Registrars;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.Application;
@@ -9,13 +8,11 @@ namespace AtendeLogo.Application;
 public static class ApplicationServiceConfiguration
 {
     public static IServiceCollection AddApplicationServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+        this IServiceCollection services )
     {
 
         services.AddScoped<IRequestMediator, RequestMediator>();
         services.AddScoped<IEventMediator, EventMediator>();
-
         services.AddApplicationHandlersFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;

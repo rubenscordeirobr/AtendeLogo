@@ -8,8 +8,7 @@ namespace AtendeLogo.UseCases;
 public static class SharedUseCasesServiceConfiguration
 {
     public static IServiceCollection AddUserCasesSharedServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+        this IServiceCollection services )
     {
         services.AddCommandValidationServicesFromAssembly(Assembly.GetExecutingAssembly());
         return services;
