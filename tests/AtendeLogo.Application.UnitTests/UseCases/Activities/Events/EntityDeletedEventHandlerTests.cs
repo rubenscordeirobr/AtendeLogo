@@ -24,6 +24,7 @@ public class EntityDeletedEventHandlerTests
         // Assert
         var executedEvents = eventContext.GetExecutedEventResults(deletedEvent);
         var handlers = executedEvents.Select(x => x.Handler).ToList();
+      
         handlers.Should()
             .ContainItemsAssignableTo<EntityDeletedEventHandler<TenantUser>>();
     }
@@ -36,15 +37,16 @@ public class EntityDeletedEventHandlerTests
         var deletedEvent = new EntityDeletedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
         var userSessionServiceMock = new AnonymousUserSessionServiceMock();
+     
         var handler = new EntityDeletedEventHandler<TenantUser>(
             activityRepository,
             userSessionServiceMock,
             new LoggerServiceMock<EntityDeletedEventHandler<TenantUser>>());
+     
         // Act
         Func<Task> task = async () => await handler.HandleAsync(deletedEvent);
+     
         // Assert
         await task.Should().NotThrowAsync();
     }
 }
-
-

@@ -24,8 +24,8 @@ public class EntityCreatedEventHandlerTests
 
         // Act
         await eventMediator.DispatchAsync(eventContext);
-        // Assert
 
+        // Assert
         var executedEvents = eventContext.GetExecutedEventResults(createdEvent);
         var handlers = executedEvents.Select(x => x.Handler).ToList();
 

@@ -39,13 +39,11 @@ public class EntityUpdatedEventHandlerTests
             activityRepository,
             userSessionServiceMock,
             new LoggerServiceMock<EntityUpdatedEventHandler<TenantUser>>());
-       
+
         // Act
         Func<Task> task = async () => await handler.HandleAsync(updatedEvent);
-        
+
         // Assert
         await task.Should().NotThrowAsync();
     }
 }
-
-
