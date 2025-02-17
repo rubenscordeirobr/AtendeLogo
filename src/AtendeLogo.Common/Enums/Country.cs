@@ -5,6 +5,7 @@ namespace AtendeLogo.Common.Enums;
 
 public enum Country
 {
+    [UndefinedValue]
     Unknown = 0,
 
     [Display(Name = "United States")]

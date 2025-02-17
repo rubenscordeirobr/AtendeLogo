@@ -2,6 +2,6 @@
 
 public enum TenantType
 {
-    Company,
+    Company = 1,
     Individual
 }

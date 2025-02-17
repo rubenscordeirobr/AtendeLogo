@@ -2,7 +2,7 @@
 
 public enum TenantState
 {
-    New,
+    New = 1,
     Onboarding,
     Trial,
     Operational,

@@ -2,7 +2,7 @@
 
 public enum Language
 {
-    Default ,
+    Default,
     Portuguese ,
     Englishk,
     Spanish,

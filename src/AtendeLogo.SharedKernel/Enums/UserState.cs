@@ -2,7 +2,7 @@
 
 public enum UserState
 {
-    New,
+    New = 1,
     Active,
     Inactive ,
     Suspended,

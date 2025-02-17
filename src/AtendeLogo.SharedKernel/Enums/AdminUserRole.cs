@@ -2,7 +2,7 @@
 
 public enum AdminUserRole
 {
-    Viewer,
+    Viewer = 1,
     Manager,
     Operator,
     SuperAdmin,

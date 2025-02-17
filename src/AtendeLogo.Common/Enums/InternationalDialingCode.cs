@@ -1,9 +1,10 @@
-﻿using AtendeLogo.Common.Attributes;
+﻿ using AtendeLogo.Common.Attributes;
 
 namespace AtendeLogo.Common.Enums;
 
 public enum InternationalDialingCode
 {
+    [UndefinedValue]
     Unknown = 0,
 
     // North America

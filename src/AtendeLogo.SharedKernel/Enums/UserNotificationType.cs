@@ -2,7 +2,7 @@
 
 public enum UserNotificationType
 {
-    NewUser ,
+    NewUser = 1,
     PasswordReset,
     AutehnticationFailed
 }

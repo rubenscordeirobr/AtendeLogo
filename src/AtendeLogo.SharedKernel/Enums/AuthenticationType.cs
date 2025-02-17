@@ -1,7 +1,10 @@
-﻿namespace AtendeLogo.Shared.Enums;
+﻿using AtendeLogo.Common.Attributes;
+
+namespace AtendeLogo.Shared.Enums;
  
 public enum AuthenticationType
 {
+    [UndefinedValue]
     Unknown,
     System,
     Anonymous,

@@ -2,7 +2,7 @@
 
 public enum TenantUserRole
 {
-    Owner,
+    Owner = 1,
     Admin,
     Manager,
     Operator,
