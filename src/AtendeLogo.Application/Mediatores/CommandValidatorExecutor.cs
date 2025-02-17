@@ -50,7 +50,9 @@ internal class CommandValidatorExecutor<TResponse>
         var validationFailure = result.Errors.FirstOrDefault() 
             ?? throw new InvalidOperationException($"Validation Error not found for command {_command.GetType()}");
 
-        var errorCode = $"{commandType.Name}.{validationFailure.PropertyName}Valitation";
+        var errorCode = ErrorCodeFactory.CreateInvalidCodeFor(
+            commandType, 
+            validationFailure.PropertyName);
 
         var error = new ValidationError(
             Code: errorCode,
