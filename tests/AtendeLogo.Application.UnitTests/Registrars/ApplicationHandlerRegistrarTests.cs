@@ -44,8 +44,6 @@ public class ApplicationHandlerRegistrarTests
         commandHandler.Should().BeOfType<MockCommandHandler>();
         singleQueryHandler.Should().BeOfType<MockSingleQueryHandler>();
         collectionQueryHandler.Should().BeOfType<MockCollectionQueryHandler>();
-
-         
     }
 
     [Fact]
@@ -77,8 +75,7 @@ public class ApplicationHandlerRegistrarTests
 
     public record MockCollectionQueryRequest : IQueryRequest<MockResponse>
     {
-    }
-
+    } 
 
     public class MockCommandHandler : CommandHandler<MockCommandRequest, MockResponse>
     {

@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Shared.Contantes;
-using AtendeLogo.Shared.Enums;
 using AtendeLogo.Domain.Extensions;
 using AtendeLogo.Shared.Interfaces.Identities;
 using Moq;
