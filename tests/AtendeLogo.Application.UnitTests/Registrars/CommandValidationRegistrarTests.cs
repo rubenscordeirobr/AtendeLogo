@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Shared.Contracts;
 using AtendeLogo.UseCases;
-using AtendeLogo.UseCases.Excpetions;
+using AtendeLogo.UseCases.Common.Excpetions;
 using FluentValidation;
 
 namespace AtendeLogo.Application.UnitTests.Registrars;

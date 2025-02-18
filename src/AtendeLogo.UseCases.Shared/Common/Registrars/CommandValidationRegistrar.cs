@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Helpers;
-using AtendeLogo.UseCases.Excpetions;
+using AtendeLogo.UseCases.Common.Excpetions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace AtendeLogo.UseCases.Registrars;
+namespace AtendeLogo.UseCases.Common.Registrars;
 
 internal class CommandValidationRegistrar
 {
