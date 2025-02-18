@@ -31,7 +31,7 @@ public class DependencyReferenceTests
         _activityPersistanceAssembly = typeof(Persistence.Activity.ActivitiyPersistenceServiceConfiguration).Assembly;
 
         _sharedKernelAssembly = typeof(Shared.ValueObjects.ValueObjectBase).Assembly;
-        _useCasesSharedAssembly = typeof(UseCases.Resources.ValidationMessages).Assembly;
+        _useCasesSharedAssembly = typeof(UseCases.Common.Validations.ValidationMessages).Assembly;
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class DependencyReferenceTests
     }
 
     [Fact]
-    public void ApplicationdAssembly_ShouldNotHaveDependencies()
+    public void ApplicationAssembly_ShouldNotHaveDependencies()
     {
         Types.InAssembly(_applicationAssembly)
              .ShouldNot()
