@@ -6,10 +6,10 @@ public abstract class EntityBase
     public DateTime LastUpdatedAt { get; protected set; }
     public Guid CreatedSession_Id { get; protected set; }
     public Guid LastUpdatedSession_Id { get; protected set; }
-  
+
     public virtual void SetCreateSession(Guid session_Id)
     {
-        if (Id != Guid.Empty )
+        if (Id != Guid.Empty && !Id.IsZeroPrefixedGuid())
         {
             throw new InvalidOperationException("Cannot set create date for existing entity");
         }
@@ -28,7 +28,7 @@ public abstract class EntityBase
 
     public override string ToString()
     {
-        if(Id == default)
+        if (Id == default)
         {
             return $"{GetType().Name}: Id={Id}";
         }
