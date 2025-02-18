@@ -12,7 +12,6 @@ public class Result<T> where T : notnull
     public bool IsFailure 
         => !IsSuccess;
 
-
     public Error? Error { get; }
 
     [MemberNotNullWhen(true, nameof(IsSuccess))]

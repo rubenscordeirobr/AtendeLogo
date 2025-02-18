@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using AtendeLogo.Common.Enums;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Infos;
 
 namespace AtendeLogo.Common.Utils;

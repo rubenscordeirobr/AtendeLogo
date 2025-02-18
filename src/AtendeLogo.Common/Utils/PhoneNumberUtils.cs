@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Common.Enums;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Common.Resources;
 
@@ -28,7 +27,7 @@ public static partial class PhoneNumberUtils
     {
         if(fullPhoneNumber == null)
         {
-            return false;
+            return  false;
         }
 
         var countryCode = GetCountryCode(fullPhoneNumber);

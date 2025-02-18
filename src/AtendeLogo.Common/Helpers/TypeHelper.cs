@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Extensions;
-
-namespace AtendeLogo.Common.Helpers;
+﻿namespace AtendeLogo.Common.Helpers;
 
 public static class TypeHelper
 {

@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using AtendeLogo.Common.Enums;
-using AtendeLogo.Common.Extensions;
 
 namespace AtendeLogo.Common.Utils;
 

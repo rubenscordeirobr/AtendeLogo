@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using AtendeLogo.Common.Extensions;
 
 namespace AtendeLogo.Common;
 
