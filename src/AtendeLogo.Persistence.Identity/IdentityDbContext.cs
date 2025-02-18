@@ -30,8 +30,7 @@ internal class IdentityDbContext : DbContext, IDbSeedAsync
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ConfigureModelDefaultConfiguration<IdentityDbContext>();
-        
+        modelBuilder.ConfigureModelDefaultConfiguration<IdentityDbContext>(isInMemory:false);
         base.OnModelCreating(modelBuilder);
     }
 

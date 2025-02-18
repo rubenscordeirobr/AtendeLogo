@@ -1,12 +1,12 @@
 ﻿using AtendeLogo.Persistence.Common.Configurations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace AtendeLogo.Persistence.Identity;
 
 public static partial class EnumMappingConfiguration
 {
     public static void ConfigureEnumMappings<TContext>(
-        this NpgsqlDbContextOptionsBuilder optionsBuilder)
+        this IRelationalDbContextOptionsBuilderInfrastructure  optionsBuilder)
         where TContext : DbContext 
     {
         optionsBuilder
