@@ -35,7 +35,7 @@ public static partial class ModelBuilderConfiguration
                 throw new Exception($"Entity builder not found for {mutableEntityType.ClrType.Name}");
             }
 
-            entityBuilder.ConfigureEntityDefaultSettings();
+            entityBuilder.ConfigureEntityDefaultSettings(isInMemory);
 
             mutableEntityType
                 .ConfigureValueObjects(entityBuilder, isInMemory)

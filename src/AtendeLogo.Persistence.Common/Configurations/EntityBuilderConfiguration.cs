@@ -6,9 +6,10 @@ namespace AtendeLogo.Persistence.Common.Configurations;
 public static class EntityBuilderConfiguration
 {
     public static EntityTypeBuilder ConfigureEntityDefaultSettings(
-        this EntityTypeBuilder entityBuilder)
+        this EntityTypeBuilder entityBuilder,
+        bool isInMemory)
     {
-        return entityBuilder.ConfigureEntityBase()
+        return entityBuilder.ConfigureEntityBase(isInMemory)
                 .ConfigureDeletableEntity()
                 .ConfigureSortable()
                 .ConfigureIndexes()
@@ -16,7 +17,9 @@ public static class EntityBuilderConfiguration
                 .ConfigureNotEmptyGuidConstraint();
     }
 
-    private static EntityTypeBuilder ConfigureEntityBase(this EntityTypeBuilder entityBuilder)
+    private static EntityTypeBuilder ConfigureEntityBase(
+        this EntityTypeBuilder entityBuilder,
+        bool isInMemory)
     {
         var entityType = entityBuilder.Metadata.ClrType;
 
@@ -34,9 +37,13 @@ public static class EntityBuilderConfiguration
             entityBuilder.ConfigureNotEmptyGuidConstraint(baseType);
         }
 
-        entityBuilder.Property(nameof(EntityBase.Id))
+        if (!isInMemory)
+        {
+            entityBuilder.Property(nameof(EntityBase.Id))
               .ValueGeneratedOnAdd()
               .HasDefaultValueSql("uuid_generate_v4()");
+        }
+      
 
         entityBuilder.Property(nameof(EntityBase.CreatedAt))
                .HasDefaultValueSql("now()")

@@ -1,5 +1,6 @@
 ﻿using AtendeLogo.Persistence.Common.Enums;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace AtendeLogo.Persistence.Common.Extensions;
 
@@ -25,5 +26,9 @@ public static class EFExtensions
             _ => false
         };
     }
+
+    public static bool IsInMemory(this DatabaseFacade database)
+          => database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
+
 }
 

@@ -42,6 +42,9 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
+        if (DbContext.Database.IsInMemory())
+            return;
+
         if (_transactionExecutor != null)
             throw new InvalidOperationException("Failed to begin transaction. There is already an open transaction.");
 
@@ -57,6 +60,9 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     public async Task<SaveChangesResult> CommitAsync(CancellationToken cancellationToken = default)
     {
+        if (DbContext.Database.IsInMemory())
+            return await SaveChangesAsync(cancellationToken);
+
         if (_transactionExecutor == null)
             throw new InvalidOperationException("There is no active transaction to commit.");
 
@@ -69,6 +75,9 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         Exception exception,
         CancellationToken cancellationToken = default)
     {
+        if (DbContext.Database.IsInMemory())
+            return;
+
         if (_transactionExecutor == null)
             throw new InvalidOperationException("Failed to rollback transaction. There is no open transaction.");
 
@@ -140,7 +149,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
             await HandleTransactionOpenExceptionAsync();
         }
     }
-     
+
     private async Task HandleTransactionOpenExceptionAsync()
     {
         Guard.NotNull(_transactionExecutor);
