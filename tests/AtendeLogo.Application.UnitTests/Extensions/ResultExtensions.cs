@@ -2,7 +2,7 @@
 using AtendeLogo.Common;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
 
-namespace AtendeLogo.Application.UnitTests.Common;
+namespace AtendeLogo.Application.UnitTests.Extensions;
 
 public static class ResultExtensions
 {
@@ -53,8 +53,7 @@ public static class ResultExtensions
         this Result<CreateTenantResponse> result,
         Expression<Func<CreateTenantCommand, object>> propertyExpression)
     {
-        ShouldHaveValidationErrorFor<CreateTenantCommand, CreateTenantResponse>(
-            result, 
+        result.ShouldHaveValidationErrorFor<CreateTenantCommand, CreateTenantResponse>(
             propertyExpression);
     }
 }

@@ -3,7 +3,7 @@ using AtendeLogo.Common.Extensions;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
 using FluentValidation.Results;
 
-namespace AtendeLogo.Application.UnitTests.Common;
+namespace AtendeLogo.Application.UnitTests.Extensions;
 
 public static partial class ValidationResultExtensions
 {
@@ -18,13 +18,14 @@ public static partial class ValidationResultExtensions
             .NotBeEmpty();
 
         result.Errors.Should()
-            .Contain(x => x.PropertyName == expression.GetMemberName() || x.PropertyName == expression.GetMemberPath());
+            .Contain(x => x.PropertyName == expression.GetMemberName()
+                       || x.PropertyName == expression.GetMemberPath());
     }
 
     public static void ShouldHaveValidationErrorFor(
-      this FluentValidation.Results.ValidationResult result,
+      this ValidationResult result,
       Expression<Func<CreateTenantCommand, object>> expression)
     {
-        ShouldHaveValidationErrorFor<CreateTenantCommand>(result, expression);
+        result.ShouldHaveValidationErrorFor<CreateTenantCommand>(expression);
     }
 }
