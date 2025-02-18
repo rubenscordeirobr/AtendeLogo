@@ -2,6 +2,7 @@
 
 public static class ValidationConstants
 {
+    public const int NameMinLength = 4;
     public const int NameMaxLength = 100;
     public const int DescriptionMaxLength = 255;
     public const int EmailMaxLength = 100;
