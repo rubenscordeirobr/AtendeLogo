@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Common.Enums;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Resources;
 using AtendeLogo.Common.Utils;
 
@@ -8,8 +7,9 @@ public static partial class PhoneNumberInfoParser
 {
     public static PhoneNumberInfo Parse(string fullNumber)
     {
-        Guard.NotNullOrWhiteSpace(fullNumber);
-
+        if (string.IsNullOrWhiteSpace(fullNumber))
+            return PhoneNumberInfo.Unknown(string.Empty);
+         
         var numbers = fullNumber.GetOnlyNumbers('+');
         if (!numbers.StartsWith("+"))
         {
@@ -36,7 +36,7 @@ public static partial class PhoneNumberInfoParser
         (
             CountryCode: countryCode,
             InternationalDialingCode: internationalDialingCode,
-            NationalNumber : nationalNumber,
+            NationalNumber: nationalNumber,
             AreaCode: areaCode,
             FormattedNationalNumber: formatterNumber
         );

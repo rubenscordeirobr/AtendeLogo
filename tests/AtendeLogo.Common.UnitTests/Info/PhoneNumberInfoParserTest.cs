@@ -2,20 +2,7 @@
 
 public class PhoneNumberInfoParserTest
 {
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("  ")]
-    public void Parse_ShouldThrowArgumentNullException_WhenInputIsNullOrEmpty(
-        string? fullNumber)
-    {
-        // Act
-        Action act = () => PhoneNumberInfoParser.Parse(fullNumber!);
-
-        // Assert
-        act.Should().Throw<ArgumentException>();
-    }
-
+    
     [Theory]
     [InlineData("+5511987654321", Country.Brazil, InternationalDialingCode.Brazil, "11987654321", "11", "(11) 98765-4321")]
     [InlineData("+551197654321", Country.Brazil, InternationalDialingCode.Brazil, "1197654321", "11", "(11) 9765-4321")]
