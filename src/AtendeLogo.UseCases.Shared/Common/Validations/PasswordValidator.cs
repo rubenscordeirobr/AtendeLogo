@@ -1,0 +1,52 @@
+﻿using FluentValidation;
+
+namespace AtendeLogo.UseCases.Shared;
+
+public static partial class DefaultValidationsExtensions
+{
+    public static IRuleBuilderOptions<T, Password> Password<T>(
+     this IRuleBuilder<T, Password> ruleBuilder,
+     IJsonStringLocalizer<ValidationMessages> localizer)
+    {
+        return ruleBuilder
+            .SetValidator(new PasswordValidator(localizer));
+    }
+
+    public static IRuleBuilderOptions<T, string> Password<T>(
+         this IRuleBuilder<T, string> ruleBuilder,
+         IJsonStringLocalizer<ValidationMessages> localizer)
+    {
+        var options = ruleBuilder
+            .NotEmpty()
+            .MinimumLength(ValidationConstants.PasswordMinLength)
+            .Matches("[A-Z]")
+                .WithMessage(localizer["PasswordUppercase", "Password must contain at least one uppercase letter"])
+            .Matches("[a-z]")
+                .WithMessage(localizer["PasswordLowercase", "Password must contain at least one lowercase letter"])
+            .Matches("[0-9]")
+                .WithMessage(localizer["PasswordNumber", "Password must contain at least one number"])
+            .Matches("[^a-zA-Z0-9]")
+                .WithMessage(localizer["PasswordSpecialCharacter", "Password must contain at least one special character"]);
+
+        return options;
+    }
+}
+
+public class PasswordValidator : AbstractValidator<Password>
+{
+    public PasswordValidator(IJsonStringLocalizer<ValidationMessages> localizer)
+    {
+        RuleFor(x => x.Strength)
+            .NotEqual(PasswordStrength.Empty)
+            .WithMessage(localizer["PasswordStrength.Empty", "Password strength cannot be empty."])
+            .NotEqual(PasswordStrength.Weak)
+            .WithMessage(localizer["PasswordStrength.Weak", "Password strength cannot be weak."]);
+
+        RuleFor(x => x.HashValue)
+            .NotEmpty()
+            .WithMessage(localizer["PasswordHashValueEmpty", "Password hash value cannot be empty."])
+            .Length(ValidationConstants.PasswordHashLength)
+            .Sha256()
+            .WithMessage(localizer["PasswordHashValueInvalid", "Password hash value is invalid."]);
+    }
+}
