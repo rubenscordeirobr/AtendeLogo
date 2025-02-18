@@ -123,7 +123,7 @@ public class ModelBuilderConfigurationTests
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureModelDefaultConfiguration<TestDbContext>(isInMemory: true);
+            modelBuilder.ConfigureModelDefaultConfiguration<TestDbContext>(isInMemory: false);
             base.OnModelCreating(modelBuilder);
         }
     }
