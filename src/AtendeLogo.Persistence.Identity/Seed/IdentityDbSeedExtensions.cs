@@ -5,24 +5,28 @@ namespace AtendeLogo.Persistence.Identity.Seed;
 
 internal static class IdentityDbSeedExtensions
 {
-    private static readonly object _lock = new();
-    private static bool _isSeeding;
+    private static readonly SemaphoreSlim _lock = new(1, 1);
 
     internal static async Task SeedAsync(this IdentityDbContext dbContext)
     {
-        lock (_lock)
+        await _lock.WaitAsync();
+        try
         {
-            if (_isSeeding)
-            {
-                return;
-            }
-            _isSeeding = true;
+            await dbContext.SeedAsyncInternal();
         }
- 
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    private static async Task SeedAsyncInternal(this IdentityDbContext dbContext)
+    {
         if (await dbContext.Users.AnyAsync())
         {
             return;
         }
+
         var strongPassword = "%ANONYMOUS@anymous%";
         var phoneNumber = PhoneNumber.Create("+5542999999999").GetValue();
         var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
@@ -34,9 +38,9 @@ internal static class IdentityDbSeedExtensions
             userStatus: UserStatus.Anonymous,
             phoneNumber: phoneNumber,
             password);
-        
+
         anonymousUser.SetAnonymousId();
-         
+
         var clientToken = HashHelper.CreateSha256Hash(AnonymousConstants.AnonymousSystemSession_Id);
 
         Guard.Sha256(clientToken);
@@ -53,7 +57,7 @@ internal static class IdentityDbSeedExtensions
             tenant_Id: null
         );
         anonymousUserSession.SetAnonymousSystemSessionId();
-        
+
         dbContext.Add(anonymousUser);
         dbContext.Add(anonymousUserSession);
 
@@ -68,5 +72,5 @@ internal static class IdentityDbSeedExtensions
             throw new InvalidOperationException("Seed failed");
         }
     }
-     
+
 }
