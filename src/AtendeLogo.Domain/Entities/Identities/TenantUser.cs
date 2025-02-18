@@ -20,23 +20,28 @@ public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
     }
 
     public TenantUser(
-        string name, 
-        string email, 
-        UserState userState, 
+        string name,
+        string email,
+        UserState userState,
         UserStatus userStatus,
-        TenantUserRole tenantUserRole, 
-        PhoneNumber phoneNumber, 
+        TenantUserRole tenantUserRole,
+        PhoneNumber phoneNumber,
         Password password)
-        :base(name, email, userState, userStatus, phoneNumber, password)
+        : base(name, email, userState, userStatus, phoneNumber, password)
     {
     }
 
     public void SetTenant(Tenant tenant)
     {
-        if(Id!= default)
-        {
+        if (Id != default)
             throw new InvalidOperationException("Tenant can be set only for new user");
-        }
+        
+        if (tenant.Id == default)
+            throw new InvalidOperationException("Tenant must have an Id");
+
+        if (Tenant_Id != default)
+            throw new InvalidOperationException("Tenant can be set only once");
+
         Tenant = tenant;
         Tenant_Id = tenant.Id;
     }
