@@ -37,7 +37,7 @@ internal class DomainEventContextFactory
         {
             EntityState.Added => CreateEvent<IPropertyValueEvent>(entry, typeof(EntityCreatedEvent<>)),
             EntityState.Deleted => CreateEvent<IPropertyValueEvent>(entry, typeof(EntityDeletedEvent<>)),
-            EntityState.Modified => CreateEvent<IChangedPropertyEvent>(entry, typeof(EntityUpdatedEventEvent<>)),
+            EntityState.Modified => CreateEvent<IChangedPropertyEvent>(entry, typeof(EntityUpdatedEvent<>)),
             _ => throw new InvalidOperationException("Failed to create entity state changed event. Invalid entity state.")
         };
     }
