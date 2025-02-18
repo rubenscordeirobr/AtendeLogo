@@ -22,7 +22,7 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             modelBuilder
                 .UseCollation("case_accent_insensitive")
                 .HasAnnotation("Npgsql:CollationDefinition:case_accent_insensitive", "und-u-ks-level1,und-u-ks-level1,icu,False")
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "admin_user_role", new[] { "manager", "operator", "super_admin", "viewer" });
@@ -37,7 +37,7 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_type", new[] { "company", "individual" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_user_role", new[] { "admin", "chat_agent", "manager", "operator", "owner", "viewer" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_state", new[] { "active", "blocked", "deleted", "inactive", "new", "pending_verification", "suspended" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_status", new[] { "anonymous", "away", "busy", "do_not_disturb", "offline", "online", "system", "unknown" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_status", new[] { "anonymous", "away", "busy", "do_not_disturb", "offline", "online", "system" });
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
