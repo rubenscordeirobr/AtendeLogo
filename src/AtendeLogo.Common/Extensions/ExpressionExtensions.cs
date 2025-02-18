@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Text;
 
 namespace AtendeLogo.Common.Extensions;
 
@@ -6,19 +7,41 @@ public static class ExpressionExtensions
 {
     public static string GetMemberName<T>(this Expression<Func<T, object>> expression)
     {
-        Expression body = expression.Body;
+        Guard.NotNull(expression);
 
-        if (body is UnaryExpression unaryExpression)
+        var memberExpression = GetMemberExpression(expression);
+        return memberExpression.Member.Name;
+    }
+
+    public static string GetMemberPath<T>(this Expression<Func<T, object>> expression)
+    {
+        Guard.NotNull(expression);
+
+        var memberExpression = GetMemberExpression(expression);
+
+        var propertyPath = new StringBuilder();
+        while (memberExpression != null)
         {
-            body = unaryExpression.Operand;
+            if (propertyPath.Length > 0)
+                propertyPath.Insert(0, ".");
+
+            propertyPath.Insert(0, memberExpression.Member.Name);
+            memberExpression = memberExpression.Expression as MemberExpression;
         }
 
-        if (body is MemberExpression memberExpression)
-        {
-            return memberExpression.Member.Name;
-        }
+        return propertyPath.ToString();
+    }
 
-        throw new ArgumentException($"The Expression '{expression}' is not a member expression", nameof(expression));
+    private static MemberExpression GetMemberExpression(LambdaExpression expression)
+    {
+        var expressionBody = expression.Body;
+        if (expressionBody is MemberExpression memberExpression)
+            return memberExpression;
+
+        if (expressionBody is UnaryExpression unaryExpression && unaryExpression.Operand is MemberExpression operand)
+            return operand;
+
+        throw new ArgumentException($"The LambdaExpression '{expression}' is not a member expression");
     }
 }
 
