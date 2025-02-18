@@ -27,7 +27,6 @@ public class ActivityDocument
     public AuthenticationType? AuthenticationType { get; set; }
 
     public string? QualifiedTypeName { get; set; }
-
     public string? Description { get; set; }
     public string? CreatedData { get; set; }
     public string? OldData { get; set; }
