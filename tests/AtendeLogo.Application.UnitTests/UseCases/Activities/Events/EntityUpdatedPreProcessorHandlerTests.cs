@@ -24,13 +24,11 @@ public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<AnonymousServ
        
         // Act
         await eventMediator.PreProcessorDispatchAsync(eventContext);
-       
-        // Assert
-        var executedEvents = eventContext.GetExecutedEventResults(updateEvent);
-        var handlers = executedEvents.Select(x => x.Handler);
 
-        handlers.Should()
-            .ContainItemsAssignableTo<EntityUpdatedPreProcessorHandler<TenantUser>>();
+        // Assert
+        eventContext
+            .ShouldHaveExecutedEvent(updateEvent)
+            .WithHandler<EntityUpdatedPreProcessorHandler<TenantUser>>();
     }
      
     [Fact]
@@ -45,6 +43,7 @@ public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<AnonymousServ
 
         // Act
         Func<Task> task = async () => await handler.PreProcessAsync(eventData);
+      
         // Assert
         await task.Should()
             .NotThrowAsync();

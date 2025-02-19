@@ -26,11 +26,9 @@ public class EntityCreatedEventHandlerTests
         await eventMediator.DispatchAsync(eventContext);
 
         // Assert
-        var executedEvents = eventContext.GetExecutedEventResults(createdEvent);
-        var handlers = executedEvents.Select(x => x.Handler).ToList();
-
-        handlers.Should()
-            .ContainItemsAssignableTo<EntityCreatedEventHandler<TenantUser>>();
+        eventContext
+            .ShouldHaveExecutedEvent(createdEvent)
+            .WithHandler<EntityCreatedEventHandler<TenantUser>>();
     }
 
     [Fact]
@@ -41,11 +39,12 @@ public class EntityCreatedEventHandlerTests
         var createdEvent = new EntityCreatedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
         var userSessionServiceMock = new AnonymousUserSessionServiceMock();
+        var logger = new LoggerServiceMock<EntityCreatedEventHandler<TenantUser>>();
 
         var handler = new EntityCreatedEventHandler<TenantUser>(
             activityRepository,
             userSessionServiceMock,
-            new LoggerServiceMock<EntityCreatedEventHandler<TenantUser>>());
+            logger);
 
         // Act
         Func<Task> task = async () => await handler.HandleAsync(createdEvent);

@@ -18,13 +18,14 @@ public class EntityUpdatedEventHandlerTests
         var eventMediator = _serviceProvider.GetRequiredService<IEventMediator>();
         var updatedEvent = new EntityUpdatedEvent<TenantUser>(entity, []);
         var eventContext = new DomainEventContext([updatedEvent]);
+       
         // Act
         await eventMediator.DispatchAsync(eventContext);
+
         // Assert
-        var executedEvents = eventContext.GetExecutedEventResults(updatedEvent);
-        var handlers = executedEvents.Select(x => x.Handler).ToList();
-        handlers.Should()
-            .ContainItemsAssignableTo<EntityUpdatedEventHandler<TenantUser>>();
+        eventContext
+            .ShouldHaveExecutedEvent(updatedEvent)
+            .WithHandler<EntityUpdatedEventHandler<TenantUser>>();
     }
 
     [Fact]
@@ -35,10 +36,12 @@ public class EntityUpdatedEventHandlerTests
         var updatedEvent = new EntityUpdatedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
         var userSessionServiceMock = new AnonymousUserSessionServiceMock();
+        var logger = new LoggerServiceMock<EntityUpdatedEventHandler<TenantUser>>();
+
         var handler = new EntityUpdatedEventHandler<TenantUser>(
             activityRepository,
             userSessionServiceMock,
-            new LoggerServiceMock<EntityUpdatedEventHandler<TenantUser>>());
+            logger);
 
         // Act
         Func<Task> task = async () => await handler.HandleAsync(updatedEvent);
