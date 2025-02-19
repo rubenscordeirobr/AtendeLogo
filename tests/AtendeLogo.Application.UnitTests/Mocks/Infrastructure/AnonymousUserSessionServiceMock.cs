@@ -1,8 +1,9 @@
 ﻿using AtendeLogo.Common.Infos;
 using AtendeLogo.Shared.Contantes;
+using AtendeLogo.Shared.Interfaces.Identities;
 
 namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
-internal class AnonymousUserSessionServiceMock : IUserSessionService
+internal class AnonymousUserSessionServiceMock : IRequestUserSessionService
 {
     public UserSession GetCurrentSession()
     {
@@ -23,5 +24,25 @@ internal class AnonymousUserSessionServiceMock : IUserSessionService
 
         userSession.SetAnonymousSystemSessionId();
         return userSession;
+    }
+
+    public void AddClientSessionCookie(string session)
+    {
+        // Do nothing        
+    }
+
+    public string? GetClientSessionToken()
+    {
+        return null;
+    }
+
+    IUserSession IRequestUserSessionService.GetCurrentSession()
+    {
+        return GetCurrentSession();
+    }
+
+    public RequestHeaderInfo GetRequestHeaderInfo()
+    {
+        return new RequestHeaderInfo("localhost", "Tests", "Tests");
     }
 }

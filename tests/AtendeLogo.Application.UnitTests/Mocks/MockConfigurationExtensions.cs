@@ -18,7 +18,7 @@ public static class MockConfigurationExtensions
 
         if (isAnonymousUserSession)
         {
-            services.AddScoped<IUserSessionService, AnonymousUserSessionServiceMock>();
+            services.AddScoped<IRequestUserSessionService, AnonymousUserSessionServiceMock>();
         }
         else
         {
