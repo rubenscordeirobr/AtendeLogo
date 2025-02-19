@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using AtendeLogo.Common.Collections;
 using AtendeLogo.Persistence.Common.Exceptions;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -8,7 +9,7 @@ namespace AtendeLogo.Persistence.Common.Configurations;
 
 public static class EnumConfiguration
 {
-    private static readonly ConcurrentDictionary<Type, HashSet<Type>> _enumTypeMappings = new();
+    private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<Type>> _enumTypeMappings = new();
 
     public static IRelationalDbContextOptionsBuilderInfrastructure AddMapEnum<TContext, TEnum>(
          this IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder)
@@ -51,25 +52,25 @@ public static class EnumConfiguration
         where TContext : DbContext
     {
         private static readonly Type _dbContextType = typeof(TContext);
-        private static HashSet<Type> _enumTypesMapped
-            => _enumTypeMappings.GetOrAdd(_dbContextType, new HashSet<Type>());
+        private static ConcurrentHashSet<Type> EnumTypesMapped
+            => _enumTypeMappings.GetOrAdd(_dbContextType, new ConcurrentHashSet<Type>());
 
         public static void AddEnumType<TEnum>()
             where TEnum : Enum
         {
-            _enumTypesMapped.Add(typeof(TEnum));
+            EnumTypesMapped.Add(typeof(TEnum));
         }
 
         internal static bool Contains<TEnum>()
              where TEnum : Enum
         {
-            return _enumTypesMapped.Contains(typeof(TEnum));
+            return EnumTypesMapped.Contains(typeof(TEnum));
         }
 
         internal static bool Contains(Type enumType)
         {
-            return _enumTypesMapped.Contains(enumType);
+            return EnumTypesMapped.Contains(enumType);
         }
     }
-#endif
 }
+#endif
