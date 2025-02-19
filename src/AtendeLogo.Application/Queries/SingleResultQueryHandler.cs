@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.Application.Queries;
 
-public abstract class SingleResultQueryHandler<TRequest, TResponse> 
-    : ISingleQueryResultHandler<TRequest, TResponse>
-    where TRequest : IQueryRequest<TResponse>
+public abstract class SingleResultQueryHandler<TQuery, TResponse> 
+    : ISingleQueryResultHandler<TQuery, TResponse>
+    where TQuery : IQueryRequest<TResponse>
     where TResponse : IResponse
 {
     public abstract Task<Result<TResponse>> HandleAsync(
-        TRequest request,
+        TQuery query,
         CancellationToken cancellationToken = default);
 }
