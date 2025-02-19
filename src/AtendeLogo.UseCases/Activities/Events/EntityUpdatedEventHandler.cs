@@ -11,12 +11,12 @@ public sealed class EntityUpdatedEventHandler<TEntity> : IEntityUpdatedEventHand
     where TEntity : EntityBase
 {
     private readonly IActivityRepository _activityRepository;
-    private readonly IUserSessionService _userSessionService;
+    private readonly IRequestUserSessionService _userSessionService;
     private readonly ILogger<EntityUpdatedEventHandler<TEntity>> _logger;
 
     public EntityUpdatedEventHandler(
         IActivityRepository activityRepository,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         ILogger<EntityUpdatedEventHandler<TEntity>> logger)
     {
         _activityRepository = activityRepository;

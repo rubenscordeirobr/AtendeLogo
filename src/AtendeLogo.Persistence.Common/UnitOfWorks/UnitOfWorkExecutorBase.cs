@@ -11,13 +11,13 @@ namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 internal abstract class UnitOfWorkExecutorBase
 {
     private readonly DbContext _dbContext;
-    private readonly IUserSessionService _userSessionService;
+    private readonly IRequestUserSessionService _userSessionService;
     protected readonly ILogger<IUnitOfWork> _logger;
     protected readonly IEventMediator EventMediator;
 
     public UnitOfWorkExecutorBase(
         DbContext dbContext,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
     {

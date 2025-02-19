@@ -10,7 +10,7 @@ internal class UnitOfWorkExecutor : UnitOfWorkExecutorBase
 {
     public UnitOfWorkExecutor(
         DbContext dbContext,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
         : base(dbContext, userSessionService, eventMediator, logger)

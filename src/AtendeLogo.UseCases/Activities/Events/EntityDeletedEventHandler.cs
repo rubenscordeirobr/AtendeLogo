@@ -11,12 +11,12 @@ public sealed class EntityDeletedEventHandler<TEntity> : IEntityDeletedEventHand
     where TEntity : EntityBase
 {
     private readonly IActivityRepository _activityRepository;
-    private readonly IUserSessionService _userSessionService;
+    private readonly IRequestUserSessionService _userSessionService;
     private readonly ILogger<EntityDeletedEventHandler<TEntity>> _logger;
 
     public EntityDeletedEventHandler(
         IActivityRepository activityRepository,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         ILogger<EntityDeletedEventHandler<TEntity>> logger )
     {
         _activityRepository = activityRepository;

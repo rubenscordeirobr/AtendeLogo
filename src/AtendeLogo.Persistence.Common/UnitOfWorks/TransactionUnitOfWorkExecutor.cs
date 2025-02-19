@@ -17,7 +17,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
 
     public TransactionUnitOfWorkExecutor(
         DbContext dbContext,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger,
         IDbContextTransaction transaction)

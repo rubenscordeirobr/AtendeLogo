@@ -10,7 +10,7 @@ namespace AtendeLogo.Persistence.Common;
 public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     private readonly DbContext _dbContext;
-    private readonly IUserSessionService _userSessionService;
+    private readonly IRequestUserSessionService _userSessionService;
 
     private readonly bool _isImplementDeletedInterface;
     private readonly bool _isImplementTenantOwnedInterface;
@@ -25,7 +25,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     public RepositoryBase(
         DbContext dbContext,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         TrackingOption trackingOption)
     {
         Guard.NotNull(dbContext);

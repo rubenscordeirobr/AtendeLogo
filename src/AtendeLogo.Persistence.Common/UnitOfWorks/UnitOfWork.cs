@@ -11,7 +11,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
     where TDbContext : DbContext
 {
     protected readonly TDbContext DbContext;
-    protected readonly IUserSessionService UserSessionService;
+    protected readonly IRequestUserSessionService UserSessionService;
     private readonly IEventMediator _eventMediator;
     private readonly ILogger<IUnitOfWork> _logger;
 
@@ -19,7 +19,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     public UnitOfWork(
         TDbContext dbContext,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
     {

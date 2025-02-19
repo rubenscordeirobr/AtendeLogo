@@ -19,7 +19,7 @@ internal class IdentityUnitOfWork : UnitOfWork<IdentityDbContext>, IIdentityUnit
 
     public IdentityUnitOfWork(
         IdentityDbContext dbContext,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         IEventMediator eventMediator,
         ILogger<IIdentityUnitOfWork> logger,
         TrackingOption trackingOption = TrackingOption.Tracking)

@@ -11,12 +11,12 @@ public sealed class EntityCreatedEventHandler<TEntity> : IEntityCreatedEventHand
     where TEntity : EntityBase
 {
     private readonly IActivityRepository _activityRepository;
-    private readonly IUserSessionService _userSessionService;
+    private readonly IRequestUserSessionService _userSessionService;
     private readonly ILogger<EntityCreatedEventHandler<TEntity>> _logger;
 
     public EntityCreatedEventHandler(
         IActivityRepository activityRepository,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         ILogger<EntityCreatedEventHandler<TEntity>> logger)
     {
         _activityRepository = activityRepository;

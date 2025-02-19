@@ -7,7 +7,7 @@ internal class AdminUserRepository : UserRepository<AdminUser>, IAdminUserReposi
 {
     public AdminUserRepository(
         IdentityDbContext dbContext,
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         TrackingOption trackingOption = TrackingOption.NoTracking)
         : base(dbContext, userSessionService, trackingOption)
     {

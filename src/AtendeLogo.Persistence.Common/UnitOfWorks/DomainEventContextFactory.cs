@@ -8,7 +8,7 @@ namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 internal class DomainEventContextFactory
 {
     internal static DomainEventContext Create(
-        UserSession userSession,
+        IUserSession userSession,
         IEnumerable<EntityEntry<EntityBase>> entries)
     {
         var aggregateEvents = entries

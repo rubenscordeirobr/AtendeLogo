@@ -7,7 +7,7 @@ internal class UserSessionRepository : RepositoryBase<UserSession>, IUserSession
 {
     public UserSessionRepository(
         IdentityDbContext dbContext, 
-        IUserSessionService userSessionService,
+        IRequestUserSessionService userSessionService,
         TrackingOption trackingOption = TrackingOption.NoTracking)
         : base(dbContext, userSessionService, trackingOption)
     {
