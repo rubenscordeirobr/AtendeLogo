@@ -1,33 +1,37 @@
 ﻿using System.Diagnostics;
 using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Common;
-using AtendeLogo.Common.Infos;
+using AtendeLogo.Application.Contracts.Services;
+using AtendeLogo.Application.Models.Identities;
+using AtendeLogo.Common.Helpers;
 
-namespace AtendeLogo.Infrastructure.Services;
+namespace AtendeLogo.Application.Services;
 
-public class SessionVerificationService : IAsyncDisposable
+public class UserSessionVerificationService : IUserSessionVerificationService, IAsyncDisposable
 {
-    private readonly RequestHeaderInfo _headerInfo;
     private readonly ISessionCacheService _sessionCacheService;
     private readonly IIdentityUnitOfWork _unitWork;
-    private readonly string? _clientSessionToken;
+    private readonly IRequestUserSessionService _userSessionService;
 
     private IUserSessionRepository UserSessionRepository
         => _unitWork.UserSessionRepository;
 
-    public SessionVerificationService(
+    public UserSessionVerificationService(
         ISessionCacheService cacheSessionService,
-        IIdentityUnitOfWork unitWork,
-        RequestHeaderInfo headerInfo,
-        string? clientSessionToken)
+        IRequestUserSessionService userSessionService,
+        IIdentityUnitOfWork unitWork )
     {
         _sessionCacheService = cacheSessionService;
+        _userSessionService = userSessionService;
         _unitWork = unitWork;
-        _headerInfo = headerInfo;
-        _clientSessionToken = clientSessionToken;
     }
 
-    public async Task<UserSession> RetrieveSessionAsync()
+    public async Task VerifyAsync()
+    {
+        var session = await RetrieveSessionAsync();
+        _userSessionService.AddClientSessionCookie(session.ClientSessionToken);
+
+    }
+    private async Task<IUserSession> RetrieveSessionAsync()
     {
         var userSession = await GetUserSessionAsync();
         if (userSession is not null)
@@ -42,20 +46,21 @@ public class SessionVerificationService : IAsyncDisposable
         return await CreateAnonymousSessionAsync(userSession);
     }
 
-    private async Task<UserSession?> GetUserSessionAsync()
+    private async Task<IUserSession?> GetUserSessionAsync()
     {
-        if (string.IsNullOrWhiteSpace(_clientSessionToken))
+        var clientSessionToken = _userSessionService.GetClientSessionToken();
+        if (string.IsNullOrWhiteSpace(clientSessionToken))
             return null;
 
-        var cachedSession = await GetSessionFromCacheAsync(_clientSessionToken);
+        var cachedSession = await GetSessionFromCacheAsync(clientSessionToken);
         if (cachedSession is not null)
         {
             return cachedSession;
         }
-        return await UserSessionRepository.GetByClientTokenAsync(_clientSessionToken);
+        return await UserSessionRepository.GetByClientTokenAsync(clientSessionToken);
     }
 
-    private async Task<UserSession?> GetSessionFromCacheAsync(string clientSessionToken)
+    private async Task<IUserSession?> GetSessionFromCacheAsync(string clientSessionToken)
     {
         var cachedSession = await _sessionCacheService.GetSessionAsync(clientSessionToken);
         if (cachedSession?.IsUpdatePending() == true)
@@ -65,12 +70,27 @@ public class SessionVerificationService : IAsyncDisposable
         return cachedSession;
     }
 
-    private async Task ValidateSessionAsync(
-        UserSession userSession)
+    private async Task ValidateSessionAsync( IUserSession userSession)
     {
         if (!userSession.IsActive)
             return;
 
+        if (userSession is AnonymousUserSession)
+        {
+            return;
+        }
+
+        if (!(userSession is UserSession userSessionEntity))
+        {
+            throw new InvalidOperationException("Invalid session type.");
+        }
+
+        await ValidateSessionEntityAsync(userSessionEntity);
+    }
+
+    private async Task ValidateSessionEntityAsync(UserSession userSession)
+    {
+        var headerInfo = _userSessionService.GetRequestHeaderInfo();
         if (userSession.IsUpdatePending() || Debugger.IsAttached)
         {
             userSession.UpdateLastActivity();
@@ -86,13 +106,13 @@ public class SessionVerificationService : IAsyncDisposable
             await _sessionCacheService.AddSessionAsync(userSession);
         }
 
-        if (!string.Equals(userSession.IpAddress, _headerInfo.IpAddress, StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(userSession.IpAddress, headerInfo.IpAddress, StringComparison.OrdinalIgnoreCase))
         {
             await TerminateSessionAsync(userSession, SessionTerminationReason.IpAddressChanged);
             return;
         }
 
-        if (!string.Equals(userSession.UserAgent, _headerInfo.UserAgent, StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(userSession.UserAgent, headerInfo.UserAgent, StringComparison.OrdinalIgnoreCase))
         {
             await TerminateSessionAsync(userSession, SessionTerminationReason.UserAgentChanged);
             return;
@@ -110,17 +130,18 @@ public class SessionVerificationService : IAsyncDisposable
     }
 
     private async Task<UserSession> CreateAnonymousSessionAsync(
-        UserSession? currentSession)
+        IUserSession? currentSession)
     {
         var sessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
         var anonymouseUser_Id = AnonymousConstants.AnonymousUser_Id;
         var currentSessionId = currentSession?.Id ?? AnonymousConstants.AnonymousSystemSession_Id;
+        var headerInfo = _userSessionService.GetRequestHeaderInfo();
 
         var userSession = new UserSession(
-              applicationName: _headerInfo.ApplicationName,
+              applicationName: headerInfo.ApplicationName,
               clientSessionToken: sessionToken,
-              ipAddress: _headerInfo.IpAddress,
-              userAgent: _headerInfo.UserAgent,
+              ipAddress: headerInfo.IpAddress,
+              userAgent: headerInfo.UserAgent,
               language: Language.Default,
               authenticationType: AuthenticationType.Anonymous,
               user_Id: anonymouseUser_Id,
@@ -129,13 +150,13 @@ public class SessionVerificationService : IAsyncDisposable
          );
 
         _unitWork.Add(userSession);
+
         var result = await _unitWork.SaveChangesAsync();
         if (!result.IsSuccess)
         {
             throw new InvalidOperationException("Error while creating anonymous session.", result.Exception);
         }
         await _sessionCacheService.AddSessionAsync(userSession);
-
         return userSession;
     }
 
