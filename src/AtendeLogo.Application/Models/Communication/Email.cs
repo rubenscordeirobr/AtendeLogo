@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Application.Models;
+﻿namespace AtendeLogo.Application.Models.Communication;
 
 public record Email
 {
