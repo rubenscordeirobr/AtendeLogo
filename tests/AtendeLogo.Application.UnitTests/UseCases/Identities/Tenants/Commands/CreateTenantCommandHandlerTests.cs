@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.UseCases.Identities.Tenants.Commands;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AtendeLogo.Application.UnitTests.UseCases.Identities.Tenants.Commands;
 
@@ -58,7 +57,6 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Password);
-
     }
 
     [Fact]

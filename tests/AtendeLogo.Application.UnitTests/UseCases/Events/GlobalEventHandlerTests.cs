@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Application.UnitTests.Extensions;
-using AtendeLogo.Domain.Entities.Identities.Events;
+﻿using AtendeLogo.Domain.Entities.Identities.Events;
 using AtendeLogo.UseCases.Events;
 
 namespace AtendeLogo.Application.UnitTests.UseCases.Events;

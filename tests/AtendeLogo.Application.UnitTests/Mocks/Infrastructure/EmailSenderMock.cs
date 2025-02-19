@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Models;
+﻿using AtendeLogo.Application.Models.Communication;
 
 namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
 

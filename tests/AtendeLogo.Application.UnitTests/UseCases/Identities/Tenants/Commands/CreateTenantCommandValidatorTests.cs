@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using AtendeLogo.Shared.Contracts;
+﻿using AtendeLogo.Shared.Contracts;
 using AtendeLogo.UseCases.Common.Validations;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
 using AtendeLogo.UseCases.Identities.Tenants.Services;

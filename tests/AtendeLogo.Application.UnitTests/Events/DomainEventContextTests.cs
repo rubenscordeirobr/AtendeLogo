@@ -85,7 +85,7 @@ public class DomainEventContextTests
         var domainEvent = new MockDomainEvent();
         var results = new List<ExecutedDomainEventResult>
         {
-            new ExecutedDomainEventResult(domainEvent, typeof(MockHandler), null, null)
+            new ExecutedDomainEventResult(domainEvent, typeof(MockHandler), null, null, null)
         };
 
         // Act
