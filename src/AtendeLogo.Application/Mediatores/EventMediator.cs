@@ -67,6 +67,7 @@ internal partial class EventMediator : IEventMediator
             results.Add(new ExecutedDomainEventResult(
                 DomainEvent: domainEvent,
                 HandlerType: typeof(DomainEventDataFactory),
+                ImplementationHandlerType: null,
                 Handler: null,
                 Exception: exception
             ));
@@ -136,6 +137,7 @@ internal partial class EventMediator : IEventMediator
         return new ExecutedDomainEventResult(
                DomainEvent: domainEvent,
                HandlerType: handlerType,
+               ImplementationHandlerType: handler?.GetType(),
                Handler: handler,
                Exception: exception
         );
