@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
-using AtendeLogo.UseCases.Registrars;
-using Microsoft.Extensions.Configuration;
+using AtendeLogo.UseCases.Common.Registrars;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.UseCases;
