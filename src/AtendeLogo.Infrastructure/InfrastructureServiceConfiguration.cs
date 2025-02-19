@@ -25,7 +25,6 @@ public static class InfrastructureServiceConfiguration
         });
 
         services.AddSingleton<ISessionCacheService, SessionCacheService>();
-        services.AddScoped<IUserSessionService, UserSessionService>();
         services.AddSingleton<ICommandTrackingService, CommandTrackingService>();
 
         ////create a new instance at time of injection
