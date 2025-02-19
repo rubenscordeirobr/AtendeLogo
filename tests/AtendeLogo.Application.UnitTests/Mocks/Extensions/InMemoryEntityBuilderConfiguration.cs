@@ -37,7 +37,6 @@ public static class InMemoryEntityBuilderConfiguration
         }
 
         var baseType = entityType.BaseType;
-
         var idProperty = entityBuilder.Property(nameof(EntityBase.Id));
 
         Guard.NotNull(idProperty);
@@ -45,7 +44,28 @@ public static class InMemoryEntityBuilderConfiguration
         idProperty
             .HasValueGenerator<GuidIntegerValueGenerator>()
             .ValueGeneratedOnAdd();
-            
+
+        entityBuilder.ConfigureDateTimeDefaultValues();
+
+      
+        return entityBuilder;
+    }
+
+    private static EntityTypeBuilder ConfigureDateTimeDefaultValues(
+        this EntityTypeBuilder entityBuilder)
+    {
+        var proprities = entityBuilder.Metadata.GetProperties();
+        foreach (var property in proprities)
+        {
+            var sqlValueGenerated = property.GetDefaultValueSql();
+            if (sqlValueGenerated == "now()")
+            {
+                var propertyBuilder = entityBuilder.Property(property.Name);
+                propertyBuilder
+                    .HasValueGenerator<DateTimeNowValueGenerator>()
+                    .ValueGeneratedOnAddOrUpdate();
+            }
+        }
         return entityBuilder;
     }
 }
