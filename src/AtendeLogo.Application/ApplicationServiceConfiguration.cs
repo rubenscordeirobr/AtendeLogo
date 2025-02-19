@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Application.Mediatores;
 using AtendeLogo.Application.Registrars;
+using AtendeLogo.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.Application;
@@ -13,6 +15,10 @@ public static class ApplicationServiceConfiguration
 
         services.AddScoped<IRequestMediator, RequestMediator>();
         services.AddScoped<IEventMediator, EventMediator>();
+
+        services.AddTransient<IUserSessionVerificationService, UserSessionVerificationService>();
+
+        
         services.AddApplicationHandlersFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
