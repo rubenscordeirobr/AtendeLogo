@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Common;
+﻿using AtendeLogo.Application.Models.Identities;
+using AtendeLogo.Common;
 using AtendeLogo.Shared.ValueObjects;
 
 namespace AtendeLogo.Persistence.Identity.Seed;
@@ -19,7 +20,6 @@ internal static class IdentityDbSeedExtensions
             _lock.Release();
         }
     }
-
     private static async Task SeedAsyncInternal(this IdentityDbContext dbContext)
     {
         if (await dbContext.Users.AnyAsync())
@@ -27,6 +27,23 @@ internal static class IdentityDbSeedExtensions
             return;
         }
 
+        dbContext.AddAnonymousUserAndSessionAsync();
+        dbContext.AddSuperAdminUser();
+
+        if (!(dbContext is IDbSeedAsync dbSeed))
+        {
+            throw new InvalidOperationException("DbContext must implement IDbSeedAsync");
+        }
+
+        var result = await (dbContext as IDbSeedAsync).SeedSaveChangesAsync();
+        if (result < 1)
+        {
+            throw new InvalidOperationException("Seed failed");
+        }
+    }
+
+    private static void AddAnonymousUserAndSessionAsync(this IdentityDbContext dbContext)
+    {
         var strongPassword = "%ANONYMOUS@anymous%";
         var phoneNumber = PhoneNumber.Create("+5542999999999").GetValue();
         var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
@@ -59,18 +76,26 @@ internal static class IdentityDbSeedExtensions
         anonymousUserSession.SetAnonymousSystemSessionId();
 
         dbContext.Add(anonymousUser);
-        dbContext.Add(anonymousUserSession);
+        dbContext.Add(anonymousUserSession); 
 
-        if (!(dbContext is IDbSeedAsync dbSeed))
-        {
-            throw new InvalidOperationException("DbContext must implement IDbSeedAsync");
-        }
-
-        var result = await (dbContext as IDbSeedAsync).SeedSaveChangesAsync();
-        if (result < 2)
-        {
-            throw new InvalidOperationException("Seed failed");
-        }
     }
 
+    private static void AddSuperAdminUser(this IdentityDbContext dbContext)
+    {
+        var strongPassword = "SuperAdmin@Teste%#";
+        var phoneNumber = PhoneNumber.Create("+5542998373996").GetValue();
+
+        var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
+        var anonymousSession_Id = AnonymousConstants.AnonymousSystemSession_Id;
+        var anonymousUser = new AdminUser(
+            name: "Super Admin",
+            email: "superadmin@atendelogo.com.br",
+            userState: UserState.Active,
+            userStatus: UserStatus.Anonymous,
+            adminUserRole: AdminUserRole.SuperAdmin,
+            phoneNumber: phoneNumber,
+            password);
+        anonymousUser.SetCreateSession(AnonymousConstants.AnonymousSystemSession_Id);
+        dbContext.Add(anonymousUser);
+    }
 }
