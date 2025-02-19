@@ -92,12 +92,12 @@ internal partial class RequestMediator : IRequestMediator
     }
 
     public Task<IReadOnlyList<TResponse>> GetManyAsync<TResponse>(
-        IQueryRequest<TResponse> queryReqyest,
+        IQueryRequest<TResponse> queryRequest,
         CancellationToken cancellationToken = default)
             where TResponse : IResponse
     {
-        var handler = GetRequestHandler<ICollectionQueryHandler<TResponse>, TResponse>(queryReqyest);
-        return handler.GetManyAsync(queryReqyest, cancellationToken);
+        var handler = GetRequestHandler<ICollectionQueryHandler<TResponse>, TResponse>(queryRequest);
+        return handler.GetManyAsync(queryRequest, cancellationToken);
     }
 
     #endregion
