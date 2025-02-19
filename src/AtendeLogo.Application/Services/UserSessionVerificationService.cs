@@ -25,10 +25,11 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         _unitWork = unitWork;
     }
 
-    public async Task VerifyAsync()
+    public async Task<IUserSession> VerifyAsync()
     {
         var session = await RetrieveSessionAsync();
         _userSessionService.AddClientSessionCookie(session.ClientSessionToken);
+        return session;
 
     }
     private async Task<IUserSession> RetrieveSessionAsync()
