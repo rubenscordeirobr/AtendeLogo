@@ -6,22 +6,22 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-
+  <ItemGroup>
+    <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\AtendeLogo.Application\AtendeLogo.Application.csproj" />
-    <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
-    <ProjectReference Include="..\AtendeLogo.Domain\AtendeLogo.Domain.csproj" />
-    <ProjectReference Include="..\AtendeLogo.UseCases.Shared\AtendeLogo.UseCases.Shared.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Identities\TenantUsers\Events\" />
-    <Folder Include="Identities\UserSessionContexts\Commands\" />
-    <Folder Include="Identities\UserSessionContexts\Queries\" />
+    
+    <ProjectReference Include="..\AtendeLogo.Application\AtendeLogo.Application.csproj" />
+    <ProjectReference Include="..\AtendeLogo.UseCases.Shared\AtendeLogo.UseCases.Shared.csproj" />
+    
+    <ProjectReference Include="..\AtendeLogo.Domain\AtendeLogo.Domain.csproj"
+                      PrivateAssets="All"  />
+
+
   </ItemGroup>
 
 </Project>
