@@ -1,17 +1,14 @@
-﻿using AtendeLogo.Common.Infos;
+﻿using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Http;
 
-namespace AtendeLogo.Infrastructure.Extensions;
+namespace AtendeLogo.Presentation.Extensions;
 
 public static class HttpContextExtensions
 {
     public static RequestHeaderInfo GetRequestHeaderInfo(
         this HttpContext context)
     {
-        if (context == null)
-        {
-            return RequestHeaderInfo.Unknown;
-        }
+        Guard.NotNull(context);
 
         var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
         var userAgent = context.Request.Headers["User-Agent"].ToString() ?? "Unknown";
