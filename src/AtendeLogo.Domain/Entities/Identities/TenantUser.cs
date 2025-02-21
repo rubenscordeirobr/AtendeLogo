@@ -5,8 +5,8 @@ public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
     public Guid Tenant_Id { get; private set; }
     public Tenant? Tenant { get; private set; }
     public TenantUserRole TenantUserRole { get; private set; }
-    public List<TenantUser> TenantUsers { get; } = [];
-
+     
+    // EF Core constructor
     private TenantUser(
        string name,
        string email,
@@ -14,12 +14,13 @@ public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
        UserStatus userStatus,
        TenantUserRole tenantUserRole,
        PhoneNumber phoneNumber) :
-       this(name, email, userState, userStatus, tenantUserRole, phoneNumber, Password.Empty)
+       base(name, email, userState, userStatus,  phoneNumber, Password.Empty)
     {
         TenantUserRole = tenantUserRole;
     }
 
     public TenantUser(
+        Tenant tenant,
         string name,
         string email,
         UserState userState,
@@ -29,20 +30,9 @@ public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
         Password password)
         : base(name, email, userState, userStatus, phoneNumber, password)
     {
-    }
-
-    public void SetTenant(Tenant tenant)
-    {
-        if (Id != default)
-            throw new InvalidOperationException("Tenant can be set only for new user");
-        
-        if (tenant.Id == default)
-            throw new InvalidOperationException("Tenant must have an Id");
-
-        if (Tenant_Id != default)
-            throw new InvalidOperationException("Tenant can be set only once");
+        Guard.NotNull(tenant, nameof(tenant));
 
         Tenant = tenant;
-        Tenant_Id = tenant.Id;
+        TenantUserRole = tenantUserRole;
     }
 }
