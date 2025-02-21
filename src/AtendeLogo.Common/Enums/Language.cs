@@ -4,7 +4,7 @@ public enum Language
 {
     Default,
     Portuguese ,
-    Englishk,
+    English,
     Spanish,
     French,
     German,
