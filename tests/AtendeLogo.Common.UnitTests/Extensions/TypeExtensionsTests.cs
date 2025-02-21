@@ -83,15 +83,7 @@ public class TypeExtensionsTests
 
         properties.Should().BeEquivalentTo(expectedProperties);
     }
-
-    public static IEnumerable<object[]> GetDeclaredPropertiesOfTypeTestData
-        => new List<object[]>
-        {
-            new object[] { typeof(TestClass), typeof(string), true, new[] { "Property1" } },
-            new object[] { typeof(TestClass), typeof(int), true, new[] { "Property2" } },
-            new object[] { typeof(TestClass), typeof(string), false, new[] { "Property1", "NotMappedProperty" } },
-        };
-
+     
     public static IEnumerable<object[]> GetAssignableTypesTestData
         => new List<object[]>
         {
@@ -116,6 +108,7 @@ public class TypeExtensionsTests
             new object[] { typeof(Dictionary<int, string>), "Dictionary<System.Int32, System.String>" },
         };
 
+
     [Theory]
     [MemberData(nameof(GetQualifiedTypeNameTestData))]
     public void GetQualifiedName_ShouldReturnExpectedResult(Type type, string expectedName)
@@ -125,11 +118,11 @@ public class TypeExtensionsTests
     }
 
     public static IEnumerable<object[]> GetPropertiesFromInterfaceTestData
-        => new List<object[]>
-        {
+       => new List<object[]>
+       {
             new object[] { typeof(TestClassWithInterface), typeof(ITestInterface), new[] { "Property1", "Property2" } },
-        };
-
+       };
+     
     [Theory]
     [MemberData(nameof(GetPropertiesFromInterfaceTestData))]
     public void GetPropertiesFromInterface_ShouldReturnExpectedResult(Type type, Type interfaceType, string[] expectedProperties)
@@ -138,18 +131,13 @@ public class TypeExtensionsTests
         result.Should().BeEquivalentTo(expectedProperties);
     }
 
-    private interface ITestInterface
-    {
-        string? Property1 { get; set; }
-        int Property2 { get; set; }
-    }
-
-    private class TestClassWithInterface : ITestInterface
-    {
-        public string? Property1 { get; set; }
-        public int Property2 { get; set; }
-        public string? Property3 { get; set; }
-    }
+    public static IEnumerable<object[]> GetDeclaredPropertiesOfTypeTestData
+        => new List<object[]>
+        {
+            new object[] { typeof(TestClass), typeof(string), true, new[] { "Property1" } },
+            new object[] { typeof(TestClass), typeof(int), true, new[] { "Property2" } },
+            new object[] { typeof(TestClass), typeof(string), false, new[] { "Property1", "NotMappedProperty" } },
+        };
 
     [Theory]
     [MemberData(nameof(GetDeclaredPropertiesOfTypeTestData))]
@@ -166,6 +154,58 @@ public class TypeExtensionsTests
         properties.Should().BeEquivalentTo(expectedProperties);
     }
 
+    public static IEnumerable<object[]> GetSingleNameTestData
+      => new List<object[]>
+      {
+            new object[] { typeof(List<string>), "List" },
+            new object[] { typeof(Dictionary<int, string>), "Dictionary" },
+            new object[] { typeof(string), "String" },
+      };
+
+    [Theory]
+    [MemberData(nameof(GetSingleNameTestData))]
+    public void GetSingleName_ShouldReturnExpectedResult(Type type, string expectedName)
+    {
+        var result = type.GetSingleName();
+        result.Should().Be(expectedName);
+    }
+
+    public static IEnumerable<object[]> IsAssignableToTestData
+       => new List<object[]>
+       {
+            new object[] { typeof(List<string>), new[] { typeof(IEnumerable<string>), typeof(ICollection<string>) }, true },
+            new object[] { typeof(string), new[] { typeof(IEnumerable<char>), typeof(IComparable) }, true },
+            new object[] { typeof(int), new[] { typeof(IComparable), typeof(IConvertible) }, true },
+            new object[] { typeof(DerivedClass), new[] { typeof(BaseClass), typeof(object) }, true },
+            new object[] { typeof(BaseClass), new[] { typeof(DerivedClass) }, false },
+       };
+
+    [Theory]
+    [MemberData(nameof(IsAssignableToTestData))]
+    public void IsAssignableTo_ShouldReturnExpectedResult(Type type, Type[] targetTypes, bool expectedResult)
+    {
+        var result = type.IsAssignableTo(targetTypes);
+        result.Should().Be(expectedResult);
+    }
+     
+    public static IEnumerable<object[]> IsAssignableToOrDefinitionTestData
+        => new List<object[]>
+        {
+            new object[] { typeof(List<string>), new[] { typeof(IEnumerable<string>), typeof(IEnumerable<>), typeof(ICollection<>) }, true },
+            new object[] { typeof(string), new[] { typeof(IEnumerable<>), typeof(IComparable) }, true },
+            new object[] { typeof(int), new[] { typeof(IComparable), typeof(IConvertible) }, true },
+            new object[] { typeof(DerivedClass), new[] { typeof(BaseClass), typeof(object) }, true },
+            new object[] { typeof(BaseClass), new[] { typeof(DerivedClass) }, false },
+        };
+
+    [Theory]
+    [MemberData(nameof(IsAssignableToOrDefinitionTestData))]
+    public void IsAssignableToOrDefinition_ShouldReturnExpectedResult(Type type, Type[] targetTypes, bool expectedResult)
+    {
+        var result = type.IsAssignableToOrDefinition(targetTypes, true);
+        result.Should().Be(expectedResult);
+    }
+
     private class BaseClass { }
     private class DerivedClass : BaseClass { }
 
@@ -176,5 +216,18 @@ public class TypeExtensionsTests
 
         [NotMapped]
         public string? NotMappedProperty { get; set; }
+    }
+
+    private interface ITestInterface
+    {
+        string? Property1 { get; set; }
+        int Property2 { get; set; }
+    }
+
+    private class TestClassWithInterface : ITestInterface
+    {
+        public string? Property1 { get; set; }
+        public int Property2 { get; set; }
+        public string? Property3 { get; set; }
     }
 }

@@ -120,15 +120,15 @@ public static class TypeExtensions
     }
 
     public static IDictionary<string, PropertyInfo> GetPropertiesFromInterface<TInterface>(
-     this Type type)
+        this Type type)
 
     {
         return GetPropertiesFromInterface(type, typeof(TInterface));
     }
 
     public static IDictionary<string, PropertyInfo> GetPropertiesFromInterface(
-     this Type type,
-     Type interfaceType)
+         this Type type,
+        Type interfaceType)
 
     {
         if (!type.IsAssignableTo(interfaceType))
@@ -171,5 +171,48 @@ public static class TypeExtensions
         }
 
         return interfacePropertyMappings;
+    }
+
+    public static string GetSingleName(this Type type)
+    {
+        if (type.IsGenericType)
+        {
+            return type.Name.Substring(0, type.Name.IndexOf('`'));
+        }
+        return type.Name;
+    }
+
+    public static bool IsAssignableTo(
+        this Type? type,
+        IEnumerable<Type> types)
+    {
+        if (type == null)
+        {
+            return false;
+        }
+        return types.Any(type.IsAssignableTo);
+    }
+
+    public static bool IsAssignableToOrDefinition(
+        this Type? type,
+        IEnumerable<Type> types,
+        bool includeDefinition)
+    {
+        if (type == null)
+        {
+            return false;
+        }
+        return types.Any(type.IsAssignableToOrDefinition);
+    }
+
+    public static bool IsAssignableToOrDefinition(
+        this Type type,
+        Type targetType)
+    {
+        if (targetType.IsGenericTypeDefinition)
+        {
+            return type.ImplementsGenericInterfaceDefinition(targetType);
+        }
+        return type.IsAssignableTo(targetType);
     }
 }
