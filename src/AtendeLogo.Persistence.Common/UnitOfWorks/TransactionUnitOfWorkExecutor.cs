@@ -27,9 +27,11 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         _transactionDomainEventContext = new();
     }
 
-    public override async Task<SaveChangesResult> SaveChangesAsync(CancellationToken cancellationToken)
+    public override async Task<SaveChangesResult> SaveChangesAsync(
+        bool silent,
+        CancellationToken cancellationToken)
     {
-        var result = await ExecuteSaveChangesAsync(cancellationToken);
+        var result = await ExecuteSaveChangesAsync(silent, cancellationToken);
         if (result.IsSuccess)
         {
             _totalRowAffects += result.AffectedRows;
@@ -38,7 +40,12 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
 
         var executionException = result.Exception;
         await TryRollbackAsync(executionException, cancellationToken);
-        throw executionException;
+
+        if (!silent)
+        {
+            throw executionException;
+        }
+        return result;
     }
 
     protected override Task DispatchAsyncDomainEventAsync(
@@ -55,7 +62,9 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         return Task.CompletedTask;
     }
 
-    internal async Task<SaveChangesResult> CommitAsync(CancellationToken cancellationToken)
+    internal async Task<SaveChangesResult> CommitAsync(
+        bool silent,
+        CancellationToken cancellationToken)
     {
         Guard.NotNull(_transaction);
 
@@ -76,7 +85,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
                 return SaveChangesResult.OperationCanceledError(cancellationToken, domainEventContext);
             }
 
-            var result = await ExecuteSaveChangesAsync(cancellationToken);
+            var result = await ExecuteSaveChangesAsync(silent, cancellationToken);
             if (!result.IsSuccess)
             {
                 await TryRollbackAsync(result.Exception, cancellationToken);
@@ -91,13 +100,24 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         }
         catch (OperationCanceledException ex)
         {
+            _logger.LogError(ex, "Operation canceled during transaction commit.");
+
             await TryRollbackAsync(ex, cancellationToken);
+            if (!silent)
+            {
+                throw;
+            }
             return SaveChangesResult.OperationCanceledError(ex, domainEventContext);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error during transaction commit.");
             await TryRollbackAsync(ex, cancellationToken);
-            return SaveChangesResult.TransactionRollbackError(ex, domainEventContext);
+            if (silent)
+            {
+                return SaveChangesResult.SaveChangesError(ex, domainEventContext);
+            }
+            throw;
         }
         finally
         {

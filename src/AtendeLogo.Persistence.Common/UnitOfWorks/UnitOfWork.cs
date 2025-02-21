@@ -16,6 +16,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
     private readonly ILogger<IUnitOfWork> _logger;
 
     private TransactionUnitOfWorkExecutor? _transactionExecutor;
+    private readonly SemaphoreSlim _lock = new(1, 1);
 
     public UnitOfWork(
         TDbContext dbContext,
@@ -37,55 +38,6 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
             throw new InvalidOperationException("There are tracked entities. Use SaveChangesAsync for this operation.");
         }
     }
-
-    #region Transaction
-
-    public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
-    {
-        if (DbContext.Database.IsInMemory())
-            return;
-
-        if (_transactionExecutor != null)
-            throw new InvalidOperationException("Failed to begin transaction. There is already an open transaction.");
-
-        var transaction = await DbContext.Database.BeginTransactionAsync(cancellationToken);
-
-        _transactionExecutor = new TransactionUnitOfWorkExecutor(
-            DbContext,
-            UserSessionService,
-            _eventMediator,
-            _logger,
-            transaction);
-    }
-
-    public async Task<SaveChangesResult> CommitAsync(CancellationToken cancellationToken = default)
-    {
-        if (DbContext.Database.IsInMemory())
-            return await SaveChangesAsync(cancellationToken);
-
-        if (_transactionExecutor == null)
-            throw new InvalidOperationException("There is no active transaction to commit.");
-
-        var result = await _transactionExecutor.CommitAsync(cancellationToken);
-        _transactionExecutor = null;
-        return result;
-    }
-
-    public async Task RollbackAsync(
-        Exception exception,
-        CancellationToken cancellationToken = default)
-    {
-        if (DbContext.Database.IsInMemory())
-            return;
-
-        if (_transactionExecutor == null)
-            throw new InvalidOperationException("Failed to rollback transaction. There is no open transaction.");
-
-        await _transactionExecutor.TryRollbackAsync(exception, cancellationToken);
-        _transactionExecutor = null;
-    }
-
-    #endregion
 
     #region Commands
 
@@ -119,22 +71,6 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         }
     }
 
-    public async Task<SaveChangesResult> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        if (_transactionExecutor != null)
-        {
-            return await _transactionExecutor.SaveChangesAsync(cancellationToken);
-        }
-
-        var executor = new UnitOfWorkExecutor(
-            DbContext,
-            UserSessionService,
-            _eventMediator,
-            _logger);
-
-        return await executor.SaveChangesAsync(cancellationToken);
-    }
-
     protected T LazyInitialize<T>(ref T? repository, Func<T> factory) where T : class
     {
         return repository ??= factory();
@@ -142,6 +78,123 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     #endregion
 
+    public async Task<SaveChangesResult> SaveChangesAsync(
+       CancellationToken cancellationToken = default)
+    {
+        return await SaveChangesAsync(silent: false, cancellationToken);
+    }
+ 
+    public async Task<SaveChangesResult> SaveChangesAsync(
+        bool silent,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            _lock.Wait(cancellationToken);
+
+            if (_transactionExecutor != null)
+            {
+                return await _transactionExecutor.SaveChangesAsync(silent, cancellationToken);
+            }
+
+            var executor = new UnitOfWorkExecutor(
+                DbContext,
+                UserSessionService,
+                _eventMediator,
+                _logger);
+
+            return await executor.SaveChangesAsync(silent, cancellationToken);
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    #region Transaction
+
+    public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        if (DbContext.Database.IsInMemory())
+            return;
+
+        if (_transactionExecutor != null)
+            throw new InvalidOperationException("Failed to begin transaction. There is already an open transaction.");
+
+        try
+        {
+            _lock.Wait(cancellationToken);
+
+            var transaction = await DbContext.Database.BeginTransactionAsync(cancellationToken);
+           
+            _transactionExecutor = new TransactionUnitOfWorkExecutor(
+                DbContext,
+                UserSessionService,
+                _eventMediator,
+                _logger,
+                transaction);
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+    public async Task<SaveChangesResult> CommitAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await CommitAsync(silent: false, cancellationToken);
+    }
+
+    public async Task<SaveChangesResult> CommitAsync(
+        bool silent,
+        CancellationToken cancellationToken = default)
+    {
+        if (DbContext.Database.IsInMemory())
+            return await SaveChangesAsync(silent, cancellationToken);
+
+        if (_transactionExecutor == null)
+            throw new InvalidOperationException("There is no active transaction to commit.");
+     
+        try
+        {
+            _lock.Wait(cancellationToken);
+
+            var result = await _transactionExecutor.CommitAsync(silent, cancellationToken);
+            _transactionExecutor = null;
+            return result;
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    public async Task RollbackAsync(
+        Exception exception,
+        CancellationToken cancellationToken = default)
+    {
+
+        if (DbContext.Database.IsInMemory())
+            return;
+
+        if (_transactionExecutor == null)
+            throw new InvalidOperationException("Failed to rollback transaction. There is no open transaction.");
+
+        try
+        {
+            _lock.Wait(cancellationToken);
+
+            await _transactionExecutor.TryRollbackAsync(exception, cancellationToken);
+            _transactionExecutor = null;
+        }
+        finally
+        {
+            _lock.Release();
+        }
+    }
+
+    #endregion
+     
     public async virtual ValueTask DisposeAsync()
     {
         if (_transactionExecutor != null)

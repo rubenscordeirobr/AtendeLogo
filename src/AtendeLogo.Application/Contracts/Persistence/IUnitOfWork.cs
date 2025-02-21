@@ -5,11 +5,6 @@ namespace AtendeLogo.Application.Contracts.Persistence;
 
 public interface IUnitOfWork : IAsyncDisposable
 {
-    //transaction
-    Task BeginTransactionAsync(CancellationToken cancellationToken = default);
-    Task<SaveChangesResult> CommitAsync(CancellationToken cancellationToken = default);
-    Task RollbackAsync(Exception exception, CancellationToken cancellationToken = default);
-
     //commands
     public void Add<TEntity>(TEntity entity)
         where TEntity : EntityBase;
@@ -23,5 +18,14 @@ public interface IUnitOfWork : IAsyncDisposable
     public void Attach<TEntity>(TEntity entity)
         where TEntity : EntityBase;
 
+    //transaction
+    Task BeginTransactionAsync(CancellationToken cancellationToken = default);
+
+    Task<SaveChangesResult> CommitAsync(bool silent, CancellationToken cancellationToken = default);
+    Task<SaveChangesResult> CommitAsync(CancellationToken cancellationToken = default);
+
+    Task RollbackAsync(Exception exception, CancellationToken cancellationToken = default);
+
+    Task<SaveChangesResult> SaveChangesAsync(bool silent, CancellationToken cancellationToken = default);
     Task<SaveChangesResult> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

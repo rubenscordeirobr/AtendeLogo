@@ -28,7 +28,9 @@ internal abstract class UnitOfWorkExecutorBase
         EventMediator = eventMediator;
     }
 
-    protected async Task<SaveChangesResult> ExecuteSaveChangesAsync(CancellationToken cancellationToken)
+    protected async Task<SaveChangesResult> ExecuteSaveChangesAsync(
+        bool silent,
+        CancellationToken cancellationToken)
     {
         var entries = _dbContext.ChangeTracker
             .Entries<EntityBase>()
@@ -71,6 +73,11 @@ internal abstract class UnitOfWorkExecutorBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during save changes.");
+         
+            if (!silent)
+            {
+                throw;
+            }
             return SaveChangesResult.SaveChangesError(ex, domainEventContext);
         }
     }
@@ -81,7 +88,7 @@ internal abstract class UnitOfWorkExecutorBase
         DomainEventContext domainEventContext,
         int rowAffects);
 
-    public abstract Task<SaveChangesResult> SaveChangesAsync(CancellationToken cancellationToken);
+    public abstract Task<SaveChangesResult> SaveChangesAsync(bool silent, CancellationToken cancellationToken);
 
     private void SetCreationAndUpdateDates(
         IUserSession userSession,

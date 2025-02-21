@@ -16,9 +16,10 @@ internal class UnitOfWorkExecutor : UnitOfWorkExecutorBase
         : base(dbContext, userSessionService, eventMediator, logger)
     {
     }
-    public override Task<SaveChangesResult> SaveChangesAsync(CancellationToken cancellationToken)
+
+    public override Task<SaveChangesResult> SaveChangesAsync(bool silent, CancellationToken cancellationToken)
     {
-        return ExecuteSaveChangesAsync(cancellationToken);
+        return ExecuteSaveChangesAsync(silent, cancellationToken);
     }
 
     protected override Task DispatchAsyncDomainEventAsync(
@@ -27,6 +28,7 @@ internal class UnitOfWorkExecutor : UnitOfWorkExecutorBase
     {
         return EventMediator.DispatchAsync(domainEventContext);
     }
+
     protected override Task PreProcessorDispatchAsync(DomainEventContext domainEventContext)
     {
         return EventMediator.PreProcessorDispatchAsync(domainEventContext);
