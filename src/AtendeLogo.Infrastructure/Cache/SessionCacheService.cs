@@ -1,17 +1,16 @@
 ﻿using AtendeLogo.Common;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 
 namespace AtendeLogo.Infrastructure.Cache;
 
 public class SessionCacheService : CacheServiceBase, ISessionCacheService
 {
-    protected override string PrefixChacheName => "user-session";
+    protected override string PrefixCacheName => "user-session";
 
     public SessionCacheService(
-        IConnectionMultiplexer redisConnection,
-        ILogger<CommandTrackingService> logger)
-        : base(redisConnection, logger, TimeSpan.FromHours(1))
+        ICacheRepository cacheRepository,
+        ILogger<SessionCacheService> logger)
+        : base(cacheRepository, logger, TimeSpan.FromHours(1))
     {
     }
 

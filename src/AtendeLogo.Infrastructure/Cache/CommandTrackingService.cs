@@ -1,18 +1,17 @@
 ﻿using AtendeLogo.Common;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 
 namespace AtendeLogo.Infrastructure.Cache;
 
 public class CommandTrackingService : CacheServiceBase, ICommandTrackingService
 {
-    protected override string PrefixChacheName
+    protected override string PrefixCacheName 
         => "request-tracker";
 
     public CommandTrackingService(
-        IConnectionMultiplexer redisConnection,
+        ICacheRepository cacheRepository,
         ILogger<CommandTrackingService> logger)
-        : base(redisConnection, logger, TimeSpan.FromMinutes(5))
+        : base(cacheRepository, logger, TimeSpan.FromMinutes(5))
     {
     }
 
@@ -40,5 +39,4 @@ public class CommandTrackingService : CacheServiceBase, ICommandTrackingService
         }
         await AddToCacheAsync(clientRequestId, result.Value);
     }
-   
 }

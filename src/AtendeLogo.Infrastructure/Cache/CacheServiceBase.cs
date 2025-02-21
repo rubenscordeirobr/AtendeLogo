@@ -3,18 +3,17 @@ using System.Text.Json.Serialization;
 using AtendeLogo.Common;
 using AtendeLogo.Domain.Primitives;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 
 namespace AtendeLogo.Infrastructure.Cache;
 
 public abstract class CacheServiceBase
 {
-    private readonly IDatabase _cache;
+    private readonly ICacheRepository _repository;
     private readonly ILogger<CacheServiceBase> _logger;
     private readonly TimeSpan _defaultExpiration;
-    protected abstract string PrefixChacheName { get; }
+    protected abstract string PrefixCacheName { get; }
 
-    protected virtual JsonSerializerOptions JsonOptiops { get; }
+    protected virtual JsonSerializerOptions JsonOptions { get; }
         = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -25,11 +24,11 @@ public abstract class CacheServiceBase
         };
 
     protected CacheServiceBase(
-        IConnectionMultiplexer redisConnection,
+        ICacheRepository _repository,
         ILogger<CacheServiceBase> logger,
         TimeSpan expiration)
     {
-        _cache = redisConnection.GetDatabase();
+        this._repository = _repository;
         _logger = logger;
         _defaultExpiration = expiration;
     }
@@ -37,13 +36,13 @@ public abstract class CacheServiceBase
     protected async Task<bool> ExistsInCacheAsync(Guid key)
     {
         var cacheKey = BuildCacheKey(key);
-        return await _cache.KeyExistsAsync(cacheKey);
+        return await _repository.KeyExistsAsync(cacheKey);
     }
 
     protected async Task<bool> ExistsInCacheAsync(string key)
     {
         var cacheKey = BuildCacheKey(key);
-        return await _cache.KeyExistsAsync(cacheKey);
+        return await _repository.KeyExistsAsync(cacheKey);
     }
 
     protected async Task<T?> GetFromCacheAsync<T>(Guid key, CancellationToken cancellationToken = default)
@@ -61,13 +60,13 @@ public abstract class CacheServiceBase
     protected async Task AddToCacheAsync<T>(string key, T value, TimeSpan? expiration = null)
     {
         var cacheKey = BuildCacheKey(key);
-        await AddToCacheAsynccInternal(cacheKey, value, expiration);
+        await AddToCacheAsyncInternal(cacheKey, value, expiration);
     }
 
     protected async Task AddToCacheAsync<T>(Guid key, T value, TimeSpan? expiration = null)
     {
         var cacheKey = BuildCacheKey(key);
-        await AddToCacheAsynccInternal(cacheKey, value, expiration);
+        await AddToCacheAsyncInternal(cacheKey, value, expiration);
     }
 
     protected async Task RemoveFromCacheAsync(Guid key)
@@ -84,16 +83,16 @@ public abstract class CacheServiceBase
 
     private async Task<T?> GetAsyncInternal<T>(string cachedKey, CancellationToken cancellationToken = default)
     {
-        var cachedValue = await _cache.StringGetAsync(cachedKey);
-        if (!cachedValue.HasValue || cancellationToken.IsCancellationRequested)
+        var cachedValue = await _repository.StringGetAsync(cachedKey);
+        if (cachedValue is null || cancellationToken.IsCancellationRequested) 
         {
             return default;
         }
 
         try
         {
-            var options = GetJsonOptios<T>();
-            return JsonSerializer.Deserialize<T>(cachedValue.ToString(), options);
+            var options = GetJsonOptions<T>();
+            return JsonSerializer.Deserialize<T>(cachedValue, options);
         }
         catch (JsonException)
         {
@@ -102,15 +101,15 @@ public abstract class CacheServiceBase
         }
     }
      
-    private async Task AddToCacheAsynccInternal<T>(string cacheKey, T value, TimeSpan? expiration = null)
+    private async Task AddToCacheAsyncInternal<T>(string cacheKey, T value, TimeSpan? expiration = null)
     {
         var serializedValue = JsonSerializer.Serialize(value);
-        await _cache.StringSetAsync(cacheKey, serializedValue, expiration ?? _defaultExpiration);
+        await _repository.StringSetAsync(cacheKey, serializedValue, expiration ?? _defaultExpiration);
     }
 
     private async Task RemoveFromCacheAsyncInternal(string cacheKey)
     {
-        await _cache.KeyDeleteAsync(cacheKey);
+        await _repository.KeyDeleteAsync(cacheKey);
     }
 
     private string BuildCacheKey(
@@ -118,9 +117,9 @@ public abstract class CacheServiceBase
          => BuildCacheKey(HashHelper.CreateMd5GuidHash(id));
 
     private string BuildCacheKey(Guid id)
-        => $"{PrefixChacheName}:{id}";
+        => $"{PrefixCacheName}:{id}";
 
-    private JsonSerializerOptions? GetJsonOptios<T>()
+    private JsonSerializerOptions? GetJsonOptions<T>()
     {
         if (typeof(T).IsSubclassOf(typeof(EntityBase)))
         {
@@ -129,11 +128,11 @@ public abstract class CacheServiceBase
 
             Guard.NotNull(converterInstance, nameof(converterInstance));
 
-            return new JsonSerializerOptions(JsonOptiops) 
+            return new JsonSerializerOptions(JsonOptions) 
             {
                 Converters = { converterInstance }
             };
         }
-        return JsonOptiops;
+        return JsonOptions;
     }
 }
