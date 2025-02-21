@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Domain.Entities.Identities.Events;
 
-public record UserCreatedEvent : DomainEvent
+public record UserCreatedEvent : IDomainEvent
 {
     public User UserCreated { get; }
 
@@ -8,9 +8,4 @@ public record UserCreatedEvent : DomainEvent
     {
         UserCreated = userCreated;
     }
-}
-
-public class DomainEvent<TEntity> : IDomainEvent
-    where TEntity : EntityBase
-{
 }

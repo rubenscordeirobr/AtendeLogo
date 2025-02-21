@@ -2,6 +2,6 @@
 
 internal sealed record TenantTimeZoneOffsetChangedEvent(
     Tenant Tenant,
-    TimeZoneOffset TimeZoneOffsetOld,
-    TimeZoneOffset TimeZoneOffsetNew) : IDomainEvent;
+    TimeZoneOffset PreviousTimeZoneOffset,
+    TimeZoneOffset TimeZoneOffset) : IDomainEvent;
 
