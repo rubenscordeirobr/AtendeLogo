@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Application.Contracts.Services;
 
-public interface ICommandTrackingService
+public interface ICommandTrackingService : IApplicationService
 {
     Task<bool> ExistsAsync(Guid clientRequestId, CancellationToken cancellationToken = default);
     Task<Result<T>?> TryGetResultAsync<T>(Guid clientRequestId, CancellationToken cancellationToken = default) where T : notnull;

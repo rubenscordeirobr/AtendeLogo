@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Application.Contracts.Services;
 
-public interface ISessionCacheService
+public interface ISessionCacheService : IApplicationService
 {
     Task<bool> ExistsAsync(string clientSessionToken);
 

@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Application.Contracts.Services;
 
-public interface IEmailSender
+public interface IEmailSender : IApplicationService
 {
     Task<bool> SendEmailAsync(Email email);
 }
