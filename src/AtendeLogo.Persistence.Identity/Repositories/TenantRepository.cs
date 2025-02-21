@@ -46,4 +46,11 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
     {
         return AnyAsync(x => x.FiscalCode == fiscalCode && x.Id != currentTenant_Id, token);
     }
+
+    public Task<Tenant?> GetWithAddressByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return Query
+            .Include(x => x.DefaultAddress)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
 }
