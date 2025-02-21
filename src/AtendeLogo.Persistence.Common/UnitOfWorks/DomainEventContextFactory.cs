@@ -106,8 +106,8 @@ internal class DomainEventContextFactory
 
         return new ChangedPropertyEvent(
             PropertyName: property.Metadata.Name,
-            OldValue: originalValue,
-            NewValue: currentValue
+            PreviousValue: originalValue,
+            Value: currentValue
          );
     }
 

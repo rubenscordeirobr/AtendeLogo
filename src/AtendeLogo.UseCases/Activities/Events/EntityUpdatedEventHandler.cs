@@ -31,7 +31,7 @@ public sealed class EntityUpdatedEventHandler<TEntity> : IEntityUpdatedEventHand
        
         var entity = domainEvent.Entity;
         var properties = domainEvent.ChangedProperties
-            .Select(propertyChanged => $"{propertyChanged.PropertyName}: {propertyChanged.OldValue} -> {propertyChanged.NewValue}")
+            .Select(propertyChanged => $"{propertyChanged.PropertyName}: {propertyChanged.PreviousValue} -> {propertyChanged.Value}")
             .ToList();
 
         var description = $"Updated {entity.GetType().Name} {entity.Id}. Properties: {string.Join(", ", properties)}";
@@ -39,13 +39,13 @@ public sealed class EntityUpdatedEventHandler<TEntity> : IEntityUpdatedEventHand
         
         foreach (var property in domainEvent.ChangedProperties)
         {
-            ((IDictionary<string, object>)newData)[property.PropertyName] = property.NewValue ?? "null";
+            ((IDictionary<string, object>)newData)[property.PropertyName] = property.Value ?? "null";
         }
 
         dynamic oldData = new ExpandoObject();
         foreach (var property in domainEvent.ChangedProperties)
         {
-            ((IDictionary<string, object>)oldData)[property.PropertyName] = property.OldValue ?? "null";
+            ((IDictionary<string, object>)oldData)[property.PropertyName] = property.PreviousValue ?? "null";
         }
 
         var oldDataSerialized = JsonSerializer.Serialize(oldData);

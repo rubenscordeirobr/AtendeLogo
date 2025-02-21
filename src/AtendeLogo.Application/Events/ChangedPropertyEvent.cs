@@ -2,11 +2,11 @@
 
 public record ChangedPropertyEvent(
     string PropertyName,
-    object? OldValue,
-    object? NewValue) : IChangedPropertyEvent
+    object? PreviousValue,
+    object? Value) : IChangedPropertyEvent
 {
     public sealed override string ToString()
-        => $"{PropertyName}: {OldValue} -> {NewValue}";
+        => $"{PropertyName}: {PreviousValue} -> {Value}";
 }
 
 public record PropertyValueEvent(

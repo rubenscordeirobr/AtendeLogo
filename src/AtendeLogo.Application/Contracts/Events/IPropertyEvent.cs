@@ -12,7 +12,7 @@ public interface IPropertyValueEvent: IPropertyEvent
 
 public interface IChangedPropertyEvent : IPropertyEvent
 {
-    public object? OldValue { get; }
-    public object? NewValue { get; }
+    public object? PreviousValue { get; }
+    public object? Value { get; }
 }
 
