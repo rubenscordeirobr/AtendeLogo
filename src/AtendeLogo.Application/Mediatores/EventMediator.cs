@@ -151,20 +151,17 @@ internal partial class EventMediator : IEventMediator
             {
                 if (domainEvent is IEntityStateChangedEvent entityStateChangedEvent)
                 {
-                    var handlerImplemnd = handlerType
+                    var isEntityStateEventHandlerType = handlerType
                         .ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventHandler<>)) ||
                         handlerType.ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventPreProcessorHandler<>));
 
-                    if (handlerImplemnd)
+                    if (isEntityStateEventHandlerType)
                     {
                         return handlerType.MakeGenericType(entityStateChangedEvent.EntityBase.GetType());
                     }
 
                     throw new InvalidOperationException($"Event {domainEvent.GetType().Name} not implements  {nameof(IEntityStateChangedEvent)}");
                 }
-
- 
-
                 throw new InvalidOperationException($"Event {domainEvent.GetType().Name} has generic arguments with ContainsGenericParameters");
             }
         }

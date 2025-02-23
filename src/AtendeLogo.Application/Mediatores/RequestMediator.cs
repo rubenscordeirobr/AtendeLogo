@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Application.Mediatores;
 
-internal partial class RequestMediator : IRequestMediator
+internal partial class RequestMediator : IRequestMediator, IRequestMediatorTest
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ICommandTrackingService _tackingService;
@@ -83,12 +83,12 @@ internal partial class RequestMediator : IRequestMediator
     #region Query
 
     public Task<Result<TResponse>> GetSingleAsync<TResponse>(
-      IQueryRequest<TResponse> queryReqyest,
+      IQueryRequest<TResponse> queryRequest,
       CancellationToken cancellationToken = default)
           where TResponse : IResponse
     {
-        var handler = GetRequestHandler<ISingleQueryResultHandler<TResponse>, TResponse>(queryReqyest);
-        return handler.GetSingleAsync(queryReqyest, cancellationToken);
+        var handler = GetRequestHandler<ISingleQueryResultHandler<TResponse>, TResponse>(queryRequest);
+        return handler.GetSingleAsync(queryRequest, cancellationToken);
     }
 
     public Task<IReadOnlyList<TResponse>> GetManyAsync<TResponse>(
@@ -132,6 +132,16 @@ internal partial class RequestMediator : IRequestMediator
 
         throw new InvalidCastException(
             $"Could not cast the request handler {handler.GetType().GetQualifiedName()} to {typeof(TRequsetHandler).GetQualifiedName()}");
+    }
+
+    #endregion
+
+    #region IRequestMediatorTest
+
+    IRequestHandler<TResponse> IRequestMediatorTest.GetRequestHandler<TResponse>(
+        IRequest<TResponse> request)
+    {
+        return GetRequestHandler<IRequestHandler<TResponse>, TResponse>(request);
     }
 
     #endregion
