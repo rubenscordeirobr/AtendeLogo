@@ -202,7 +202,7 @@ public class TypeExtensionsTests
     [MemberData(nameof(IsAssignableToOrDefinitionTestData))]
     public void IsAssignableToOrDefinition_ShouldReturnExpectedResult(Type type, Type[] targetTypes, bool expectedResult)
     {
-        var result = type.IsAssignableToOrDefinition(targetTypes, true);
+        var result = type.IsAssignableToOrDefinition(targetTypes);
         result.Should().Be(expectedResult);
     }
 

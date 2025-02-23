@@ -195,8 +195,7 @@ public static class TypeExtensions
 
     public static bool IsAssignableToOrDefinition(
         this Type? type,
-        IEnumerable<Type> types,
-        bool includeDefinition)
+        IEnumerable<Type> types)
     {
         if (type == null)
         {
