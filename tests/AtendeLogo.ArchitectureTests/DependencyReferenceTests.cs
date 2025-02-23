@@ -1,60 +1,16 @@
-﻿using System.Reflection;
+﻿using AtendeLogo.ArchitectureTests.TestSupport;
+using AtendeLogo.ArchitectureTests.Extensions;
 using FluentAssertions;
 using NetArchTest.Rules;
 
 namespace AtendeLogo.ArchitectureTests;
 
-public class DependencyReferenceTests
+public class DependencyReferenceTests :IClassFixture<ApplicationAssemblyContext>
 {
-    private Assembly _commonAssembly;
-    private Assembly _domainAssembly;
-    private Assembly _sharedKernelAssembly;
-    private Assembly _applicationAssembly;
-    private Assembly _useCasesAssembly;
-    private Assembly _presentationAssembly;
-
-    private Assembly _infrastructureAssembly;
-    private Assembly _identityPersistanceAssembly;
-    private Assembly _activityPersistanceAssembly;
-    private Assembly _useCasesSharedAssembly;
-
-    public Assembly[] _infrastructuresAssemblies;
-    public string[] _infrastructuresAssemblyNames;
-
-    public DependencyReferenceTests()
+    private readonly ApplicationAssemblyContext _context;
+    public DependencyReferenceTests(ApplicationAssemblyContext assemblyContext)
     {
-
-        _commonAssembly = typeof(Common.Guard).Assembly;
-        _domainAssembly = typeof(Domain.Primitives.EntityBase).Assembly;
-
-        _applicationAssembly = typeof(Application.ApplicationServiceConfiguration).Assembly;
-
-        _useCasesAssembly = typeof(UseCases.UseCasesServiceConfiguration).Assembly;
-        _presentationAssembly = typeof(Presentation.PresentationServiceConfiguration).Assembly;
-
-        _infrastructureAssembly = typeof(Infrastructure.InfrastructureServiceConfiguration).Assembly;
-        _identityPersistanceAssembly = typeof(Persistence.Identity.IdentityPersistenceServiceConfiguration).Assembly;
-        _activityPersistanceAssembly = typeof(Persistence.Activity.ActivitiyPersistenceServiceConfiguration).Assembly;
-
-        _sharedKernelAssembly = typeof(Shared.ValueObjects.ValueObjectBase).Assembly;
-        _useCasesSharedAssembly = typeof(UseCases.Common.Validations.ValidationMessages).Assembly;
-
-        _infrastructuresAssemblies = [
-            _infrastructureAssembly,
-            _identityPersistanceAssembly,
-            _activityPersistanceAssembly
-        ];
-
-        _infrastructuresAssemblyNames = [
-            _infrastructureAssembly.GetName().Name!,
-            _identityPersistanceAssembly.GetName().Name!,
-            _activityPersistanceAssembly.GetName().Name!
-        ];
-
-        if (_infrastructuresAssemblyNames.Any(x => x == null))
-        {
-            throw new Exception("One of the infrastructure assembly names is null");
-        }
+        _context = assemblyContext;
     }
 
     [Fact]
@@ -62,15 +18,15 @@ public class DependencyReferenceTests
     {
         //Arrange
         string[] dependencies = [
-            _domainAssembly.GetName().Name!,
-            _applicationAssembly.GetName().Name!,
-            _useCasesSharedAssembly.GetName().Name!,
-            _useCasesAssembly.GetName().Name!,
-            _presentationAssembly.GetName().Name!,
-             .._infrastructuresAssemblyNames];
+            _context.DomainAssemblyName,
+            _context.ApplicationAssemblyName,
+            _context.UseCasesSharedAssemblyName,
+            _context.UseCasesAssemblyName,
+            _context.PresentationAssemblyName,
+             .._context.InfrastructuresAssemblyNames];
 
         //Act
-        var result = Types.InAssembly(_commonAssembly)
+        var result = Types.InAssembly(_context.CommonAssembly)
             .ShouldNot()
             .HaveDependencyOnAny(dependencies)
             .GetResult();
@@ -87,17 +43,17 @@ public class DependencyReferenceTests
     public void UseSharedKernelAssembly_ShouldNotHaveDependencies()
     {
         //Arrange
-        string[] depedencies = [
-                _domainAssembly.GetName().Name!,
-                _applicationAssembly.GetName().Name!,
-                _useCasesSharedAssembly.GetName().Name!,
-                _presentationAssembly.GetName().Name!,
-                .._infrastructuresAssemblyNames];
+        string[] dependencies = [
+            _context.DomainAssemblyName,
+            _context.ApplicationAssemblyName,
+            _context.UseCasesSharedAssemblyName,
+            _context.PresentationAssemblyName,
+            .._context.InfrastructuresAssemblyNames];
 
         //Act
-        var result = Types.InAssembly(_sharedKernelAssembly)
+        var result = Types.InAssembly(_context.SharedKernelAssembly)
                .ShouldNot()
-               .HaveDependencyOnAny(depedencies)
+               .HaveDependencyOnAny(dependencies)
                .GetResult();
 
         //Assert
@@ -113,11 +69,11 @@ public class DependencyReferenceTests
     {
         //Arrange
         string[] dependencies = [
-         _useCasesAssembly.GetName().Name!,
-             .._infrastructuresAssemblyNames];
+            _context.UseCasesAssemblyName,
+            .._context.InfrastructuresAssemblyNames];
 
         //Act
-        var result = Types.InAssembly(_applicationAssembly)
+        var result = Types.InAssembly(_context.ApplicationAssembly)
              .ShouldNot()
              .HaveDependencyOnAny(dependencies)
              .GetResult();
@@ -133,10 +89,10 @@ public class DependencyReferenceTests
     public void UserCasesAssembly_ShouldNotHaveDependencies()
     {
         //Arrange
-        string[] dependencies = [.. _infrastructuresAssemblyNames];
+        string[] dependencies = _context.InfrastructuresAssemblyNames;
 
         //Act
-        var result = Types.InAssembly(_applicationAssembly)
+        var result = Types.InAssembly(_context.UseCasesAssembly)
               .ShouldNot()
               .HaveDependencyOnAny(dependencies)
               .GetResult();
@@ -153,13 +109,14 @@ public class DependencyReferenceTests
     {
         //Arrange
         string[] dependencies = [
-           _domainAssembly.GetName().Name!,
-           _applicationAssembly.GetName().Name!,
-           _presentationAssembly.GetName().Name!,
-             .._infrastructuresAssemblyNames];
+           _context.DomainAssemblyName,
+           _context.ApplicationAssemblyName,
+           _context.PresentationAssemblyName,
+           .._context.InfrastructuresAssemblyNames
+        ];
 
         //Act
-        var result = Types.InAssembly(_useCasesSharedAssembly)
+        var result = Types.InAssembly(_context.UseCasesSharedAssembly)
             .ShouldNot()
             .HaveDependencyOnAny(dependencies)
             .GetResult();
@@ -176,10 +133,10 @@ public class DependencyReferenceTests
     public void PresentationAssembly_ShouldNotHaveDomainDependencies()
     {
         //Arrange
-        var domainAssemblyName = _domainAssembly.GetName().Name!;
+        var domainAssemblyName = _context.DomainAssemblyName;
 
         //Act
-        var result = Types.InAssembly(_presentationAssembly)
+        var result = Types.InAssembly(_context.PresentationAssembly)
             .ShouldNot()
             .HaveDependencyOn(domainAssemblyName)
             .GetResult();
@@ -188,7 +145,6 @@ public class DependencyReferenceTests
         result.IsSuccessful
                .Should()
                .BeTrue(because: "Presentation layer should not have dependencies on Domain layer." +
-                                $" FailingTypeNames { result.GetFailingTypeNames()}");
-
+                                $" FailingTypeNames {result.GetFailingTypeNames()}");
     }
 }
