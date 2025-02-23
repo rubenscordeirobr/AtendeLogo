@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.Common.UnitTests;
+﻿using System.Net;
+
+namespace AtendeLogo.Common.UnitTests;
 
 public class ResultTests
 {
@@ -136,4 +138,51 @@ public class ResultTests
         result.Error.Message.Should().Be(message);
         result.Value.Should().BeNull();
     }
+
+    [Fact]
+    public void ConvertTo_WhenValueIsConvertible_ReturnsSuccessResult()
+    {
+        // Arrange: Use same type conversion (string to string)
+        var originalValue = "test value";
+        var result = Result.Success(originalValue); // Result<string>
+
+        // Act
+        var converted = result.ConvertTo<string>();
+
+        // Assert
+        converted.IsSuccess.Should().BeTrue();
+        converted.Value.Should().Be(originalValue);
+    }
+
+    [Fact]
+    public void ConvertTo_WhenValueIsNotConvertible_ThrowsInvalidOperationException()
+    {
+        // Arrange: string is not convertible to int
+        var originalValue = "test value";
+        var result = Result.Success(originalValue); // Result<string>
+
+        // Act
+        Action act = () => result.ConvertTo<int>();
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>();
+            
+    }
+
+    [Fact]
+    public void ConvertTo_WhenResultIsFailure_ReturnsFailureResult()
+    {
+        // Arrange
+        var error = new  InvalidOperationError ("ERR001", "Error occurred");
+        var result = Result.Failure<string>(error);
+
+        // Act
+        var converted = result.ConvertTo<int>();
+
+        // Assert
+        converted.IsFailure.Should().BeTrue();
+        converted.Error.Should().Be(error);
+    }
+     
+
 }

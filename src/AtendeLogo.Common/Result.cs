@@ -9,7 +9,7 @@ public class Result<T> where T : notnull
     public bool IsSuccess { get; }
 
     [MemberNotNullWhen(true, nameof(Error))]
-    public bool IsFailure 
+    public bool IsFailure
         => !IsSuccess;
 
     public Error? Error { get; }
@@ -46,7 +46,20 @@ public class Result<T> where T : notnull
 
         return Value;
     }
- 
+
+    public Result<TConvert> ConvertTo<TConvert>()
+       where TConvert : notnull
+    {
+        if (IsSuccess)
+        {
+            if (Value.GetType().IsAssignableTo(typeof(TConvert)))
+            {
+                return Result.Success((TConvert)(object)Value!);
+            }
+            throw new InvalidOperationException($" Cannot convert value {typeof(T).Name} to {typeof(TConvert).Name}");
+        }
+        return Result.Failure<TConvert>(Error);
+    }
 }
 
 public static class Result
@@ -61,15 +74,17 @@ public static class Result
 
     public static Result<T> ValidationFailure<T>(
         string code,
-        string message, 
+        string message,
         params object[] arguments)
         where T : notnull
         => new(new ValidationError(code, message, arguments));
-   
+
     public static Result<T> NotFoundFailure<T>(
         string code,
         string message,
         params object[] arguments)
         where T : notnull
         => new(new NotFoundError(code, message, arguments));
+
+
 }
