@@ -21,6 +21,8 @@ public static partial class DefaultValidationsExtensions
             .MinimumLength(ValidationConstants.PasswordMinLength)
             .Matches("[A-Z]")
                 .WithMessage(localizer["PasswordUppercase", "Password must contain at least one uppercase letter"])
+            .MaximumLength(ValidationConstants.PasswordMaxLength)
+                .WithMessage(localizer["PasswordTooLong", "Password cannot be longer than {MaxLength} characters"])
             .Matches("[a-z]")
                 .WithMessage(localizer["PasswordLowercase", "Password must contain at least one lowercase letter"])
             .Matches("[0-9]")
