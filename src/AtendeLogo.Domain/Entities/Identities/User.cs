@@ -41,7 +41,6 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
             throw new DomainException("Password must be strong");
 
         Password = password;
-
         _events.Add(new PasswordChangedEvent(this));
     }
 

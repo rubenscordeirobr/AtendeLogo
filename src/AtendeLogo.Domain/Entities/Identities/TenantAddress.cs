@@ -5,7 +5,7 @@ public sealed class TenantAddress : EntityBase, IAddress, ISoftDeletableEntity, 
     public string AddressName { get; private set; }
     public string Street { get; private set; }
     public string Number { get; private set; }
-    public string Complement { get; private set; }
+    public string? Complement { get; private set; }
     public string Neighborhood { get; private set; }
     public string City { get; private set; }
     public string State { get; private set; }
@@ -20,7 +20,7 @@ public sealed class TenantAddress : EntityBase, IAddress, ISoftDeletableEntity, 
            string addressName,
            string street,
            string number,
-           string complement,
+           string? complement,
            string neighborhood,
            string city,
            string state,
@@ -37,7 +37,7 @@ public sealed class TenantAddress : EntityBase, IAddress, ISoftDeletableEntity, 
         string addressName,
         string street,
         string number,
-        string complement,
+        string? complement,
         string neighborhood,
         string city,
         string state,
@@ -79,6 +79,4 @@ public sealed class TenantAddress : EntityBase, IAddress, ISoftDeletableEntity, 
     public double? SortOrder { get; private set; }
 
     #endregion
-
-
 }

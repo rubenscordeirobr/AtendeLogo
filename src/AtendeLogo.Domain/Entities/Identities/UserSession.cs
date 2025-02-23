@@ -2,7 +2,7 @@
 
 public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 {
-    private const int UpdateCheckIntervalMinutes  = 5;
+    private const int UpdateCheckIntervalMinutes = 5;
 
     private readonly List<IDomainEvent> _events = new();
 
@@ -17,13 +17,13 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public DateTime? TerminatedAt { get; private set; }
     public Language Language { get; private set; }
     public AuthenticationType AuthenticationType { get; private set; }
-    public SessionTerminationReason? TerminationReason { get;private set; }
+    public SessionTerminationReason? TerminationReason { get; private set; }
     public Guid User_Id { get; private set; }
     public User? User { get; private set; }
     public Guid? Tenant_Id { get; private set; }
     public Tenant? Tenant { get; private set; }
     public GeoLocation GeoLocation { get; private set; } = GeoLocation.Empty;
-      
+
     public UserSession(
         string applicationName,
         string clientSessionToken,
@@ -57,25 +57,15 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
             throw new InvalidOperationException("Anonymous system session cannot be terminated.");
         }
 
+        if (!IsActive)
+        {
+            throw new InvalidOperationException("Session is already terminated.");
+        }
+
         this.IsActive = false;
         this.TerminatedAt = DateTime.Now;
         this.TerminationReason = reason;
         this._events.Add(new UserSessionTerminatedEvent(this, reason));
-    }
-
-    public void SetAnonymousSystemSessionId()
-    {
-        if(Id!= default)
-        {
-            throw new InvalidOperationException("Id is already set.");
-        }
-
-        SetCreateSession(AnonymousConstants.AnonymousSystemSession_Id);
-
-        Id = AnonymousConstants.AnonymousSystemSession_Id;
-        AuthenticationType = AuthenticationType.Anonymous;
-        AuthToken = null;
-        Tenant_Id = null;
     }
 
     public void UpdateLastActivity()
@@ -90,4 +80,5 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public IReadOnlyList<IDomainEvent> DomainEvents => _events;
 
     #endregion
+     
 }

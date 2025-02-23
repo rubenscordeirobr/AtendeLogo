@@ -76,17 +76,22 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
         TimeZoneOffset = timeZoneOffset;
     }
 
-    public void SetAddress(TenantAddress address)
+    public void SetDefaultAddress(TenantAddress address)
     {
+        DefaultAddress?.RemoveDefault();
+
         DefaultAddress = address;
         Address_Id = address.Id;
     }
 
     public void SetCreateOwner(TenantUser tenantUser)
     {
-        Guard.MustBeEmpty(OwnerUser_Id);
-        Guard.NotEmpty(tenantUser.Id);
+        if(OwnerUser_Id != default)
+        {
+            throw new InvalidOperationException(" The owner cannot be changed.");
+        }
 
+        Guard.NotEmpty(tenantUser.Id);
         OwnerUser = tenantUser;
         OwnerUser_Id = tenantUser.Id;
 
@@ -114,14 +119,13 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
         string addressName,
         string street,
         string number,
-        string complement,
+        string? complement,
         string neighborhood,
         string city,
         string state,
         string zipCode,
         Country country)
     {
-       
         var address = new TenantAddress(
              tenant: this,
              addressName: addressName,

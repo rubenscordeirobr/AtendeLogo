@@ -2,7 +2,8 @@
 
 public sealed class SystemUser : User
 {
-    public SystemUser(
+    // EF Core constructor
+    private SystemUser(
        string name,
        string email,
        UserState userState,
@@ -22,19 +23,5 @@ public sealed class SystemUser : User
         Password password) 
         : base(name, email, userState, userStatus, phoneNumber, password)
     {
-    }
-
-    public void SetAnonymousId()
-    {
-        if (Id != default)
-        {
-            throw new InvalidOperationException("Id is already set.");
-        }
-        SetCreateSession(AnonymousConstants.AnonymousSystemSession_Id);
-        Id = AnonymousConstants.AnonymousUser_Id;
-        Email = AnonymousConstants.AnonymousEmail;
-        Name = AnonymousConstants.AnonymousName;
-        UserStatus = UserStatus.Anonymous;
-        UserState = UserState.Active;
     }
 }
