@@ -15,7 +15,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AtendeLogo.Persistence.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250215085508_InitialMigration")]
+    [Migration("20250221055227_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -25,22 +25,22 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             modelBuilder
                 .UseCollation("case_accent_insensitive")
                 .HasAnnotation("Npgsql:CollationDefinition:case_accent_insensitive", "und-u-ks-level1,und-u-ks-level1,icu,False")
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "admin_user_role", new[] { "manager", "operator", "super_admin", "viewer" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "authentication_type", new[] { "anonymous", "email_password", "facebook", "google", "microsoft", "sms", "system", "unknown", "whats_app" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "business_type", new[] { "civil_registry_office" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "business_type", new[] { "civil_registry_office", "system" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "country", new[] { "argentina", "bolivia", "brazil", "canada", "chile", "colombia", "ecuador", "france", "germany", "guyana", "italy", "mexico", "paraguay", "peru", "portugal", "spain", "suriname", "united_kingdom", "united_states", "unknown", "uruguay", "venezuela" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "currency", new[] { "brl", "eur", "usd" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "language", new[] { "default", "englishk", "french", "german", "italian", "portuguese", "spanish" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "language", new[] { "default", "english", "french", "german", "italian", "portuguese", "spanish" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "password_strength", new[] { "empty", "medium", "strong", "weak" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_state", new[] { "cancelled", "closed", "new", "onboarding", "operational", "trial" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_state", new[] { "cancelled", "closed", "new", "onboarding", "operational", "system", "trial" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_status", new[] { "active", "archived", "inactive", "pending", "suspended" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_type", new[] { "company", "individual" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_type", new[] { "company", "individual", "system" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_user_role", new[] { "admin", "chat_agent", "manager", "operator", "owner", "viewer" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_state", new[] { "active", "blocked", "deleted", "inactive", "new", "pending_verification", "suspended" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_status", new[] { "anonymous", "away", "busy", "do_not_disturb", "offline", "online", "system", "unknown" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_status", new[] { "anonymous", "away", "busy", "do_not_disturb", "offline", "online", "system" });
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
@@ -88,8 +88,8 @@ namespace AtendeLogo.Persistence.Identity.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("email")
                         .UseCollation("case_accent_insensitive");
 
@@ -127,9 +127,9 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                         .HasColumnName("name")
                         .UseCollation("case_accent_insensitive");
 
-                    b.Property<Guid?>("Owner_Id")
+                    b.Property<Guid?>("OwnerUser_Id")
                         .HasColumnType("uuid")
-                        .HasColumnName("owner_id");
+                        .HasColumnName("owner_user_id");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -184,9 +184,9 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                         .HasDatabaseName("ix_tenants_fiscal_code")
                         .HasFilter("is_deleted = false");
 
-                    b.HasIndex("Owner_Id")
+                    b.HasIndex("OwnerUser_Id")
                         .IsUnique()
-                        .HasDatabaseName("ix_tenants_owner_id")
+                        .HasDatabaseName("ix_tenants_owner_user_id")
                         .HasFilter("is_deleted = false");
 
                     b.ToTable("tenants", t =>
@@ -196,6 +196,142 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                             t.HasCheckConstraint("ck_tenants_id_not_empty", "id <> '00000000-0000-0000-0000-000000000000'::uuid");
 
                             t.HasCheckConstraint("ck_tenants_last_updated_session_id_not_empty", "last_updated_session_id <> '00000000-0000-0000-0000-000000000000'::uuid");
+                        });
+                });
+
+            modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.TenantAddress", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<string>("AddressName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("address_name")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("city")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<string>("Complement")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("complement")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<Country>("Country")
+                        .HasColumnType("country")
+                        .HasColumnName("country");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("CreatedSession_Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_session_id");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<Guid?>("DeletedSession_Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("deleted_session_id");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_default");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("LastUpdatedSession_Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("last_updated_session_id");
+
+                    b.Property<string>("Neighborhood")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("neighborhood")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("number")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<double?>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("double precision")
+                        .HasColumnName("sort_order")
+                        .HasDefaultValueSql("get_next_sort_order_asc('addresses', 'sort_order')");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("character varying(2)")
+                        .HasColumnName("state")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("street")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<Guid>("Tenant_Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("zip_code")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.HasKey("Id")
+                        .HasName("pk_addresses");
+
+                    b.HasIndex("SortOrder")
+                        .HasDatabaseName("ix_addresses_sort_order");
+
+                    b.HasIndex("Tenant_Id")
+                        .HasDatabaseName("ix_addresses_tenant_id");
+
+                    b.ToTable("addresses", t =>
+                        {
+                            t.HasCheckConstraint("ck_addresses_created_session_id_not_empty", "created_session_id <> '00000000-0000-0000-0000-000000000000'::uuid");
+
+                            t.HasCheckConstraint("ck_addresses_id_not_empty", "id <> '00000000-0000-0000-0000-000000000000'::uuid");
+
+                            t.HasCheckConstraint("ck_addresses_last_updated_session_id_not_empty", "last_updated_session_id <> '00000000-0000-0000-0000-000000000000'::uuid");
+
+                            t.HasCheckConstraint("ck_addresses_tenant_id_not_empty", "tenant_id <> '00000000-0000-0000-0000-000000000000'::uuid");
                         });
                 });
 
@@ -234,8 +370,8 @@ namespace AtendeLogo.Persistence.Identity.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("email")
                         .UseCollation("case_accent_insensitive");
 
@@ -461,99 +597,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                         });
                 });
 
-            modelBuilder.Entity("AtendeLogo.Domain.Entities.Shared.Address", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("city")
-                        .UseCollation("case_accent_insensitive");
-
-                    b.Property<string>("Complement")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("complement")
-                        .UseCollation("case_accent_insensitive");
-
-                    b.Property<Country>("Country")
-                        .HasColumnType("country")
-                        .HasColumnName("country");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<Guid>("CreatedSession_Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("created_session_id");
-
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("last_updated_at")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<Guid>("LastUpdatedSession_Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("last_updated_session_id");
-
-                    b.Property<string>("Neighborhood")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("neighborhood")
-                        .UseCollation("case_accent_insensitive");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("number")
-                        .UseCollation("case_accent_insensitive");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)")
-                        .HasColumnName("state")
-                        .UseCollation("case_accent_insensitive");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("street")
-                        .UseCollation("case_accent_insensitive");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("zip_code")
-                        .UseCollation("case_accent_insensitive");
-
-                    b.HasKey("Id")
-                        .HasName("pk_addresses");
-
-                    b.ToTable("addresses", t =>
-                        {
-                            t.HasCheckConstraint("ck_addresses_created_session_id_not_empty", "created_session_id <> '00000000-0000-0000-0000-000000000000'::uuid");
-
-                            t.HasCheckConstraint("ck_addresses_id_not_empty", "id <> '00000000-0000-0000-0000-000000000000'::uuid");
-
-                            t.HasCheckConstraint("ck_addresses_last_updated_session_id_not_empty", "last_updated_session_id <> '00000000-0000-0000-0000-000000000000'::uuid");
-                        });
-                });
-
             modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.AdminUser", b =>
                 {
                     b.HasBaseType("AtendeLogo.Domain.Entities.Identities.User");
@@ -594,10 +637,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                 {
                     b.HasBaseType("AtendeLogo.Domain.Entities.Identities.User");
 
-                    b.Property<Guid?>("TenantUserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("tenant_user_id");
-
                     b.Property<TenantUserRole>("TenantUserRole")
                         .HasColumnType("tenant_user_role")
                         .HasColumnName("tenant_user_role");
@@ -605,9 +644,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                     b.Property<Guid>("Tenant_Id")
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
-
-                    b.HasIndex("TenantUserId")
-                        .HasDatabaseName("ix_users_tenant_user_id");
 
                     b.HasIndex("Tenant_Id")
                         .HasDatabaseName("ix_users_tenant_id");
@@ -628,21 +664,33 @@ namespace AtendeLogo.Persistence.Identity.Migrations
 
             modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.Tenant", b =>
                 {
-                    b.HasOne("AtendeLogo.Domain.Entities.Shared.Address", "Address")
+                    b.HasOne("AtendeLogo.Domain.Entities.Identities.TenantAddress", "DefaultAddress")
                         .WithOne()
                         .HasForeignKey("AtendeLogo.Domain.Entities.Identities.Tenant", "Address_Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_tenants_addresses_address_id");
 
-                    b.HasOne("AtendeLogo.Domain.Entities.Identities.TenantUser", "Owner")
+                    b.HasOne("AtendeLogo.Domain.Entities.Identities.TenantUser", "OwnerUser")
                         .WithOne()
-                        .HasForeignKey("AtendeLogo.Domain.Entities.Identities.Tenant", "Owner_Id")
+                        .HasForeignKey("AtendeLogo.Domain.Entities.Identities.Tenant", "OwnerUser_Id")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_tenants_users_owner_id");
+                        .HasConstraintName("fk_tenants_users_owner_user_id");
 
-                    b.Navigation("Address");
+                    b.Navigation("DefaultAddress");
 
-                    b.Navigation("Owner");
+                    b.Navigation("OwnerUser");
+                });
+
+            modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.TenantAddress", b =>
+                {
+                    b.HasOne("AtendeLogo.Domain.Entities.Identities.Tenant", "Tenant")
+                        .WithMany("Addresses")
+                        .HasForeignKey("Tenant_Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_addresses_tenants_tenant_id");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.UserSession", b =>
@@ -666,12 +714,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
 
             modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.TenantUser", b =>
                 {
-                    b.HasOne("AtendeLogo.Domain.Entities.Identities.TenantUser", null)
-                        .WithMany("TenantUsers")
-                        .HasForeignKey("TenantUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_users_users_tenant_user_id");
-
                     b.HasOne("AtendeLogo.Domain.Entities.Identities.Tenant", "Tenant")
                         .WithMany("Users")
                         .HasForeignKey("Tenant_Id")
@@ -684,6 +726,8 @@ namespace AtendeLogo.Persistence.Identity.Migrations
 
             modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.Tenant", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Sessions");
 
                     b.Navigation("Users");
@@ -692,11 +736,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.User", b =>
                 {
                     b.Navigation("Sessions");
-                });
-
-            modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.TenantUser", b =>
-                {
-                    b.Navigation("TenantUsers");
                 });
 #pragma warning restore 612, 618
         }
