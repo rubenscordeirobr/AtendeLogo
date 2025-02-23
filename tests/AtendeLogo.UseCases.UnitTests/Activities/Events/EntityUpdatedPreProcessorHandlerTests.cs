@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Application.Mediatores;
 
-namespace AtendeLogo.Application.UnitTests.UseCases.Activities.Events;
+namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
 public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<AnonymousServiceProviderMock>
 {

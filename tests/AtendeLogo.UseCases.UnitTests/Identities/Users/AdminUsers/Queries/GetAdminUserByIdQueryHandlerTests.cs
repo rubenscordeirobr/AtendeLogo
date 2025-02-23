@@ -2,19 +2,40 @@
 using AtendeLogo.Common;
 using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
-namespace AtendeLogo.Application.UnitTests.UseCases.Identities.Users.AdminUsers.Queries;
+namespace AtendeLogo.UseCases.UnitTests.Identities.Users.AdminUsers.Queries;
 
-public class GetAdminUserByIdQueryHandlerTests
+public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceProviderMock>
 {
+    private readonly IServiceProvider _serviceProvider;
+
+    public GetAdminUserByIdQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    {
+        this._serviceProvider = serviceProvider;
+    }
+
+    [Fact]
+    public void Handle_ShouldBe_GetAdminUserByIdQueryHandler()
+    {
+        // Arrange
+        var mediator = _serviceProvider.GetRequiredService<IRequestMediator>() as IRequestMediatorTest;
+        var query = new GetAdminUserByIdQuery { Id = Guid.NewGuid() };
+
+        // Act
+        var handlerType = mediator!.GetRequestHandler(query);
+
+        // Assert
+        handlerType.Should().BeOfType<GetAdminUserByIdQueryHandler>();
+    }
+
+
     [Fact]
     public async Task HandleAsync_ReturnSuccess()
     {
         // Arrange
-        var serviceProvider = new AnonymousServiceProviderMock();
-        var mediator = serviceProvider.GetRequiredService<IRequestMediator>();
+        var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var guidAdminUserId = Guid.NewGuid();
 
-        var adminUserRepository = serviceProvider.GetRequiredService<IAdminUserRepository>();
+        var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
         var superAdminUser = await adminUserRepository.GetByEmailAsync("superadmin@atendelogo.com.br");
 
         Guard.NotNull(superAdminUser);
@@ -40,8 +61,7 @@ public class GetAdminUserByIdQueryHandlerTests
     public async Task HandleAsync_ReturnFailure()
     {
         // Arrange
-        var serviceProvider = new AnonymousServiceProviderMock();
-        var mediator = serviceProvider.GetRequiredService<IRequestMediator>();
+        var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var query = new GetAdminUserByIdQuery { Id = Guid.NewGuid() };
 
         // Act

@@ -1,7 +1,7 @@
 ﻿using AtendeLogo.Domain.Entities.Identities.Events;
 using AtendeLogo.UseCases.Identities.UserSessionContexts.Events;
 
-namespace AtendeLogo.Application.UnitTests.UseCases.Identities.UserSessionContexts;
+namespace AtendeLogo.UseCases.UnitTests.Identities.UserSessionContexts;
 
 public class UserSessionTerminatedEventHandlerTests
      : IClassFixture<AnonymousServiceProviderMock>

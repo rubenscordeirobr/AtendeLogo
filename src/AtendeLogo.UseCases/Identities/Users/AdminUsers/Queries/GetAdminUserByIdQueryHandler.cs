@@ -6,7 +6,6 @@ namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 public class GetAdminUserByIdQueryHandler
      : SingleResultQueryHandler<GetAdminUserByIdQuery, AdminUserResponse>
 {
-
     private readonly IAdminUserRepository _adminUserRepository;
     public GetAdminUserByIdQueryHandler(
         IAdminUserRepository adminUserRepository)

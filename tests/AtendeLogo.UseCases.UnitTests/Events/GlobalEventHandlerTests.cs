@@ -1,7 +1,7 @@
 ﻿using AtendeLogo.Domain.Entities.Identities.Events;
 using AtendeLogo.UseCases.Events;
 
-namespace AtendeLogo.Application.UnitTests.UseCases.Events;
+namespace AtendeLogo.UseCases.UnitTests.Events;
 
 public class GlobalEventHandlerTests
      : IClassFixture<AnonymousServiceProviderMock>

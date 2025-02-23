@@ -1,10 +1,11 @@
 ﻿using AtendeLogo.UseCases.Identities.Tenants.Commands;
+using AtendeLogo.UseCases.UnitTests.TestSupport;
 
-namespace AtendeLogo.Application.UnitTests.UseCases.Identities.Tenants.Commands;
+namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
 public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServiceProviderMock>
 {
-    private IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider;
     private readonly CreateTenantCommand _validadeCommand;
 
     public CreateTenantCommandHandlerTests(AnonymousServiceProviderMock serviceProvide)
@@ -26,6 +27,19 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
             PhoneNumber = new PhoneNumber("+55 42 99977 1020")
         };
     }
+
+    [Fact]
+    public void Handler_ShouldBe_CreateTenantCommandHandler()
+    {
+        // Arrange
+        var mediator = _serviceProvider.GetRequiredService<IRequestMediator>() as IRequestMediatorTest;
+
+        // Act
+        var handlerType = mediator!.GetRequestHandler(_validadeCommand);
+
+        // Assert
+        handlerType.Should().BeOfType<CreateTenantCommandHandler>();
+    } 
 
     [Fact]
     public async Task HandleAsync_ReturnsSuccess()
@@ -53,7 +67,7 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
         };
 
         // Act
-        var result = await mediator.RunAsync(command);
+        var result = await mediator.TestRunAsync(command );
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Password);
@@ -70,7 +84,7 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
         };
 
         // Act
-        var result = await mediator.RunAsync(command);
+        var result = await mediator.TestRunAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email);
@@ -85,14 +99,14 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
         {
             Name = "First"
         };
- 
+
         // Act
-        var result = await mediator.RunAsync(command);
+        var result = await mediator.TestRunAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name);
     }
-  
+
     [Fact]
     public async Task Validate_ShouldHaveError_WhenFiscalCodeIsEmpty()
     {
@@ -104,7 +118,7 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
         };
 
         // Act
-        var result = await mediator.RunAsync(command);
+        var result = await mediator.TestRunAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.FiscalCode);

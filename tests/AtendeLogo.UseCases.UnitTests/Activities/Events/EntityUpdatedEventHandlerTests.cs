@@ -1,13 +1,11 @@
-﻿namespace AtendeLogo.Application.UnitTests.UseCases.Activities.Events;
+﻿namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
-public class EntityCreatedEventHandlerTests
+public class EntityUpdatedEventHandlerTests
     : IClassFixture<AnonymousServiceProviderMock>
 {
     private Fixture _figure = new();
-
     private IServiceProvider _serviceProvider;
-
-    public EntityCreatedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
+    public EntityUpdatedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
     {
         _serviceProvider = serviceProviderMock;
     }
@@ -18,17 +16,16 @@ public class EntityCreatedEventHandlerTests
         // Arrange
         var entity = _figure.Create<TenantUser>();
         var eventMediator = _serviceProvider.GetRequiredService<IEventMediator>();
-
-        var createdEvent = new EntityCreatedEvent<TenantUser>(entity, []);
-        var eventContext = new DomainEventContext([createdEvent]);
-
+        var updatedEvent = new EntityUpdatedEvent<TenantUser>(entity, []);
+        var eventContext = new DomainEventContext([updatedEvent]);
+       
         // Act
         await eventMediator.DispatchAsync(eventContext);
 
         // Assert
         eventContext
-            .ShouldHaveExecutedEvent(createdEvent)
-            .WithHandler<EntityCreatedEventHandler<TenantUser>>();
+            .ShouldHaveExecutedEvent(updatedEvent)
+            .WithHandler<EntityUpdatedEventHandler<TenantUser>>();
     }
 
     [Fact]
@@ -36,18 +33,18 @@ public class EntityCreatedEventHandlerTests
     {
         // Arrange
         var entity = _figure.Create<TenantUser>();
-        var createdEvent = new EntityCreatedEvent<TenantUser>(entity, []);
+        var updatedEvent = new EntityUpdatedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
         var userSessionServiceMock = new AnonymousUserSessionServiceMock();
-        var logger = new LoggerServiceMock<EntityCreatedEventHandler<TenantUser>>();
+        var logger = new LoggerServiceMock<EntityUpdatedEventHandler<TenantUser>>();
 
-        var handler = new EntityCreatedEventHandler<TenantUser>(
+        var handler = new EntityUpdatedEventHandler<TenantUser>(
             activityRepository,
             userSessionServiceMock,
             logger);
 
         // Act
-        Func<Task> task = async () => await handler.HandleAsync(createdEvent);
+        Func<Task> task = async () => await handler.HandleAsync(updatedEvent);
 
         // Assert
         await task.Should().NotThrowAsync();

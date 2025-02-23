@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Application.UnitTests.UseCases.Activities.Events;
+﻿namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
 public class EntityDeletedEventHandlerTests
     : IClassFixture<AnonymousServiceProviderMock>

@@ -2,14 +2,15 @@
 using AtendeLogo.UseCases.Common.Validations;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
 using AtendeLogo.UseCases.Identities.Tenants.Services;
-using FluentValidation;
+using AtendeLogo.UseCases.UnitTests.TestSupport;
+using FluentValidation.TestHelper;
 using Moq;
 
-namespace AtendeLogo.Application.UnitTests.UseCases.Identities.Tenants.Commands;
+namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
 public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceProviderMock>
 {
-    private IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider;
     private readonly IValidator<CreateTenantCommand> _validator;
     private readonly CreateTenantCommand _validadeCommand;
 
@@ -36,20 +37,31 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
     }
 
     [Fact]
+    public void Validator_ShouldBe_CreateTenantCommandValidator()
+    {
+        _validator.Should().BeOfType<CreateTenantCommandValidator>();
+    }
+
+    [Fact]
     public async Task ValidationResult_ShouldBeValid()
     {
         // Arrange
-        var command = _validadeCommand;
+        var randowEmail = Guid.NewGuid().ToString().Substring(0, 8) + "@atendelogo.com";
+        var fakeCpf = BrazilianFakeUtils.GenerateCpf();
+        var command = _validadeCommand with
+        {
+            Email = randowEmail,
+            FiscalCode = fakeCpf
+        };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.IsValid.Should()
-            .BeTrue();
-
         result.Errors.Should()
-            .BeEmpty();
+            .BeEmpty($"Command must valid and failed with errors: {string.Join(",", result.Errors)}");
+
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Theory]
@@ -68,7 +80,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name);
@@ -89,7 +101,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TenantName);
@@ -111,7 +123,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email);
@@ -132,7 +144,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.FiscalCode);
@@ -152,7 +164,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.PhoneNumber.Number);
@@ -171,7 +183,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Country);
@@ -189,7 +201,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Language);
@@ -208,7 +220,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Currency);
@@ -227,7 +239,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.BusinessType);
@@ -244,17 +256,17 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
             TenantType = tenantType.GetValueOrDefault()
         };
         // Act
-        var result = await _validator.ValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TenantType);
     }
-     
+
     [Fact]
     public async Task ValidationResult_ShouldEmailBeUnique()
     {
         // Arrange
         var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
-        
+
         var tenantValidationSetup = new Mock<ITenantValidationService>();
         tenantValidationSetup
             .Setup(x => x.IsEmailUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -273,7 +285,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await validator.ValidateAsync(command);
+        var result = await validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email);
@@ -284,7 +296,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
     {
         // Arrange
         var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
-        
+
         var tenantValidationSetup = new Mock<ITenantValidationService>();
         tenantValidationSetup
             .Setup(x => x.IsEmailUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -303,7 +315,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         };
 
         // Act
-        var result = await validator.ValidateAsync(command);
+        var result = await validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.FiscalCode);

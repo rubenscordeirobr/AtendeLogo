@@ -1,0 +1,17 @@
+﻿global using AtendeLogo.Application.Contracts.Mediators;
+global using AtendeLogo.Application.Events;
+global using AtendeLogo.Application.UnitTests.Extensions;
+global using AtendeLogo.Application.UnitTests.Mocks;
+global using AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
+global using AtendeLogo.Application.UnitTests.Mocks.Repositories;
+global using AtendeLogo.Common.Enums;
+global using AtendeLogo.Domain.Entities.Identities;
+global using AtendeLogo.Shared.Enums;
+global using AtendeLogo.Shared.ValueObjects;
+global using AtendeLogo.UseCases.Activities.Events;
+global using AtendeLogo.UseCases.Shared;
+global using AutoFixture;
+global using FluentAssertions;
+global using FluentValidation;
+global using Microsoft.Extensions.DependencyInjection;
+global using AtendeLogo.Shared.Contantes;

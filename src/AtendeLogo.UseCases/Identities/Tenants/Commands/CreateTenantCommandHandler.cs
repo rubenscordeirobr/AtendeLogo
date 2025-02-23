@@ -5,21 +5,23 @@ using AtendeLogo.Common;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
-public class CreateTenantCommandHandler : CommandHandler<CreateTenantCommand, CreateTenantResponse>
+public class CreateTenantCommandHandler
+    : CommandHandler<CreateTenantCommand, CreateTenantResponse>
 {
     public IIdentityUnitOfWork _unitOfWork;
     private ISecureConfiguration _secureConfiguration;
 
     public CreateTenantCommandHandler(
         IIdentityUnitOfWork unitOfWork,
-        ISecureConfiguration secureConfiguration)
+        ISecureConfiguration secureConfiguration )
     {
         _unitOfWork = unitOfWork;
         _secureConfiguration = secureConfiguration;
     }
 
     protected override async Task<Result<CreateTenantResponse>> HandleAsync(
-        CreateTenantCommand command, CancellationToken cancellationToken)
+        CreateTenantCommand command, 
+        CancellationToken cancellationToken)
     {
 
         var salt = _secureConfiguration.GetPasswordSalt();
@@ -43,16 +45,15 @@ public class CreateTenantCommandHandler : CommandHandler<CreateTenantCommand, Cr
             tenantType: command.TenantType,
             phoneNumber: command.PhoneNumber,
             timeZoneOffset: TimeZoneOffset.Default);
-
-        var tenantUser = new TenantUser(
-            name: command.Name,
-            email: command.Email,
-            userState: UserState.Active,
-            userStatus: UserStatus.Online,
-            tenantUserRole: TenantUserRole.Owner,
-            phoneNumber: command.PhoneNumber,
-            password.Value);
-
+ 
+       var user = tenant.AddUser(
+           name: command.Name,
+           email: command.Email,
+           userState: UserState.Active,
+           userStatus: UserStatus.Online,
+           tenantUserRole: TenantUserRole.Owner,
+           phoneNumber: command.PhoneNumber,
+           password.Value);
 
         try
         {
@@ -61,12 +62,8 @@ public class CreateTenantCommandHandler : CommandHandler<CreateTenantCommand, Cr
             _unitOfWork.Add(tenant);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            tenantUser.SetTenant(tenant);
-            _unitOfWork.Add(tenantUser);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            tenant.SetCreateOwner(tenantUser);
+           
+            tenant.SetCreateOwner(user);
             _unitOfWork.Update(tenant);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
