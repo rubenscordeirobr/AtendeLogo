@@ -11,7 +11,7 @@ public class FiscalCodeValidationUtilsTests
     [InlineData("74.882.697/0001-08", Country.Brazil, true)] // Valid CNPJ
     [InlineData("74882697000108", Country.Brazil, true)] // Invalid CNPJ
     [InlineData("12345678909", Country.Unknown, false)]
-    public void IsValid_ShouldReturnExpectedResult(string fiscalCode, Country country, bool expectedResult)
+    public void IsValid_ShouldReturnExpectedResult(string? fiscalCode, Country country, bool expectedResult)
     {
         var result = FiscalCodeValidationUtils.IsValid(fiscalCode, country);
         result.Should().Be(expectedResult);
