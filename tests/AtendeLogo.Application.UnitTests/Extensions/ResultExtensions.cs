@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-using AtendeLogo.Common;
-using AtendeLogo.UseCases.Identities.Tenants.Commands;
+﻿using AtendeLogo.Common;
 
 namespace AtendeLogo.Application.UnitTests.Extensions;
 
@@ -23,38 +21,38 @@ public static class ResultExtensions
             .BeNull();
     }
 
-    public static void ShouldHaveValidationErrorFor<TRequest, TResponse>(
-        this Result<TResponse> result,
-        Expression<Func<TRequest, object>> propertyExpression)
-        where TResponse : notnull
-    {
-        result.Error
-            .Should()
-            .NotBeNull();
+    //public static void ShouldHaveValidationErrorFor<TRequest, TResponse>(
+    //    this Result<TResponse> result,
+    //    Expression<Func<TRequest, object>> propertyExpression)
+    //    where TResponse : notnull
+    //{
+    //    result.Error
+    //        .Should()
+    //        .NotBeNull();
 
-        result.IsFailure
-            .Should()
-            .BeTrue();
+    //    result.IsFailure
+    //        .Should()
+    //        .BeTrue();
 
-        result.IsSuccess
-            .Should()
-            .BeFalse();
+    //    result.IsSuccess
+    //        .Should()
+    //        .BeFalse();
 
-        var errorCode = ErrorCodeFactory.CreateInvalidCodeFor(propertyExpression);
-        result.Error.Should()
-            .BeOfType<ValidationError>()
-            .Subject.Code
-            .Should()
-            .Be(errorCode);
+    //    var errorCode = ErrorCodeFactory.CreateInvalidCodeFor(propertyExpression);
+    //    result.Error.Should()
+    //        .BeOfType<ValidationError>()
+    //        .Subject.Code
+    //        .Should()
+    //        .Be(errorCode);
 
-    }
+    //}
 
-    public static void ShouldHaveValidationErrorFor(
-        this Result<CreateTenantResponse> result,
-        Expression<Func<CreateTenantCommand, object>> propertyExpression)
-    {
-        result.ShouldHaveValidationErrorFor<CreateTenantCommand, CreateTenantResponse>(
-            propertyExpression);
-    }
+    //public static void ShouldHaveValidationErrorFor(
+    //    this Result<CreateTenantResponse> result,
+    //    Expression<Func<CreateTenantCommand, object>> propertyExpression)
+    //{
+    //    result.ShouldHaveValidationErrorFor<CreateTenantCommand, CreateTenantResponse>(
+    //        propertyExpression);
+    //}
 }
 

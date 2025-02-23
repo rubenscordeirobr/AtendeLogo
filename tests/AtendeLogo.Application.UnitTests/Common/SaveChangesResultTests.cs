@@ -1,6 +1,7 @@
 ﻿using AtendeLogo.Application.Common;
 using AtendeLogo.Application.Contracts.Events;
 using AtendeLogo.Common;
+using AtendeLogo.Domain.Exceptions;
 using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Common;
@@ -20,7 +21,7 @@ public class SaveChangesResultTests
         result.Error.Should().Be(error);
         result.AffectedRows.Should().Be(0);
         result.DomainEventContext.Should().Be(_domainEventContext);
-        result.Exception.Should().BeOfType<Exception>();
+        result.Exception.Should().BeOfType<DomainEventException>();
     }
 
     [Fact]
@@ -90,7 +91,7 @@ public class SaveChangesResultTests
         result.Error.Should().Be(error);
         result.AffectedRows.Should().Be(0);
         result.DomainEventContext.Should().Be(_domainEventContext);
-        result.Exception.Should().BeOfType<Exception>();
+        result.Exception.Should().BeOfType<DomainEventException>();
     }
 
     [Fact]
