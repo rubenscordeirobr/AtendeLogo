@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-Core", "02-Core", "{FCE5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-Infrastructure", "03-Infrastructure", "{364E8139-8CAB-493E-8DFD-81A3D371414E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presetation", "Presetation", "{6F92CCFD-E702-4589-92C5-E9C7C728C52D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05-Presetation", "05-Presetation", "{6F92CCFD-E702-4589-92C5-E9C7C728C52D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Domain", "src\AtendeLogo.Domain\AtendeLogo.Domain.csproj", "{DB90F0F0-95F5-472A-A414-C16933D61E96}"
 EndProject
@@ -23,13 +23,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.UseCases", "src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj", "{D12ADE0C-85F0-4532-9CAC-8D47C7726613}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Persistence.Activities", "src\AtendeLogo.Persistence.Activities\AtendeLogo.Persistence.Activities.csproj", "{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Persistence.Activity", "src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj", "{CD30F2FA-0E77-466B-95F7-1FC0B98DFA56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Persistence", "src\AtendeLogo.Persistence\AtendeLogo.Persistence.csproj", "{DD0F15AA-F964-4F18-87E2-A358FE7A9B69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Persistence.Identity", "src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj", "{DD0F15AA-F964-4F18-87E2-A358FE7A9B69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Api", "src\AtendeLogo.Api\AtendeLogo.Api.csproj", "{8DDC9EBB-B3C5-41B1-A9DF-6B503808D2C2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Shared", "01-Shared", "{23271A9F-5748-4F0A-B690-65A43417D400}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Common", "01-Common", "{23271A9F-5748-4F0A-B690-65A43417D400}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.SharedKernel", "src\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj", "{4C702D2B-058E-4888-8767-283BEB035741}"
 EndProject
@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infra", "infra", "{0EC2D31C
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1FCBE191-34FE-4B2E-8915-CA81553958AD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutions-items", "solutions-items", "{8AE11B0A-571B-4B13-A89B-B61B13C6E60C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{8AE11B0A-571B-4B13-A89B-B61B13C6E60C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
@@ -52,6 +52,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-UseCases", "04-UseCases", "{CCA300F5-7660-4F3D-9414-B3D625BE6485}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.ArchitectureTests", "tests\AtendeLogo.ArchitectureTests\AtendeLogo.ArchitectureTests.csproj", "{69E47DA5-FA6C-4F64-B5EF-4A91FD359D56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Persistence.Common", "src\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj", "{779C7365-BB38-48E2-B9D2-A96864B6766B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.Presentation", "src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj", "{77013F16-455A-4D14-A133-7BA25AB01AC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtendeLogo.UseCases.UnitTests", "tests\AtendeLogo.UseCases.UnitTests\AtendeLogo.UseCases.UnitTests.csproj", "{FD4A5037-AF6A-4051-AF58-9CADC0D5767E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +121,18 @@ Global
 		{69E47DA5-FA6C-4F64-B5EF-4A91FD359D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69E47DA5-FA6C-4F64-B5EF-4A91FD359D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69E47DA5-FA6C-4F64-B5EF-4A91FD359D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{779C7365-BB38-48E2-B9D2-A96864B6766B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{779C7365-BB38-48E2-B9D2-A96864B6766B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{779C7365-BB38-48E2-B9D2-A96864B6766B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{779C7365-BB38-48E2-B9D2-A96864B6766B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77013F16-455A-4D14-A133-7BA25AB01AC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77013F16-455A-4D14-A133-7BA25AB01AC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77013F16-455A-4D14-A133-7BA25AB01AC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77013F16-455A-4D14-A133-7BA25AB01AC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD4A5037-AF6A-4051-AF58-9CADC0D5767E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD4A5037-AF6A-4051-AF58-9CADC0D5767E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD4A5037-AF6A-4051-AF58-9CADC0D5767E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD4A5037-AF6A-4051-AF58-9CADC0D5767E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +156,9 @@ Global
 		{87FB7595-8B4A-46C9-AA10-0BA47CCCB5B2} = {3C860474-B86B-447D-AAF6-0FBA1704FC2E}
 		{CCA300F5-7660-4F3D-9414-B3D625BE6485} = {CBAF2D29-C961-4430-B55C-E2A0295659E7}
 		{69E47DA5-FA6C-4F64-B5EF-4A91FD359D56} = {3C860474-B86B-447D-AAF6-0FBA1704FC2E}
+		{779C7365-BB38-48E2-B9D2-A96864B6766B} = {364E8139-8CAB-493E-8DFD-81A3D371414E}
+		{77013F16-455A-4D14-A133-7BA25AB01AC4} = {6F92CCFD-E702-4589-92C5-E9C7C728C52D}
+		{FD4A5037-AF6A-4051-AF58-9CADC0D5767E} = {3C860474-B86B-447D-AAF6-0FBA1704FC2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DAAD8CB-2BC7-492A-A4D6-B0190130790B}
