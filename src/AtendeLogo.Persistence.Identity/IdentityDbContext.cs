@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Domain.Entities.Shared;
-using AtendeLogo.Persistence.Common.Configurations;
+﻿using AtendeLogo.Persistence.Common.Configurations;
 
 namespace AtendeLogo.Persistence.Identity;
 
@@ -8,7 +7,7 @@ internal class IdentityDbContext : DbContext, IDbSeedAsync
     internal DbSet<User> Users { get; set; }
     internal DbSet<UserSession> Sessions { get; set; }
     internal DbSet<Tenant> Tenants { get; set; }
-    internal DbSet<Address> Addresses { get; set; }
+    internal DbSet<TenantAddress> Addresses { get; set; }
 
     public IdentityDbContext(
         DbContextOptions<IdentityDbContext> options ) 
@@ -43,8 +42,7 @@ internal class IdentityDbContext : DbContext, IDbSeedAsync
             throw new InvalidOperationException("Database already seeded");
         }
         return await base.SaveChangesAsync();
-    }
-
+    } 
     #endregion
 }
 

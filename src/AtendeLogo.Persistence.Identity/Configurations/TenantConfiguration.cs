@@ -17,44 +17,36 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
         builder.Property(x => x.FiscalCode)
             .IsRequired()
             .HasMaxLength(ValidationConstants.FiscalCodeMaxLength);
+  
+        builder.HasMany(x => x.Addresses)
+          .WithOne(x => x.Tenant)
+          .HasForeignKey(x => x.Tenant_Id)
+          .IsRequired();
 
-        //builder.Property(x => x.PhoneNumber)
-        //    .IsRequired()
-        //    .HasMaxLength(ValidationConstants.PhoneNumberMaxLength);
+        builder.HasMany(x => x.Sessions)
+          .WithOne(x => x.Tenant)
+          .HasForeignKey(x => x.Tenant_Id)
+          .IsRequired();
 
-        //builder.Property(x => x.BusinessType)
-        //    .IsRequired();
-
-        //builder.Property(x => x.TenantState)
-        //    .IsRequired();
-
-        //builder.Property(x => x.TenantStatus)
-        //    .IsRequired();
-
-        //builder.Property(x => x.TenantType)
-        //    .IsRequired();
-
-        builder.HasOne(x => x.Address)
+        builder.HasOne(x => x.DefaultAddress)
             .WithOne()
             .HasForeignKey<Tenant>(x => x.Address_Id)
             .IsRequired(false);
 
-        builder.HasOne(x => x.Owner)
+        builder.HasOne(x => x.OwnerUser)
             .WithOne()
-            .HasForeignKey<Tenant>(x => x.Owner_Id)
+            .HasForeignKey<Tenant>(x => x.OwnerUser_Id)
             .IsRequired(false);
 
         builder.HasMany(x => x.Users)
             .WithOne(x => x.Tenant)
             .HasForeignKey(x => x.Tenant_Id)
             .IsRequired();
-
-
+         
         builder.HasIndex(x => x.FiscalCode)
             .IsUnique();
 
         builder.HasIndex(x => x.Email)
             .IsUnique();
-
     }
 }
