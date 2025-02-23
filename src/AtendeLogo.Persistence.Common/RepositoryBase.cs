@@ -171,7 +171,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     private bool CheckIfNeedFilterTentantOwned()
     {
         var userSession = _userSessionService.GetCurrentSession();
-        if (userSession.Tenant_Id == Guid.Empty)
+        if (userSession.Tenant_Id is null || userSession.Tenant_Id == default)
         {
             if (IsUserHasAdminPermision(userSession))
             {
