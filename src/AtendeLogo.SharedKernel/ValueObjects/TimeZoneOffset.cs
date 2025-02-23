@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AtendeLogo.Shared.ValueObjects;
 
@@ -8,7 +9,8 @@ public sealed record TimeZoneOffset : ValueObjectBase
     public string Location { get; private set; }
     public TimeSpan OffsetTimeSpan
         => TimeSpan.Parse(Offset);
-     
+
+    [JsonConstructor]
     private TimeZoneOffset(string offset, string location)
     {
         Offset = offset;
