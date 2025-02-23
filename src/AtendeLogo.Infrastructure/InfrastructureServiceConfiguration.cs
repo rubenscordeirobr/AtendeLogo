@@ -24,6 +24,7 @@ public static class InfrastructureServiceConfiguration
             return ConnectionMultiplexer.Connect(redisConnection!);
         });
 
+        services.AddSingleton<ICacheRepository, CacheRepository>();
         services.AddSingleton<ISessionCacheService, SessionCacheService>();
         services.AddSingleton<ICommandTrackingService, CommandTrackingService>();
 

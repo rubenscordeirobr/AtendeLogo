@@ -1,38 +1,73 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace AtendeLogo.Infrastructure.Cache;
 
 public class CacheRepository : ICacheRepository
 {
-    private IDatabase _database;
+    private readonly IDatabase _database;
+    private readonly ILogger<CacheRepository> _logger;
 
-    public CacheRepository(IConnectionMultiplexer connection)
+    public CacheRepository(
+        IConnectionMultiplexer connection,
+        ILogger<CacheRepository> logger)
     {
-        _database = connection.GetDatabase() ;
+        _database = connection.GetDatabase();
+        _logger = logger;
     }
 
-    public Task<bool> KeyExistsAsync(string cacheKey)
+    public async Task<bool> KeyExistsAsync(string cacheKey)
     {
-        return _database.KeyExistsAsync(cacheKey);
-    }
-
-    public async Task<string?> StringGetAsync(string cachedKey )
-    {
-        var cachedValue = await _database.StringGetAsync(cachedKey);
-        if (!cachedValue.HasValue)
+        try
         {
+            return await _database.KeyExistsAsync(cacheKey);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error checking if key exists in cache");
+            return false;
+        }
+    }
+
+    public async Task<string?> StringGetAsync(string cachedKey)
+    {
+        try
+        {
+            var cachedValue = await _database.StringGetAsync(cachedKey);
+            if (!cachedValue.HasValue)
+            {
+                return null;
+            }
+            return cachedValue.ToString();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting value from cache");
             return null;
         }
-        return cachedValue.ToString();
-    }
-     
-    public Task KeyDeleteAsync(string cacheKey)
-    {
-        return _database.KeyDeleteAsync(cacheKey);
     }
 
-    public Task StringSetAsync(string cacheKey, string value, TimeSpan timeSpan)
+    public async Task KeyDeleteAsync(string cacheKey)
     {
-        return _database.StringSetAsync(cacheKey, value, timeSpan);
+        try
+        {
+            await _database.KeyDeleteAsync(cacheKey);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting key from cache");
+        }
+    }
+
+    public async Task StringSetAsync(string cacheKey, string value, TimeSpan timeSpan)
+    {
+        try
+        {
+            await _database.StringSetAsync(cacheKey, value, timeSpan);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error setting value in cache");
+        }
     }
 }
