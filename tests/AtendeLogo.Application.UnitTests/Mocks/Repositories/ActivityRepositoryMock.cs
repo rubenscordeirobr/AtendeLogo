@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Application.UnitTests.Mocks.Repositories;
 
-internal class ActivityRepositoryMock : IActivityRepository
+public class ActivityRepositoryMock : IActivityRepository
 {
     public Task<IEnumerable<ActivityBase>> GetAllAsync()
     {

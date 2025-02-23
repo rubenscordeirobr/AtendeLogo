@@ -14,15 +14,15 @@ public static class MockConfigurationExtensions
             .AddSingleton<ISecureConfiguration, SecureConfigurationMock>()
             .AddSingleton<ISessionCacheService, SessionCacheServiceMock>()
             .AddSingleton<ICommandTrackingService, CommandTrackingServiceMock>()
-            .AddTransient<IEmailSender, EmailSenderMock>();
+            .AddSingleton<IEmailSender, EmailSenderMock>();
 
         if (isAnonymousUserSession)
         {
-            services.AddScoped<IRequestUserSessionService, AnonymousUserSessionServiceMock>();
+            services.AddSingleton<IRequestUserSessionService, AnonymousUserSessionServiceMock>();
         }
         else
         {
-            throw new NotImplementedException();
+            services.AddSingleton<IRequestUserSessionService, SystemTenantUserSessionServiceMock>();
         }
 
         return services;
@@ -32,7 +32,7 @@ public static class MockConfigurationExtensions
     this IServiceCollection services)
     {
         return services
-            .AddScoped<IActivityRepository, ActivityRepositoryMock>()
+            .AddSingleton<IActivityRepository, ActivityRepositoryMock>()
             .AddIdentyRepositoryServices();
     }
 

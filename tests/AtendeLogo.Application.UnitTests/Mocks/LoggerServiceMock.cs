@@ -14,12 +14,14 @@ public class LoggerServiceMock<T> : ILogger<T>
         return false;
     }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
+        // Do nothing
 
     }
-    public IDisposable BeginScope<TState>(TState state)
+
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
     {
-        return null!;
+        return null;
     }
 }

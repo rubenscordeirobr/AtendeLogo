@@ -3,11 +3,11 @@ using AtendeLogo.UseCases;
 
 namespace AtendeLogo.Application.UnitTests.Mocks;
 
-public abstract class AbstractMockServiceProvider : IServiceProvider
+public abstract class AbstractServiceProviderMock : IServiceProvider
 {
     private IServiceProvider _serviceProvider;
     protected abstract bool IsAnonymous { get; }
-    public AbstractMockServiceProvider()
+    public AbstractServiceProviderMock()
     {
         _serviceProvider = new ServiceCollection()
               .AddApplicationServices()
@@ -26,12 +26,13 @@ public abstract class AbstractMockServiceProvider : IServiceProvider
     }
 }
 
-public class TenantUserServiceProviderMock : AbstractMockServiceProvider
+public class TenantUserServiceProviderMock : AbstractServiceProviderMock
 {
     protected override bool IsAnonymous => false;
 }
 
-public class AnonymousServiceProviderMock : AbstractMockServiceProvider
+public class AnonymousServiceProviderMock : AbstractServiceProviderMock
 {
     protected override bool IsAnonymous => true;
+   
 }
