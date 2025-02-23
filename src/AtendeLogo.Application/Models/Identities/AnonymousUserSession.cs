@@ -8,7 +8,7 @@ public class AnonymousUserSession : IUserSession
     public Guid User_Id
         => AnonymousConstants.AnonymousUser_Id;
     public string ClientSessionToken
-        => AnonymousConstants.ClientAnymousSystemSessionToken;
+        => AnonymousConstants.ClientAnonymousSystemSessionToken;
   
     public required string ApplicationName { get; init; }
     public required string IpAddress { get; init; }
