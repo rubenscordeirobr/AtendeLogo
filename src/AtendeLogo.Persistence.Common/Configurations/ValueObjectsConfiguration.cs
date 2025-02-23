@@ -109,7 +109,9 @@ public static class ValueObjectsConfiguration
             .IsRequired(false);
     }
 
-    private static void ConfigurePhoneNumber(EntityTypeBuilder entityBuilder, PropertyInfo property)
+    private static void ConfigurePhoneNumber(
+        EntityTypeBuilder entityBuilder, 
+        PropertyInfo property)
     {
         entityBuilder.Property(property.Name)
            .IsRequired()
