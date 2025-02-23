@@ -7,21 +7,16 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Mocks\Repositories\Commom\**" />
-    <Compile Remove="Mocks\Repositories\Identities\**" />
-    <EmbeddedResource Remove="Mocks\Repositories\Commom\**" />
-    <EmbeddedResource Remove="Mocks\Repositories\Identities\**" />
-    <None Remove="Mocks\Repositories\Commom\**" />
-    <None Remove="Mocks\Repositories\Identities\**" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="AutoFixture" />
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq" />
+    <PackageReference Include="StackExchange.Redis" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
@@ -29,12 +24,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\AtendeLogo.Application\AtendeLogo.Application.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UseCases\" />
   </ItemGroup>
 
 </Project>
