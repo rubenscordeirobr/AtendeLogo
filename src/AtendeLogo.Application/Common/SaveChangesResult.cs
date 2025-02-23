@@ -52,6 +52,7 @@ public class SaveChangesResult
         {
             DatabaseError databaseError => databaseError.Exception,
             OperationCanceledError operationError => operationError.Exception,
+            DomainEventError domainEventError => new DomainEventException(domainEventError.FormattedMessage ?? "Unknown error"),
             _ => new Exception(Error!.FormattedMessage ?? "Unknown error")
         };
     }
@@ -71,9 +72,10 @@ public class SaveChangesResult
 
     }
     public static SaveChangesResult TransactionRollbackError(
-      Exception eexception, IDomainEventContext domainEventContext)
+        Exception exception, 
+        IDomainEventContext domainEventContext)
     {
-        return DatabaseError(eexception, domainEventContext, "EntityFramewor.TransactionRollbackError");
+        return DatabaseError(exception, domainEventContext, "EntityFramewor.TransactionRollbackError");
     }
 
     public static SaveChangesResult DomainEventError(
@@ -84,8 +86,8 @@ public class SaveChangesResult
     }
 
     public static SaveChangesResult OperationCanceledError(
-       CancellationToken cancellationToken,
-       IDomainEventContext eventDomainContext)
+        CancellationToken cancellationToken,
+        IDomainEventContext eventDomainContext)
     {
         var exception = new OperationCanceledException(
             $"IsCancellationRequested {cancellationToken.IsCancellationRequested}",
@@ -101,8 +103,8 @@ public class SaveChangesResult
     }
 
     public static SaveChangesResult OperationCanceledError(
-       OperationCanceledException exception,
-       IDomainEventContext domainEventContext)
+        OperationCanceledException exception,
+        IDomainEventContext domainEventContext)
     {
         var operationError = new OperationCanceledError(
           Exception: exception,
