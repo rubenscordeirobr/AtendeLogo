@@ -1,0 +1,42 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=atende_logo_user
+      - POSTGRES_PASSWORD=Temp@Teste123%$
+      - POSTGRES_DB=postgres  
+    volumes:
+      - ./scripts/postgres-init:/docker-entrypoint-initdb.d/
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    environment:
+      - REDIS_PASSWORD=Temp@Teste123%$
+  
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=atende_logo_user
+      - MONGO_INITDB_ROOT_PASSWORD=Temp@Teste123%$
+      - MONGO_INITDB_DATABASE=activityDB
+    volumes:
+      - ./scripts/mongo-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+volumes:
+  redis-data:
+    driver: local
