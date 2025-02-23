@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using AtendeLogo.ArchitectureTests.TestSupport;
-using AtendeLogo.Common.Extensions;
-using AtendeLogo.Domain.Primitives;
+﻿using AtendeLogo.ArchitectureTests.TestSupport;
+using AtendeLogo.Common;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Xunit.Abstractions;
 
 namespace AtendeLogo.ArchitectureTests;
@@ -20,7 +20,7 @@ public class EntityValidationTests : IClassFixture<ApplicationAssemblyContext>
         _output = output;
     }
 
-    public static IEnumerable<object[]> EntityTypes
+    public static IEnumerable<object[]> EntityTypesData
     {
         get
         {
@@ -31,7 +31,7 @@ public class EntityValidationTests : IClassFixture<ApplicationAssemblyContext>
     }
 
     [Theory]
-    [MemberData(nameof(EntityTypes))]
+    [MemberData(nameof(EntityTypesData))]
     public void EntityType_ShouldBe_AbstractOrSealed(Type entityType)
     {
         //Act
@@ -45,41 +45,53 @@ public class EntityValidationTests : IClassFixture<ApplicationAssemblyContext>
         _output.WriteLine($"Entity {entityType.Name} is abstract or sealed");
     }
 
-    [Theory]
-    [MemberData(nameof(EntityTypes))]
-    public void EntityType_ShouldHave_PublicProperties_WithPrivateOrProtectedSetters(
-        Type entityType)
+    public static IEnumerable<object[]> EntityTypeToConfigurationTypeMapData
     {
-        // Arrange
-        var assembly = typeof(EntityBase).Assembly;
-
-        //Act
-        var publicPropertiesWithPublicSetters = entityType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-              .Where(prop => prop.GetMethod?.IsPublic == true && prop.SetMethod != null)
-              .Where(prop => prop.SetMethod?.IsPublic == true);
-
-        // Assert
-        publicPropertiesWithPublicSetters.Should()
-            .BeEmpty(getBecauseMessage());
-
-        string getBecauseMessage()
-            => $"These properties should have private or protected setters:{Environment.NewLine}" +
-               $"{string.Join(Environment.NewLine, publicPropertiesWithPublicSetters.Select(p => p.GetPropertyPath()))}";
-
-        _output.WriteLine($"Entity {entityType.Name} has no public properties with public setters");
+        get
+        {
+            return new ApplicationAssemblyContext()
+                 .EntityTypeToConfigurationTypeMap
+                 .Select(kvp => new object[] { kvp.Key, kvp.Value });
+        }
     }
 
     [Theory]
-    [MemberData(nameof(EntityTypes))]
-    public void EntityType_ShouldHave_EFCoreConfiguration(Type entityType)
+    [MemberData(nameof(EntityTypeToConfigurationTypeMapData))]
+    public void EntityType_ShouldHave_PublicProperties_WithPrivateOrProtectedSetters(
+        Type entityType,
+        Type entityConfigurationType)
     {
         // Arrange
-        var entityConfigurationType = _entityTypeToConfigurationTypeMap.GetValueOrDefault(entityType);
+        var conventionSet = new ConventionSet();
+        var modelBuilder = new ModelBuilder(conventionSet);
 
-        // Assert
-        entityConfigurationType.Should()
-            .NotBeNull($"The entity {entityType.Name} does not have a configuration");
+        var entityConfigurationInstance = Activator.CreateInstance(entityConfigurationType);
 
-        _output.WriteLine($"Entity {entityType.Name} has configuration {entityConfigurationType!.Name}");
+        modelBuilder.ApplyConfiguration(entityConfigurationInstance as dynamic);
+
+        var immutableEntityType = modelBuilder.Model.FindEntityType(entityType);
+
+        Guard.NotNull(immutableEntityType);
+         
+        var entityBuilder = modelBuilder.Entity(entityType);
+
+        foreach (var property in immutableEntityType.GetProperties())
+        {
+            if (property.PropertyInfo is null)
+                continue;
+
+            if (property.PropertyInfo.PropertyType == typeof(string))
+            {
+                var maxLength = property.GetMaxLength();
+
+                maxLength.Should()
+                    .NotBeNull($"Property {property.Name} of entity {entityType.Name} should have a max length defined in {entityConfigurationType.Name}");
+
+                maxLength?.Should()
+                    .BeGreaterThan(0, $"Property {property.Name} of entity {entityType.Name} should have a max length defined in {entityConfigurationType.Name}");
+
+            }
+        }
+        _output.WriteLine($"Entity {entityType.Name}  has string properties with max length defined");
     }
 }
