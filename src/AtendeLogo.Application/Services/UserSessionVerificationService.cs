@@ -18,7 +18,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     public UserSessionVerificationService(
         ISessionCacheService cacheSessionService,
         IRequestUserSessionService userSessionService,
-        IIdentityUnitOfWork unitWork )
+        IIdentityUnitOfWork unitWork)
     {
         _sessionCacheService = cacheSessionService;
         _userSessionService = userSessionService;
@@ -71,7 +71,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         return cachedSession;
     }
 
-    private async Task ValidateSessionAsync( IUserSession userSession)
+    private async Task ValidateSessionAsync(IUserSession userSession)
     {
         if (!userSession.IsActive)
             return;
@@ -98,10 +98,17 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
             _unitWork.Update(userSession);
 
-            var result = await _unitWork.SaveChangesAsync();
-            if (result.Error is DomainEventError)
+            var result = await _unitWork.SaveChangesAsync(silent: true);
+            if (!result.IsSuccess)
             {
-                await TerminateSessionAsync(userSession, SessionTerminationReason.DomainEventError);
+                if (result.Error is DomainEventError)
+                {
+                    await TerminateSessionAsync(userSession, SessionTerminationReason.DomainEventError);
+                }
+                else
+                {
+                    throw result.Exception;
+                }
                 return;
             }
             await _sessionCacheService.AddSessionAsync(userSession);
@@ -124,8 +131,12 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         UserSession userSession,
         SessionTerminationReason reason)
     {
-        userSession.TerminateSession(reason);
+        if (!userSession.IsActive)
+        {
+            return;
+        }
 
+        userSession.TerminateSession(reason);
         await _unitWork.SaveChangesAsync();
         await _sessionCacheService.RemoveSessionAsync(userSession.ClientSessionToken);
     }
