@@ -13,3 +13,8 @@ bin
 *.pidb
 *.scc
 *.dll
+
+.well-known
+
+temp/
+copilot-instructions.md
