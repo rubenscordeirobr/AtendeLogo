@@ -5,10 +5,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
- 
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
+    <InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
     <ProjectReference Include="..\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
+  </ItemGroup>
+ 
+  <ItemGroup>
+    <Folder Include="Entities\Shared\" />
   </ItemGroup>
 
 </Project>
