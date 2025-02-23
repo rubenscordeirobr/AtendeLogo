@@ -7,5 +7,6 @@ public enum TenantState
     Trial,
     Operational,
     Cancelled,
-    Closed
+    Closed,
+    System
 }

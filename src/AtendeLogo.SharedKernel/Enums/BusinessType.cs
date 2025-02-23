@@ -2,5 +2,6 @@
 
 public enum BusinessType
 {
-    CivilRegistryOffice = 1
+    CivilRegistryOffice = 1,
+    System = 2
 }
