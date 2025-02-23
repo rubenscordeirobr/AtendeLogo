@@ -25,7 +25,6 @@ public static class ActivitiyPersistenceServiceConfiguration
         });
 
         services.AddScoped<IActivityRepository, ActivityRepository>();
-
         return services;
     }
 }
