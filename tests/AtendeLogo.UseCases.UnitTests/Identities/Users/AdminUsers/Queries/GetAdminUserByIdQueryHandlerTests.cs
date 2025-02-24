@@ -18,7 +18,7 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>() as IRequestMediatorTest;
-        var query = new GetAdminUserByIdQuery { Id = Guid.NewGuid() };
+        var query = new GetAdminUserByIdQuery(Guid.NewGuid());
 
         // Act
         var handlerType = mediator!.GetRequestHandler(query);
@@ -26,7 +26,6 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
         // Assert
         handlerType.Should().BeOfType<GetAdminUserByIdQueryHandler>();
     }
-
 
     [Fact]
     public async Task HandleAsync_ReturnSuccess()
@@ -40,7 +39,7 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
 
         Guard.NotNull(superAdminUser);
 
-        var query = new GetAdminUserByIdQuery { Id = superAdminUser.Id };
+        var query = new GetAdminUserByIdQuery(superAdminUser.Id);
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);
@@ -62,7 +61,7 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetAdminUserByIdQuery { Id = Guid.NewGuid() };
+        var query = new GetAdminUserByIdQuery(Guid.NewGuid());
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);

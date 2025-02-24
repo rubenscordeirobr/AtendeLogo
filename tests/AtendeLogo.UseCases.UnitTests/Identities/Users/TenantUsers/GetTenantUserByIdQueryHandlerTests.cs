@@ -18,7 +18,7 @@ public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantUserServic
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>() as IRequestMediatorTest;
-        var query = new GetTenantUserByIdQuery { Id = Guid.NewGuid() };
+        var query = new GetTenantUserByIdQuery(Guid.NewGuid());
 
         // Act
         var handlerType = mediator!.GetRequestHandler(query);
@@ -39,7 +39,7 @@ public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantUserServic
 
         Guard.NotNull(tenantUserTemp);
 
-        var query = new GetTenantUserByIdQuery { Id = tenantUserTemp.Id };
+        var query = new GetTenantUserByIdQuery(tenantUserTemp.Id);
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);
@@ -61,7 +61,7 @@ public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantUserServic
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetTenantUserByIdQuery { Id = Guid.NewGuid() };
+        var query = new GetTenantUserByIdQuery(Guid.NewGuid());
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);

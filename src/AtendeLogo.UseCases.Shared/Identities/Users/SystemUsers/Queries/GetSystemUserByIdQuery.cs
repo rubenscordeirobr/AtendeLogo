@@ -2,7 +2,4 @@
 
 namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
-public record GetSystemUserByIdQuery : GetEntityByIdQuery<SystemUserResponse>
-{
-
-}
+public record GetSystemUserByIdQuery(Guid Id) : GetEntityByIdQuery<SystemUserResponse>(Id);

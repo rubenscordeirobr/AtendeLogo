@@ -16,7 +16,7 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>() as IRequestMediatorTest;
-        var query = new GetSystemUserByIdQuery { Id = Guid.NewGuid() };
+        var query = new GetSystemUserByIdQuery(Guid.NewGuid());
 
         // Act
         var handlerType = mediator!.GetRequestHandler(query);
@@ -30,7 +30,7 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetSystemUserByIdQuery { Id = AnonymousConstants.AnonymousUser_Id };
+        var query = new GetSystemUserByIdQuery(AnonymousConstants.AnonymousUser_Id);
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);
@@ -52,11 +52,11 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetSystemUserByIdQuery { Id = Guid.NewGuid() };
-        
+        var query = new GetSystemUserByIdQuery(Guid.NewGuid());
+
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);
-      
+
         // Assert
         result.Should().NotBeNull();
         result.IsFailure.Should().BeTrue();
