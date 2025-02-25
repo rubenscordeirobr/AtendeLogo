@@ -31,4 +31,10 @@ internal abstract class UserRepository<TUserEntity> : RepositoryBase<TUserEntity
 
     public Task<TUserEntity?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
         => FindAsync(x => x.PhoneNumber.Number == phoneNumber, cancellationToken);
+
+    public Task<TUserEntity?> GetByEmailOrPhoneNumberAsync(
+        string email,
+        string phoneNumber, 
+        CancellationToken cancellationToken = default)
+        => FindAsync(x => x.Email == email || x.PhoneNumber.Number == phoneNumber, cancellationToken);
 }
