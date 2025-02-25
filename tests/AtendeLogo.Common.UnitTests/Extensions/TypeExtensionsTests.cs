@@ -198,12 +198,30 @@ public class TypeExtensionsTests
             new object[] { typeof(BaseClass), new[] { typeof(DerivedClass) }, false },
         };
 
+
     [Theory]
     [MemberData(nameof(IsAssignableToOrDefinitionTestData))]
     public void IsAssignableToOrDefinition_ShouldReturnExpectedResult(Type type, Type[] targetTypes, bool expectedResult)
     {
         var result = type.IsAssignableToOrDefinition(targetTypes);
         result.Should().Be(expectedResult);
+    }
+
+    public static IEnumerable<object[]> GetUnderlyingTypeTestData
+    => new List<object[]>
+    {
+            new object[] { typeof(int?), typeof(int) },
+            new object[] { typeof(string), typeof(string) },
+            new object[] { typeof(Nullable<>), typeof(Nullable<>) },
+            new object[] { typeof(List<string>), typeof(List<string>) },
+    };
+
+    [Theory]
+    [MemberData(nameof(GetUnderlyingTypeTestData))]
+    public void GetUnderlyingType_ShouldReturnExpectedResult(Type type, Type expectedType)
+    {
+        var result = type.GetUnderlyingType();
+        result.Should().Be(expectedType);
     }
 
     private class BaseClass { }

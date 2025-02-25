@@ -260,4 +260,14 @@ public static class TypeExtensions
 
         return interfaces[0].GetGenericArguments();
     }
+
+    public static Type GetUnderlyingType(this Type type)
+    {
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            return Nullable.GetUnderlyingType(type)
+                ?? type;
+        }
+        return type;
+    }
 }
