@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Common;
 
-public class Result<T> where T : notnull
+public class Result<T> : IResultValue where T : notnull
 {
     [MemberNotNullWhen(true, nameof(Value))]
     [MemberNotNullWhen(false, nameof(Error))]
@@ -15,6 +15,7 @@ public class Result<T> where T : notnull
     public Error? Error { get; }
 
     [MemberNotNullWhen(true, nameof(IsSuccess))]
+    [MemberNotNullWhen(false, nameof(IsFailure))]
     public T? Value { get; }
 
     internal Result(Error error)
@@ -60,6 +61,10 @@ public class Result<T> where T : notnull
         }
         return Result.Failure<TConvert>(Error);
     }
+
+    #region IResult
+    object? IResultValue.Value => Value;
+    #endregion
 }
 
 public static class Result
@@ -85,6 +90,4 @@ public static class Result
         params object[] arguments)
         where T : notnull
         => new(new NotFoundError(code, message, arguments));
-
-
 }
