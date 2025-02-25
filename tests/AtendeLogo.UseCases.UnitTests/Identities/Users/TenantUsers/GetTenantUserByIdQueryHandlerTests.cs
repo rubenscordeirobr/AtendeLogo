@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Common;
 using AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers;

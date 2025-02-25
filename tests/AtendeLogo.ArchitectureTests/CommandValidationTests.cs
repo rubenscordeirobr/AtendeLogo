@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using AtendeLogo.Application.UnitTests.Mocks;
 using AtendeLogo.ArchitectureTests.TestSupport;
-using AtendeLogo.Shared.Contracts;
 using FluentAssertions;
 using FluentValidation.Validators;
 using FluentValidation;

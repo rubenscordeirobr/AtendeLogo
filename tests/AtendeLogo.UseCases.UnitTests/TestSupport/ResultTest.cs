@@ -1,9 +1,4 @@
-﻿using System;
-using System.Net;
-using FluentAssertions;
-using Xunit;
-using AtendeLogo.Common;
-using AtendeLogo.Shared.Contracts;
+﻿using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.UseCases.UnitTests.TestSupport;
 

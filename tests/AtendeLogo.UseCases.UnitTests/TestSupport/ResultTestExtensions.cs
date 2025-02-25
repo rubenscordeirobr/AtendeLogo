@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using AtendeLogo.Common;
 
 namespace AtendeLogo.UseCases.UnitTests.TestSupport;
 
