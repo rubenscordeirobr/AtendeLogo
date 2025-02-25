@@ -1,0 +1,106 @@
+﻿using System.Reflection;
+using AtendeLogo.Presentation.Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+
+namespace AtendeLogo.Application.UnitTests.Presentation.Common;
+
+public class QueryParameterBinderTests
+{
+    private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
+    {
+        return new HttpMethodDescriptor(method);
+    }
+
+    [Fact]
+    public void BindParameter_WhenQueryKeyIsMissing_ShouldReturnFailure()
+    {
+        // Arrange
+        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.GetItem));
+        var descriptor = CreateDescriptor(method!);
+       
+        var context = new DefaultHttpContext();
+        var parameter = method!.GetParameters()[1]; // 'filter' parameter
+
+        // Act
+        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "");
+
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().NotBeNull();
+        result.Error!.Code.Should().Be("QueryKeyMissing");
+        result.Error.Message.Should().Contain(descriptor.Method.Name);
+        result.Error.Message.Should().Contain(descriptor.QueryTemplate);
+    }
+
+    [Fact]
+    public void BindParameter_WhenQueryParameterConvertible_ShouldReturnSuccess()
+    {
+        // Arrange
+        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.GetItem));
+        var descriptor = CreateDescriptor(method!);
+        var context = new DefaultHttpContext();
+
+        // Set query parameter "filter" to a valid string value.
+        context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>
+        {
+            { "filter", "filterValue" }
+        });
+
+        var parameter = method!.GetParameters()[1]; // 'filter' parameter
+
+        // Act
+        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "filter");
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be("filterValue");
+    }
+
+    [Fact]
+    public void BindParameter_WhenConversionFails_ShouldReturnFailure()
+    {
+        // Arrange
+        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.GetItem));
+        var descriptor = CreateDescriptor(method!);
+        var context = new DefaultHttpContext();
+
+        // Provide a non-numeric value for 'id' which should fail conversion.
+        context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>
+        {
+            { "id", "notanumber" }
+        });
+
+        var parameter = method!.GetParameters()[0]; // 'id' parameter
+
+        // Act
+        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "id");
+
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().NotBeNull();
+        result.Error!.Code.Should().Be("ParameterConversionFailed");
+        result.Error.Message.Should().Contain(parameter.Name);
+        result.Error.Message.Should().Contain(descriptor.QueryTemplate);
+    }
+
+    [Fact]
+    public void BindParameter_WhenQueryParameterMissingButHasDefaultValue_ShouldReturnDefault()
+    {
+        // Arrange: Create a method with a parameter that has a default value.
+        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.GetItemDefaultParameter));
+        var descriptor = CreateDescriptor(method!);
+        var context = new DefaultHttpContext();
+
+        // No query provided.
+        var parameter = method!.GetParameters()[1]; // 'sort' parameter with a default value
+
+        // Act
+        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "defaultValue");
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(true); // Assuming the default value is set in the method signature.
+    }
+}
+
