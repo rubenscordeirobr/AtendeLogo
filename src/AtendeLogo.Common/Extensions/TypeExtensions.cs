@@ -23,7 +23,7 @@ public static class TypeExtensions
     {
         return type.IsSubclassOf(otherType) || type == otherType;
     }
-      
+
     public static bool ImplementsGenericInterfaceDefinition(
         this Type type,
         Type definitionType)
@@ -108,14 +108,14 @@ public static class TypeExtensions
             if (type.FullName is not null)
                 return type.FullName;
 
-            if(type.Namespace is not null)
+            if (type.Namespace is not null)
             {
                 return string.IsNullOrWhiteSpace(type.Namespace)
                 ? type.Name
                 : $"{type.Namespace}.{type.Name}";
             }
             return type.Name;
-           
+
         }
     }
 
@@ -213,5 +213,51 @@ public static class TypeExtensions
             return type.ImplementsGenericInterfaceDefinition(targetType);
         }
         return type.IsAssignableTo(targetType);
+    }
+
+    public static Type GetGenericArgumentFromInterfaceDefinition(
+        this Type type,
+        Type interfaceDefinition)
+    {
+        var arguments = type.GetGenericArgumentsFromInterfaceDefinition(interfaceDefinition);
+        if (arguments.Length != 1)
+        {
+            throw new ArgumentException(
+                $"The interface {interfaceDefinition.Name} must have exactly one generic argument");
+        }
+        return arguments[0];
+    }
+
+    public static Type[] GetGenericArgumentsFromInterfaceDefinition(
+      this Type type,
+      Type interfaceDefinition)
+    {
+        if (!interfaceDefinition.IsGenericTypeDefinition)
+        {
+            throw new ArgumentException("The interface definition must be a generic type definition", nameof(interfaceDefinition));
+        }
+
+        if (!type.ImplementsGenericInterfaceDefinition(interfaceDefinition))
+        {
+            throw new ArgumentException($"The type {type.Name} does not implement the interface {interfaceDefinition.Name}");
+        }
+
+        var interfaces = type.GetInterfaces()
+            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == interfaceDefinition)
+            .ToArray();
+
+        if (!interfaces.Any())
+        {
+            throw new ArgumentException(
+                $"The type {type.Name} does not implement the interface {interfaceDefinition.Name}");
+        }
+
+        if(interfaces.Length > 1)
+        {
+            throw new ArgumentException(
+                $"The type {type.Name} implements the interface {interfaceDefinition.Name} more than once");
+        }
+
+        return interfaces[0].GetGenericArguments();
     }
 }
