@@ -16,12 +16,12 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandler
         GetAdminUserByEmailOrPhoneNumberQuery query,
         CancellationToken cancellationToken = default)
     {
-        var user = await _adminUserRepository.GetByEmailOrPhoneNumberAsync(query.Email, query.PhoneNumber, cancellationToken);
+        var user = await _adminUserRepository.GetByEmailOrPhoneNumberAsync(query.EmailOrPhonenumber, cancellationToken);
         if (user is null)
         {
             return Result.NotFoundFailure<AdminUserResponse>(
                 "SystemUser.NotFound",
-                "SystemUser with email or phone number {EntityId} not found.", query.Email);
+                $"SystemUser with email or phone number  {query.EmailOrPhonenumber}  not found.");
         }
         return Result.Success(new AdminUserResponse
         {

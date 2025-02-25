@@ -16,4 +16,8 @@ public interface ITenantUserService
     Task<Result<TenantUserResponse>> GetTenantUserByPhoneNumberAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default);
+
+    Task<Result<TenantUserResponse>> GetTenantUserByEmailOrPhoneNumberAsync(
+        string emailOrPhoneNumber,
+        CancellationToken cancellationToken = default);
 }

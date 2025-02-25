@@ -22,45 +22,28 @@ public class TenantUsersEndpoint : ApiEndpointBase, ITenantUserService
         return _mediator.GetSingleAsync(new GetTenantUserByIdQuery(id), cancellationToken);
     }
 
-    [HttpGet("email={email}")]
+    [HttpGet("/", "email={email}")]
     public Task<Result<TenantUserResponse>> GetTenantUserByEmailAsync(
         string email,
         CancellationToken cancellationToken = default)
     {
         return _mediator.GetSingleAsync(new GetTenantUserByEmailQuery(email), cancellationToken);
     }
-     
-    [HttpGet("phone-number={phoneNumber}")]
+
+    [HttpGet("/", "phone-number={phoneNumber}")]
     public Task<Result<TenantUserResponse>> GetTenantUserByPhoneNumberAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default)
     {
         return _mediator.GetSingleAsync(new GetTenantUserByPhoneNumberQuery(phoneNumber), cancellationToken);
     }
-
-    [HttpGet("/", "email={email}")]
-    public Task<Result<TenantUserResponse>> GetTenantUserByEmailQueryAsync(
-      string email,
-      CancellationToken cancellationToken = default)
-    {
-        return _mediator.GetSingleAsync(new GetTenantUserByEmailQuery(email), cancellationToken);
-    }
-     
-    [HttpGet("/", "phone-number={phoneNumber}")]
-    public Task<Result<TenantUserResponse>> GetTenantUserByPhoneNumberQueryAsync(
-        string phoneNumber,
-        CancellationToken cancellationToken = default)
-    {
-        return _mediator.GetSingleAsync(new GetTenantUserByPhoneNumberQuery(phoneNumber), cancellationToken);
-    }
-
-    [HttpGet("/", "email={email}&phoneNumber={phoneNumber}")]
-    public Task<Result<TenantUserResponse>> GetTenantUserByEmailOrPhoneNumberQueryAsync(
-       string email,
-       string phoneNumber,
+      
+    [HttpGet("/", "emailOrPhoneNumber={emailOrPhoneNumber}")]
+    public Task<Result<TenantUserResponse>> GetTenantUserByEmailOrPhoneNumberAsync(
+       string emailOrPhoneNumber,
        CancellationToken cancellationToken = default)
     {
-        return _mediator.GetSingleAsync(new GetTenantUserByPhoneNumberQuery(phoneNumber), cancellationToken);
+        return _mediator.GetSingleAsync(new GetTenantUserByEmailOrPhoneNumberQuery(emailOrPhoneNumber), cancellationToken);
     }
 }
 

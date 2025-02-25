@@ -22,7 +22,7 @@ public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService
         return _mediator.GetSingleAsync(new GetAdminUserByIdQuery(id), cancellationToken);
     }
 
-    [HttpGet("email={email}")]
+    [HttpGet("/", "email={email}")]
     public Task<Result<AdminUserResponse>> GetAdminUserByEmailAsync(
         string email,
         CancellationToken cancellationToken = default)
@@ -30,34 +30,17 @@ public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService
         return _mediator.GetSingleAsync(new GetAdminUserByEmailQuery(email), cancellationToken);
     }
 
-    [HttpGet("phone-number={phoneNumber}")]
+    [HttpGet("/", "phone-number={phoneNumber}")]
     public Task<Result<AdminUserResponse>> GetAdminUserByPhoneNumberAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default)
     {
         return _mediator.GetSingleAsync(new GetAdminUserByPhoneNumberQuery(phoneNumber), cancellationToken);
     }
-
-    [HttpGet("/", "email={email}")]
-    public Task<Result<AdminUserResponse>> GetAdminUserByEmailQueryAsync(
-      string email,
-      CancellationToken cancellationToken = default)
-    {
-        return _mediator.GetSingleAsync(new GetAdminUserByEmailQuery(email), cancellationToken);
-    }
-
-    [HttpGet("/", "phone-number={phoneNumber}")]
-    public Task<Result<AdminUserResponse>> GetAdminUserByPhoneNumberQueryAsync(
-        string phoneNumber,
-        CancellationToken cancellationToken = default)
-    {
-        return _mediator.GetSingleAsync(new GetAdminUserByPhoneNumberQuery(phoneNumber), cancellationToken);
-    }
-
+  
     [HttpGet("/", "emailOrPhoneNumber={emailOrPhoneNumber}")]
-    public Task<Result<AdminUserResponse>> GetAdminUserByEmailOrPhoneNumberQueryAsync(
-       string emailOrPhoneNumber,
-       CancellationToken cancellationToken = default)
+    public Task<Result<AdminUserResponse>> GetAdminUserByEmailOrPhoneNumberAsync(
+        string emailOrPhoneNumber, CancellationToken cancellationToken)
     {
         return _mediator.GetSingleAsync(new GetAdminUserByEmailOrPhoneNumberQuery(emailOrPhoneNumber), cancellationToken);
     }

@@ -17,7 +17,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>() as IRequestMediatorTest;
-        var query = new GetTenantUserByEmailOrPhoneNumberQuery("test@example.com", "1234567890");
+        var query = new GetTenantUserByEmailOrPhoneNumberQuery("test@example.com");
 
         // Act
         var handlerType = mediator!.GetRequestHandler(query);
@@ -36,7 +36,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
 
         Guard.NotNull(tenantUser);
 
-        var query = new GetTenantUserByEmailOrPhoneNumberQuery(tenantUser.Email, null!);
+        var query = new GetTenantUserByEmailOrPhoneNumberQuery(tenantUser.Email);
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);
@@ -63,7 +63,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
 
         Guard.NotNull(tenantUser);
 
-        var query = new GetTenantUserByEmailOrPhoneNumberQuery(null!, tenantUser.PhoneNumber.Number);
+        var query = new GetTenantUserByEmailOrPhoneNumberQuery(tenantUser.PhoneNumber.Number);
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);
@@ -85,7 +85,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetTenantUserByEmailOrPhoneNumberQuery("nonexistent@example.com", "0987654321");
+        var query = new GetTenantUserByEmailOrPhoneNumberQuery("nonexistent@example.com");
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);

@@ -16,12 +16,12 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandler
         GetTenantUserByEmailOrPhoneNumberQuery query,
         CancellationToken cancellationToken = default)
     {
-        var user = await _tenantUserRepository.GetByEmailOrPhoneNumberAsync(query.Email, query.PhoneNumber, cancellationToken);
+        var user = await _tenantUserRepository.GetByEmailOrPhoneNumberAsync(query.EmailOrPhoneNumber, cancellationToken);
         if (user is null)
         {
             return Result.NotFoundFailure<TenantUserResponse>(
                 "TenantUser.NotFound",
-                "TenantUser with email or phone number {EntityId} not found.", query.Email);
+                $"TenantUser with email or phone number {query.EmailOrPhoneNumber} not found.");
         }
         return Result.Success(new TenantUserResponse
         {

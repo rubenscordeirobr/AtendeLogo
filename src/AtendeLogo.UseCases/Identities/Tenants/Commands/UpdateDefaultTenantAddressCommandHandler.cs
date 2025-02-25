@@ -25,7 +25,7 @@ public class UpdateDefaultTenantAddressCommandHandler
         {
             return Result.NotFoundFailure<UpdateDefaultTenantResponse>(
                  "Tenant.NotFound",
-                 "Tenant with id {TenantId} not found.", command.Tenant_Id);
+                 $"Tenant with id {command.Tenant_Id} not found.");
         }
 
         var address = command.Address;
