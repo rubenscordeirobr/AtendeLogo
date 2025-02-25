@@ -46,7 +46,7 @@ internal abstract class UnitOfWorkExecutorBase
 
         if (domainEventContext.IsCanceled)
         {
-            _logger.LogError("Domain event context is canceled. {Message}.", domainEventContext.Error.FormattedMessage);
+            _logger.LogError("Domain event context is canceled. {Message}.", domainEventContext.Error.Message);
             return SaveChangesResult.DomainEventError(domainEventContext, domainEventContext.Error);
         }
 

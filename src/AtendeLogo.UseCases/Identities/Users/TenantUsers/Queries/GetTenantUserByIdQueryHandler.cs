@@ -22,7 +22,7 @@ public class GetTenantUserByIdQueryHandler
         {
             return Result.NotFoundFailure<TenantUserResponse>(
                 "TenantUser.NotFound",
-                "TenantUser with id {EntityId} not found.", query.Id);
+                $"TenantUser with id {query.Id} not found.");
         }
 
         return Result.Success(new TenantUserResponse

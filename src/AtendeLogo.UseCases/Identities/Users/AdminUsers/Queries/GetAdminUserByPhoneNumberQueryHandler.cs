@@ -21,7 +21,7 @@ public class GetAdminUserByPhoneNumberQueryHandler
         {
             return Result.NotFoundFailure<AdminUserResponse>(
                 "SystemUser.NotFound",
-                "SystemUser with phone number {EntityId} not found.", query.PhoneNumber);
+                $"SystemUser with phone number {query.PhoneNumber} not found.");
         }
         return Result.Success(new AdminUserResponse
         {

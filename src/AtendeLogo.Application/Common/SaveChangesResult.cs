@@ -52,8 +52,8 @@ public class SaveChangesResult
         {
             DatabaseError databaseError => databaseError.Exception,
             OperationCanceledError operationError => operationError.Exception,
-            DomainEventError domainEventError => new DomainEventException(domainEventError.FormattedMessage ?? "Unknown error"),
-            _ => new Exception(Error!.FormattedMessage ?? "Unknown error")
+            DomainEventError domainEventError => new DomainEventException(domainEventError.Message ?? "Unknown error"),
+            _ => new Exception(Error!.Message ?? "Unknown error")
         };
     }
 

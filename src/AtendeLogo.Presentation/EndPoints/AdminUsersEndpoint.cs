@@ -54,13 +54,12 @@ public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService
         return _mediator.GetSingleAsync(new GetAdminUserByPhoneNumberQuery(phoneNumber), cancellationToken);
     }
 
-    [HttpGet("/", "email={email}&phoneNumber={phoneNumber}")]
+    [HttpGet("/", "emailOrPhoneNumber={emailOrPhoneNumber}")]
     public Task<Result<AdminUserResponse>> GetAdminUserByEmailOrPhoneNumberQueryAsync(
-       string email,
-       string phoneNumber,
+       string emailOrPhoneNumber,
        CancellationToken cancellationToken = default)
     {
-        return _mediator.GetSingleAsync(new GetAdminUserByEmailOrPhoneNumberQuery(email, phoneNumber), cancellationToken);
+        return _mediator.GetSingleAsync(new GetAdminUserByEmailOrPhoneNumberQuery(emailOrPhoneNumber), cancellationToken);
     }
 }
 

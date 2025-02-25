@@ -6,18 +6,15 @@ public abstract record Error
 {
     public string Code { get; }
     public string Message { get; }
-    public object[] Arguments { get; }
-    public string FormattedMessage
-        => GetFormattedMessageInternal();
 
-    public Error(string code, string message, params object[] arguments)
+
+    public Error(string code, string message)
     {
         Guard.NotNullOrWhiteSpace(code, nameof(code));
         Guard.NotNullOrWhiteSpace(message, nameof(message));
 
         Code = code;
         Message = message;
-        Arguments = arguments ?? [];
     }
 
     public sealed override string ToString()
@@ -39,75 +36,51 @@ public abstract record Error
         InvalidOperationError => HttpStatusCode.InternalServerError,
         _ => throw new NotSupportedException($"Error type {GetType().Name} is not supported")
     };
-
-    private string GetFormattedMessageInternal()
-    {
-        if (Arguments is null || Arguments.Length == 0)
-            return Message;
-
-        try
-        {
-            return string.Format(Message, Arguments);
-        }
-        catch(FormatException)
-        {
-            return Message;
-        }
-    }
 }
 
-public record BadRequestError(string Code, 
-    string Message, 
-    params object[] Arguments) 
-    : Error(Code, Message, Arguments);
+public record BadRequestError(string Code,
+    string Message )
+    : Error(Code, Message);
 
 public record ValidationError(
     string Code,
-    string Message, 
-    params object[] Arguments) 
-    : Error(Code, Message, Arguments);
+    string Message )
+    : Error(Code, Message);
 
 public record NotFoundError(
     string Code,
-    string Message, 
-    params object[] Arguments)
-    : Error(Code, Message, Arguments);
+    string Message )
+    : Error(Code, Message);
 
 public record InvalidOperationError(
     string Code,
-    string Message,
-    params object[] Arguments)
-    : Error(Code, Message, Arguments);
+    string Message )
+    : Error(Code, Message);
 
 public record UnauthorizedError(
-    string Code, 
-    string Message, 
-    params object[] Arguments) 
-    : Error(Code, Message, Arguments);
+    string Code,
+    string Message )
+    : Error(Code, Message);
 
 public record DomainEventError(
-    string Code, 
-    string Message, 
-    params object[] Arguments) 
-    : Error(Code, Message, Arguments);
+    string Code,
+    string Message )
+    : Error(Code, Message);
 
 public record InternalError(
     Exception Exception,
     string Code,
-    string Message,
-    params object[] Arguments)
-    : Error(Code, Message, Arguments);
+    string Message )
+    : Error(Code, Message);
 
 public record DatabaseError(
-    Exception Exception, 
+    Exception Exception,
     string Code,
-    string Message,
-    params object[] Arguments) 
-    : Error(Code, Message, Arguments);
+    string Message)
+    : Error(Code, Message);
 
 public record OperationCanceledError(
     OperationCanceledException Exception,
-    string Code, 
-    string Message,
-    params object[] Arguments)
-    : Error(Code, Message, Arguments);
+    string Code,
+    string Message)
+    : Error(Code, Message);

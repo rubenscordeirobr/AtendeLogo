@@ -21,7 +21,7 @@ public class GetTenantUserByEmailQueryHandler
         {
             return Result.NotFoundFailure<TenantUserResponse>(
                 "TenantUser.NotFound",
-                "TenantUser with email {EntityId} not found.", query.Email);
+                $"TenantUser with email {query.Email} not found.");
         }
         return Result.Success(new TenantUserResponse
         {

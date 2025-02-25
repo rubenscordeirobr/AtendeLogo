@@ -53,7 +53,7 @@ public record ResponseResult
         => new ResponseResult(statusCode, errorCode, errorMessage);
 
     public static ResponseResult Error(Error error)
-        => new ResponseResult(error.StatusCode, error.Code, error.FormattedMessage);
+        => new ResponseResult(error.StatusCode, error.Code, error.Message);
 }
 
 public record ErroResult(

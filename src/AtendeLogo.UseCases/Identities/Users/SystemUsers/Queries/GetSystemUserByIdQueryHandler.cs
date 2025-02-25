@@ -21,7 +21,7 @@ public sealed class GetSystemUserByIdQueryHandler
         {
             return Result.NotFoundFailure<SystemUserResponse>(
                 "SystemUser.NotFound",
-                "SystemUser with id {EntityId} not found.", query.Id);
+                $"SystemUser with id {query.Id} not found.");
         }
 
         return Result.Success(new SystemUserResponse

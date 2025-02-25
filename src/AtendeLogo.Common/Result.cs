@@ -79,15 +79,13 @@ public static class Result
 
     public static Result<T> ValidationFailure<T>(
         string code,
-        string message,
-        params object[] arguments)
+        string message)
         where T : notnull
-        => new(new ValidationError(code, message, arguments));
+        => new(new ValidationError(code, message));
 
     public static Result<T> NotFoundFailure<T>(
         string code,
-        string message,
-        params object[] arguments)
+        string message)
         where T : notnull
-        => new(new NotFoundError(code, message, arguments));
+        => new(new NotFoundError(code, message));
 }

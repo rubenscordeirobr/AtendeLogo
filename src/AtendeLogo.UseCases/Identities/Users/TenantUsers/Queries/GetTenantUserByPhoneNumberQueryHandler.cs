@@ -21,7 +21,7 @@ public class GetTenantUserByPhoneNumberQueryHandler
         {
             return Result.NotFoundFailure<TenantUserResponse>(
                 "TenantUser.NotFound",
-                "TenantUser with phone number {EntityId} not found.", query.PhoneNumber);
+                $"TenantUser with phone number {query.PhoneNumber} not found.");
         }
         return Result.Success(new TenantUserResponse
         {

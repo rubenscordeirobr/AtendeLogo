@@ -17,49 +17,10 @@ public class ErrorTests
         // Assert
         error.Code.Should().Be(code);
         error.Message.Should().Be(message);
-        error.Arguments.Should().BeEmpty();
     }
 
     #endregion
-
-    #region Test: Formatting with Arguments
-
-    [Theory]
-    [InlineData("BadRequest", "Invalid field {0}.", "username")]
-    [InlineData("NotFound", "Item {0} with ID {1} not found.", "User", 123)]
-    public void FormattedMessage_ShouldFormatCorrectly(string code, string message, params object[] args)
-    {
-        // Arrange
-        var error = new InvalidOperationError(code, message, args);
-
-        // Act
-        var formattedMessage = error.FormattedMessage;
-
-        // Assert
-        formattedMessage.Should().Be(string.Format(message, args));
-    }
-
-    #endregion
-
-    #region Test: Formatting with Invalid Placeholders (Should NOT throw FormatException)
-
-    [Theory]
-    [InlineData("BadRequest", "Invalid field {0} {1}.", "username")] // Too few args
-    [InlineData("NotFound", "Item {2} with ID {3} not found.", "User", 123)] // Incorrect placeholders
-    public void FormattedMessage_ShouldReturnRawMessage_WhenFormatExceptionOccurs(string code, string message, params object[] args)
-    {
-        // Arrange
-        var error = new InvalidOperationError(code, message, args);
-
-        // Act
-        var formattedMessage = error.FormattedMessage;
-
-        // Assert
-        formattedMessage.Should().Be(message);
-    }
-
-    #endregion
-
+     
     #region Test: Implicit String Conversion
 
     [Fact]

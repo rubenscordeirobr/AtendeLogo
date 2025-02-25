@@ -23,7 +23,7 @@ public class GetAdminUserByEmailQueryHandler
         {
             return Result.NotFoundFailure<AdminUserResponse>(
                 "SystemUser.NotFound",
-                "SystemUser with email {EntityId} not found.", query.Email);
+                $"SystemUser with email {query.Email} not found.");
         }
         return Result.Success(new AdminUserResponse
         {

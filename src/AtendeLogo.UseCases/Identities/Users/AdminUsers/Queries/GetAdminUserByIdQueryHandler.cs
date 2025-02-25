@@ -22,7 +22,7 @@ public class GetAdminUserByIdQueryHandler
         {
             return Result.NotFoundFailure<AdminUserResponse>(
                 "SystemUser.NotFound",
-                "SystemUser with id {EntityId} not found.", query.Id);
+                $"SystemUser with id {query.Id} not found.");
         }
 
         return Result.Success(new AdminUserResponse
