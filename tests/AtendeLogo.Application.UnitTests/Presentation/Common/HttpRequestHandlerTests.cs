@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Xunit;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Enums;
 using AtendeLogo.Presentation.Common.Attributes;
-using AtendeLogo.Shared.Contracts;
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
 public class HttpRequestHandlerTests
 {

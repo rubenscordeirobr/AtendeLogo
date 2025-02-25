@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Reflection;
-using AtendeLogo.Presentation.Common.Attributes;
 using AtendeLogo.Presentation.Common.Enums;
 using AtendeLogo.Presentation.Common.Exceptions;
 
@@ -130,5 +129,4 @@ public class HttpMethodDescriptor
         }
         return mappings;
     }
- 
 }
