@@ -105,7 +105,17 @@ public class ApplicationAssemblyContext
         get { lock (_lock) { return field ??= GetEntityTypeToConfigurationTypeMap(); } }
     }
 
-#pragma warning disable CS9264 
+    public IReadOnlyList<Type> RequestTypes
+    {
+        get { lock (_lock) { return field ??= GetRequestTypes(); } }
+    }
+
+    public IReadOnlyDictionary<Type, Type> RequestTypeToHandlerTypeMap
+    {
+        get { lock (_lock) { return field ??= GetRequestTypeToHandlerTypeMap(); } }
+    }
+
+#pragma warning disable CS9264
     public ApplicationAssemblyContext()
 #pragma warning restore CS9264
     {
@@ -249,6 +259,33 @@ public class ApplicationAssemblyContext
             dictionary[entityType] = configurationEntityType;
         } 
 
+        return dictionary.AsReadOnly();
+    }
+
+    private IReadOnlyList<Type> GetRequestTypes()
+    {
+        return [.. Types
+            .Where(x => x.IsConcrete())
+            .Where(t => t.ImplementsGenericInterfaceDefinition(typeof(IRequest<>)))];
+    }
+
+    private IReadOnlyDictionary<Type, Type> GetRequestTypeToHandlerTypeMap()
+    {
+        var dictionary = new Dictionary<Type, Type>();
+        var handlerTypes = Types
+            .Where(x => x.IsConcrete())
+            .Where(t => t.ImplementsGenericInterfaceDefinition(typeof(IRequestHandler<,>)));
+        
+        foreach (var handlerType in handlerTypes)
+        {
+            var requestType = handlerType.GetInterfaces()
+                .Where(x => x.IsGenericType)
+                .Where(x => x.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))
+                .Select(x => x.GetGenericArguments().First())
+                .First();
+
+            dictionary[requestType] = handlerType;
+        }
         return dictionary.AsReadOnly();
     }
 }
