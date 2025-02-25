@@ -1,5 +1,4 @@
-﻿using AtendeLogo.UseCases.Common;
+﻿namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
-namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
-
-public record GetTenantUserByIdQuery(Guid Id) : GetEntityByIdQuery<TenantUserResponse>(Id);
+public record GetTenantUserByIdQuery(Guid Id) 
+    : GetEntityByIdQuery<TenantUserResponse>(Id);
