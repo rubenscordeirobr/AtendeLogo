@@ -1,5 +1,4 @@
-﻿using AtendeLogo.UseCases.Common;
-using AtendeLogo.UseCases.Shared;
+﻿using AtendeLogo.UseCases.Shared;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 

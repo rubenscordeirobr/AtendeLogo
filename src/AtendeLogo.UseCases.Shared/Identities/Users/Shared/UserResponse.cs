@@ -1,6 +1,4 @@
-﻿using AtendeLogo.UseCases.Common;
-
-namespace AtendeLogo.UseCases.Identities.Users.Shared;
+﻿namespace AtendeLogo.UseCases.Identities.Users.Shared;
 
 public abstract record UserResponse : ResponseBase, IUser
 {

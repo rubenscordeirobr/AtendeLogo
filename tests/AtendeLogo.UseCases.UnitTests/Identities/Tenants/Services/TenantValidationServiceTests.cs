@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.UseCases.Identities.Services;
 using AtendeLogo.UseCases.Identities.Tenants.Services;
 using Moq;
 

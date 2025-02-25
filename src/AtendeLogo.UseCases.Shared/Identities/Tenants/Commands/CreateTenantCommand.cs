@@ -1,6 +1,4 @@
-﻿using AtendeLogo.UseCases.Common;
-
-namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 public sealed record CreateTenantCommand : CommandRequest<CreateTenantResponse>
 {
     public required string Name { get; init; }

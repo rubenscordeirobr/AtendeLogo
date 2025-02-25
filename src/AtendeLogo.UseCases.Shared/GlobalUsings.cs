@@ -5,3 +5,4 @@ global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.Interfaces.Identities;
 global using AtendeLogo.Shared.ValueObjects;
 global using AtendeLogo.UseCases.Common.Validations;
+global using AtendeLogo.UseCases.Common;

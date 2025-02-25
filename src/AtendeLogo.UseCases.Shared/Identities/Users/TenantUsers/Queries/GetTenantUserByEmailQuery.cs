@@ -1,4 +1,5 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
 public record GetTenantUserByEmailQuery(
-    string Email) : QueryRequest<TenantUserResponse>;
+    string Email) 
+    : QueryRequest<TenantUserResponse>;

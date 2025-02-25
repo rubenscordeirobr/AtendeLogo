@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace AtendeLogo.Common.UnitTests;
+﻿namespace AtendeLogo.Common.UnitTests;
 
 public class ResultTests
 {
