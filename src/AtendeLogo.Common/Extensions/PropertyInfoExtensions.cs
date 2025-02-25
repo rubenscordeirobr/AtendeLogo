@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Common.Extensions;
 
-public static class PropertyInfoExtesions
+public static class PropertyInfoExtensions
 {
     public static string GetPropertyPath(this PropertyInfo propertyInfo)
     {

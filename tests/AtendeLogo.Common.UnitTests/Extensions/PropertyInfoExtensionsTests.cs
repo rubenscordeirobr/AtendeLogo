@@ -1,5 +1,5 @@
 ﻿namespace AtendeLogo.Common.UnitTests.Extensions;
-public class PropertyInfoExtesionsTests
+public class PropertyInfoExtensionsTests
 {
     private class NestedPropertyTestClass
     {
