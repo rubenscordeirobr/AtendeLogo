@@ -48,7 +48,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection()
    .UseAuthorization();
+
 app.MapControllers();
 
 app.UsePresentationServices();
+app.MapPresentationEndPoints();
+ 
 app.Run();
