@@ -2,7 +2,6 @@
 using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Contracts.Registrars;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Domain.Primitives;
 using AtendeLogo.Domain.Primitives.Contracts;

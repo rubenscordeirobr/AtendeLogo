@@ -1,7 +1,6 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Common.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Application.Mediatores;

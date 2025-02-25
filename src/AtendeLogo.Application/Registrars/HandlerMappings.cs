@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using AtendeLogo.Common.Extensions;
 
 namespace AtendeLogo.Application.Registrars;
 

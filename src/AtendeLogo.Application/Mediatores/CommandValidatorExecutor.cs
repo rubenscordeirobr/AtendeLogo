@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Common.Extensions;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common.Extensions;
-using AtendeLogo.Domain.Primitives;
+﻿using AtendeLogo.Domain.Primitives;
 
 namespace AtendeLogo.Application.Registrars;
 
