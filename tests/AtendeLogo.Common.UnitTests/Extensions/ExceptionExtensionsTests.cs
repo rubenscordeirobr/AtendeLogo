@@ -36,7 +36,7 @@ public class ExceptionExtensionsTests
         Exception? exception = null;
 
         // Act
-        Action act = () => exception?.GetNestedMessage();
+        Action act = () => exception!.GetNestedMessage();
 
         // Assert
         act.Should().Throw<ArgumentNullException>();
