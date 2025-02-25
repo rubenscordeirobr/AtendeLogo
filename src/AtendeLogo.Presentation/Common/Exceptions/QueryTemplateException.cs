@@ -2,7 +2,7 @@
 
 public class QueryTemplateException : HttpTemplateException
 {
-    public QueryTemplateException(string? message) : base(message)
+    public QueryTemplateException(string message) : base(message)
     {
     }
 }

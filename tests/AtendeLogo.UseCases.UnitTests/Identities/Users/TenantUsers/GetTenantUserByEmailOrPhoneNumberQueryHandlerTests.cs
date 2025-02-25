@@ -32,7 +32,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var tenantUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
-        var tenantUser = await tenantUserRepository.GetByEmailAsync("test@example.com");
+        var tenantUser = await tenantUserRepository.GetByEmailAsync(SystemTenantConstants.TenantSystemEmail);
 
         Guard.NotNull(tenantUser);
 
@@ -59,7 +59,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var tenantUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
-        var tenantUser = await tenantUserRepository.GetByPhoneNumberAsync("1234567890");
+        var tenantUser = await tenantUserRepository.GetByPhoneNumberAsync(SystemTenantConstants.PhoneNumber);
 
         Guard.NotNull(tenantUser);
 

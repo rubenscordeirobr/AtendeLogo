@@ -10,7 +10,7 @@ public class RequestUserSessionServiceTests
         // Arrange
         var httpContextAccessor = new HttpContextAccessorMock();
         // Ensure Items does not already contain a session.
-        httpContextAccessor.HttpContext.Items.Clear();
+        httpContextAccessor.HttpContext?.Items.Clear();
         var logger = new LoggerServiceMock<RequestUserSessionService>();
         var service = new RequestUserSessionService(httpContextAccessor, logger);
 
@@ -36,7 +36,7 @@ public class RequestUserSessionServiceTests
 
         // Assert
         // Check that the response headers include the cookie with the expected name and value.
-        httpContextAccessor.HttpContext.Response.Headers.TryGetValue("Set-Cookie", out var setCookieValues);
+        httpContextAccessor.HttpContext!.Response.Headers.TryGetValue("Set-Cookie", out var setCookieValues);
 
         setCookieValues.Any(v => v?.Contains("ClientSessionToken=" + token) == true)
             .Should()
@@ -52,7 +52,7 @@ public class RequestUserSessionServiceTests
         // Manually set Cookie header to simulate an incoming cookie.
 
         var token = "abc123";
-        httpContextAccessor.HttpContext.Request.Headers["Cookie"] = $"ClientSessionToken={token}; otherCookie=otherValue";
+        httpContextAccessor.HttpContext!.Request.Headers["Cookie"] = $"ClientSessionToken={token}; otherCookie=otherValue";
       
         var logger = new LoggerServiceMock<RequestUserSessionService>();
         var service = new RequestUserSessionService(httpContextAccessor, logger);
