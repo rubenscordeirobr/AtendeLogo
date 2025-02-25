@@ -96,7 +96,7 @@ public class SaveChangesResult
         var operationError = new OperationCanceledError(
             Exception: exception,
             Code: "EntityFramewor.IsCancellationRequested",
-            Message: exception.Message
+            Message: exception.GetNestedMessage()
         );
 
         return new SaveChangesResult(eventDomainContext, operationError);
@@ -109,7 +109,7 @@ public class SaveChangesResult
         var operationError = new OperationCanceledError(
           Exception: exception,
           Code: "EntityFramewor.OperationCanceledError",
-          Message: exception.Message
+          Message: exception.GetNestedMessage()
        );
 
         return new SaveChangesResult(domainEventContext, operationError);
@@ -123,7 +123,7 @@ public class SaveChangesResult
         var databaseError = new DatabaseError(
             Exception: exception,
             Code: errorCode,
-            Message: exception.Message
+            Message: exception.GetNestedMessage()
         );
 
         return new SaveChangesResult(domainEventContext, databaseError);
