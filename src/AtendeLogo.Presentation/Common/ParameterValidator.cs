@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using AtendeLogo.Presentation.Common.Exceptions;
-using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Presentation.Common;
 
@@ -35,14 +34,9 @@ internal class ParameterValidator
 
         if (parameters.Length > 0)
         {
-            // if the method has only one parameter and it implements IRequest<>, 
-            // it is assumed to be bound from the request body.
-            if (parameters.Length == 1 &&
-                parameters[0].
-                ParameterType.ImplementsGenericInterfaceDefinition(typeof(IRequest<>)))
-            {
+            if (descriptor.IsBodyParameter)
                 return;
-            }
+  
         }
 
         var allParameters = routeParameters
@@ -65,7 +59,7 @@ internal class ParameterValidator
 
         if (parameterDuplicate.Any())
         {
-            throw new HttpTemplateException(
+            throw new DuplicateHttpTemplateException(
                 $"Error binding HTTP templates in method '{method.Name}' of type '{method.DeclaringType?.Name}': " +
                 $"the following parameters are mapped in both the route and query template: {string.Join(", ", parameterDuplicate)}. " +
                 "Please ensure that each parameter is mapped to only one template.");

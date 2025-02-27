@@ -6,7 +6,9 @@ using Moq;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Enums;
 using AtendeLogo.Presentation.Common.Attributes;
+
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
+
 public class HttpRequestHandlerTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
@@ -136,15 +138,16 @@ public class HttpRequestHandlerTests
         response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
         response.ErroResult!.Code.Should().Be("HttpRequestHandler.ErrorInvokingMethod");
     }
+  
 }
-
+ 
 // Mock Test Endpoint
 public class TestValidEndpoint : ApiEndpointBase
 {
     [HttpGet("items/{id}")]
     public int GetItem(int id = 10) => id;
 
-    [HttpGet("items/{id}")]
+    [HttpGet("test-exception/{id}")]
     public void ThrowException()
         => throw new InvalidOperationException("Test exception");
 

@@ -2,6 +2,7 @@
 using System.Reflection;
 using AtendeLogo.Presentation.Common.Enums;
 using AtendeLogo.Presentation.Common.Exceptions;
+using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Presentation.Common;
 
@@ -11,14 +12,11 @@ public class HttpMethodDescriptor
     public HttpMethodAttribute Attribute { get; }
     public ParameterInfo[] Parameters { get; }
     public ParameterInfo[] RouteParameters { get; }
-    public IReadOnlyDictionary<ParameterInfo, string> ParameterToQueryKeyMap { get; }
     public bool HasCancellationToken { get; }
-
-    public string RouteTemplate
-        => this.Attribute.RouteTemplate;
-
-    public string QueryTemplate
-        => this.Attribute.QueryTemplate;
+    public string RouteTemplate { get; }
+    public string QueryTemplate { get; }
+    public bool IsBodyParameter { get; }
+    public IReadOnlyDictionary<ParameterInfo, string> ParameterToQueryKeyMap { get; }
 
     public HttpStatusCode SuccessStatusCode
         => Attribute.SuccessStatusCode;
@@ -29,34 +27,65 @@ public class HttpMethodDescriptor
     public HttpMethodDescriptor(
         MethodInfo method)
     {
-        var paramerters = method.GetParameters();
+        var parameters = method.GetParameters();
+        var lastParameter = parameters.LastOrDefault();
 
         Method = method;
         Attribute = method.GetCustomAttribute<HttpMethodAttribute>()
             ?? throw new HttpTemplateException("Method must have an HttpMethodAttribute.");
 
-        HasCancellationToken = paramerters.LastOrDefault()?
-            .ParameterType == typeof(CancellationToken);
+        HasCancellationToken = lastParameter is not null 
+            && lastParameter.ParameterType == typeof(CancellationToken);
 
         Parameters = HasCancellationToken
-            ? paramerters[..^1]
-            : paramerters;
+            ? parameters[..^1]
+            : parameters;
 
-        RouteParameters = GetRouteParameters(RouteTemplate);
-        ParameterToQueryKeyMap = MapKeyKeyToParameters(Attribute.QueryTemplate);
+        IsBodyParameter = IsBodyParameterPresent();
+        RouteTemplate = Attribute.RouteTemplate;
+        RouteParameters = GetRouteParameters();
+        QueryTemplate = AdjustQueryTemplate(Attribute.QueryTemplate);
+       
+        ParameterToQueryKeyMap = MapParametersToQueryKeys();
 
         ParameterValidator.Validate(this);
     }
 
-    private ParameterInfo[] GetRouteParameters(string routeTemplate)
+    private bool IsBodyParameterPresent()
+    {
+        return Parameters.Length == 1 &&
+               Parameters[0].
+               ParameterType.ImplementsGenericInterfaceDefinition(typeof(IRequest<>));
+    }
+
+    private string AdjustQueryTemplate(string queryTemplate)
+    {
+        var needsCreateQueryTemplate = string.IsNullOrEmpty(queryTemplate) &&
+            Attribute.HttpVerb == HttpVerb.Get &&
+            Parameters.Length > 0 &&
+            !IsBodyParameter;
+
+        if (needsCreateQueryTemplate)
+            return CreateQueryTemplate();
+
+        return queryTemplate;
+    }
+
+    private string CreateQueryTemplate()
+    {
+        var queryParameters = Parameters.Except(RouteParameters)
+            .Select(x => $"{x.Name}={{{x.Name}}}");
+
+        return string.Join("&", queryParameters);
+    }
+
+    private ParameterInfo[] GetRouteParameters()
     {
         if (Parameters.Length == 0)
-        {
             return [];
-        }
 
         var routeParameters = new List<ParameterInfo>();
-        var routeParts = routeTemplate.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var routeParts = RouteTemplate.Split('/', StringSplitOptions.RemoveEmptyEntries);
         foreach (var routePart in routeParts)
         {
             if (routePart.Contains("{") && routePart.Contains("}"))
@@ -91,7 +120,7 @@ public class HttpMethodDescriptor
             "Please review the route template syntax.");
     }
 
-    protected IReadOnlyDictionary<ParameterInfo, string> MapKeyKeyToParameters(string pathOrQuery)
+    protected IReadOnlyDictionary<ParameterInfo, string> MapParametersToQueryKeys()
     {
         if (Parameters.Length == 0)
         {
@@ -99,7 +128,8 @@ public class HttpMethodDescriptor
         }
 
         var mappings = new Dictionary<ParameterInfo, string>();
-        var pairs = pathOrQuery.Split('&', StringSplitOptions.RemoveEmptyEntries);
+        var pairs = QueryTemplate.Split('&', StringSplitOptions.RemoveEmptyEntries);
+      
         foreach (var pair in pairs)
         {
             var keyValue = pair.Split('=', StringSplitOptions.RemoveEmptyEntries);

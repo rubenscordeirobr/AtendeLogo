@@ -110,6 +110,38 @@ public class HttpMethodDescriptorTests
         Action act = () => new HttpMethodDescriptor(method!);
         act.Should().NotThrow();
     }
+
+    [Fact]
+    public void Method_ShouldCreateQueryTemplate()
+    {
+        // Arrange
+        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.Parameters));
+        method.Should().NotBeNull();
+        
+        // Act
+        var descriptor = new HttpMethodDescriptor(method!);
+        var result = descriptor.QueryTemplate;
+
+        // Assert
+        result.Should()
+            .Be("parameter1={parameter1}&parameter2={parameter2}&parameter3={parameter3}");
+    }
+
+    [Fact]
+    public void Method_ShouldBeBodyParameter()
+    {
+        // Arrange
+        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.CreateItem));
+        method.Should().NotBeNull();
+        
+        // Act
+        var descriptor = new HttpMethodDescriptor(method!);
+        var result = descriptor.IsBodyParameter;
+        
+        // Assert
+        result.Should().BeTrue();
+    }
+
 }
 
 // Test endpoint used for testing.
@@ -145,8 +177,16 @@ public class TestEndpoint
     // Valid scenario: single parameter implementing IRequest<> should bypass additional validation.
     [HttpPost("items")]
     public void CreateItem(TestRequest request) { }
+     
+    [HttpGet]
+    public int Parameters(int parameter1, double parameter2, string parameter3)
+    {
+        return 0;
+    }
+     
 }
 
 public class TestRequest : IRequest<IResponse>
 {
 }
+

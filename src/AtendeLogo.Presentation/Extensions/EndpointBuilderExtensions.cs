@@ -17,7 +17,7 @@ public static class EndpointBuilderExtensions
     }
 
     public static void MapPresentationEndPoints(
-        this IEndpointRouteBuilder endpoints,
+        this IEndpointRouteBuilder endpointBuilder,
         Assembly assembly)
     {
 
@@ -27,46 +27,61 @@ public static class EndpointBuilderExtensions
 
         foreach (var endpointType in endpointTypes)
         {
-            var endpointAttr = endpointType.GetCustomAttribute<EndPointAttribute>()!;
-            var routePrefix = endpointAttr.RoutePrefix;
+            endpointBuilder.MapEndpointType(endpointType);
+           
+        }
+    }
 
-            var methodDescriptors = endpointType
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(m => m.GetCustomAttribute<HttpMethodAttribute>() != null)
-                .Select(m => new HttpMethodDescriptor(m))
-                .ToArray();
+    public static void MapEndpointType(
+        this IEndpointRouteBuilder endpointBuilder,
+        Type endpointType)
+    {
+        var endpointAttr = endpointType.GetCustomAttribute<EndPointAttribute>();
+        if(endpointAttr is null)
+        {
+            throw new EndpointAttributeException(
+                $"The endpoint type '{endpointType.Name}' must have an EndPointAttribute.");
+        }
 
-            var routeGroups = methodDescriptors
-                .GroupBy(x => (x.RouteTemplate, x.HttpVerb))
-                .ToList();
 
-            foreach (var routeGroup in routeGroups)
+        var routePrefix = endpointAttr.RoutePrefix;
+
+        var methodDescriptors = endpointType
+            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+            .Where(m => m.GetCustomAttribute<HttpMethodAttribute>() != null)
+            .Select(m => new HttpMethodDescriptor(m))
+            .ToArray();
+
+        var routeGroups = methodDescriptors
+            .GroupBy(x => (x.RouteTemplate, x.HttpVerb))
+            .ToList();
+
+        foreach (var routeGroup in routeGroups)
+        {
+            var (routeTemplate, httpVerb) = routeGroup.Key;
+
+            var descriptors = routeGroup.ToArray();
+
+            ValidateDescriptors(descriptors);
+
+            string[] httpMethods = [httpVerb.ToString().ToUpper()];
+
+            var route = string.IsNullOrWhiteSpace(routeTemplate)
+                ? routePrefix
+                : $"{routePrefix}/{routeTemplate.TrimStart('/')}";
+
+            RequestDelegate requestDelegate = async (httpContext) =>
             {
-                var (routeTemplate, httpVerb) = routeGroup.Key;
-                
-                var descriptors = routeGroup.ToArray();
+                var descriptor = HttpGetDescriptorSelector.Select(httpContext, descriptors);
 
-                ValidateDescriptors(descriptors);
+                var requestHandler = new HttpRequestHandler(
+                    httpContext,
+                    endpointType,
+                    descriptor);
 
-                string[] httpMethods = [httpVerb.ToString().ToUpper()];
-
-                var route = string.IsNullOrWhiteSpace(routeTemplate)
-                    ? routePrefix
-                    : $"{routePrefix}/{routeTemplate.TrimStart('/')}";
-
-                RequestDelegate requestDelegate = async (httpContext) =>
-                {
-                    var descriptor = HttpGetDescriptorSelector.Select(httpContext, descriptors);
-
-                    var requestHandler = new HttpRequestHandler(
-                        httpContext,
-                        endpointType,
-                        descriptor);
-
-                    await requestHandler.HandleAsync();
-                };
-                endpoints.MapMethods(route, httpMethods, requestDelegate);
-            }
+                await requestHandler.HandleAsync();
+            };
+            endpointBuilder.MapMethods(route, httpMethods, requestDelegate);
         }
     }
 
@@ -84,7 +99,7 @@ public static class EndpointBuilderExtensions
 
         if (distinctQueryTemplateCount != descriptors.Length)
         {
-            throw new HttpTemplateException(
+            throw new DuplicateEndpointException(
                 $"Multiple methods with the same route template '{descriptors.First().RouteTemplate}' " +
                 $"and query template '{descriptors.First().QueryTemplate}' are not allowed.");
         }
