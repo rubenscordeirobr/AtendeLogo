@@ -10,25 +10,25 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 {
     private readonly ISessionCacheService _sessionCacheService;
     private readonly IIdentityUnitOfWork _unitWork;
-    private readonly IRequestUserSessionService _userSessionService;
+    private readonly IUserSessionAccessor _userSessionAccessor;
 
     private IUserSessionRepository UserSessionRepository
         => _unitWork.UserSessionRepository;
 
     public UserSessionVerificationService(
         ISessionCacheService cacheSessionService,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionAccessor,
         IIdentityUnitOfWork unitWork)
     {
         _sessionCacheService = cacheSessionService;
-        _userSessionService = userSessionService;
+        _userSessionAccessor = userSessionAccessor;
         _unitWork = unitWork;
     }
 
     public async Task<IUserSession> VerifyAsync()
     {
         var session = await RetrieveSessionAsync();
-        _userSessionService.AddClientSessionCookie(session.ClientSessionToken);
+        _userSessionAccessor.AddClientSessionCookie(session.ClientSessionToken);
         return session;
 
     }
@@ -49,7 +49,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     private async Task<IUserSession?> GetUserSessionAsync()
     {
-        var clientSessionToken = _userSessionService.GetClientSessionToken();
+        var clientSessionToken = _userSessionAccessor.GetClientSessionToken();
         if (string.IsNullOrWhiteSpace(clientSessionToken))
             return null;
 
@@ -91,7 +91,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     private async Task ValidateSessionEntityAsync(UserSession userSession)
     {
-        var headerInfo = _userSessionService.GetRequestHeaderInfo();
+        var headerInfo = _userSessionAccessor.GetRequestHeaderInfo();
         if (userSession.IsUpdatePending() || Debugger.IsAttached)
         {
             userSession.UpdateLastActivity();
@@ -147,7 +147,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         var sessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
         var anonymouseUser_Id = AnonymousConstants.AnonymousUser_Id;
         var currentSessionId = currentSession?.Id ?? AnonymousConstants.AnonymousSystemSession_Id;
-        var headerInfo = _userSessionService.GetRequestHeaderInfo();
+        var headerInfo = _userSessionAccessor.GetRequestHeaderInfo();
 
         var userSession = new UserSession(
               applicationName: headerInfo.ApplicationName,

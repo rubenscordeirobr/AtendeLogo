@@ -3,8 +3,8 @@
 public class EntityDeletedEventHandlerTests
     : IClassFixture<AnonymousServiceProviderMock>
 {
-    private Fixture _figure = new();
-    private IServiceProvider _serviceProvider;
+    private readonly Fixture _figure = new();
+    private readonly IServiceProvider _serviceProvider;
 
     public EntityDeletedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
     {
@@ -19,7 +19,7 @@ public class EntityDeletedEventHandlerTests
         var eventMediator = _serviceProvider.GetRequiredService<IEventMediator>();
         var deletedEvent = new EntityDeletedEvent<TenantUser>(entity, []);
         var eventContext = new DomainEventContext([deletedEvent]);
-      
+
         // Act
         await eventMediator.DispatchAsync(eventContext);
 
@@ -36,17 +36,17 @@ public class EntityDeletedEventHandlerTests
         var entity = _figure.Create<TenantUser>();
         var deletedEvent = new EntityDeletedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
-        var userSessionServiceMock = new AnonymousUserSessionServiceMock();
+        var userSessionAccessorMock = new AnonymousUserSessionAccessorMock();
         var logger = new LoggerServiceMock<EntityDeletedEventHandler<TenantUser>>();
-         
+
         var handler = new EntityDeletedEventHandler<TenantUser>(
             activityRepository,
-            userSessionServiceMock,
+            userSessionAccessorMock,
             logger);
-     
+
         // Act
         Func<Task> task = async () => await handler.HandleAsync(deletedEvent);
-     
+
         // Assert
         await task.Should().NotThrowAsync();
     }

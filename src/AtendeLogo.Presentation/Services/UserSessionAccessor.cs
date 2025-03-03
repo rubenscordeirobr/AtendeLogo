@@ -5,17 +5,17 @@ using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Presentation.Services;
 
-public class RequestUserSessionService : IRequestUserSessionService
+public class UserSessionAccessor : IUserSessionAccessor
 {
     private const int DefaultSessionExpirationDays = 7;
     private const string SessionTokenCookieName = "ClientSessionToken";
 
     private readonly HttpContext _httpContext;
-    private readonly ILogger<RequestUserSessionService> _logger;
+    private readonly ILogger<UserSessionAccessor> _logger;
 
-    public RequestUserSessionService(
+    public UserSessionAccessor(
         IHttpContextAccessor httpContextAccessor,
-        ILogger<RequestUserSessionService> logger)
+        ILogger<UserSessionAccessor> logger)
     {
         _httpContext = httpContextAccessor.HttpContext
             ?? throw new InvalidOperationException("HttpContext is not available.");

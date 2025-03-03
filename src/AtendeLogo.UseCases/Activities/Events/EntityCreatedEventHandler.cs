@@ -11,22 +11,22 @@ public sealed class EntityCreatedEventHandler<TEntity> : IEntityCreatedEventHand
     where TEntity : EntityBase
 {
     private readonly IActivityRepository _activityRepository;
-    private readonly IRequestUserSessionService _userSessionService;
+    private readonly IUserSessionAccessor _userSessionAccessor;
     private readonly ILogger<EntityCreatedEventHandler<TEntity>> _logger;
 
     public EntityCreatedEventHandler(
         IActivityRepository activityRepository,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionAccessor,
         ILogger<EntityCreatedEventHandler<TEntity>> logger)
     {
         _activityRepository = activityRepository;
-        _userSessionService = userSessionService;
+        _userSessionAccessor = userSessionAccessor;
         _logger = logger;
     }
 
     public async Task HandleAsync(IEntityCreatedEvent<TEntity> domainEvent)
     {
-        var userSession = _userSessionService.GetCurrentSession();
+        var userSession = _userSessionAccessor.GetCurrentSession();
         var entity = domainEvent.Entity;
        
         var properties = domainEvent.PropertyValues

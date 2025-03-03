@@ -4,8 +4,8 @@ namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
 public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<AnonymousServiceProviderMock>
 {
-    private Fixture _figure = new();
-    private IServiceProvider _serviceProvider;
+    private readonly Fixture _figure = new();
+    private readonly IServiceProvider _serviceProvider;
 
     public EntityUpdatedPreProcessorHandlerTests(
         AnonymousServiceProviderMock serviceProviderMock)

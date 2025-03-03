@@ -11,23 +11,23 @@ public sealed class EntityDeletedEventHandler<TEntity> : IEntityDeletedEventHand
     where TEntity : EntityBase
 {
     private readonly IActivityRepository _activityRepository;
-    private readonly IRequestUserSessionService _userSessionService;
+    private readonly IUserSessionAccessor _userSessionAccessor;
     private readonly ILogger<EntityDeletedEventHandler<TEntity>> _logger;
 
     public EntityDeletedEventHandler(
         IActivityRepository activityRepository,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionAccessor,
         ILogger<EntityDeletedEventHandler<TEntity>> logger )
     {
         _activityRepository = activityRepository;
-        _userSessionService = userSessionService;
+        _userSessionAccessor = userSessionAccessor;
         _logger = logger;
     }
 
     public async Task HandleAsync(
         IEntityDeletedEvent<TEntity> domainEvent)
     {
-        var userSession = _userSessionService.GetCurrentSession();
+        var userSession = _userSessionAccessor.GetCurrentSession();
         var entity = domainEvent.Entity;
 
         var properties = domainEvent.PropertyValues

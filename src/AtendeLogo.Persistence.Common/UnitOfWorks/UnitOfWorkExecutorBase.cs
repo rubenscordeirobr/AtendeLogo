@@ -11,18 +11,18 @@ namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 internal abstract class UnitOfWorkExecutorBase
 {
     private readonly DbContext _dbContext;
-    private readonly IRequestUserSessionService _userSessionService;
+    private readonly IUserSessionAccessor _userSessionAccessor;
     protected readonly ILogger<IUnitOfWork> _logger;
     protected readonly IEventMediator EventMediator;
 
     public UnitOfWorkExecutorBase(
         DbContext dbContext,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionAccessor,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
     {
         _dbContext = dbContext;
-        _userSessionService = userSessionService;
+        _userSessionAccessor = userSessionAccessor;
         _logger = logger;
 
         EventMediator = eventMediator;
@@ -37,7 +37,7 @@ internal abstract class UnitOfWorkExecutorBase
             .Where(x => x.HasChanges())
             .ToList();
 
-        var userSession = _userSessionService.GetCurrentSession();
+        var userSession = _userSessionAccessor.GetCurrentSession();
         var domainEventContext = DomainEventContextFactory.Create(userSession, entries);
 
         await PreProcessorDispatchAsync(domainEventContext);

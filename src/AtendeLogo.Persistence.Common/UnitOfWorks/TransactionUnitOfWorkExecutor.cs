@@ -17,11 +17,11 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
 
     public TransactionUnitOfWorkExecutor(
         DbContext dbContext,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionAccessor,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger,
         IDbContextTransaction transaction)
-        : base(dbContext, userSessionService, eventMediator, logger)
+        : base(dbContext, userSessionAccessor, eventMediator, logger)
     {
         _transaction = transaction;
         _transactionDomainEventContext = new();

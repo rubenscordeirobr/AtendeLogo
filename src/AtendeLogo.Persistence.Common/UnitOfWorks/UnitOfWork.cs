@@ -11,7 +11,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
     where TDbContext : DbContext
 {
     protected readonly TDbContext DbContext;
-    protected readonly IRequestUserSessionService UserSessionService;
+    protected readonly IUserSessionAccessor UserSessionAccessor;
     private readonly IEventMediator _eventMediator;
     private readonly ILogger<IUnitOfWork> _logger;
 
@@ -20,7 +20,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     public UnitOfWork(
         TDbContext dbContext,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
     {
@@ -28,7 +28,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         Guard.NotNull(userSessionService);
 
         DbContext = dbContext;
-        UserSessionService = userSessionService;
+        UserSessionAccessor = userSessionService;
 
         _eventMediator = eventMediator;
         _logger = logger;
@@ -99,7 +99,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
             var executor = new UnitOfWorkExecutor(
                 DbContext,
-                UserSessionService,
+                UserSessionAccessor,
                 _eventMediator,
                 _logger);
 
@@ -129,7 +129,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
            
             _transactionExecutor = new TransactionUnitOfWorkExecutor(
                 DbContext,
-                UserSessionService,
+                UserSessionAccessor,
                 _eventMediator,
                 _logger,
                 transaction);

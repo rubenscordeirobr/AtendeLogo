@@ -8,9 +8,9 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
 {
     public TenantRepository(
         IdentityDbContext dbContext,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionAccessor,
         TrackingOption trackingOption = TrackingOption.NoTracking)
-        : base(dbContext, userSessionService, trackingOption)
+        : base(dbContext, userSessionAccessor, trackingOption)
     {
     }
 

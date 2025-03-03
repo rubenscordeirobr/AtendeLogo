@@ -3,9 +3,8 @@
 public class EntityCreatedEventHandlerTests
     : IClassFixture<AnonymousServiceProviderMock>
 {
-    private Fixture _figure = new();
-
-    private IServiceProvider _serviceProvider;
+    private readonly Fixture _figure = new();
+    private readonly IServiceProvider _serviceProvider;
 
     public EntityCreatedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
     {
@@ -40,12 +39,12 @@ public class EntityCreatedEventHandlerTests
         var entity = _figure.Create<TenantUser>();
         var createdEvent = new EntityCreatedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
-        var userSessionServiceMock = new AnonymousUserSessionServiceMock();
+        var userSessionAccessorMock = new AnonymousUserSessionAccessorMock();
         var logger = new LoggerServiceMock<EntityCreatedEventHandler<TenantUser>>();
 
         var handler = new EntityCreatedEventHandler<TenantUser>(
             activityRepository,
-            userSessionServiceMock,
+            userSessionAccessorMock,
             logger);
 
         // Act

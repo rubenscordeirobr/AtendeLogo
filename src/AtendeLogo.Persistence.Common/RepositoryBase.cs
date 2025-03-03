@@ -10,7 +10,7 @@ namespace AtendeLogo.Persistence.Common;
 public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     private readonly DbContext _dbContext;
-    private readonly IRequestUserSessionService _userSessionService;
+    private readonly IUserSessionAccessor _userSessionAccessor;
 
     private readonly bool _isImplementDeletedInterface;
     private readonly bool _isImplementTenantOwnedInterface;
@@ -25,7 +25,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     public RepositoryBase(
         DbContext dbContext,
-        IRequestUserSessionService userSessionService,
+        IUserSessionAccessor userSessionAccessor,
         TrackingOption trackingOption)
     {
         Guard.NotNull(dbContext);
@@ -34,7 +34,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         _isImplementDeletedInterface = typeof(ISoftDeletableEntity).IsAssignableFrom(typeof(TEntity));
         _isImplementTenantOwnedInterface = typeof(ITenantOwned).IsAssignableFrom(typeof(TEntity));
         _trackingOption = trackingOption;
-        _userSessionService = userSessionService;
+        _userSessionAccessor = userSessionAccessor;
     }
 
     #region Queries
@@ -151,7 +151,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         {
             if (CheckIfNeedFilterTentantOwned())
             {
-                var userSession = _userSessionService.GetCurrentSession();
+                var userSession = _userSessionAccessor.GetCurrentSession();
 
                 query = query.Cast<ITenantOwned>()
                    .Where(x => x.Tenant_Id == userSession.Tenant_Id)
@@ -170,7 +170,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     private bool CheckIfNeedFilterTentantOwned()
     {
-        var userSession = _userSessionService.GetCurrentSession();
+        var userSession = _userSessionAccessor.GetCurrentSession();
         if (userSession.Tenant_Id is null || userSession.Tenant_Id == default)
         {
             if (IsUserHasAdminPermision(userSession))

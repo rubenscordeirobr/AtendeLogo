@@ -6,7 +6,7 @@ using AtendeLogo.Common.Helpers;
 
 namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
 
-public abstract class UserSessionServiceMock : IRequestUserSessionService
+public abstract class UserSessionAccessorMock : IUserSessionAccessor
 {
     public void AddClientSessionCookie(string session)
     {
@@ -21,7 +21,7 @@ public abstract class UserSessionServiceMock : IRequestUserSessionService
         return null;
     }
 
-    IUserSession IRequestUserSessionService.GetCurrentSession()
+    IUserSession IUserSessionAccessor.GetCurrentSession()
     {
         return GetCurrentSession();
     }
@@ -32,7 +32,7 @@ public abstract class UserSessionServiceMock : IRequestUserSessionService
     }
 }
 
-public class AnonymousUserSessionServiceMock : UserSessionServiceMock
+public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
 {
     public override UserSession GetCurrentSession()
     {
@@ -54,7 +54,7 @@ public class AnonymousUserSessionServiceMock : UserSessionServiceMock
         return userSession;
     }
 }
-public class SystemTenantUserSessionServiceMock : UserSessionServiceMock
+public class SystemTenantUserSessionAccessorMock : UserSessionAccessorMock
 {
     public override UserSession GetCurrentSession()
     {

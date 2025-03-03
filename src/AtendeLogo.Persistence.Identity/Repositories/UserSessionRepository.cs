@@ -6,10 +6,10 @@ namespace AtendeLogo.Persistence.Identity.Repositories;
 internal class UserSessionRepository : RepositoryBase<UserSession>, IUserSessionRepository
 {
     public UserSessionRepository(
-        IdentityDbContext dbContext, 
-        IRequestUserSessionService userSessionService,
+        IdentityDbContext dbContext,
+        IUserSessionAccessor userSessionAccessor,
         TrackingOption trackingOption = TrackingOption.NoTracking)
-        : base(dbContext, userSessionService, trackingOption)
+        : base(dbContext, userSessionAccessor, trackingOption)
     {
     }
 

@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Application.Contracts.Services;
 
-public interface IRequestUserSessionService : IApplicationService
+public interface IUserSessionAccessor : IApplicationService
 {
     void AddClientSessionCookie(string session);
     string? GetClientSessionToken();

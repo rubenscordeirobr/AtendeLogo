@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Application.UnitTests.Services;
 
-public class RequestUserSessionServiceTests
+public class UserSessionAccessorTests
 {
     [Fact]
     public void GetCurrentSession_ShouldReturnAnonymousSession_WhenNoSessionFoundInContext()
@@ -11,8 +11,8 @@ public class RequestUserSessionServiceTests
         var httpContextAccessor = new HttpContextAccessorMock();
         // Ensure Items does not already contain a session.
         httpContextAccessor.HttpContext?.Items.Clear();
-        var logger = new LoggerServiceMock<RequestUserSessionService>();
-        var service = new RequestUserSessionService(httpContextAccessor, logger);
+        var logger = new LoggerServiceMock<UserSessionAccessor>();
+        var service = new UserSessionAccessor(httpContextAccessor, logger);
 
         // Act
         var session = service.GetCurrentSession();
@@ -27,8 +27,8 @@ public class RequestUserSessionServiceTests
     {
         // Arrange
         var httpContextAccessor = new HttpContextAccessorMock();
-        var logger = new LoggerServiceMock<RequestUserSessionService>();
-        var service = new RequestUserSessionService(httpContextAccessor, logger);
+        var logger = new LoggerServiceMock<UserSessionAccessor>();
+        var service = new UserSessionAccessor(httpContextAccessor, logger);
         var token = "test-token";
 
         // Act
@@ -54,8 +54,8 @@ public class RequestUserSessionServiceTests
         var token = "abc123";
         httpContextAccessor.HttpContext!.Request.Headers["Cookie"] = $"ClientSessionToken={token}; otherCookie=otherValue";
       
-        var logger = new LoggerServiceMock<RequestUserSessionService>();
-        var service = new RequestUserSessionService(httpContextAccessor, logger);
+        var logger = new LoggerServiceMock<UserSessionAccessor>();
+        var service = new UserSessionAccessor(httpContextAccessor, logger);
 
         // Act
         var retrievedToken = service.GetClientSessionToken();

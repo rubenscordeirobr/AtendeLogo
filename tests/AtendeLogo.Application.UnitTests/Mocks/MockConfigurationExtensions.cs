@@ -18,11 +18,11 @@ public static class MockConfigurationExtensions
 
         if (isAnonymousUserSession)
         {
-            services.AddSingleton<IRequestUserSessionService, AnonymousUserSessionServiceMock>();
+            services.AddSingleton<IUserSessionAccessor, AnonymousUserSessionAccessorMock>();
         }
         else
         {
-            services.AddSingleton<IRequestUserSessionService, SystemTenantUserSessionServiceMock>();
+            services.AddSingleton<IUserSessionAccessor, SystemTenantUserSessionAccessorMock>();
         }
 
         return services;
