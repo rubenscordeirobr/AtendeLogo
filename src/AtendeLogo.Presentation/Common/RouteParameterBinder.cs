@@ -35,7 +35,7 @@ public static class RouteParameterBinder
                     new BadRequestError(
                         "ParameterConversionFailed",
                         $"Error in method '{descriptor.Method.Name}' of '{descriptor.Method.DeclaringType?.Name}': " +
-                        $"Failed to convert route parameter '{parameterName}' (from template '{descriptor.RouteTemplate}') " +
+                        $"Failed to convert route value '{routeValue}' to parameter ({parameterName}) Type '{parameter.ParameterType}'." +
                         $"to type '{parameterType.Name}'. Details: {ex.GetNestedMessage()}"));
             }
         }

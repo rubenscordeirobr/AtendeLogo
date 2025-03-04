@@ -16,6 +16,11 @@ public class HttpMethodDescriptor
     public string RouteTemplate { get; }
     public string QueryTemplate { get; }
     public bool IsBodyParameter { get; }
+    public Type ResponseType { get; }
+
+    public IReadOnlyList<ParameterInfo> QueryParameters
+        => ParameterToQueryKeyMap.Keys.ToList();
+
     public IReadOnlyDictionary<ParameterInfo, string> ParameterToQueryKeyMap { get; }
 
     public HttpStatusCode SuccessStatusCode
@@ -23,6 +28,11 @@ public class HttpMethodDescriptor
 
     public HttpVerb HttpVerb
         => this.Attribute.HttpVerb;
+     
+    public Type? BodyType
+        => IsBodyParameter
+            ? Parameters.FirstOrDefault()?.ParameterType
+            : null;
 
     public HttpMethodDescriptor(
         MethodInfo method)
@@ -40,14 +50,13 @@ public class HttpMethodDescriptor
         Parameters = HasCancellationToken
             ? parameters[..^1]
             : parameters;
-
+         
         IsBodyParameter = IsBodyParameterPresent();
         RouteTemplate = Attribute.RouteTemplate;
         RouteParameters = GetRouteParameters();
         QueryTemplate = AdjustQueryTemplate(Attribute.QueryTemplate);
-       
         ParameterToQueryKeyMap = MapParametersToQueryKeys();
-
+        ResponseType = ResolveResponseType(Method.ReturnType);
         ParameterValidator.Validate(this);
     }
 
@@ -158,5 +167,22 @@ public class HttpMethodDescriptor
             }
         }
         return mappings;
+    }
+
+    private Type ResolveResponseType(Type currentType)
+    {
+        if(currentType.IsGenericType)
+        {
+            if (currentType.GetGenericTypeDefinition() == typeof(Task<>))
+            {
+                return ResolveResponseType(currentType.GenericTypeArguments[0]);
+            }
+
+            if (currentType.GetGenericTypeDefinition() == typeof(Result<>))
+            {
+                return ResolveResponseType(currentType.GenericTypeArguments[0]);
+            }
+        }
+        return currentType;
     }
 }
