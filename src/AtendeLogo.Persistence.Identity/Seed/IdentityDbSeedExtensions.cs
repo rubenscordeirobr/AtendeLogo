@@ -72,6 +72,7 @@ internal static class IdentityDbSeedExtensions
             userAgent: "SYSTEM",
             language: Language.Default,
             authenticationType: AuthenticationType.Anonymous,
+            expirationTime: null,
             user_Id: AnonymousConstants.AnonymousUser_Id,
             tenant_Id: null
         );
@@ -143,7 +144,5 @@ internal static class IdentityDbSeedExtensions
         systemTenant.SetPropertyValue(x => x.Id, SystemTenantConstants.TenantSystem_Id);
 
         dbContext.Add(systemTenant);
-
-        
     }
 }

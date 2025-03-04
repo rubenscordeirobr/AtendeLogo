@@ -19,7 +19,7 @@ public class UserSessionTerminatedEventHandlerTests
     {
         // Arrange
         var userSession = _figure.Create<UserSession>();
-        var createdEvent = new UserSessionTerminatedEvent(userSession, SessionTerminationReason.SessionTimeout);
+        var createdEvent = new UserSessionTerminatedEvent(userSession, SessionTerminationReason.SessionExpired);
         var eventContext = new DomainEventContext([createdEvent]);
 
         // Act

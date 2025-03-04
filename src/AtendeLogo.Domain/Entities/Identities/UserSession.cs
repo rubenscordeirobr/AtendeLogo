@@ -15,6 +15,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public DateTime LastActivity { get; private set; }
     public DateTime StartedAt { get; private set; }
     public DateTime? TerminatedAt { get; private set; }
+    public TimeSpan? ExpirationTime { get; private set; }
     public Language Language { get; private set; }
     public AuthenticationType AuthenticationType { get; private set; }
     public SessionTerminationReason? TerminationReason { get; private set; }
@@ -32,23 +33,34 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         string? authToken,
         Language language,
         AuthenticationType authenticationType,
+        TimeSpan? expirationTime,
         Guid user_Id,
         Guid? tenant_Id)
     {
         ApplicationName = applicationName;
+        ClientSessionToken = clientSessionToken;
         IpAddress = ipAddress;
         UserAgent = userAgent;
-        Language = language;
         AuthToken = authToken;
+        Language = language;
+        AuthenticationType = authenticationType;
+        ExpirationTime = expirationTime;
         User_Id = user_Id;
         Tenant_Id = tenant_Id;
-        ClientSessionToken = clientSessionToken;
-        AuthenticationType = authenticationType;
         IsActive = true;
     }
 
     public bool IsUpdatePending()
       => this.IsActive && LastActivity.IsExpired(TimeSpan.FromMinutes(UpdateCheckIntervalMinutes));
+
+    public bool IsExpired()
+    {
+        if (IsActive && ExpirationTime.HasValue)
+        {
+            return DateTime.Now > LastActivity.Add(ExpirationTime.Value);
+        }
+        return false;
+    }
 
     public void TerminateSession(SessionTerminationReason reason)
     {
@@ -80,5 +92,5 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public IReadOnlyList<IDomainEvent> DomainEvents => _events;
 
     #endregion
-     
+
 }

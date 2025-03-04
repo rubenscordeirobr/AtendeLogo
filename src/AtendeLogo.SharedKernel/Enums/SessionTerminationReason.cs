@@ -5,6 +5,6 @@ public enum SessionTerminationReason
     IpAddressChanged = 1,
     UserAgentChanged,
     PasswordChanged,
-    SessionTimeout,
+    SessionExpired,
     DomainEventError,
 }

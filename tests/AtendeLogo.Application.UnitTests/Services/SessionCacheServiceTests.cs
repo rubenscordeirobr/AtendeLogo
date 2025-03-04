@@ -51,8 +51,19 @@ public class SessionCacheServiceTests
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
         var clientSessionToken = "test-session-token";
-        var expectedSession = new UserSession("app", clientSessionToken, "127.0.0.1", "user-agent", null, Language.English, AuthenticationType.Email_Password, Guid.NewGuid(), null);
-
+        var expectedSession = new UserSession(
+             applicationName: "app",
+             clientSessionToken: clientSessionToken,
+             ipAddress: "127.0.0.1",
+             userAgent: "user-agent",
+             language: Language.English,
+             authenticationType: AuthenticationType.Email_Password,
+             user_Id: Guid.NewGuid(),
+             expirationTime: null,
+             authToken: null,
+             tenant_Id: null
+        );
+         
         var cacheKey = $"user-session:{HashHelper.CreateMd5GuidHash(clientSessionToken)}";
 
         await cacheRepository.StringSetAsync(cacheKey, JsonSerializer.Serialize(expectedSession), TimeSpan.FromHours(1));
@@ -88,7 +99,19 @@ public class SessionCacheServiceTests
         var logger = new LoggerServiceMock<SessionCacheService>();
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
-        var session = new UserSession("app", "test-session-token", "127.0.0.1", "user-agent", null, Language.English, AuthenticationType.Email_Password, Guid.NewGuid(), null);
+        var session = new UserSession(
+             applicationName: "app",
+             clientSessionToken: "test-session-token",
+             ipAddress: "127.0.0.1",
+             userAgent: "user-agent",
+             language: Language.English,
+             authenticationType: AuthenticationType.Email_Password,
+             user_Id: Guid.NewGuid(),
+             expirationTime: null,
+             authToken: null,
+             tenant_Id: null
+        );
+
         session.SetAnonymousSystemSessionId();
 
         var cacheKey = $"user-session:{HashHelper.CreateMd5GuidHash(session.ClientSessionToken)}";
@@ -107,7 +130,18 @@ public class SessionCacheServiceTests
         var logger = new LoggerServiceMock<SessionCacheService>();
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
-        var session = new UserSession("app", "test-session-token", "127.0.0.1", "user-agent", null, Language.English, AuthenticationType.Email_Password, Guid.Empty, null);
+        var session = new UserSession(
+            applicationName: "app",
+            clientSessionToken: "test-session-token",
+            ipAddress: "127.0.0.1",
+            userAgent: "user-agent",
+            language: Language.English,
+            authenticationType: AuthenticationType.Email_Password,
+            user_Id: Guid.Empty,
+            expirationTime: null,
+            authToken: null,
+            tenant_Id: null
+         );
 
         // Act
         Func<Task> act = async () => await service.AddSessionAsync(session);

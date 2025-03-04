@@ -47,6 +47,7 @@ public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
             language: Language.Default,
             authenticationType: AuthenticationType.Anonymous,
             user_Id: AnonymousConstants.AnonymousUser_Id,
+            expirationTime: null,
             authToken: null,
             tenant_Id: null
         );
@@ -68,6 +69,7 @@ public class SystemTenantUserSessionAccessorMock : UserSessionAccessorMock
             userAgent: "SYSTEM",
             language: Language.Default,
             authenticationType: AuthenticationType.System,
+            expirationTime: null,
             user_Id: SystemTenantConstants.TenantSystemOwnerUser_Id,
             authToken: clientSessionToken,
             tenant_Id: SystemTenantConstants.TenantSystem_Id

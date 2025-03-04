@@ -3,6 +3,7 @@ using AtendeLogo.Application.Contracts.Persistence.Identity;
 using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Application.Models.Identities;
 using AtendeLogo.Common.Helpers;
+using AtendeLogo.Common.Infos;
 
 namespace AtendeLogo.Application.Services;
 
@@ -74,14 +75,16 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     private async Task ValidateSessionAsync(IUserSession userSession)
     {
         if (!userSession.IsActive)
+        {
             return;
+        }
 
         if (userSession is AnonymousUserSession)
         {
             return;
         }
 
-        if (!(userSession is UserSession userSessionEntity))
+        if (userSession is not UserSession userSessionEntity)
         {
             throw new InvalidOperationException("Invalid session type.");
         }
@@ -92,39 +95,40 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     private async Task ValidateSessionEntityAsync(UserSession userSession)
     {
         var headerInfo = _userSessionAccessor.GetRequestHeaderInfo();
-        if (userSession.IsUpdatePending() || Debugger.IsAttached)
+        var terminationReason = GetSessionTerminationReason(userSession, headerInfo);
+        if (terminationReason.HasValue)
         {
-            userSession.UpdateLastActivity();
+            await TerminateSessionAsync(userSession, terminationReason.Value);
+            return;
+        }
 
-            _unitWork.Update(userSession);
+        if (!userSession.IsUpdatePending())
+        {
+            return;
+        }
 
-            var result = await _unitWork.SaveChangesAsync(silent: true);
-            if (!result.IsSuccess)
-            {
-                if (result.Error is DomainEventError)
-                {
-                    await TerminateSessionAsync(userSession, SessionTerminationReason.DomainEventError);
-                }
-                else
-                {
-                    throw result.Exception;
-                }
-                return;
-            }
-            await _sessionCacheService.AddSessionAsync(userSession);
+        await ProcessSessionUpdateAsync(userSession);
+    }
+
+    private SessionTerminationReason? GetSessionTerminationReason(
+        UserSession userSession,
+        RequestHeaderInfo headerInfo)
+    {
+        if (userSession.IsExpired())
+        {
+            return SessionTerminationReason.SessionExpired;
         }
 
         if (!string.Equals(userSession.IpAddress, headerInfo.IpAddress, StringComparison.OrdinalIgnoreCase))
         {
-            await TerminateSessionAsync(userSession, SessionTerminationReason.IpAddressChanged);
-            return;
+            return SessionTerminationReason.IpAddressChanged;
         }
 
         if (!string.Equals(userSession.UserAgent, headerInfo.UserAgent, StringComparison.OrdinalIgnoreCase))
         {
-            await TerminateSessionAsync(userSession, SessionTerminationReason.UserAgentChanged);
-            return;
+            return SessionTerminationReason.UserAgentChanged;
         }
+        return null;
     }
 
     private async Task TerminateSessionAsync(
@@ -139,6 +143,26 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         userSession.TerminateSession(reason);
         await _unitWork.SaveChangesAsync();
         await _sessionCacheService.RemoveSessionAsync(userSession.ClientSessionToken);
+    }
+
+    private async Task ProcessSessionUpdateAsync(UserSession userSession)
+    {
+        userSession.UpdateLastActivity();
+
+        _unitWork.Update(userSession);
+
+        var result = await _unitWork.SaveChangesAsync(silent: true);
+        if (!result.IsSuccess)
+        {
+            var terminationReason = result.Error is DomainEventError
+                ? SessionTerminationReason.DomainEventError
+                : throw result.Exception;
+
+            await TerminateSessionAsync(userSession, terminationReason);
+            return;
+        }
+
+        await _sessionCacheService.AddSessionAsync(userSession);
     }
 
     private async Task<UserSession> CreateAnonymousSessionAsync(
@@ -156,6 +180,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
               userAgent: headerInfo.UserAgent,
               language: Language.Default,
               authenticationType: AuthenticationType.Anonymous,
+              expirationTime: null,
               user_Id: anonymouseUser_Id,
               authToken: null,
               tenant_Id: null
