@@ -59,7 +59,7 @@ public class RequestMediatorTests
     {
         // Arrange
         var mediator = CreateMockRequestMediator();
-        var request = new MockValidatorNotRegistredCommandRequest();
+        var request = new MockValidatorNotRegisteredCommandRequest();
 
         // Act
         Func<Task> act = async () => await mediator.RunAsync(request);
@@ -73,7 +73,7 @@ public class RequestMediatorTests
     {
         // Arrange
         var mediator =CreateMockRequestMediator();
-        var request = new MockHandlerNotRegistredCommandRequest();
+        var request = new MockHandlerNotRegisteredCommandRequest();
         
         // Act
         Func<Task> act = async () => await mediator.RunAsync(request);
@@ -102,8 +102,8 @@ public class RequestMediatorTests
             typeof(MockCommandHandler),
             typeof(MockCommandRequest),
             typeof(MockCommandRequestValidator),
-            typeof(MockHandlerNotRegistredCommandRequest),
-            typeof(MockHandlerNotRegistredCommandRequestValidator),
+            typeof(MockHandlerNotRegisteredCommandRequest),
+            typeof(MockHandlerNotRegisteredCommandRequestValidator),
         };
 
         return new ServiceCollection()
@@ -156,19 +156,19 @@ public class RequestMediatorTests
         }
     }
 
-    public record MockValidatorNotRegistredCommandRequest : ICommandRequest<MockResponse>
+    public record MockValidatorNotRegisteredCommandRequest : ICommandRequest<MockResponse>
     {
         public Guid ClientRequestId => Guid.NewGuid();
     }
 
-    public record MockHandlerNotRegistredCommandRequest : ICommandRequest<MockResponse>
+    public record MockHandlerNotRegisteredCommandRequest : ICommandRequest<MockResponse>
     {
         public Guid ClientRequestId => Guid.NewGuid();
     }
 
-    public class MockHandlerNotRegistredCommandRequestValidator : AbstractValidator<MockHandlerNotRegistredCommandRequest>
+    public class MockHandlerNotRegisteredCommandRequestValidator : AbstractValidator<MockHandlerNotRegisteredCommandRequest>
     {
-        public MockHandlerNotRegistredCommandRequestValidator()
+        public MockHandlerNotRegisteredCommandRequestValidator()
         {
             RuleFor(x => x.ClientRequestId)
                 .NotEmpty();
