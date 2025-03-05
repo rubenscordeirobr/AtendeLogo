@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Persistence.Common.Interceptors;
+﻿using AtendeLogo.Persistence.Common.Interceptors;
 using AtendeLogo.Persistence.Identity.Repositories;
 using AtendeLogo.Persistence.Identity.Seed;
 using Microsoft.AspNetCore.Builder;

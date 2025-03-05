@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Common;
-namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
+﻿namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
 public sealed class GetSystemUserByIdQueryHandler
     : SingleResultQueryHandler<GetSystemUserByIdQuery, SystemUserResponse>

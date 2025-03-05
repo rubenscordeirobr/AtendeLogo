@@ -1,7 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Common;
-
-namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public class GetAdminUserByEmailQueryHandler
     : SingleResultQueryHandler<GetAdminUserByEmailQuery, AdminUserResponse>

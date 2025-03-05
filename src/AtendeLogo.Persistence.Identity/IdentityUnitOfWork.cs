@@ -1,6 +1,4 @@
 ﻿using AtendeLogo.Application.Contracts.Mediators;
-using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Persistence.Common.Enums;
 using AtendeLogo.Persistence.Common.UnitOfWorks;
 using AtendeLogo.Persistence.Identity.Repositories;
 using Microsoft.Extensions.Logging;

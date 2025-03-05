@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Application.Contracts.Persistence.Identity;
+﻿namespace AtendeLogo.Application.Contracts.Persistence.Identities;
 
 public interface IUserRepository<TUser> : IRepositoryBase<TUser>
     where TUser : User

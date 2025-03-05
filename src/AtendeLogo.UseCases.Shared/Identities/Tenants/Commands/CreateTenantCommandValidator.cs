@@ -1,6 +1,4 @@
-﻿using AtendeLogo.UseCases.Identities.Tenants.Services;
-using AtendeLogo.UseCases.Shared;
-using FluentValidation;
+﻿using FluentValidation;
 
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;

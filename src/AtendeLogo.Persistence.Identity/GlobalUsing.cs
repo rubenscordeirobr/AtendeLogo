@@ -1,9 +1,14 @@
-﻿global using AtendeLogo.Application.Contracts.Services;
+﻿global using AtendeLogo.Application.Contracts.Persistence.Identities;
+global using AtendeLogo.Application.Contracts.Services;
+global using AtendeLogo.Common;
 global using AtendeLogo.Common.Enums;
 global using AtendeLogo.Common.Helpers;
 global using AtendeLogo.Domain.Entities.Identities;
+global using AtendeLogo.Persistence.Common;
+global using AtendeLogo.Persistence.Common.Enums;
+global using AtendeLogo.Persistence.Identity.Extensions;
 global using AtendeLogo.Shared.Contantes;
 global using AtendeLogo.Shared.Enums;
+global using AtendeLogo.Shared.ValueObjects;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
-

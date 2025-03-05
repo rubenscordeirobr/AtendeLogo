@@ -1,7 +1,7 @@
 ﻿using AtendeLogo.Shared.Contracts;
 using AtendeLogo.UseCases.Common.Validations;
+using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
-using AtendeLogo.UseCases.Identities.Tenants.Services;
 using AtendeLogo.UseCases.UnitTests.TestSupport;
 using FluentValidation.TestHelper;
 using Moq;

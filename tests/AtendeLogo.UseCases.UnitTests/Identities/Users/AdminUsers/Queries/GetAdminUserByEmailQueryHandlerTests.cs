@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.AdminUsers.Queries;
 

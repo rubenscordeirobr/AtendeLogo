@@ -16,3 +16,4 @@ global using AutoFixture;
 global using FluentAssertions;
 global using FluentValidation;
 global using Microsoft.Extensions.DependencyInjection;
+global using AtendeLogo.Application.Contracts.Persistence.Identities;

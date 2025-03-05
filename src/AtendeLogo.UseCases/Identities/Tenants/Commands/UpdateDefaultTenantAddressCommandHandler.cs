@@ -1,6 +1,4 @@
 ﻿using AtendeLogo.Application.Commands;
-using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Common;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 

@@ -1,6 +1,4 @@
-﻿using AtendeLogo.UseCases.Shared;
-
-namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
 public record UpdateDefaultTenantAddressCommand : CommandRequest<UpdateDefaultTenantResponse>
 {
@@ -9,6 +7,6 @@ public record UpdateDefaultTenantAddressCommand : CommandRequest<UpdateDefaultTe
     public required AddressDto Address { get; init; }
 }
 
-public record UpdateDefaultTenantResponse : ResponseBase
+public record UpdateDefaultTenantResponse : IResponse
 {
 } 

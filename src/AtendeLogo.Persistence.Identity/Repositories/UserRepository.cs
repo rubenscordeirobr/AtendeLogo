@@ -1,8 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Persistence.Common;
-using AtendeLogo.Persistence.Common.Enums;
-
-namespace AtendeLogo.Persistence.Identity.Repositories;
+﻿namespace AtendeLogo.Persistence.Identity.Repositories;
 
 internal abstract class UserRepository<TUserEntity> : RepositoryBase<TUserEntity>, IUserRepository<TUserEntity>
     where TUserEntity : User

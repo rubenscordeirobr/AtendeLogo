@@ -1,8 +1,4 @@
-﻿using AtendeLogo.Common;
-using AtendeLogo.Shared.ValueObjects;
-using AtendeLogo.Persistence.Identity.Extensions;
-
-namespace AtendeLogo.Persistence.Identity.Seed;
+﻿namespace AtendeLogo.Persistence.Identity.Seed;
 
 internal static class IdentityDbSeedExtensions
 {

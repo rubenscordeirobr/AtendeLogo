@@ -5,3 +5,5 @@ global using AtendeLogo.Domain.Entities.Identities;
 global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.ValueObjects;
 global using Microsoft.Extensions.Logging;
+global using AtendeLogo.Application.Contracts.Persistence.Identities;
+global using AtendeLogo.Common;

@@ -1,6 +1,5 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
+﻿namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
-namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 internal sealed partial class GetAllSystemUsersQueryHandler
     : CollectionQueryHandler<GetAllSystemUsersQuery, SystemUserResponse>
 {

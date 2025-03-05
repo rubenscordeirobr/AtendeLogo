@@ -1,7 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Persistence.Common.Enums;
-
-namespace AtendeLogo.Persistence.Identity.Repositories;
+﻿namespace AtendeLogo.Persistence.Identity.Repositories;
 
 internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRepository
 {
@@ -11,5 +8,20 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
         TrackingOption trackingOption = TrackingOption.NoTracking)
         : base(dbContext, userSessionAccessor, trackingOption)
     {
+    }
+
+    public Task<bool> EmailExistsAsync(
+        Guid currentTenantUser_Id, 
+        string email, 
+        CancellationToken token)
+    {
+        return AnyAsync(x => x.Email == email && x.Id != currentTenantUser_Id, token);
+    }
+
+    public Task<bool> EmailOrPhoneNumberExits(
+        string emailOrPhoneNumber, 
+        CancellationToken token)
+    {
+        return AnyAsync(x => x.Email == emailOrPhoneNumber || x.PhoneNumber.Number == emailOrPhoneNumber, token);
     }
 }
