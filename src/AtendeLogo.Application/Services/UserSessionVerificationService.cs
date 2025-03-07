@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
-using AtendeLogo.Application.Contracts.Persistence.Identity;
-using AtendeLogo.Application.Contracts.Services;
-using AtendeLogo.Application.Models.Identities;
-using AtendeLogo.Common.Helpers;
+using AtendeLogo.Application.Contracts.Persistence.Identities;
 using AtendeLogo.Common.Infos;
+using AtendeLogo.Domain.Entities.Identities.Factories;
+using AtendeLogo.Shared.Models.Identities;
 
 namespace AtendeLogo.Application.Services;
 
@@ -14,7 +13,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     private readonly IUserSessionAccessor _userSessionAccessor;
 
     private IUserSessionRepository UserSessionRepository
-        => _unitWork.UserSessionRepository;
+        => _unitWork.UserSessions;
 
     public UserSessionVerificationService(
         ISessionCacheService cacheSessionService,
@@ -94,7 +93,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     private async Task ValidateSessionEntityAsync(UserSession userSession)
     {
-        var headerInfo = _userSessionAccessor.GetRequestHeaderInfo();
+        var headerInfo = _userSessionAccessor.GetClientRequestHeaderInfo();
         var terminationReason = GetSessionTerminationReason(userSession, headerInfo);
         if (terminationReason.HasValue)
         {
@@ -112,7 +111,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     private SessionTerminationReason? GetSessionTerminationReason(
         UserSession userSession,
-        RequestHeaderInfo headerInfo)
+        ClientRequestHeaderInfo headerInfo)
     {
         if (userSession.IsExpired())
         {
@@ -168,23 +167,17 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     private async Task<UserSession> CreateAnonymousSessionAsync(
         IUserSession? currentSession)
     {
-        var sessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
-        var anonymouseUser_Id = AnonymousConstants.AnonymousUser_Id;
-        var currentSessionId = currentSession?.Id ?? AnonymousConstants.AnonymousSystemSession_Id;
-        var headerInfo = _userSessionAccessor.GetRequestHeaderInfo();
-
-        var userSession = new UserSession(
-              applicationName: headerInfo.ApplicationName,
-              clientSessionToken: sessionToken,
-              ipAddress: headerInfo.IpAddress,
-              userAgent: headerInfo.UserAgent,
-              language: Language.Default,
+        var currentSessionId = currentSession?.Id ?? AnonymousIdentityConstants.AnonymousSystemSession_Id;
+        var headerInfo = _userSessionAccessor.GetClientRequestHeaderInfo();
+        var anynoumousUser = AnonymousIdentityConstants.AnonymousUser;
+        var userSession = UserSessionFactory.Create(
+              user: anynoumousUser,
+              clientHeaderInfo: headerInfo,
               authenticationType: AuthenticationType.Anonymous,
-              expirationTime: null,
-              user_Id: anonymouseUser_Id,
-              authToken: null,
-              tenant_Id: null
-         );
+              rememberMe: true,
+              tenant_id: null);
+
+        Debugger.Break();
 
         _unitWork.Add(userSession);
 

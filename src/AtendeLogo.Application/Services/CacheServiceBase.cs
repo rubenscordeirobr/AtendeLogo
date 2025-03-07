@@ -1,10 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using AtendeLogo.Common;
-using AtendeLogo.Domain.Primitives;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Infrastructure.Cache;
+namespace AtendeLogo.Application.Services;
 
 public abstract class CacheServiceBase
 {

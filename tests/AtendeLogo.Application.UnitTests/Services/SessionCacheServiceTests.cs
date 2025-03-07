@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
+using AtendeLogo.Application.Services;
 using AtendeLogo.Common.Helpers;
-using AtendeLogo.Infrastructure.Cache;
 using AtendeLogo.Persistence.Identity.Extensions;
 
 namespace AtendeLogo.Application.UnitTests.Services;
@@ -57,7 +57,7 @@ public class SessionCacheServiceTests
              ipAddress: "127.0.0.1",
              userAgent: "user-agent",
              language: Language.English,
-             authenticationType: AuthenticationType.Email_Password,
+             authenticationType: AuthenticationType.Credentials,
              user_Id: Guid.NewGuid(),
              expirationTime: null,
              authToken: null,
@@ -105,7 +105,7 @@ public class SessionCacheServiceTests
              ipAddress: "127.0.0.1",
              userAgent: "user-agent",
              language: Language.English,
-             authenticationType: AuthenticationType.Email_Password,
+             authenticationType: AuthenticationType.Credentials,
              user_Id: Guid.NewGuid(),
              expirationTime: null,
              authToken: null,
@@ -136,7 +136,7 @@ public class SessionCacheServiceTests
             ipAddress: "127.0.0.1",
             userAgent: "user-agent",
             language: Language.English,
-            authenticationType: AuthenticationType.Email_Password,
+            authenticationType: AuthenticationType.Credentials,
             user_Id: Guid.Empty,
             expirationTime: null,
             authToken: null,

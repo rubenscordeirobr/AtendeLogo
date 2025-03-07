@@ -1,7 +1,6 @@
-﻿using AtendeLogo.Common;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Infrastructure.Cache;
+namespace AtendeLogo.Application.Services;
 
 public class SessionCacheService : CacheServiceBase, ISessionCacheService
 {

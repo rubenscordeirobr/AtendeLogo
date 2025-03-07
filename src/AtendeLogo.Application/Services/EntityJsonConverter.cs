@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using AtendeLogo.Domain.Primitives;
 
-namespace AtendeLogo.Infrastructure.Cache;
+namespace AtendeLogo.Application.Services;
 
 public class EntityJsonConverter<TEntity> : JsonConverter<TEntity>
     where TEntity : EntityBase
@@ -15,7 +14,7 @@ public class EntityJsonConverter<TEntity> : JsonConverter<TEntity>
         var jsonDoc = JsonDocument.ParseValue(ref reader);
         var jsonObject = jsonDoc.RootElement;
 
-        JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions(options);
+        var jsonSerializerOptions = new JsonSerializerOptions(options);
         jsonSerializerOptions.Converters.Remove(this);
         jsonSerializerOptions.Converters.Clear();
 

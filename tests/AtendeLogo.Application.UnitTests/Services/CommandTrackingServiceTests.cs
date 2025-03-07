@@ -1,5 +1,5 @@
-﻿using AtendeLogo.Common;
-using AtendeLogo.Infrastructure.Cache;
+﻿using AtendeLogo.Application.Services;
+using AtendeLogo.Common;
 
 namespace AtendeLogo.Application.UnitTests.Services;
 
