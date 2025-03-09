@@ -1,8 +1,8 @@
 ﻿namespace AtendeLogo.UseCases.Common;
 
 public abstract record CommandRequest<TResponse>
-    : Request<TResponse>, ICommandRequest<TResponse>
-    where TResponse : ResponseBase
+    : IRequest<TResponse>, ICommandRequest<TResponse>
+    where TResponse : IResponse
 {
     public required Guid ClientRequestId { get; init; }
 }
