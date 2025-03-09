@@ -2,13 +2,13 @@
 
 public interface IIdentityUnitOfWork: IUnitOfWork
 {
-    IUserSessionRepository UserSessionRepository { get; }
-    IAdminUserRepository AdminUserRepository { get; }
+    IUserSessionRepository UserSessions { get; }
+    IAdminUserRepository AdminUsers { get; }
 
-    ISystemUserRepository SystemUserRepository { get; }
+    ISystemUserRepository SystemUsers { get; }
 
-    ITenantUserRepository TenantUserRepository { get; }
+    ITenantUserRepository TenantUsers { get; }
 
-    ITenantRepository TenantRepository { get; }
-   
+    ITenantRepository Tenants { get; }
+ 
 }
