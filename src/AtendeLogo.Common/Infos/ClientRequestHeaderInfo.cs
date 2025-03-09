@@ -1,17 +1,17 @@
 ﻿namespace AtendeLogo.Common.Infos;
-public partial record RequestHeaderInfo(
+public partial record ClientRequestHeaderInfo(
     string IpAddress,
     string UserAgent,
     string ApplicationName);
 
-public partial record RequestHeaderInfo
+public partial record ClientRequestHeaderInfo
 {
-    public static RequestHeaderInfo Unknown
+    public static ClientRequestHeaderInfo Unknown
         => new(IpAddress: "Unknown",
                UserAgent: "Unknown",
                ApplicationName: "Unknown");
 
-    public static RequestHeaderInfo System
+    public static ClientRequestHeaderInfo System
         => new(IpAddress: "System",
                UserAgent: "System",
                ApplicationName: "System");

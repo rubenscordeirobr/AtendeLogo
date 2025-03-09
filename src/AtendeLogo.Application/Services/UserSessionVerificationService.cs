@@ -58,7 +58,8 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         {
             return cachedSession;
         }
-        return await UserSessionRepository.GetByClientTokenAsync(clientSessionToken);
+        return await UserSessionRepository.GetByClientTokenAsync(
+            clientSessionToken);
     }
 
     private async Task<IUserSession?> GetSessionFromCacheAsync(string clientSessionToken)
