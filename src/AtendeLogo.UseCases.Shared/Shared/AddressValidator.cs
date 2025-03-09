@@ -10,13 +10,17 @@ public class AddressValidator : AbstractValidator<AddressDto>
             .NotEmpty()
             .WithMessage(localizer["Address.StreetRequired", "Street is required."])
             .MaximumLength(ValidationConstants.StreetMaxLength)
-            .WithMessage(localizer["Address.StreetTooLong", "Street cannot be longer than {MaxLength} characters."]);
+            .WithMessage(localizer["Address.StreetTooLong", 
+                                   "Street cannot be longer than {MaxLength} characters.", 
+                                   ValidationConstants.StreetMaxLength]);
 
         RuleFor(x => x.Number)
             .NotEmpty()
             .WithMessage(localizer["Address.NumberRequired", "Number is required."])
             .MaximumLength(ValidationConstants.AddressNumberMaxLength)
-            .WithMessage(localizer["Address.NumberTooLong", "Number cannot be longer than {MaxLength} characters."]);
+            .WithMessage(localizer["Address.NumberTooLong",
+                                   "Number cannot be longer than {MaxLength} characters.",
+                                   ValidationConstants.AddressNumberMaxLength]);
 
         RuleFor(x => x.ZipCode)
             .NotEmpty()

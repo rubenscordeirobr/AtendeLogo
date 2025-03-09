@@ -12,24 +12,25 @@ public static partial class DefaultValidationsExtensions
             .SetValidator(new PasswordValidator(localizer));
     }
 
-    public static IRuleBuilderOptions<T, string> Password<T>(
+    public static IRuleBuilderOptions<T, string> CreatePassword<T>(
          this IRuleBuilder<T, string> ruleBuilder,
          IJsonStringLocalizer<ValidationMessages> localizer)
     {
         var options = ruleBuilder
             .NotEmpty()
+                .WithMessage(localizer["PasswordEmpty", "Password cannot be empty"])
             .MinimumLength(ValidationConstants.PasswordMinLength)
-            .Matches("[A-Z]")
-                .WithMessage(localizer["PasswordUppercase", "Password must contain at least one uppercase letter"])
+                .WithMessage(localizer["PasswordTooShort", "Password must be at least {MinLength} characters long"])
             .MaximumLength(ValidationConstants.PasswordMaxLength)
                 .WithMessage(localizer["PasswordTooLong", "Password cannot be longer than {MaxLength} characters"])
+            .Matches("[A-Z]")
+                .WithMessage(localizer["PasswordUppercase", "Password must contain at least one uppercase letter"])
             .Matches("[a-z]")
                 .WithMessage(localizer["PasswordLowercase", "Password must contain at least one lowercase letter"])
             .Matches("[0-9]")
                 .WithMessage(localizer["PasswordNumber", "Password must contain at least one number"])
             .Matches("[^a-zA-Z0-9]")
                 .WithMessage(localizer["PasswordSpecialCharacter", "Password must contain at least one special character"]);
-
         return options;
     }
 }
