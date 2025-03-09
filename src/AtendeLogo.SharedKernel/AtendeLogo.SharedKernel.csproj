@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>AtendeLogo.Shared</RootNamespace>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

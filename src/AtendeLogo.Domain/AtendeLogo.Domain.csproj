@@ -4,18 +4,19 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
 
+  </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
+    <InternalsVisibleTo Include="AtendeLogo.UseCases.UnitTests" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
     <ProjectReference Include="..\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
   </ItemGroup>
- 
+
   <ItemGroup>
     <Folder Include="Entities\Shared\" />
   </ItemGroup>
