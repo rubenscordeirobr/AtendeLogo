@@ -7,7 +7,7 @@ public static class ValidationUtils
 {
     private static readonly Regex HexRegex = new(@"^[a-fA-F0-9]+$", RegexOptions.Compiled);
 
-    public static bool IsPhoneNumberValid(string? phoneNumber)
+    public static bool IsFullPhoneNumberValid(string? phoneNumber)
     {
         return PhoneNumberUtils.IsFullPhoneNumberValid(phoneNumber);
     }

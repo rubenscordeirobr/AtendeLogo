@@ -18,7 +18,7 @@ public static partial class PhoneNumberInfoParser
 
         var internationalDialingCode = PhoneNumberUtils.GetInternationalDialingCode(numbers);
         var countryCode = PhoneNumberUtilsInternal.GetCountryCodeInternal(internationalDialingCode, numbers);
-        var countryMetedataInfo = PhoneFormatMetadata.TryGet(countryCode);
+        var countryMetedataInfo = PhoneNumberFormatRegistry .TryGet(countryCode);
 
         if (countryCode == Country.Unknown ||
             internationalDialingCode == InternationalDialingCode.Unknown ||

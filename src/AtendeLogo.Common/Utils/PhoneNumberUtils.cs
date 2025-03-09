@@ -31,7 +31,7 @@ public static partial class PhoneNumberUtils
         }
 
         var countryCode = GetCountryCode(fullPhoneNumber);
-        var phoneFormatInfo = PhoneFormatMetadata.TryGet(countryCode);
+        var phoneFormatInfo = PhoneNumberFormatRegistry .TryGet(countryCode);
         if (phoneFormatInfo == null)
         {
             return false;
@@ -51,7 +51,7 @@ public static partial class PhoneNumberUtils
             return false;
         }
 
-        var phoneFormatInfo = PhoneFormatMetadata.TryGet(countryCode);
+        var phoneFormatInfo = PhoneNumberFormatRegistry .TryGet(countryCode);
         if (phoneFormatInfo == null)
         {
             return false;

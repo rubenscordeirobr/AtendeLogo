@@ -22,6 +22,6 @@ public class PhoneNumberValidator : AbstractValidator<PhoneNumber>
             .WithMessage(localizer["PhoneNumber.Number", "Phone number cannot be empty."])
             .MaximumLength(ValidationConstants.PhoneNumberMaxLength)
             .WithMessage(localizer["PhoneNumber.TooLong", "Phone number cannot be longer than {MaxLength} characters."])
-            .Must(PhoneNumberUtils.IsFullPhoneNumberValid);
+            .Must(ValidationUtils.IsFullPhoneNumberValid);
     }
 }
