@@ -15,5 +15,6 @@ global using AtendeLogo.UseCases.Shared;
 global using AutoFixture;
 global using FluentAssertions;
 global using FluentValidation;
+global using FluentValidation.TestHelper;
 global using Microsoft.Extensions.DependencyInjection;
 global using AtendeLogo.Application.Contracts.Persistence.Identities;

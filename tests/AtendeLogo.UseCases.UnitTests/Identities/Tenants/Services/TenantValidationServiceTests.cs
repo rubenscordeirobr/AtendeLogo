@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identity;
+﻿using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Tenants.Services;
 using Moq;
 
@@ -7,13 +7,17 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Services;
 public class TenantValidationServiceTests
 {
     private readonly Mock<ITenantRepository> _tenantRepositoryMock;
+    private readonly Mock<ITenantUserRepository> _tenantUserRepositoryMock;
     private readonly TenantValidationService _validationService;
     private readonly CancellationToken _token = CancellationToken.None;
 
     public TenantValidationServiceTests()
     {
         _tenantRepositoryMock = new Mock<ITenantRepository>();
-        _validationService = new TenantValidationService(_tenantRepositoryMock.Object);
+        _tenantUserRepositoryMock = new Mock<ITenantUserRepository>();
+        _validationService = new TenantValidationService(
+            _tenantRepositoryMock.Object,
+            _tenantUserRepositoryMock.Object);
     }
 
     [Fact]
@@ -66,13 +70,15 @@ public class TenantValidationServiceTests
     {
         // Arrange
         var tenantId = Guid.NewGuid();
+        var ownerId = Guid.NewGuid();
         var email = "test@example.com";
+
         _tenantRepositoryMock
             .Setup(repo => repo.EmailExistsAsync(tenantId, email, _token))
             .ReturnsAsync(false);
 
         // Act
-        var result = await _validationService.IsEmailUniqueAsync(tenantId, email, _token);
+        var result = await _validationService.IsEmailUniqueAsync(tenantId, ownerId, email, _token);
 
         // Assert
         result.Should().BeTrue();
@@ -83,13 +89,14 @@ public class TenantValidationServiceTests
     {
         // Arrange
         var tenantId = Guid.NewGuid();
+        var ownerId = Guid.NewGuid();
         var email = "test@example.com";
         _tenantRepositoryMock
             .Setup(repo => repo.EmailExistsAsync(tenantId, email, _token))
             .ReturnsAsync(true);
 
         // Act
-        var result = await _validationService.IsEmailUniqueAsync(tenantId, email, _token);
+        var result = await _validationService.IsEmailUniqueAsync(tenantId, ownerId, email, _token);
 
         // Assert
         result.Should().BeFalse();
@@ -150,6 +157,7 @@ public class TenantValidationServiceTests
         // Arrange
         var tenantId = Guid.NewGuid();
         var fiscalCode = "123456789";
+       
         _tenantRepositoryMock
             .Setup(repo => repo.FiscalCodeExistsAsync(tenantId, fiscalCode, _token))
             .ReturnsAsync(true);

@@ -38,7 +38,7 @@ public class ValidationUtilsTests
         string? phoneNumber)
     {
         // Act
-        var result = ValidationUtils.IsPhoneNumberValid(phoneNumber);
+        var result = ValidationUtils.IsFullPhoneNumberValid(phoneNumber);
 
         // Assert
         result.Should().BeFalse();
@@ -52,7 +52,7 @@ public class ValidationUtilsTests
     public void IsPhoneNumberValid_ShouldReturnTrue_ForValidPhoneNumbers(string phoneNumber)
     {
         // Act
-        var result = ValidationUtils.IsPhoneNumberValid(phoneNumber);
+        var result = ValidationUtils.IsFullPhoneNumberValid(phoneNumber);
 
         // Assert
         result.Should().BeTrue();

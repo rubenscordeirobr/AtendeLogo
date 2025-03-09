@@ -30,7 +30,7 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetSystemUserByIdQuery(AnonymousConstants.AnonymousUser_Id);
+        var query = new GetSystemUserByIdQuery(AnonymousIdentityConstants.AnonymousUser_Id);
 
         // Act
         var result = await mediator.GetSingleAsync(query, CancellationToken.None);
@@ -44,7 +44,7 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
             .BeOfType<SystemUserResponse>()
             .Subject;
 
-        systemUser.Id.Should().Be(AnonymousConstants.AnonymousUser_Id);
+        systemUser.Id.Should().Be(AnonymousIdentityConstants.AnonymousUser_Id);
     }
 
     [Fact]

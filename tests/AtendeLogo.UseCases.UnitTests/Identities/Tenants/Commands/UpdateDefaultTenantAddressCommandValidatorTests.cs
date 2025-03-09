@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.UseCases.Identities.Tenants.Commands;
-using FluentValidation.TestHelper;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 

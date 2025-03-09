@@ -3,7 +3,6 @@ using AtendeLogo.UseCases.Common.Validations;
 using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
 using AtendeLogo.UseCases.UnitTests.TestSupport;
-using FluentValidation.TestHelper;
 using Moq;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
@@ -268,6 +267,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
 
         var tenantValidationSetup = new Mock<ITenantValidationService>();
+      
         tenantValidationSetup
             .Setup(x => x.IsEmailUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
@@ -298,6 +298,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
 
         var tenantValidationSetup = new Mock<ITenantValidationService>();
+        
         tenantValidationSetup
             .Setup(x => x.IsEmailUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);

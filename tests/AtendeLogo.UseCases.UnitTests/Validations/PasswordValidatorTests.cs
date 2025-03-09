@@ -1,6 +1,4 @@
-﻿using FluentValidation.TestHelper;
-
-namespace AtendeLogo.UseCases.UnitTests.Validations;
+﻿namespace AtendeLogo.UseCases.UnitTests.Validations;
 
 public class PasswordValidatorTests : IClassFixture<AnonymousServiceProviderMock>
 {
