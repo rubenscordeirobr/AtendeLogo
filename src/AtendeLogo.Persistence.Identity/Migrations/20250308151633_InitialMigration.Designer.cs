@@ -15,8 +15,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AtendeLogo.Persistence.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250304110608_AddExpirationTimeToUserSession")]
-    partial class AddExpirationTimeToUserSession
+    [Migration("20250308151633_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,8 +28,7 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                 .HasAnnotation("ProductVersion", "9.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "admin_user_role", new[] { "manager", "operator", "super_admin", "viewer" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "authentication_type", new[] { "anonymous", "email_password", "facebook", "google", "microsoft", "sms", "system", "unknown", "whats_app" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "authentication_type", new[] { "anonymous", "credentials", "facebook", "google", "microsoft", "sms", "system", "unknown", "whats_app" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "business_type", new[] { "civil_registry_office", "system" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "country", new[] { "argentina", "bolivia", "brazil", "canada", "chile", "colombia", "ecuador", "france", "germany", "guyana", "italy", "mexico", "paraguay", "peru", "portugal", "spain", "suriname", "united_kingdom", "united_states", "unknown", "uruguay", "venezuela" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "currency", new[] { "brl", "eur", "usd" });
@@ -38,9 +37,10 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_state", new[] { "cancelled", "closed", "new", "onboarding", "operational", "system", "trial" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_status", new[] { "active", "archived", "inactive", "pending", "suspended" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_type", new[] { "company", "individual", "system" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_user_role", new[] { "admin", "chat_agent", "manager", "operator", "owner", "viewer" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_role", new[] { "admin", "chat_agent", "manager", "none", "operator", "owner", "system", "viewer" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_state", new[] { "active", "blocked", "deleted", "inactive", "new", "pending_verification", "suspended" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_status", new[] { "anonymous", "away", "busy", "do_not_disturb", "offline", "online", "system" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "verification_state", new[] { "not_verified", "verified" });
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
@@ -375,11 +375,19 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                         .HasColumnName("email")
                         .UseCollation("case_accent_insensitive");
 
+                    b.Property<VerificationState>("EmailVerificationState")
+                        .HasColumnType("verification_state")
+                        .HasColumnName("email_verification_state");
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false)
                         .HasColumnName("is_deleted");
+
+                    b.Property<Language>("Language")
+                        .HasColumnType("language")
+                        .HasColumnName("language");
 
                     b.Property<DateTime>("LastUpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -403,6 +411,20 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone_number");
+
+                    b.Property<VerificationState>("PhoneNumberVerificationState")
+                        .HasColumnType("verification_state")
+                        .HasColumnName("phone_number_verification_state");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)")
+                        .HasColumnName("profile_picture_url")
+                        .UseCollation("case_accent_insensitive");
+
+                    b.Property<UserRole>("Role")
+                        .HasColumnType("user_role")
+                        .HasColumnName("role");
 
                     b.Property<double?>("SortOrder")
                         .ValueGeneratedOnAdd()
@@ -558,6 +580,10 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                         .HasColumnName("user_agent")
                         .UseCollation("case_accent_insensitive");
 
+                    b.Property<UserRole>("UserRole")
+                        .HasColumnType("user_role")
+                        .HasColumnName("user_role");
+
                     b.Property<Guid>("User_Id")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
@@ -605,10 +631,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                 {
                     b.HasBaseType("AtendeLogo.Domain.Entities.Identities.User");
 
-                    b.Property<AdminUserRole>("AdminUserRole")
-                        .HasColumnType("admin_user_role")
-                        .HasColumnName("admin_user_role");
-
                     b.ToTable("users", t =>
                         {
                             t.HasCheckConstraint("ck_users_created_session_id_not_empty", "created_session_id <> '00000000-0000-0000-0000-000000000000'::uuid");
@@ -640,10 +662,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             modelBuilder.Entity("AtendeLogo.Domain.Entities.Identities.TenantUser", b =>
                 {
                     b.HasBaseType("AtendeLogo.Domain.Entities.Identities.User");
-
-                    b.Property<TenantUserRole>("TenantUserRole")
-                        .HasColumnType("tenant_user_role")
-                        .HasColumnName("tenant_user_role");
 
                     b.Property<Guid>("Tenant_Id")
                         .HasColumnType("uuid")
