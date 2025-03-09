@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Shared.Enums;
-using AtendeLogo.UseCases.Contracts.Identities;
 
 namespace AtendeLogo.Presentation.Common;
 

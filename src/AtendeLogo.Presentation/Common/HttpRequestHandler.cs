@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using AtendeLogo.Presentation.Common.Enums;
 using AtendeLogo.Presentation.Constants;
