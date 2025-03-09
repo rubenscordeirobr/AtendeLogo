@@ -1,4 +1,7 @@
-﻿namespace AtendeLogo.Persistence.Identity.Seed;
+﻿using AtendeLogo.Common.Infos;
+using AtendeLogo.Domain.Entities.Identities.Factories;
+
+namespace AtendeLogo.Persistence.Identity.Seed;
 
 internal static class IdentityDbSeedExtensions
 {
@@ -44,34 +47,34 @@ internal static class IdentityDbSeedExtensions
         var strongPassword = "%ANONYMOUS@anymous%";
         var phoneNumber = PhoneNumber.Create("+5542999999999").GetValue();
         var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
-        var anonymousSession_Id = AnonymousConstants.AnonymousSystemSession_Id;
+        var anonymousSession_Id = AnonymousIdentityConstants.AnonymousSystemSession_Id;
+
         var anonymousUser = new SystemUser(
             name: "Anonymous",
             email: "anonymous@atendelogo.com.br",
+            language: Language.Default,
+            role: UserRole.None,
             userState: UserState.Active,
             userStatus: UserStatus.Anonymous,
             phoneNumber: phoneNumber,
             password);
 
-        
         anonymousUser.SetAnonymousId();
-
-        var clientToken = HashHelper.CreateSha256Hash(AnonymousConstants.AnonymousSystemSession_Id);
-
-        Guard.Sha256(clientToken);
-
-        var anonymousUserSession = new UserSession(
-            applicationName: "AtendeLogo.Seed",
-            clientSessionToken: clientToken,
-            ipAddress: "LOCALHOST",
-            authToken: null,
-            userAgent: "SYSTEM",
-            language: Language.Default,
-            authenticationType: AuthenticationType.Anonymous,
-            expirationTime: null,
-            user_Id: AnonymousConstants.AnonymousUser_Id,
-            tenant_Id: null
+         
+        var headerInfo = new ClientRequestHeaderInfo(
+            IpAddress: "LOCALHOST",
+            ApplicationName: "AtendeLogo.Seed",
+            UserAgent: "SYSTEM"
         );
+
+        var anonymousUserSession = UserSessionFactory.Create(
+            user: anonymousUser,
+            clientHeaderInfo: headerInfo,
+            authenticationType: AuthenticationType.Anonymous,
+            rememberMe: true,
+            tenant_id: null);
+
+        
         anonymousUserSession.SetAnonymousSystemSessionId();
 
         dbContext.Add(anonymousUser);
@@ -83,19 +86,20 @@ internal static class IdentityDbSeedExtensions
         var strongPassword = "SuperAdmin@Teste%#";
         var phoneNumber = PhoneNumber.Create("+5542998373996").GetValue();
 
-        var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
-        var anonymousSession_Id = AnonymousConstants.AnonymousSystemSession_Id;
+        var password = Password.Create(strongPassword, "SYSTEM").GetValue();
+        var anonymousSession_Id = AnonymousIdentityConstants.AnonymousSystemSession_Id;
 
         var anonymousUser = new AdminUser(
             name: "Super Admin",
             email: "superadmin@atendelogo.com.br",
+            language: Language.Default,
+            role: UserRole.Admin,
             userState: UserState.Active,
             userStatus: UserStatus.Anonymous,
-            adminUserRole: AdminUserRole.SuperAdmin,
             phoneNumber: phoneNumber,
             password);
 
-        anonymousUser.SetCreateSession(AnonymousConstants.AnonymousSystemSession_Id);
+        anonymousUser.SetCreateSession(AnonymousIdentityConstants.AnonymousSystemSession_Id);
         dbContext.Add(anonymousUser);
     }
 
@@ -111,7 +115,7 @@ internal static class IdentityDbSeedExtensions
         var systemTenant = new Tenant(
             name: SystemTenantConstants.TenantSystemName,
             fiscalCode: SystemTenantConstants.FiscalCode,
-            email: SystemTenantConstants.TenantSystemName,
+            email: SystemTenantConstants.TenantSystemEmail,
             businessType: BusinessType.System,
             country: Country.Brazil,
             currency: Currency.BRL,
@@ -126,16 +130,17 @@ internal static class IdentityDbSeedExtensions
         var tenantUser = systemTenant.AddUser(
              name: SystemTenantConstants.TenantSystemName,
              email: SystemTenantConstants.TenantSystemEmail,
+             language: Language.Default,
              userState: UserState.Active,
              userStatus: UserStatus.System,
-             tenantUserRole: TenantUserRole.Admin,
+             role: UserRole.Admin,
              phoneNumber: phoneNumber,
              password: password
          );
 
-        systemTenant.SetCreateSession(AnonymousConstants.AnonymousSystemSession_Id);
-        tenantUser.SetCreateSession(AnonymousConstants.AnonymousSystemSession_Id);
-        
+        systemTenant.SetCreateSession(AnonymousIdentityConstants.AnonymousSystemSession_Id);
+        tenantUser.SetCreateSession(AnonymousIdentityConstants.AnonymousSystemSession_Id);
+
         tenantUser.SetPropertyValue(x => x.Id, SystemTenantConstants.TenantSystemOwnerUser_Id);
         systemTenant.SetPropertyValue(x => x.Id, SystemTenantConstants.TenantSystem_Id);
 

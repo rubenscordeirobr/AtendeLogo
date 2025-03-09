@@ -9,10 +9,10 @@ public static class SystemUserExtensions
             throw new InvalidOperationException("Id is already set.");
         }
 
-        user.SetCreateSession(AnonymousConstants.AnonymousSystemSession_Id);
-        user.SetPropertyValue(p => p.Id, AnonymousConstants.AnonymousUser_Id);
-        user.SetPropertyValue(p => p.Email, AnonymousConstants.AnonymousEmail);
-        user.SetPropertyValue(p => p.Name, AnonymousConstants.AnonymousName);
+        user.SetCreateSession(AnonymousIdentityConstants.AnonymousSystemSession_Id);
+        user.SetPropertyValue(p => p.Id, AnonymousIdentityConstants.AnonymousUser_Id);
+        user.SetPropertyValue(p => p.Email, AnonymousIdentityConstants.AnonymousEmail);
+        user.SetPropertyValue(p => p.Name, AnonymousIdentityConstants.AnonymousName);
         user.SetPropertyValue(p => p.UserStatus, UserStatus.Anonymous);
         user.SetPropertyValue(p => p.UserState, UserState.Active);
     }

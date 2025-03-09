@@ -32,7 +32,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
         _eventMediator = eventMediator;
         _logger = logger;
-
+ 
         if (dbContext.ChangeTracker.HasChanges())
         {
             throw new InvalidOperationException("There are tracked entities. Use SaveChangesAsync for this operation.");

@@ -3,6 +3,7 @@ using AtendeLogo.Shared.Contantes;
 using AtendeLogo.Shared.Interfaces.Identities;
 using AtendeLogo.Persistence.Identity.Extensions;
 using AtendeLogo.Common.Helpers;
+using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
 
@@ -13,8 +14,13 @@ public abstract class UserSessionAccessorMock : IUserSessionAccessor
         // Do nothing        
     }
 
+    public void RemoveClientSessionCookie(string clientSessionToken)
+    {
+        // Do nothing
+    }
+
     public abstract UserSession GetCurrentSession();
-   
+
 
     public string? GetClientSessionToken()
     {
@@ -26,18 +32,37 @@ public abstract class UserSessionAccessorMock : IUserSessionAccessor
         return GetCurrentSession();
     }
 
-    public RequestHeaderInfo GetRequestHeaderInfo()
+    public ClientRequestHeaderInfo GetClientRequestHeaderInfo()
     {
-        return new RequestHeaderInfo("localhost", "Tests", "Tests");
+        return new ClientRequestHeaderInfo("localhost", "Tests", "Tests");
     }
+
+    public Type? GetCurrentEndpointType()
+        => typeof(UserAuthenticationServiceMock);
+
+    public IEndpointService? GetCurrentEndpointInstance()
+        =>  new UserAuthenticationServiceMock();
+}
+
+public class UserAuthenticationServiceMock : IEndpointService
+{
+    public ServiceRole ServiceRole
+        => ServiceRole.UserAuthentication;
+
+    public string ServiceName
+        => "UserAuthentication";
+
+
+    public bool IsAllowAnonymous
+        => true;
 }
 
 public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
 {
     public override UserSession GetCurrentSession()
     {
-        var headerInfo = RequestHeaderInfo.Unknown;
-        var clientSessionToken = AnonymousConstants.ClientAnonymousSystemSessionToken;
+        var headerInfo = ClientRequestHeaderInfo.Unknown;
+        var clientSessionToken = AnonymousIdentityConstants.ClientAnonymousSystemSessionToken;
 
         var userSession = new UserSession(
             applicationName: "AtendeLogo",
@@ -46,9 +71,9 @@ public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
             userAgent: "SYSTEM",
             language: Language.Default,
             authenticationType: AuthenticationType.Anonymous,
-            user_Id: AnonymousConstants.AnonymousUser_Id,
+            userRole: UserRole.None,
+            user_Id: AnonymousIdentityConstants.AnonymousUser_Id,
             expirationTime: null,
-            authToken: null,
             tenant_Id: null
         );
         userSession.SetAnonymousSystemSessionId();
@@ -59,7 +84,7 @@ public class SystemTenantUserSessionAccessorMock : UserSessionAccessorMock
 {
     public override UserSession GetCurrentSession()
     {
-        var headerInfo = RequestHeaderInfo.Unknown;
+        var headerInfo = ClientRequestHeaderInfo.Unknown;
         var clientSessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
 
         var userSession = new UserSession(
@@ -69,12 +94,12 @@ public class SystemTenantUserSessionAccessorMock : UserSessionAccessorMock
             userAgent: "SYSTEM",
             language: Language.Default,
             authenticationType: AuthenticationType.System,
+            userRole: UserRole.Owner,
             expirationTime: null,
             user_Id: SystemTenantConstants.TenantSystemOwnerUser_Id,
-            authToken: clientSessionToken,
             tenant_Id: SystemTenantConstants.TenantSystem_Id
         );
-        userSession.SetPropertyValue(x=> x.Id,  Guid.NewGuid());
+        userSession.SetPropertyValue(x => x.Id, Guid.NewGuid());
         return userSession;
     }
 }

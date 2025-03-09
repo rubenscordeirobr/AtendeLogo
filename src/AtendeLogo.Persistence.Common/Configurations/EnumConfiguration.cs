@@ -12,14 +12,19 @@ public static class EnumConfiguration
     private static readonly ConcurrentDictionary<Type, ConcurrentHashSet<Type>> _enumTypeMappings = new();
 
     public static IRelationalDbContextOptionsBuilderInfrastructure AddMapEnum<TContext, TEnum>(
-         this IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder)
+         this IRelationalDbContextOptionsBuilderInfrastructure optionsBuilder,
+         bool isInMemory)
          where TContext : DbContext
          where TEnum : struct, Enum
     {
-        if (optionsBuilder is NpgsqlDbContextOptionsBuilder npgsqlOptionsBuilder)
+        if (!isInMemory)
         {
-            npgsqlOptionsBuilder.MapEnum<TEnum>();
+            if (optionsBuilder is NpgsqlDbContextOptionsBuilder npgsqlOptionsBuilder)
+            {
+                npgsqlOptionsBuilder.MapEnum<TEnum>();
+            }
         }
+        
 
 #if DEBUG
         EnumMappingsTracker<TContext>.AddEnumType<TEnum>();

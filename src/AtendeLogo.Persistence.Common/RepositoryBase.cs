@@ -10,12 +10,12 @@ namespace AtendeLogo.Persistence.Common;
 public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     private readonly DbContext _dbContext;
-    private readonly IUserSessionAccessor _userSessionAccessor;
+    protected readonly IUserSessionAccessor _userSessionAccessor;
+    protected readonly TrackingOption _trackingOption;
 
     private readonly bool _isImplementDeletedInterface;
     private readonly bool _isImplementTenantOwnedInterface;
-    private readonly TrackingOption _trackingOption;
-
+     
     private bool _isIncludeDeleted = false;
 
     protected virtual int DefaultMaxRecords { get; } = RepositoryConstants.DefaultMaxRecords;
@@ -141,7 +141,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     #region Filter
 
-    private IQueryable<TEntity> GetInitialQuery()
+    protected virtual IQueryable<TEntity> GetInitialQuery()
     {
         var query = _dbContext.Set<TEntity>()
               .ApplyTracking(_trackingOption)
@@ -149,7 +149,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
         if (_isImplementTenantOwnedInterface)
         {
-            if (CheckIfNeedFilterTentantOwned())
+            if (ShouldFilterTenantOwned())
             {
                 var userSession = _userSessionAccessor.GetCurrentSession();
 
@@ -168,24 +168,15 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         return query;
     }
 
-    private bool CheckIfNeedFilterTentantOwned()
+    protected virtual bool ShouldFilterTenantOwned()
     {
         var userSession = _userSessionAccessor.GetCurrentSession();
-        if (userSession.Tenant_Id is null || userSession.Tenant_Id == default)
+        if (!userSession.IsTenantUser() && !userSession.IsSystemAdminUser())
         {
-            if (IsUserHasAdminPermision(userSession))
-            {
-                return false;
-            }
             throw new UnauthorizedAccessException("User not have permission to access this resource.");
         }
         return true;
     }
-
-    private bool IsUserHasAdminPermision(IUserSession userSession)
-    {
-        throw new NotImplementedException();
-    }
-
+ 
     #endregion
 }

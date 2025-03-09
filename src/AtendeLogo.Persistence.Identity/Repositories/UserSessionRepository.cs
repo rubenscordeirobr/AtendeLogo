@@ -1,4 +1,5 @@
-﻿namespace AtendeLogo.Persistence.Identity.Repositories;
+﻿
+namespace AtendeLogo.Persistence.Identity.Repositories;
 internal class UserSessionRepository : RepositoryBase<UserSession>, IUserSessionRepository
 {
     public UserSessionRepository(
@@ -9,6 +10,9 @@ internal class UserSessionRepository : RepositoryBase<UserSession>, IUserSession
     {
     }
 
-    public Task<UserSession?> GetByClientTokenAsync(string sessionToken)
-        => FindAsync(x => x.ClientSessionToken == sessionToken);
+    public Task<UserSession?> GetByClientTokenAsync(
+        string sessionToken, 
+        CancellationToken cancellationToken = default)
+        => FindAsync(x => x.ClientSessionToken == sessionToken, cancellationToken);
+ 
 }

@@ -26,27 +26,27 @@ internal class IdentityUnitOfWork : UnitOfWork<IdentityDbContext>, IIdentityUnit
         _trackingOption = trackingOption;
     }
 
-    public IAdminUserRepository AdminUserRepository
+    public IAdminUserRepository AdminUsers
         => LazyInitialize(
             ref _adminUserRepository,
             () => new AdminUserRepository(DbContext, UserSessionAccessor, _trackingOption));
 
-    public ISystemUserRepository SystemUserRepository
+    public ISystemUserRepository SystemUsers
         => LazyInitialize(
             ref _systemUserRepository,
             () => new SystemUserRepository(DbContext, UserSessionAccessor, _trackingOption));
 
-    public ITenantUserRepository TenantUserRepository
+    public ITenantUserRepository TenantUsers
         => LazyInitialize(
             ref _tenantUserTenantRepository,
             () => new TenantUserRepository(DbContext, UserSessionAccessor, _trackingOption));
 
-    public ITenantRepository TenantRepository
+    public ITenantRepository Tenants
         => LazyInitialize(
             ref _tenantRepository,
             () => new TenantRepository(DbContext, UserSessionAccessor, _trackingOption));
 
-    public IUserSessionRepository UserSessionRepository
+    public IUserSessionRepository UserSessions
         => LazyInitialize(
             ref _userSessionRepository,
             () => new UserSessionRepository(DbContext, UserSessionAccessor, _trackingOption));

@@ -6,6 +6,6 @@ internal class SecureConfigurationMock: ISecureConfiguration
 {
     public string GetPasswordSalt()
     {
-        return "test-salt";
+        return "SYSTEM";
     }
 }

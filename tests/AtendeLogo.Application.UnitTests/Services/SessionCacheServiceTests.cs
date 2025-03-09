@@ -58,9 +58,9 @@ public class SessionCacheServiceTests
              userAgent: "user-agent",
              language: Language.English,
              authenticationType: AuthenticationType.Credentials,
+             userRole: UserRole.None,
              user_Id: Guid.NewGuid(),
              expirationTime: null,
-             authToken: null,
              tenant_Id: null
         );
          
@@ -106,9 +106,9 @@ public class SessionCacheServiceTests
              userAgent: "user-agent",
              language: Language.English,
              authenticationType: AuthenticationType.Credentials,
+             userRole: UserRole.None,
              user_Id: Guid.NewGuid(),
              expirationTime: null,
-             authToken: null,
              tenant_Id: null
         );
 
@@ -137,9 +137,9 @@ public class SessionCacheServiceTests
             userAgent: "user-agent",
             language: Language.English,
             authenticationType: AuthenticationType.Credentials,
+            userRole: UserRole.None,
             user_Id: Guid.Empty,
             expirationTime: null,
-            authToken: null,
             tenant_Id: null
          );
 

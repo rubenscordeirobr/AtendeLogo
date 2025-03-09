@@ -12,7 +12,7 @@ public class UserSessionContextExtensionsTests
     {
         // Arrange
         var userSession = new Mock<IUserSession>();
-        userSession.Setup(us => us.User_Id).Returns(AnonymousConstants.AnonymousUser_Id);
+        userSession.Setup(us => us.User_Id).Returns(AnonymousIdentityConstants.AnonymousUser_Id);
         userSession.Setup(us => us.AuthenticationType)
             .Returns(AuthenticationType.Anonymous);
 
@@ -29,7 +29,7 @@ public class UserSessionContextExtensionsTests
         // Arrange
         var userSession = new Mock<IUserSession>();
         userSession.Setup(us => us.User_Id).Returns(Guid.NewGuid());
-        userSession.Setup(us => us.AuthenticationType).Returns(AuthenticationType.Email_Password);
+        userSession.Setup(us => us.AuthenticationType).Returns(AuthenticationType.Credentials);
 
         // Act
         var result = userSession.Object.IsAnonymous();
