@@ -21,7 +21,7 @@ public static class InMemoryIdentityDbContextBuilderExtensions
                         databaseName: "ShouldReturnSystemUser",
                         optionsBuilder =>
                         {
-                            optionsBuilder.ConfigureEnumMappings<IdentityDbContext>();
+                            optionsBuilder.ConfigureEnumMappings<IdentityDbContext>(isInMemory: true);
                         });
                     optionsBuilder.ReplaceService<IModelCustomizer, InMemoryIdentityDbContextModelCustomizer>();
                 },

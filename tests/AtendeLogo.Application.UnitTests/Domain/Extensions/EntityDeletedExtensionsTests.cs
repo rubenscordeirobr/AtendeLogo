@@ -42,7 +42,7 @@ public class EntityDeletedExtensionsTests
         var entityMock = new Mock<ISoftDeletableEntity>();
         var userSessionMock = new Mock<IUserSession>();
 
-        userSessionMock.Setup(s => s.User_Id).Returns(AnonymousConstants.AnonymousUser_Id);
+        userSessionMock.Setup(s => s.User_Id).Returns(AnonymousIdentityConstants.AnonymousUser_Id);
         var userSession = userSessionMock.Object;
 
         // Act

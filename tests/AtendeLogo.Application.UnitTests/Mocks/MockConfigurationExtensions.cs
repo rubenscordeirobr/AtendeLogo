@@ -12,8 +12,7 @@ public static class MockConfigurationExtensions
     {
         services.AddSingleton(typeof(IJsonStringLocalizer<>), typeof(JsonStringLocalizer<>))
             .AddSingleton<ISecureConfiguration, SecureConfigurationMock>()
-            .AddSingleton<ISessionCacheService, SessionCacheServiceMock>()
-            .AddSingleton<ICommandTrackingService, CommandTrackingServiceMock>()
+            .AddSingleton<ICacheRepository, CacheRepositoryMock>()
             .AddSingleton<IEmailSender, EmailSenderMock>();
 
         if (isAnonymousUserSession)

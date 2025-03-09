@@ -119,7 +119,7 @@ public class ActivityDocumentMapperTests
             ActivityDate = activityDate,
             Description = "Login success",
             IPAddress = "127.0.0.1",
-            AuthenticationType = AuthenticationType.Email_Password
+            AuthenticationType = AuthenticationType.Credentials
         };
 
         // Act
@@ -131,7 +131,7 @@ public class ActivityDocumentMapperTests
         document.Description.Should().Be(loginSuccessfulActivity.Description);
         document.ActivityType.Should().Be(ActivityType.LoginSuccessful);
         document.IPAddress.Should().Be("127.0.0.1");
-        document.AuthenticationType.Should().Be(AuthenticationType.Email_Password);
+        document.AuthenticationType.Should().Be(AuthenticationType.Credentials);
     }
 
     [Fact]
