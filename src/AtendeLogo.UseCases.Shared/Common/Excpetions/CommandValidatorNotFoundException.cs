@@ -2,24 +2,12 @@
 
 public class CommandValidatorNotFoundException : Exception
 {
-    public List<Type> CommandTypes { get; }
-    public override string Message
-        => GetMessage();
-
-    public CommandValidatorNotFoundException(List<Type> commandTypes)
+    public IReadOnlyList<Type> CommandTypes { get; }
+ 
+    public CommandValidatorNotFoundException(string message,
+        IReadOnlyList<Type> commandTypes)
+        : base(message)
     {
         CommandTypes = commandTypes;
-    }
-
-    private string GetMessage()
-    {
-        var commandNames = CommandTypes.Select(type => type.Name);
-        var message = $"Validation not found for commands: {string.Join(", ", commandNames)}";
-        return message;
-    }
-
-    public override string ToString()
-    {
-        return $"{GetType().Name}.{Message}";
     }
 }

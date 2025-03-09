@@ -40,7 +40,7 @@ internal class CommandValidationRegistrar
                 throw new InvalidOperationException($"Validation not found for command: {commandType.Name}");
             }
             commandTypes.Remove(commandType);
-             
+
             var serviceType = typeof(IValidator<>).MakeGenericType(commandType);
 
             ThrowIfHandAnyOtherCommandValidatorRegistredFor(
@@ -53,7 +53,9 @@ internal class CommandValidationRegistrar
 
         if (commandTypes.Any())
         {
-            throw new CommandValidatorNotFoundException(commandTypes);
+            var commandNames = commandTypes.Select(type => type.Name);
+            var message = $"No validators found for the following commands: {string.Join(", ", commandNames)}.";
+            throw new CommandValidatorNotFoundException(message,commandTypes);
         }
     }
 
