@@ -169,9 +169,10 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
     public TenantUser AddUser(
         string name,
         string email,
+        Language language,
         UserState userState,
         UserStatus userStatus,
-        TenantUserRole tenantUserRole,
+        UserRole role,
         PhoneNumber phoneNumber,
         Password password)
     {
@@ -179,9 +180,10 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
              tenant: this,
              name: name,
              email: email,
+             language: language,
              userState: userState,
              userStatus: userStatus,
-             tenantUserRole: tenantUserRole,
+             role: role,
              phoneNumber: phoneNumber,
              password: password
          );

@@ -7,17 +7,27 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     private readonly List<IDomainEvent> _events = new();
     public string Name { get; protected set; }
     public string Email { get; protected set; }
+    public string? ProfilePictureUrl { get; protected set; }
+    public UserRole Role { get; protected set; }
+    public Language Language { get; protected set; }
     public UserState UserState { get; protected set; }
     public UserStatus UserStatus { get; protected set; }
+    public VerificationState EmailVerificationState { get; protected set; }
+    public VerificationState PhoneNumberVerificationState { get; protected set; }
     public PhoneNumber PhoneNumber { get; private set; }
     public Password Password { get; private set; }
     public List<UserSession> Sessions { get; } = [];
-
+     
     protected User(
         string name,
         string email,
+        string? profilePictureUrl,
+        Language language,
+        UserRole role,
         UserState userState,
         UserStatus userStatus,
+        VerificationState emailVerificationState,
+        VerificationState phoneNumberVerificationState,
         PhoneNumber phoneNumber,
         Password password)
     {
@@ -27,8 +37,12 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
 
         Name = name;
         Email = email;
+        ProfilePictureUrl = profilePictureUrl;
+        Language = language;
         UserState = userState;
         UserStatus = userStatus;
+        EmailVerificationState = emailVerificationState;
+        PhoneNumberVerificationState = phoneNumberVerificationState;
         PhoneNumber = phoneNumber;
         Password = password;
     }

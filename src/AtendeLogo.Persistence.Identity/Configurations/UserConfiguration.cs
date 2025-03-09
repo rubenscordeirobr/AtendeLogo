@@ -4,10 +4,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        builder.Property(x => x.Role)
+          .IsRequired();
 
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(ValidationConstants.NameMaxLength);
+
+        builder.Property(x => x.ProfilePictureUrl)
+            .HasMaxLength(ValidationConstants.UrlMaxLength);
 
         builder.Property(x => x.Email)
             .IsRequired()

@@ -29,7 +29,6 @@ public sealed class TenantAddress : EntityBase, IAddress, ISoftDeletableEntity, 
            : this(addressName, street, number, complement, neighborhood,
                  city, state, zipCode, country, tenant.Id)
     {
-
     }
 
     // EF Core

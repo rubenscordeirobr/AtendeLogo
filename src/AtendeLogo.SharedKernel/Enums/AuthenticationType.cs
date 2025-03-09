@@ -8,7 +8,7 @@ public enum AuthenticationType
     Unknown,
     System,
     Anonymous,
-    Email_Password,  
+    Credentials,  
     Google,      
     Facebook,
     Microsoft,        

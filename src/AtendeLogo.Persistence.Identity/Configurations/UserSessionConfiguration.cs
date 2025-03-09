@@ -6,13 +6,13 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
     {
         builder.Property(x => x.ClientSessionToken)
             .IsRequired()
-            .HasMaxLength(ValidationConstants.TokenMaxLength);
+            .HasMaxLength(ValidationConstants.AuthTokenMaxLength);
 
         builder.HasIndex(x => x.ClientSessionToken)
             .IsUnique();
 
         builder.Property(x => x.AuthToken)
-            .HasMaxLength(ValidationConstants.TokenMaxLength);
+            .HasMaxLength(ValidationConstants.AuthTokenMaxLength);
 
         builder.HasIndex(x => x.AuthToken);
             
@@ -45,5 +45,8 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
            .WithMany(x => x.Sessions)
            .HasForeignKey(x => x.Tenant_Id)
            .IsRequired(false);
+
+        builder.HasIndex(x=> x.ClientSessionToken)
+            .IsUnique();
     }
 }

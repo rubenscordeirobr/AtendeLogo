@@ -2,28 +2,34 @@
 
 public sealed class AdminUser : User
 {
-    public AdminUserRole AdminUserRole { get; private set; }
-     
+    
     private AdminUser(
         string name,
         string email,
+        string? profilePictureUrl,
+        Language language,
+        UserRole role,
         UserState userState,
         UserStatus userStatus,
-        AdminUserRole adminUserRole,
-        PhoneNumber phoneNumber)  :
-        this(name, email, userState, userStatus, adminUserRole, phoneNumber, Password.Empty)
+        VerificationState emailVerificationState,
+        VerificationState phoneNumberVerificationState,
+        PhoneNumber phoneNumber)
+        : base(name, email, profilePictureUrl, language, role, userState, userStatus,
+              emailVerificationState, phoneNumberVerificationState, phoneNumber, Password.Empty)
     {
-        
     }
+
     public AdminUser(
         string name,
         string email,
+        Language language,
+        UserRole role,
         UserState userState,
         UserStatus userStatus,
-        AdminUserRole adminUserRole,
         PhoneNumber phoneNumber,
-        Password password) : base(name, email, userState, userStatus, phoneNumber, password)
+        Password password)
+        : base(name, email, null, language, role, userState, userStatus,
+               VerificationState.NotVerified, VerificationState.NotVerified, phoneNumber, password)
     {
-        AdminUserRole = adminUserRole;
     }
 }

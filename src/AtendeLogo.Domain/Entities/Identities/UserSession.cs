@@ -1,11 +1,12 @@
-﻿namespace AtendeLogo.Domain.Entities.Identities;
+﻿using System.Text.Json.Serialization;
+
+namespace AtendeLogo.Domain.Entities.Identities;
 
 public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 {
     private const int UpdateCheckIntervalMinutes = 5;
 
     private readonly List<IDomainEvent> _events = new();
-
     public string ClientSessionToken { get; private set; }
     public string ApplicationName { get; private set; }
     public string IpAddress { get; private set; }
@@ -19,20 +20,22 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public Language Language { get; private set; }
     public AuthenticationType AuthenticationType { get; private set; }
     public SessionTerminationReason? TerminationReason { get; private set; }
+    public UserRole UserRole { get; private set; }
     public Guid User_Id { get; private set; }
     public User? User { get; private set; }
     public Guid? Tenant_Id { get; private set; }
     public Tenant? Tenant { get; private set; }
     public GeoLocation GeoLocation { get; private set; } = GeoLocation.Empty;
-
-    public UserSession(
+     
+    [JsonConstructor]
+    internal UserSession(
         string applicationName,
         string clientSessionToken,
         string ipAddress,
         string userAgent,
-        string? authToken,
-        Language language,
         AuthenticationType authenticationType,
+        Language language,
+        UserRole userRole,
         TimeSpan? expirationTime,
         Guid user_Id,
         Guid? tenant_Id)
@@ -41,9 +44,9 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         ClientSessionToken = clientSessionToken;
         IpAddress = ipAddress;
         UserAgent = userAgent;
-        AuthToken = authToken;
-        Language = language;
         AuthenticationType = authenticationType;
+        Language = language;
+        UserRole = userRole;
         ExpirationTime = expirationTime;
         User_Id = user_Id;
         Tenant_Id = tenant_Id;
@@ -64,7 +67,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 
     public void TerminateSession(SessionTerminationReason reason)
     {
-        if (Id == AnonymousConstants.AnonymousSystemSession_Id)
+        if (Id == AnonymousIdentityConstants.AnonymousSystemSession_Id)
         {
             throw new InvalidOperationException("Anonymous system session cannot be terminated.");
         }

@@ -1,11 +1,13 @@
 ﻿namespace AtendeLogo.Shared.Enums;
 
-public enum TenantUserRole
+public enum UserRole
 {
-    Owner = 1,
+    None = 0,
+    System,
+    Owner,
     Admin,
     Manager,
     Operator,
     Viewer,
-    ChatAgent
+    ChatAgent,
 }

@@ -7,4 +7,5 @@ public enum SessionTerminationReason
     PasswordChanged,
     SessionExpired,
     DomainEventError,
+    UserLogout,
 }
