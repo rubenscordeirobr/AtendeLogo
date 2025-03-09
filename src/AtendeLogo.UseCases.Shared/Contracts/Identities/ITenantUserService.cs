@@ -1,7 +1,6 @@
-﻿using AtendeLogo.Common;
-using AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
+﻿using AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
-namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Services;
+namespace AtendeLogo.UseCases.Contracts.Identities;
 
 public interface ITenantUserService
 {
