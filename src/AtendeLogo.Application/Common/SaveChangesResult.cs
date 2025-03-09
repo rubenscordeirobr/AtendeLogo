@@ -94,7 +94,7 @@ public class SaveChangesResult
             cancellationToken);
 
         var operationError = new OperationCanceledError(
-            Exception: exception,
+            exception: exception,
             Code: "EntityFramewor.IsCancellationRequested",
             Message: exception.GetNestedMessage()
         );
@@ -107,7 +107,7 @@ public class SaveChangesResult
         IDomainEventContext domainEventContext)
     {
         var operationError = new OperationCanceledError(
-          Exception: exception,
+          exception: exception,
           Code: "EntityFramewor.OperationCanceledError",
           Message: exception.GetNestedMessage()
        );

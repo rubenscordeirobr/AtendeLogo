@@ -7,7 +7,6 @@ public abstract record Error
     public string Code { get; }
     public string Message { get; }
 
-
     public Error(string code, string message)
     {
         Guard.NotNullOrWhiteSpace(code, nameof(code));
@@ -39,38 +38,38 @@ public abstract record Error
 }
 
 public record BadRequestError(string Code,
-    string Message )
+    string Message)
     : Error(Code, Message);
 
 public record ValidationError(
     string Code,
-    string Message )
+    string Message)
     : Error(Code, Message);
 
 public record NotFoundError(
-    string Code,
-    string Message )
-    : Error(Code, Message);
+    string code,
+    string message)
+    : Error(code, message);
 
 public record InvalidOperationError(
     string Code,
-    string Message )
+    string Message)
     : Error(Code, Message);
 
 public record UnauthorizedError(
     string Code,
-    string Message )
+    string Message)
     : Error(Code, Message);
 
 public record DomainEventError(
     string Code,
-    string Message )
+    string Message)
     : Error(Code, Message);
 
 public record InternalError(
     Exception Exception,
     string Code,
-    string Message )
+    string Message)
     : Error(Code, Message);
 
 public record DatabaseError(
@@ -79,8 +78,25 @@ public record DatabaseError(
     string Message)
     : Error(Code, Message);
 
-public record OperationCanceledError(
-    OperationCanceledException Exception,
-    string Code,
-    string Message)
-    : Error(Code, Message);
+public record OperationCanceledError : Error
+{
+    public OperationCanceledException Exception { get; }
+
+    public OperationCanceledError(
+        OperationCanceledException exception,
+        string Code,
+        string Message)
+        : base(Code, Message)
+    {
+        Exception = exception;
+    }
+
+    public OperationCanceledError(
+        string Code,
+        string Message)
+        : base(Code, Message)
+    {
+        Exception = new OperationCanceledException(Message);
+    }
+}
+
