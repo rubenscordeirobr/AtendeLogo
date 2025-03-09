@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using AtendeLogo.Application.Contracts.Services;
+using AtendeLogo.Application.Contracts.Security;
 using AtendeLogo.Application.Mediatores;
 using AtendeLogo.Application.Registrars;
 using AtendeLogo.Application.Services;
@@ -16,11 +16,12 @@ public static class ApplicationServiceConfiguration
         services.AddScoped<IRequestMediator, RequestMediator>();
         services.AddScoped<IEventMediator, EventMediator>();
 
+        services.AddTransient<IAuthenticationAttemptLimiterService, AuthenticationAttemptLimiterService>();
         services.AddSingleton<ICommandTrackingService, CommandTrackingService>();
         services.AddSingleton<ISessionCacheService, SessionCacheService>();
         services.AddTransient<IUserSessionVerificationService, UserSessionVerificationService>();
-
         
+         
         services.AddApplicationHandlersFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
