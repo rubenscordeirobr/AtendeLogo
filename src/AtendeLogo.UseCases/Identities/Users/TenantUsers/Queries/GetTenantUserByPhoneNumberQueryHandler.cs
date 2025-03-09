@@ -25,10 +25,14 @@ public class GetTenantUserByPhoneNumberQueryHandler
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            PhoneNumber = user.PhoneNumber,
+            ProfilePictureUrl = user.ProfilePictureUrl,
+            Language = user.Language,
             UserState = user.UserState,
             UserStatus = user.UserStatus,
-            Role = user.TenantUserRole
+            EmailVerificationState = user.EmailVerificationState,
+            PhoneNumberVerificationState = user.PhoneNumberVerificationState,
+            Role = user.Role,
+            PhoneNumber = user.PhoneNumber,
         });
     }
 }

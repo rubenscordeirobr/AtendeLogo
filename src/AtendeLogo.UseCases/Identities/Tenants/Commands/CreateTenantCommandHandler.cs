@@ -47,9 +47,10 @@ public class CreateTenantCommandHandler
        var user = tenant.AddUser(
            name: command.Name,
            email: command.Email,
+           language: command.Language,
            userState: UserState.Active,
            userStatus: UserStatus.Online,
-           tenantUserRole: TenantUserRole.Owner,
+           role: UserRole.Owner,
            phoneNumber: command.PhoneNumber,
            password.Value);
 

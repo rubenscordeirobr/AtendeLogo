@@ -27,10 +27,14 @@ public class GetTenantUserByIdQueryHandler
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
+            ProfilePictureUrl = user.ProfilePictureUrl,
+            Language = user.Language,
             PhoneNumber = user.PhoneNumber,
             UserState = user.UserState,
             UserStatus = user.UserStatus,
-            Role = user.TenantUserRole
+            EmailVerificationState = user.EmailVerificationState,
+            PhoneNumberVerificationState = user.PhoneNumberVerificationState,
+            Role = user.Role
         });
     }
 }

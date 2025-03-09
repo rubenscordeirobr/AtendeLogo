@@ -16,7 +16,7 @@ public class UpdateDefaultTenantAddressCommandHandler
     protected override async Task<Result<UpdateDefaultTenantResponse>> HandleAsync(
         UpdateDefaultTenantAddressCommand command, CancellationToken cancellationToken)
     {
-        var tenant = await _unitOfWork.TenantRepository
+        var tenant = await _unitOfWork.Tenants
             .GetWithAddressByIdAsync(command.Tenant_Id);
 
         if (tenant == null)

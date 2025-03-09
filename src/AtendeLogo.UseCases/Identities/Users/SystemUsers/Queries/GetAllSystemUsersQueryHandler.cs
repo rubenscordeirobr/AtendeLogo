@@ -13,7 +13,6 @@ internal sealed partial class GetAllSystemUsersQueryHandler
         GetAllSystemUsersQuery request,
         CancellationToken cancellationToken = default)
     {
-
         var users = await _systemUserRepository.GetAllAsync(cancellationToken);
 
         return users.Select(user => new SystemUserResponse
@@ -21,9 +20,14 @@ internal sealed partial class GetAllSystemUsersQueryHandler
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
+            ProfilePictureUrl = user.ProfilePictureUrl,
+            Role = user.Role,
+            Language = user.Language,
             PhoneNumber = user.PhoneNumber,
             UserState = user.UserState,
-            UserStatus = user.UserStatus
+            UserStatus = user.UserStatus,
+            EmailVerificationState = user.EmailVerificationState,
+            PhoneNumberVerificationState = user.PhoneNumberVerificationState
         }).ToList();
     }
 }
