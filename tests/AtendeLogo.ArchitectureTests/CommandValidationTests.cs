@@ -55,10 +55,9 @@ public class CommandValidationTests
         validatorsType.Should()
             .HaveCount(1, $"The command {commandType.Name} has more than one validator");
 
-
         _output.WriteLine($"Command {commandType.Name} has validator {validatorsType!.First().Name}");
     }
-
+     
     [Theory]
     [MemberData(nameof(CommandTypesData))]
     public void CommandValidator_ShouldEnforceStringPropertyValidations(
@@ -67,7 +66,7 @@ public class CommandValidationTests
         //Arrange
         var validatorType = typeof(IValidator<>).MakeGenericType(commandType);
         var validator = _serviceProvider.GetService(validatorType) as IValidator;
-
+         
         validator.Should()
             .NotBeNull($"The command {commandType.Name} does not have a validator registered");
 

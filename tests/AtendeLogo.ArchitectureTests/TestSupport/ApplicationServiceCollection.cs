@@ -38,7 +38,7 @@ public class ApplicationServiceCollection : ServiceCollection
         var fakeConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurations!)
             .Build();
-         
+
         this.AddApplicationServices()
             .AddUserCasesServices()
             .AddUserCasesSharedServices()

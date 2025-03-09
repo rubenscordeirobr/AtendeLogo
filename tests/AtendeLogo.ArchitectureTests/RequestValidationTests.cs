@@ -35,8 +35,7 @@ public class RequestValidationTests
             return requestTypes.Select(type => new object[] { type });
         }
     }
-
-
+     
     [Theory]
     [MemberData(nameof(RequestTypes))]
     public void Request_Should_Have_Handler_Registered(Type type)
@@ -60,6 +59,5 @@ public class RequestValidationTests
 
         _output.WriteLine($"Request {type.Name} has a registered RequestHandler {handlerType.Name}.");
     }
-
 }
 

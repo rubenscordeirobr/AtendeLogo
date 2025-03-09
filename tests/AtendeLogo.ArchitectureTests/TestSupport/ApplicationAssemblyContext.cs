@@ -4,6 +4,7 @@ using AtendeLogo.Application.Contracts.Persistence;
 using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Common.Extensions;
 using AtendeLogo.Domain.Primitives;
+using AtendeLogo.Presentation.Common;
 using AtendeLogo.Shared.Contracts;
 using AtendeLogo.UseCases.Common.Services;
 using FluentValidation;
@@ -179,7 +180,7 @@ public class ApplicationAssemblyContext
             typeof(IValidationService),
             typeof(IApplicationService)
         ];
-        return [.. Types.Where(t => t.IsAssignableTo(targetTypes))];
+        return [.. Types.Where(t => !t.IsSubclassOf<ApiEndpointBase>() && t.IsAssignableTo(targetTypes))];
     }
 
     private IReadOnlyList<Type> GetImplementServiceTypes()
