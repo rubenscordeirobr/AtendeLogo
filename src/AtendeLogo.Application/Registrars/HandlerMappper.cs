@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using AtendeLogo.Domain.Primitives;
 using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.Registrars;

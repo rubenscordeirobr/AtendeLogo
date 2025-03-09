@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Common;
-using AtendeLogo.Domain.Primitives;
 
 namespace AtendeLogo.Application.Contracts.Persistence;
 

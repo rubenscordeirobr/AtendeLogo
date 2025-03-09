@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Primitives;
-
-namespace AtendeLogo.Application.Registrars;
+﻿namespace AtendeLogo.Application.Registrars;
 
 internal class GenericEventMapper(HandlerKind kind)
 {

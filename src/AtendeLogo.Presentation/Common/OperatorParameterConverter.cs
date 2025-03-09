@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Presentation.Common;
 
-public static class ParameterConverter
+public static class OperatorParameterConverter
 {
     public static string? ToString(object? value, Type type)
     {
@@ -41,7 +41,7 @@ public static class ParameterConverter
     {
         var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrEmpty(value) || value == "null")
         {
             return isNullable 
                 ? null

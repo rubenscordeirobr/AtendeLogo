@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Domain.Primitives;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace AtendeLogo.Application.Contracts.Persistence;
 public interface IRepositoryBase<TEntity> where TEntity : EntityBase

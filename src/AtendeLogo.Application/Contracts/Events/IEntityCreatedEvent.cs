@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Domain.Enums;
-using AtendeLogo.Domain.Primitives;
 
 namespace AtendeLogo.Application.Contracts.Events;
 

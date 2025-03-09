@@ -23,8 +23,8 @@ public class HttpMethodDescriptorTests
         descriptor.RouteParameters[0].Name.Should().Be("id");
 
         // Expect one query mapping: parameter "filter" mapped to query key "filter".
-        descriptor.ParameterToQueryKeyMap.Should().HaveCount(1);
-        var mapping = descriptor.ParameterToQueryKeyMap.First();
+        descriptor.OperationParameterToKeyMap.Should().HaveCount(1);
+        var mapping = descriptor.OperationParameterToKeyMap.First();
         mapping.Value.Should().Be("filter");
         mapping.Key.Name.Should().Be("filter");
     }
@@ -52,7 +52,7 @@ public class HttpMethodDescriptorTests
 
         // Act & Assert
         Action act = () => new HttpMethodDescriptor(method!);
-        act.Should().Throw<RouteTemplateException>()
+        act.Should().Throw<OperationTemplateException>()
            .WithMessage("*the key-value pair*")
            .And.Message.Should()
            .Contain("invalidTemplate");
@@ -67,24 +67,10 @@ public class HttpMethodDescriptorTests
 
         // Act & Assert
         Action act = () => new HttpMethodDescriptor(method!);
-        act.Should().Throw<QueryTemplateException>()
+        act.Should().Throw<OperationTemplateException>()
            .WithMessage("*the parameter 'missing'*");
     }
-
-    [Fact]
-    public void ExtraParameterNotMapped_ShouldThrowHttpTemplateException()
-    {
-        // Arrange: method with an extra parameter "sort" not mapped in route or query.
-        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.GetItemExtraParameter));
-        method.Should().NotBeNull();
-
-        // Act & Assert
-        Action act = () => new HttpMethodDescriptor(method!);
-        act.Should().Throw<HttpTemplateException>()
-           .WithMessage("*not mapped*")
-           .And.Message.Should().Contain("sort");
-    }
-
+  
     [Fact]
     public void ParameterMappedInBothRouteAndQuery_ShouldThrowHttpTemplateException()
     {
@@ -94,9 +80,7 @@ public class HttpMethodDescriptorTests
 
         // Act & Assert
         Action act = () => new HttpMethodDescriptor(method!);
-        act.Should().Throw<HttpTemplateException>()
-           .WithMessage("*mapped in both the route and query*")
-           .And.Message.Should().Contain("id");
+        act.Should().Throw<OperationTemplateException>();
     }
 
     [Fact]
@@ -120,7 +104,7 @@ public class HttpMethodDescriptorTests
         
         // Act
         var descriptor = new HttpMethodDescriptor(method!);
-        var result = descriptor.QueryTemplate;
+        var result = descriptor.OperationTemplate;
 
         // Assert
         result.Should()

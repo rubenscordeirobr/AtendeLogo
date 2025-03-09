@@ -1,4 +1,7 @@
-﻿namespace AtendeLogo.Presentation.Common;
+﻿using AtendeLogo.Shared.Enums;
+using AtendeLogo.UseCases.Contracts.Identities;
+
+namespace AtendeLogo.Presentation.Common;
 
 public abstract class ApiEndpointBase
 {
@@ -31,5 +34,16 @@ public abstract class ApiEndpointBase
         }
         return ResponseResult.Error(resultValue.Error);
     }
+
+    #region IEndpointService
+    public virtual ServiceRole ServiceRole
+        => ServiceRole.General;
+    public virtual string ServiceName
+        => this.GetType().Name;
+
+    public virtual bool IsAllowAnonymous
+        => false;
+
+    #endregion
 }
- 
+

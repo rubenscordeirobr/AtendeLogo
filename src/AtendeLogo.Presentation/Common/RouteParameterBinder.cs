@@ -26,7 +26,7 @@ public static class RouteParameterBinder
         {
             try
             {
-                var convertedValue = ParameterConverter.Parse(routeValue?.ToString(), parameter.ParameterType);
+                var convertedValue = OperatorParameterConverter.Parse(routeValue?.ToString(), parameter.ParameterType);
                 return Result.Success(convertedValue!);
             }
             catch (Exception ex)

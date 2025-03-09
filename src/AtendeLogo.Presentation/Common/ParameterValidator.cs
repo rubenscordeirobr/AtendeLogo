@@ -28,23 +28,21 @@ internal class ParameterValidator
     internal static void Validate(HttpMethodDescriptor descriptor)
     {
         var parameters = descriptor.Parameters;
-        var routeParameters = descriptor.RouteParameters;
-        var queryParameters = descriptor.ParameterToQueryKeyMap.Keys;
-        var method = descriptor.Method;
-
-        if (parameters.Length > 0)
+        if (descriptor.IsBodyParameter ||
+            parameters.Length == 0)
         {
-            if (descriptor.IsBodyParameter)
-                return;
-  
+            return;
         }
 
-        var allParameters = routeParameters
-            .Concat(queryParameters)
+        var routeParameters = descriptor.RouteParameters;
+        var operatorParameters = descriptor.OperationParameters;
+        var method = descriptor.Method;
+
+        var validParameters = routeParameters
+            .Concat(operatorParameters)
             .ToList();
 
-        var missingParameters = parameters.Where(p => !p.HasDefaultValue && !allParameters.Contains(p)).ToList();
-
+        var missingParameters = parameters.Where(p => !p.HasDefaultValue && !validParameters.Contains(p)).ToList();
         if (missingParameters.Any())
         {
             throw new HttpTemplateException(
@@ -53,8 +51,16 @@ internal class ParameterValidator
                 "Please ensure that every non-CancellationToken parameter in the method signature is referenced in the route and/or query template.");
         }
 
+        if(operatorParameters.Length != descriptor.OperationParameterToKeyMap.Count)
+        {
+            throw new HttpTemplateException(
+                $"Error binding HTTP templates in method '{method.Name}' of type '{method.DeclaringType?.Name}': " +
+                $"the number of parameters in the operation template does not match the number of keys in the                 $\"the number of parameters in the operation template does not match the number of keys in the query template. \" +\r\n template. " +
+                "Please ensure that each parameter is mapped to a key in the query template.");
+        }
+        
         var parameterDuplicate = routeParameters
-            .Intersect(queryParameters)
+            .Intersect(operatorParameters)
             .ToList();
 
         if (parameterDuplicate.Any())
@@ -65,7 +71,7 @@ internal class ParameterValidator
                 "Please ensure that each parameter is mapped to only one template.");
         }
 
-        allParameters.ForEach(parameter => ValidateParameter(method, parameter));
+        validParameters.ForEach(parameter => ValidateParameter(method, parameter));
     }
 
     private static void ValidateParameter(MethodInfo method, ParameterInfo paramerter)

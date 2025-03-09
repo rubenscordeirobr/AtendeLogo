@@ -7,7 +7,7 @@ namespace AtendeLogo.Presentation.Common.Attributes;
 public abstract class HttpMethodAttribute : Attribute
 {
     public string RouteTemplate { get; }
-    public string QueryTemplate { get; }
+    public string OperationTemplate { get; }
 
     public HttpStatusCode SuccessStatusCode { get; }
 
@@ -25,10 +25,10 @@ public abstract class HttpMethodAttribute : Attribute
     protected HttpMethodAttribute(
         HttpStatusCode httpStatusCode,
         string routeTemplate,
-        string queryTemplate = "")
+        string operationTemplate = "")
     {
         RouteTemplate = routeTemplate;
         SuccessStatusCode = httpStatusCode;
-        QueryTemplate = queryTemplate;
+        OperationTemplate = operationTemplate;
     }
 }

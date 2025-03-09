@@ -18,7 +18,7 @@ public static class HttpGetDescriptorSelector
 
         var requestQueryTemplate = CreateQueryTemplate(httpContext);
         var queryDescriptor = descriptors
-            .Where(d => d.QueryTemplate.Equals(requestQueryTemplate, StringComparison.OrdinalIgnoreCase))
+            .Where(d => d.OperationTemplate.Equals(requestQueryTemplate, StringComparison.OrdinalIgnoreCase))
             .FirstOrDefault();
 
         if(queryDescriptor != null)
@@ -46,7 +46,7 @@ public static class HttpGetDescriptorSelector
         HttpMethodDescriptor[] descriptors,
         string requestQueryTemplate)
     {
-        var requestKeys = httpContext.Request.Query.Keys;
+        var operationKeys = httpContext.Request.GetOperationKeys();
 
         HttpMethodDescriptor? bestMatch = null;
         int bestScore = -1;
@@ -54,9 +54,10 @@ public static class HttpGetDescriptorSelector
 
         foreach (var descriptor in descriptors)
         {
-            var descriptorKeys = descriptor.ParameterToQueryKeyMap.Values.ToArray();
-            int commonKeysCount = requestKeys.Intersect(descriptorKeys, StringComparer.OrdinalIgnoreCase).Count();
-            int keyCountDiff = Math.Abs(requestKeys.Count - descriptorKeys.Length);
+            var descriptorOperationKeys = descriptor.OperationParameterToKeyMap.Values.ToArray();
+          
+            int commonKeysCount = operationKeys.Intersect(descriptorOperationKeys, StringComparer.OrdinalIgnoreCase).Count();
+            int keyCountDiff = Math.Abs(operationKeys.Count - descriptorOperationKeys.Length);
 
             if (commonKeysCount > bestScore ||
                 (commonKeysCount == bestScore && keyCountDiff < bestKeyCountDiff))
@@ -78,4 +79,3 @@ public static class HttpGetDescriptorSelector
          );
     }
 }
-

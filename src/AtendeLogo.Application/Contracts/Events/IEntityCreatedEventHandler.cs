@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Primitives;
-
-namespace AtendeLogo.Application.Contracts.Events;
+﻿namespace AtendeLogo.Application.Contracts.Events;
 
 public interface IEntityStateChangedEventHandler<TEvent> : IDomainEventHandler<TEvent>
     where TEvent : IEntityStateChangedEvent

@@ -12,30 +12,28 @@ public class HttpMethodDescriptor
     public HttpMethodAttribute Attribute { get; }
     public ParameterInfo[] Parameters { get; }
     public ParameterInfo[] RouteParameters { get; }
+    public ParameterInfo[] OperationParameters { get; }
     public bool HasCancellationToken { get; }
     public string RouteTemplate { get; }
-    public string QueryTemplate { get; }
+    public string OperationTemplate { get; }
     public bool IsBodyParameter { get; }
     public Type ResponseType { get; }
-
-    public IReadOnlyList<ParameterInfo> QueryParameters
-        => ParameterToQueryKeyMap.Keys.ToList();
-
-    public IReadOnlyDictionary<ParameterInfo, string> ParameterToQueryKeyMap { get; }
+    public IReadOnlyDictionary<ParameterInfo, string> OperationParameterToKeyMap { get; }
 
     public HttpStatusCode SuccessStatusCode
         => Attribute.SuccessStatusCode;
 
     public HttpVerb HttpVerb
         => this.Attribute.HttpVerb;
-     
+
     public Type? BodyType
         => IsBodyParameter
             ? Parameters.FirstOrDefault()?.ParameterType
             : null;
 
-    public HttpMethodDescriptor(
-        MethodInfo method)
+    public OperationParameterLocation OperationParameterLocation { get; }
+
+    public HttpMethodDescriptor( MethodInfo method)
     {
         var parameters = method.GetParameters();
         var lastParameter = parameters.LastOrDefault();
@@ -44,19 +42,22 @@ public class HttpMethodDescriptor
         Attribute = method.GetCustomAttribute<HttpMethodAttribute>()
             ?? throw new HttpTemplateException("Method must have an HttpMethodAttribute.");
 
-        HasCancellationToken = lastParameter is not null 
+        HasCancellationToken = lastParameter is not null
             && lastParameter.ParameterType == typeof(CancellationToken);
 
         Parameters = HasCancellationToken
             ? parameters[..^1]
             : parameters;
-         
+
         IsBodyParameter = IsBodyParameterPresent();
         RouteTemplate = Attribute.RouteTemplate;
         RouteParameters = GetRouteParameters();
-        QueryTemplate = AdjustQueryTemplate(Attribute.QueryTemplate);
-        ParameterToQueryKeyMap = MapParametersToQueryKeys();
+        OperationParameters = Parameters.Except(RouteParameters).ToArray();
+
+        OperationTemplate = AdjustOperationTemplate(Attribute.OperationTemplate);
+        OperationParameterToKeyMap = MapOperationParametersToKeys();
         ResponseType = ResolveResponseType(Method.ReturnType);
+        
         ParameterValidator.Validate(this);
     }
 
@@ -67,22 +68,21 @@ public class HttpMethodDescriptor
                ParameterType.ImplementsGenericInterfaceDefinition(typeof(IRequest<>));
     }
 
-    private string AdjustQueryTemplate(string queryTemplate)
+    private string AdjustOperationTemplate(string queryTemplate)
     {
-        var needsCreateQueryTemplate = string.IsNullOrEmpty(queryTemplate) &&
-            Attribute.HttpVerb == HttpVerb.Get &&
+        var needsCreateOperatorTemplate = string.IsNullOrEmpty(queryTemplate) &&
             Parameters.Length > 0 &&
             !IsBodyParameter;
 
-        if (needsCreateQueryTemplate)
-            return CreateQueryTemplate();
+        if (needsCreateOperatorTemplate)
+            return CreateOperatorTemplate();
 
         return queryTemplate;
     }
 
-    private string CreateQueryTemplate()
+    private string CreateOperatorTemplate()
     {
-        var queryParameters = Parameters.Except(RouteParameters)
+        var queryParameters = OperationParameters
             .Select(x => $"{x.Name}={{{x.Name}}}");
 
         return string.Join("&", queryParameters);
@@ -95,6 +95,7 @@ public class HttpMethodDescriptor
 
         var routeParameters = new List<ParameterInfo>();
         var routeParts = RouteTemplate.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
         foreach (var routePart in routeParts)
         {
             if (routePart.Contains("{") && routePart.Contains("}"))
@@ -129,7 +130,7 @@ public class HttpMethodDescriptor
             "Please review the route template syntax.");
     }
 
-    protected IReadOnlyDictionary<ParameterInfo, string> MapParametersToQueryKeys()
+    protected IReadOnlyDictionary<ParameterInfo, string> MapOperationParametersToKeys()
     {
         if (Parameters.Length == 0)
         {
@@ -137,15 +138,15 @@ public class HttpMethodDescriptor
         }
 
         var mappings = new Dictionary<ParameterInfo, string>();
-        var pairs = QueryTemplate.Split('&', StringSplitOptions.RemoveEmptyEntries);
-      
+        var pairs = OperationTemplate.Split('&', StringSplitOptions.RemoveEmptyEntries);
+
         foreach (var pair in pairs)
         {
             var keyValue = pair.Split('=', StringSplitOptions.RemoveEmptyEntries);
             if (keyValue.Length != 2)
             {
-                throw new RouteTemplateException(
-                    $"Error binding query template '{QueryTemplate}' in method '{Method.Name}' of type '{Method.DeclaringType?.Name}': " +
+                throw new OperationTemplateException(
+                    $"Error binding operation template '{OperationTemplate}' in method '{Method.Name}' of type '{Method.DeclaringType?.Name}': " +
                     $"the key-value pair '{pair}' is invalid. It must be in the format 'key={{parameterName}}'. " +
                     "Please review the query template syntax.");
             }
@@ -155,11 +156,11 @@ public class HttpMethodDescriptor
             if (value.StartsWith("{") && value.EndsWith("}"))
             {
                 var parameterName = value.Substring(1, value.Length - 2);
-                var parameter = Parameters.FirstOrDefault(x => x.Name == parameterName);
+                var parameter = OperationParameters.FirstOrDefault(x => x.Name == parameterName);
                 if (parameter is null)
                 {
-                    throw new QueryTemplateException(
-                        $"Error binding query template '{QueryTemplate}' in method '{Method.Name}' of type '{Method.DeclaringType?.Name}': " +
+                    throw new OperationTemplateException(
+                        $"Error binding operation template '{OperationTemplate}' in method '{Method.Name}' of type '{Method.DeclaringType?.Name}': " +
                         $"the parameter '{parameterName}' specified in the template is not present in the method signature. " +
                         "Ensure that all parameters referenced in the query template are defined in the method.");
                 }
@@ -171,7 +172,7 @@ public class HttpMethodDescriptor
 
     private Type ResolveResponseType(Type currentType)
     {
-        if(currentType.IsGenericType)
+        if (currentType.IsGenericType)
         {
             if (currentType.GetGenericTypeDefinition() == typeof(Task<>))
             {
@@ -185,4 +186,11 @@ public class HttpMethodDescriptor
         }
         return currentType;
     }
+}
+
+public enum OperationParameterLocation
+{
+    Route,
+    Query,
+    BodyForm,
 }

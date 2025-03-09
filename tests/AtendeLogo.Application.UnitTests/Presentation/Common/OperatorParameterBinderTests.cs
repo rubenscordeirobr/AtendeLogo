@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
 using AtendeLogo.Presentation.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Primitives;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
 
-public class QueryParameterBinderTests
+public class OperatorParameterBinderTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
@@ -18,19 +19,19 @@ public class QueryParameterBinderTests
         // Arrange
         var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.GetItem));
         var descriptor = CreateDescriptor(method!);
-       
+
         var context = new DefaultHttpContext();
         var parameter = method!.GetParameters()[1]; // 'filter' parameter
 
         // Act
-        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "");
+        var result = OperationParameterBinder.BindParameter(descriptor, context, parameter, "");
 
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();
         result.Error!.Code.Should().Be("QueryKeyMissing");
         result.Error.Message.Should().Contain(descriptor.Method.Name);
-        result.Error.Message.Should().Contain(descriptor.QueryTemplate);
+        result.Error.Message.Should().Contain(descriptor.OperationTemplate);
     }
 
     [Fact]
@@ -50,7 +51,7 @@ public class QueryParameterBinderTests
         var parameter = method!.GetParameters()[1]; // 'filter' parameter
 
         // Act
-        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "filter");
+        var result = OperationParameterBinder.BindParameter(descriptor, context, parameter, "filter");
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -74,14 +75,14 @@ public class QueryParameterBinderTests
         var parameter = method!.GetParameters()[0]; // 'id' parameter
 
         // Act
-        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "id");
+        var result = OperationParameterBinder.BindParameter(descriptor, context, parameter, "id");
 
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();
         result.Error!.Code.Should().Be("ParameterConversionFailed");
         result.Error.Message.Should().Contain(parameter.Name);
-        result.Error.Message.Should().Contain(descriptor.QueryTemplate);
+        result.Error.Message.Should().Contain(descriptor.OperationTemplate);
     }
 
     [Fact]
@@ -96,11 +97,38 @@ public class QueryParameterBinderTests
         var parameter = method!.GetParameters()[1]; // 'sort' parameter with a default value
 
         // Act
-        var result = QueryParameterBinder.BindParameter(descriptor, context, parameter, "defaultValue");
+        var result = OperationParameterBinder.BindParameter(descriptor, context, parameter, "defaultValue");
 
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(true); // Assuming the default value is set in the method signature.
+    }
+
+    [Fact]
+    public void BindParameter_WhenFormParameterProvided_ShouldReturnSuccess()
+    {
+        // Arrange
+        var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.GetItem));
+        var descriptor = CreateDescriptor(method!);
+        var context = new DefaultHttpContext();
+
+        // Prepare a form collection with the key "filter".
+        var formValues = new Dictionary<string, StringValues>
+        {
+            { "filter", "formFilterValue" }
+        };
+
+        var formCollection = new FormCollection(formValues);
+        context.Features.Set<IFormFeature>(new FormFeature(formCollection));
+
+        var parameter = method!.GetParameters()[1]; // 'filter' parameter
+
+        // Act
+        var result = OperationParameterBinder.BindParameter(descriptor, context, parameter, "filter");
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be("formFilterValue");
     }
 }
 

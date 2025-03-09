@@ -51,7 +51,7 @@ public class ParameterConverterTests
     public void ToString_WhenCalled_ReturnsExpectedString(object? input, Type type, string? expected)
     {
         // Act
-        string? result = ParameterConverter.ToString(input, type);
+        string? result = OperatorParameterConverter.ToString(input, type);
 
         // Assert
         result.Should().Be(expected);
@@ -116,7 +116,7 @@ public class ParameterConverterTests
     public void Parse_WhenCalled_ReturnsExpectedResult(string? input, Type type, object? expected)
     {
         // Act
-        var result = ParameterConverter.Parse(input, type);
+        var result = OperatorParameterConverter.Parse(input, type);
 
         // Assert
         if (expected is null)

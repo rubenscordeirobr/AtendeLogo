@@ -1,6 +1,8 @@
 ﻿using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using AtendeLogo.Presentation.Common.Enums;
+using AtendeLogo.Presentation.Constants;
 using AtendeLogo.Shared.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,6 +59,8 @@ public class HttpRequestHandler
         var endpointInstance = GetEndPointServiceInstance();
         if (endpointInstance is null)
         {
+            _httpContext.Items.Add(HttpContextItensConstants.EndpointInstance, endpointInstance);
+
             return ResponseResult.Error(
                 HttpStatusCode.InternalServerError,
                 "HttpRequestHandler.InvalidEndPointType",
@@ -237,10 +241,10 @@ public class HttpRequestHandler
 
     private Result<object> GetParameterValue(ParameterInfo parameter)
     {
-        if (_descriptor.ParameterToQueryKeyMap.ContainsKey(parameter))
+        if (_descriptor.OperationParameterToKeyMap.ContainsKey(parameter))
         {
-            var queryKey = _descriptor.ParameterToQueryKeyMap[parameter];
-            return QueryParameterBinder.BindParameter(
+            var queryKey = _descriptor.OperationParameterToKeyMap[parameter];
+            return OperationParameterBinder.BindParameter(
                 _descriptor,
                 _httpContext,
                 parameter,
