@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using AtendeLogo.Application.Common.JsonConverters;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Application.Services;
@@ -7,7 +8,7 @@ namespace AtendeLogo.Application.Services;
 public abstract class CacheServiceBase
 {
     private readonly ICacheRepository _repository;
-    private readonly ILogger<CacheServiceBase> _logger;
+    private readonly ILogger _logger;
     private readonly TimeSpan _defaultExpiration;
     protected abstract string PrefixCacheName { get; }
 
@@ -23,7 +24,7 @@ public abstract class CacheServiceBase
 
     protected CacheServiceBase(
         ICacheRepository _repository,
-        ILogger<CacheServiceBase> logger,
+        ILogger logger,
         TimeSpan expiration)
     {
         this._repository = _repository;

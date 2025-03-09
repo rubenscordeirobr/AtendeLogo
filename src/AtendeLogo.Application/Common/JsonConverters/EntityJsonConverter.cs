@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace AtendeLogo.Application.Services;
+namespace AtendeLogo.Application.Common.JsonConverters;
 
-public class EntityJsonConverter<TEntity> : JsonConverter<TEntity>
+internal class EntityJsonConverter<TEntity> : JsonConverter<TEntity>
     where TEntity : EntityBase
 {
     public override TEntity? Read(

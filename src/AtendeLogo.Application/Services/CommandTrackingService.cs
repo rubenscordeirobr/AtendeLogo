@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Infrastructure.Cache;
+namespace AtendeLogo.Application.Services;
 
 public class CommandTrackingService : CacheServiceBase, ICommandTrackingService
 {

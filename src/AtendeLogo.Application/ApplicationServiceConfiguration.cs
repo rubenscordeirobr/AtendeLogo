@@ -16,6 +16,8 @@ public static class ApplicationServiceConfiguration
         services.AddScoped<IRequestMediator, RequestMediator>();
         services.AddScoped<IEventMediator, EventMediator>();
 
+        services.AddSingleton<ICommandTrackingService, CommandTrackingService>();
+        services.AddSingleton<ISessionCacheService, SessionCacheService>();
         services.AddTransient<IUserSessionVerificationService, UserSessionVerificationService>();
 
         

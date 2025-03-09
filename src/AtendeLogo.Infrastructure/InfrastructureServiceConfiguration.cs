@@ -25,10 +25,6 @@ public static class InfrastructureServiceConfiguration
         });
 
         services.AddSingleton<ICacheRepository, CacheRepository>();
-        services.AddSingleton<ISessionCacheService, SessionCacheService>();
-        services.AddSingleton<ICommandTrackingService, CommandTrackingService>();
-
-        ////create a new instance at time of injection
         services.AddTransient<IEmailSender, EmailSender>();
          
         return services;
