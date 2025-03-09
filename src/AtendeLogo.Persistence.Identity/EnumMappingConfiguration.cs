@@ -6,22 +6,24 @@ namespace AtendeLogo.Persistence.Identity;
 public static partial class EnumMappingConfiguration
 {
     public static void ConfigureEnumMappings<TContext>(
-        this IRelationalDbContextOptionsBuilderInfrastructure  optionsBuilder)
+        this IRelationalDbContextOptionsBuilderInfrastructure  optionsBuilder,
+        bool isInMemory = false)
         where TContext : DbContext 
     {
         optionsBuilder
-            .AddMapEnum<TContext, UserStatus>()
-            .AddMapEnum<TContext, AdminUserRole>()
-            .AddMapEnum<TContext, AuthenticationType>()
-            .AddMapEnum<TContext, BusinessType>()
-            .AddMapEnum<TContext, Country>()
-            .AddMapEnum<TContext, Currency>()
-            .AddMapEnum<TContext, Language>()
-            .AddMapEnum<TContext, PasswordStrength>()
-            .AddMapEnum<TContext, TenantState>()
-            .AddMapEnum<TContext, TenantStatus>()
-            .AddMapEnum<TContext, TenantType>()
-            .AddMapEnum<TContext, TenantUserRole>()
-            .AddMapEnum<TContext, UserState>();
+            .AddMapEnum<TContext, UserStatus>(isInMemory)
+            .AddMapEnum<TContext, UserRole>(isInMemory)
+            .AddMapEnum<TContext, AuthenticationType>(isInMemory)
+            .AddMapEnum<TContext, BusinessType>(isInMemory)
+            .AddMapEnum<TContext, Country>(isInMemory)
+            .AddMapEnum<TContext, Currency>(isInMemory)
+            .AddMapEnum<TContext, Language>(isInMemory)
+            .AddMapEnum<TContext, PasswordStrength>(isInMemory)
+            .AddMapEnum<TContext, TenantState>(isInMemory)
+            .AddMapEnum<TContext, TenantStatus>(isInMemory)
+            .AddMapEnum<TContext, TenantType>(isInMemory)
+            //.AddMapEnum<TContext, UserRole>(isInMemory)
+            .AddMapEnum<TContext, UserState>(isInMemory)
+            .AddMapEnum<TContext, VerificationState>(isInMemory);
     }
 }
