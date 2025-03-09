@@ -1,14 +1,15 @@
 ﻿using AtendeLogo.Application.Contracts.Mediators;
 using AtendeLogo.Presentation.Common;
+using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
-using AtendeLogo.UseCases.Identities.Users.TenantUsers.Services;
 
-namespace AtendeLogo.Presentation.EndPoints;
+namespace AtendeLogo.Presentation.Endpoints.Identity;
 
 [EndPoint("api/tenant-users")]
 public class TenantUsersEndpoint : ApiEndpointBase, ITenantUserService
 {
     private readonly IRequestMediator _mediator;
+
     public TenantUsersEndpoint(IRequestMediator mediator)
     {
         _mediator = mediator;

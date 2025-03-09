@@ -1,9 +1,9 @@
 ﻿using AtendeLogo.Application.Contracts.Mediators;
 using AtendeLogo.Presentation.Common;
+using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
-using AtendeLogo.UseCases.Identities.Tenants.Services;
 
-namespace AtendeLogo.Presentation.EndPoints;
+namespace AtendeLogo.Presentation.Endpoints.Identity;
 
 [EndPoint("api/tenants")]
 public class TenantsEndpoint : ApiEndpointBase, ITenantService

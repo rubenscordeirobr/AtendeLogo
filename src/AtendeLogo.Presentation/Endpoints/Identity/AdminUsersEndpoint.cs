@@ -1,9 +1,9 @@
 ﻿using AtendeLogo.Application.Contracts.Mediators;
 using AtendeLogo.Presentation.Common;
+using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
-using AtendeLogo.UseCases.Identities.Users.AdminUsers.Services;
 
-namespace AtendeLogo.Presentation.EndPoints;
+namespace AtendeLogo.Presentation.Endpoints.Identity;
 
 [EndPoint("api/admin-users")]
 public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService

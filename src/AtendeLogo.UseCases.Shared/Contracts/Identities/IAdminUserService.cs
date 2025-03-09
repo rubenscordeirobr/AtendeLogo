@@ -1,9 +1,8 @@
-﻿using AtendeLogo.Common;
-using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
-namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Services;
+namespace AtendeLogo.UseCases.Contracts.Identities;
 
-public interface IAdminUserService
+public interface IAdminUserService : IEndpointService
 {
     Task<Result<AdminUserResponse>> GetAdminUserByIdAsync(
         Guid id,
