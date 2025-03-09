@@ -1,4 +1,6 @@
-﻿using AtendeLogo.Application.Factories;
+﻿using AtendeLogo.Presentation.Constants;
+using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Factories;
 using AtendeLogo.Shared.Interfaces.Identities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -25,34 +27,18 @@ public class UserSessionAccessor : IUserSessionAccessor
 
     public IUserSession GetCurrentSession()
     {
-        var currentSession = GetCurrentSessionInternal();
+        var currentSession = TryGetHttpContextItem<IUserSession>(HttpContextItensConstants.UserSession);
         if (currentSession != null)
         {
             return currentSession;
         }
 
         var headerInfo = _httpContext.GetRequestHeaderInfo();
-        return UserSessionFactory.CreateAnonymousSession(headerInfo);
+        return AnonymousUserSessionFactory.CreateAnonymousSession(headerInfo);
     }
 
-    private IUserSession? GetCurrentSessionInternal()
-    {
-        try
-        {
-            if (_httpContext.Items.TryGetValue("UserSession", out var sessionObj) &&
-                sessionObj is IUserSession userSession)
-            {
-                return userSession;
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error retrieving session from HttpContext.Items.");
-        }
-        return null;
-    }
 
-    public RequestHeaderInfo GetRequestHeaderInfo()
+    public ClientRequestHeaderInfo GetClientRequestHeaderInfo()
     {
         return _httpContext.GetRequestHeaderInfo();
     }
@@ -88,5 +74,46 @@ public class UserSessionAccessor : IUserSessionAccessor
             return sessionToken;
         }
         return null;
+    }
+
+    public void RemoveClientSessionCookie(string clientSessionToken)
+    {
+        try
+        {
+            _httpContext.Response.Cookies.Delete(SessionTokenCookieName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error removing client session cookie.");
+        }
+    }
+
+    public Type? GetCurrentEndpointType()
+    {
+        return TryGetHttpContextItem<Type>(HttpContextItensConstants.EndpointType);
+
+    }
+
+    public IEndpointService? GetCurrentEndpointInstance()
+    {
+        return TryGetHttpContextItem<IEndpointService>(HttpContextItensConstants.EndpointInstance);
+    }
+
+    private TItem? TryGetHttpContextItem<TItem>(string key)
+    {
+        try
+        {
+            if (_httpContext.Items.TryGetValue(key,
+                out var obj) &&
+                obj is TItem ityem)
+            {
+                return ityem;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error retrieving item {typeof(TItem).FullName} from HttpContext.Items.");
+        }
+        return default;
     }
 }

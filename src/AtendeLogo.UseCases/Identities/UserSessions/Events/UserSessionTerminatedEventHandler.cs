@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Domain.Entities.Identities.Events;
 
-namespace AtendeLogo.UseCases.Identities.UserSessionContexts.Events;
+namespace AtendeLogo.UseCases.Identities.UserSessions.Events;
 
 internal class UserSessionTerminatedEventHandler : IDomainEventHandler<UserSessionTerminatedEvent>
 {

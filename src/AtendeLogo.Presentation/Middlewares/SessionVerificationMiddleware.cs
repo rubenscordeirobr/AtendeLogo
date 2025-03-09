@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AtendeLogo.Presentation.Constants;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -7,7 +8,7 @@ namespace AtendeLogo.Presentation.Middlewares;
 public class SessionVerificationMiddleware
 {
     private readonly RequestDelegate _next;
-    
+
     public SessionVerificationMiddleware(RequestDelegate next)
     {
         _next = next;
@@ -21,14 +22,15 @@ public class SessionVerificationMiddleware
             try
             {
                 var sessionVerification = scope.ServiceProvider.GetService<IUserSessionVerificationService>();
-                if(sessionVerification == null)
+                if (sessionVerification == null)
                 {
                     logger.LogError("UserSessionVerificationService not registered.");
                     return;
                 }
-                await sessionVerification.VerifyAsync();
+                var userSession = await sessionVerification.VerifyAsync();
+                context.Items.Add(HttpContextItensConstants.UserSession, userSession);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Error retrieving UserSessionVerificationService.");
             }

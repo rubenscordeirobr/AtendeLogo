@@ -1,12 +1,14 @@
-﻿using AtendeLogo.Domain.Entities.Identities.Events;
-using AtendeLogo.UseCases.Identities.UserSessionContexts.Events;
+﻿using AtendeLogo.Common.Infos;
+using AtendeLogo.Domain.Entities.Identities.Events;
+using AtendeLogo.Domain.Entities.Identities.Factories;
+using AtendeLogo.UseCases.Identities.UserSessions.Events;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.UserSessionContexts;
 
 public class UserSessionTerminatedEventHandlerTests
      : IClassFixture<AnonymousServiceProviderMock>
 {
-    private Fixture _figure = new();
+    private Fixture _fixture = new();
     private IEventMediator _eventMediator;
 
     public UserSessionTerminatedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
@@ -18,7 +20,14 @@ public class UserSessionTerminatedEventHandlerTests
     public async Task EventMediator_ShouldDispatchForUserSessionTerminatedEvent()
     {
         // Arrange
-        var userSession = _figure.Create<UserSession>();
+        var user = _fixture.Create<TenantUser>();
+        var userSession = UserSessionFactory.Create(
+            user: user,
+            clientHeaderInfo: ClientRequestHeaderInfo.System,
+            authenticationType: AuthenticationType.System,
+            rememberMe: false,
+            tenant_id: null);
+
         var createdEvent = new UserSessionTerminatedEvent(userSession, SessionTerminationReason.SessionExpired);
         var eventContext = new DomainEventContext([createdEvent]);
 

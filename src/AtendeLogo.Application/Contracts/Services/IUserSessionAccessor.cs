@@ -4,8 +4,12 @@ namespace AtendeLogo.Application.Contracts.Services;
 
 public interface IUserSessionAccessor : IApplicationService
 {
-    void AddClientSessionCookie(string session);
+    void AddClientSessionCookie(string clientSessionToken);
+    void RemoveClientSessionCookie(string clientSessionToken);
     string? GetClientSessionToken();
     IUserSession GetCurrentSession();
-    RequestHeaderInfo GetRequestHeaderInfo();
+
+    ClientRequestHeaderInfo GetClientRequestHeaderInfo();
+    Type? GetCurrentEndpointType();
+    IEndpointService? GetCurrentEndpointInstance();
 }
