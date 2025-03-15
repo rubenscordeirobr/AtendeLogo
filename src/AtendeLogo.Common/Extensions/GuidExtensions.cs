@@ -4,11 +4,11 @@ namespace AtendeLogo.Common.Extensions;
 
 public static class GuidExtensions
 {
-    public static bool IsZeroPrefixedGuid(this Guid guid)
+    public static bool IsZeroPrefixedGuid(this Guid value)
     {
         var zero = (byte)0x0;
 
-        var bytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref guid, 1));
+        var bytes = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref value, 1));
         return bytes[0] == zero &&
                bytes[1] == zero &&
                bytes[2] == zero &&

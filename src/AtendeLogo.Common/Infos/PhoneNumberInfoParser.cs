@@ -11,7 +11,7 @@ public static partial class PhoneNumberInfoParser
             return PhoneNumberInfo.Unknown(string.Empty);
          
         var numbers = fullNumber.GetOnlyNumbers('+');
-        if (!numbers.StartsWith("+"))
+        if (!numbers.StartsWith('+'))
         {
             return PhoneNumberInfo.Unknown(numbers);
         }

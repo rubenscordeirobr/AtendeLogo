@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 
+namespace AtendeLogo.Common.Extensions;
+
 public static class DictionaryExtensions
 {
     public static TValue GetOrAdd<TKey, TValue>(
@@ -23,13 +25,9 @@ public static class DictionaryExtensions
         TValue value)
         where TKey : notnull
     {
-        if (dictionary.ContainsKey(key))
+        if (!dictionary.TryAdd(key, value))
         {
             dictionary[key] = value;
-        }
-        else
-        {
-            dictionary.Add(key, value);
         }
     }
 

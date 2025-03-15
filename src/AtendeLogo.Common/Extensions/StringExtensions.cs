@@ -94,14 +94,16 @@ public static class StringExtensions
         return value.Substring(startIndex, length);
     }
 
-    public static string SafeTrim(this string? value, int maxLength)
+    public static string SafeTrim(this string? value,
+        int maxLength,
+        string? appendWhenTrimmed = null)
     {
         if (value is null)
             return string.Empty;
 
         var trimmedValue = value.Trim();
         return maxLength > 0 && value.Length > maxLength
-            ? trimmedValue.Substring(0, maxLength)
+            ? $"{trimmedValue.Substring(0, maxLength)}{appendWhenTrimmed}"
             : value;
     }
 
@@ -114,7 +116,7 @@ public static class StringExtensions
         if (value.Length == 0)
             return string.Empty;
 
-        return char.ToUpper(value[0]) + value.Substring(1);
+        return char.ToUpperInvariant(value[0]) + value.Substring(1);
     }
 
     public static string Descapitalize(this string? value)
@@ -125,6 +127,6 @@ public static class StringExtensions
         value = value.TrimStart();
         if (value.Length == 0)
             return string.Empty;
-        return char.ToLower(value[0]) + value.Substring(1);
+        return char.ToLowerInvariant(value[0]) + value.Substring(1);
     }
 }

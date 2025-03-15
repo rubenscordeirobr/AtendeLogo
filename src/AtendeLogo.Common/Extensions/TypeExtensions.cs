@@ -246,7 +246,7 @@ public static class TypeExtensions
             .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == interfaceDefinition)
             .ToArray();
 
-        if (!interfaces.Any())
+        if (interfaces.Length == 0)
         {
             throw new ArgumentException(
                 $"The type {type.Name} does not implement the interface {interfaceDefinition.Name}");

@@ -17,7 +17,7 @@ public static partial class PhoneNumberUtils
     public static InternationalDialingCode GetInternationalDialingCode(string fullNumber)
     {
         var numbers = fullNumber.GetOnlyNumbers('+');
-        if (!numbers.StartsWith("+") || numbers.Length < 10)
+        if (!numbers.StartsWith('+') || numbers.Length < 10)
         {
             return InternationalDialingCode.Unknown;
         }

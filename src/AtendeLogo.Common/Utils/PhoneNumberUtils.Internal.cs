@@ -95,7 +95,7 @@ internal static partial class PhoneNumberUtilsInternal
             return result2;
         }
 
-        if (numbers.StartsWith("1"))
+        if (numbers.StartsWith('1'))
         {
             return InternationalDialingCode.UnitedStatesOrCanada;
         }
