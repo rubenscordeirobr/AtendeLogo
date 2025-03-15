@@ -3,7 +3,7 @@ using AtendeLogo.Common.Enums;
 
 namespace AtendeLogo.Common.Utils;
 
-public static partial class CaseUtils
+public static partial class CaseConventionUtils
 {
     [GeneratedRegex("^[A-Z0-9]+$")]
     private static partial Regex UpperCaseRegex();
@@ -99,14 +99,14 @@ public static partial class CaseUtils
         Guard.NotNullOrWhiteSpace(input);
 
         var words = SplitWords(input);
-        return string.Join("_", words).ToLower();
+        return string.Join("_", words).ToLowerInvariant();
     }
 
     public static string ToKebabCase(string? input)
     {
         Guard.NotNullOrWhiteSpace(input);
         var words = SplitWords(input);
-        return string.Join("-", words).ToLower();
+        return string.Join("-", words).ToLowerInvariant();
     }
 
     public static string ToPascalCase(string? input)
@@ -129,7 +129,7 @@ public static partial class CaseUtils
         Guard.NotNullOrWhiteSpace(input);
         var words = SplitWords(input);
 
-        return String.Join(String.Empty, words).ToUpper();
+        return string.Join(string.Empty, words).ToUpperInvariant();
     }
      
     private static string[] SplitWords(string input)

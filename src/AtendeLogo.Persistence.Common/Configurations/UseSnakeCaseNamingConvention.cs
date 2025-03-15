@@ -8,7 +8,7 @@ public static class UseSnakeCaseNamingConventionExtensions
     {
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
-            var tableName = CaseUtils.ToSnakeCase(entity.GetTableName() ?? string.Empty);
+            var tableName = CaseConventionUtils.ToSnakeCase(entity.GetTableName() ?? string.Empty);
             entity.SetTableName(tableName);
 
             foreach (var property in entity.GetProperties())
@@ -16,7 +16,7 @@ public static class UseSnakeCaseNamingConventionExtensions
                 var columnName = property.GetColumnName();
                 if (!string.IsNullOrWhiteSpace(columnName))
                 {
-                    property.SetColumnName(CaseUtils.ToSnakeCase(columnName));
+                    property.SetColumnName(CaseConventionUtils.ToSnakeCase(columnName));
                 }
             }
 
@@ -25,7 +25,7 @@ public static class UseSnakeCaseNamingConventionExtensions
                 var indexName = index.GetDatabaseName();
                 if (!string.IsNullOrWhiteSpace(indexName))
                 {
-                    index.SetDatabaseName(CaseUtils.ToSnakeCase(indexName));
+                    index.SetDatabaseName(CaseConventionUtils.ToSnakeCase(indexName));
                 }
             }
 
@@ -34,7 +34,7 @@ public static class UseSnakeCaseNamingConventionExtensions
                 var keyName = key.GetName();
                 if (!string.IsNullOrWhiteSpace(keyName))
                 {
-                    key.SetName(CaseUtils.ToSnakeCase(keyName));
+                    key.SetName(CaseConventionUtils.ToSnakeCase(keyName));
                 }
             }
 
@@ -43,7 +43,7 @@ public static class UseSnakeCaseNamingConventionExtensions
                 var foreignKeyName = foreignKey.GetConstraintName();
                 if (!string.IsNullOrWhiteSpace(foreignKeyName))
                 {
-                    foreignKey.SetConstraintName(CaseUtils.ToSnakeCase(foreignKeyName));
+                    foreignKey.SetConstraintName(CaseConventionUtils.ToSnakeCase(foreignKeyName));
                 }
             }
         }
