@@ -1,34 +1,55 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <TargetFramework>net9.0</TargetFramework>
-    <MicrosoftAspNetVersion>9.0.2</MicrosoftAspNetVersion>
+    <MicrosoftAspNetVersion>9.0.3</MicrosoftAspNetVersion>
+    <AspireVersion>9.1.0</AspireVersion>
+    <OpenTelemetryVersion>1.11.0</OpenTelemetryVersion>
   </PropertyGroup>
   <ItemGroup>
-   
     <!-- 🔍 Code Analysis & Static Checks -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-    
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.7.0.110445" />
     <!-- 🛠️ Core .NET Libraries -->
     <PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.3.0" />
-    
-    <PackageVersion Include="Microsoft.AspNetCore.App.Ref" Version="$(MicrosoftAspNetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(MicrosoftAspNetVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="$(MicrosoftAspNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(MicrosoftAspNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftAspNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftAspNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(MicrosoftAspNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftAspNetVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="$(MicrosoftAspNetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftAspNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(MicrosoftAspNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(MicrosoftAspNetVersion)" />
+    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.11.5" />
+    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.11.5" />
+
+    <!-- 🚀 Aspire Hosting -->
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="$(AspireVersion)" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="$(AspireVersion)" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="$(AspireVersion)" />
+    <PackageVersion Include="Aspire.Hosting.MongoDB" Version="$(AspireVersion)" />
+    <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="$(AspireVersion)" />
     
+    <!-- 📊 Metrics & Monitoring -->
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="$(AspireVersion)" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="$(AspireVersion)" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="$(AspireVersion)" />
+    <PackageVersion Include="Aspire.Hosting.MongoDB" Version="$(AspireVersion)" />
+    
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.0.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="$(OpenTelemetryVersion)" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="$(OpenTelemetryVersion)" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OpenTelemetryVersion)" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OpenTelemetryVersion)" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="$(OpenTelemetryVersion)" />
     <!-- 🔀 Object Mapping & Validation -->
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-   
     <!-- 🗄️ Database & ORM -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftAspNetVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftAspNetVersion)">
@@ -43,10 +64,8 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     <PackageVersion Include="MongoDB.Driver" Version="3.1.0" />
     <PackageVersion Include="StackExchange.Redis" Version="2.8.24" />
-  
     <!-- 📜 API Documentation -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-    
     <!-- 🛠️ Testing Libraries -->
     <PackageVersion Include="AutoFixture" Version="4.18.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />

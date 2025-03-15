@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <LangVersion>preview</LangVersion>
+    <!--
+    <AnalysisMode>minimum</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    -->
+ 
+  </PropertyGroup>
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj'">
+ 
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
