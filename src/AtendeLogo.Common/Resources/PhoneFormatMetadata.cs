@@ -3,7 +3,7 @@ using AtendeLogo.Common.Infos;
 
 namespace AtendeLogo.Common.Resources;
 
-internal class PhoneNumberFormatRegistry 
+internal static class PhoneNumberFormatRegistry 
 {
     public static PhoneNumberFormatInfo? TryGet(Country countryCode)
     {
