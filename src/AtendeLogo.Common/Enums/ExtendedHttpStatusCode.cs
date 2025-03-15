@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Presentation.Common.Enums;
+﻿namespace AtendeLogo.Common.Enums;
 
 public enum ExtendedHttpStatusCode
 {

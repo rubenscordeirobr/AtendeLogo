@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
-using AtendeLogo.Presentation.Common;
+using AtendeLogo.Common.Converters;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
 
-public class ParameterConverterTests
+public class OperatorParameterConverterTests
 {
     private enum TestEnum
     {
@@ -101,7 +101,7 @@ public class ParameterConverterTests
             yield return new object[] { "hello", typeof(string), "hello" };
 
             // Empty string for non-nullable type returns default
-            yield return new object[] { "", typeof(int), Activator.CreateInstance(typeof(int))! };
+            yield return new object[] { "", typeof(int), Activator.CreateInstance<int>()! };
 
             // Empty string for nullable type returns null
             yield return new object[] { "", typeof(int?), null! };
