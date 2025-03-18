@@ -1,9 +1,9 @@
 ﻿namespace AtendeLogo.Application.Contracts.Handlers;
 
-internal interface ICollectionQueryHandler<TResponse> : IRequestHandler<TResponse>
+internal interface IGetManyQueryHandler<TResponse> : IRequestHandler<TResponse>
     where TResponse : IResponse
 {
-    Task<IReadOnlyList<TResponse>> GetManyAsync(
+    Task<Result<IReadOnlyList<TResponse>>> GetManyAsync(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default);
 
@@ -13,16 +13,16 @@ internal interface ICollectionQueryHandler<TResponse> : IRequestHandler<TRespons
     }
 }
 
-internal interface ICollectionQueryHandler<TQuery, TResponse>
-    : IRequestHandler<TQuery, TResponse>, ICollectionQueryHandler<TResponse>
+internal interface IGetManyQueryHandler<TQuery, TResponse>
+    : IRequestHandler<TQuery, TResponse>, IGetManyQueryHandler<TResponse>
     where TQuery : IRequest<TResponse>
     where TResponse : IResponse
 {
-    Task<IReadOnlyList<TResponse>> GetManyAsync(
+    Task<Result<IReadOnlyList<TResponse>>> GetManyAsync(
         TQuery request,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<TResponse>> ICollectionQueryHandler<TResponse>.GetManyAsync(
+    Task<Result<IReadOnlyList<TResponse>>> IGetManyQueryHandler<TResponse>.GetManyAsync(
        IRequest<TResponse> request,
        CancellationToken cancellationToken)
     {

@@ -80,21 +80,21 @@ internal partial class RequestMediator : IRequestMediator, IRequestMediatorTest
 
     #region Query
 
-    public Task<Result<TResponse>> GetSingleAsync<TResponse>(
-      IQueryRequest<TResponse> queryRequest,
-      CancellationToken cancellationToken = default)
-          where TResponse : IResponse
+    public Task<Result<TResponse>> GetAsync<TResponse>(
+        IQueryRequest<TResponse> queryRequest,
+        CancellationToken cancellationToken = default)
+        where TResponse : IResponse
     {
-        var handler = GetRequestHandler<ISingleQueryResultHandler<TResponse>, TResponse>(queryRequest);
-        return handler.GetSingleAsync(queryRequest, cancellationToken);
+        var handler = GetRequestHandler<IGetQueryResultHandler<TResponse>, TResponse>(queryRequest);
+        return handler.GetAsync(queryRequest, cancellationToken);
     }
 
-    public Task<IReadOnlyList<TResponse>> GetManyAsync<TResponse>(
+    public Task<Result<IReadOnlyList<TResponse>>> GetManyAsync<TResponse>(
         IQueryRequest<TResponse> queryRequest,
         CancellationToken cancellationToken = default)
             where TResponse : IResponse
     {
-        var handler = GetRequestHandler<ICollectionQueryHandler<TResponse>, TResponse>(queryRequest);
+        var handler = GetRequestHandler<IGetManyQueryHandler<TResponse>, TResponse>(queryRequest);
         return handler.GetManyAsync(queryRequest, cancellationToken);
     }
 

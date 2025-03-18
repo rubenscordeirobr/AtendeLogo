@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public class GetAdminUserByEmailOrPhoneNumberQueryHandler
-    : SingleResultQueryHandler<GetAdminUserByEmailOrPhoneNumberQuery, AdminUserResponse>
+    : GetQueryResultHandler<GetAdminUserByEmailOrPhoneNumberQuery, AdminUserResponse>
 {
     private readonly IAdminUserRepository _adminUserRepository;
     public GetAdminUserByEmailOrPhoneNumberQueryHandler(

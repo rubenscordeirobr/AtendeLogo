@@ -2,12 +2,12 @@
 
 public interface IQueryMediador
 {
-    Task<Result<TResponse>> GetSingleAsync<TResponse>(
+    Task<Result<TResponse>> GetAsync<TResponse>(
         IQueryRequest<TResponse> query,
         CancellationToken cancellationToken = default)
             where TResponse : IResponse;
 
-    Task<IReadOnlyList<TResponse>> GetManyAsync<TResponse>(
+    Task<Result<IReadOnlyList<TResponse>>> GetManyAsync<TResponse>(
         IQueryRequest<TResponse> request,
         CancellationToken cancellationToken = default)
             where TResponse : IResponse;

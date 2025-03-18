@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
 public class GetTenantUserByEmailOrPhoneNumberQueryHandler
-    : SingleResultQueryHandler<GetTenantUserByEmailOrPhoneNumberQuery, TenantUserResponse>
+    : GetQueryResultHandler<GetTenantUserByEmailOrPhoneNumberQuery, TenantUserResponse>
 {
     private readonly ITenantUserRepository _tenantUserRepository;
     public GetTenantUserByEmailOrPhoneNumberQueryHandler(

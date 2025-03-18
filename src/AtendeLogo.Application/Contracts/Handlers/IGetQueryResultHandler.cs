@@ -1,20 +1,20 @@
 ﻿namespace AtendeLogo.Application.Contracts.Handlers;
 
-public interface ISingleQueryResultHandler<TResponse> : IRequestHandler<TResponse>
+public interface IGetQueryResultHandler<TResponse> : IRequestHandler<TResponse>
     where TResponse : IResponse
 {
-    internal Task<Result<TResponse>> GetSingleAsync(
+    internal Task<Result<TResponse>> GetAsync(
          IQueryRequest<TResponse> request,
          CancellationToken cancellationToken = default);
 
     Task IApplicationHandler.HandleAsync(object domainEvent)
     {
-        return GetSingleAsync((IQueryRequest<TResponse>)domainEvent);
+        return GetAsync((IQueryRequest<TResponse>)domainEvent);
     }
 }
 
-public interface ISingleQueryResultHandler<TQuery, TResponse>
-    : IRequestHandler<TQuery, TResponse>, ISingleQueryResultHandler<TResponse>
+public interface IGetQueryResultHandler<TQuery, TResponse>
+    : IRequestHandler<TQuery, TResponse>, IGetQueryResultHandler<TResponse>
     where TQuery : IQueryRequest<TResponse>
     where TResponse : IResponse
 {
@@ -22,7 +22,7 @@ public interface ISingleQueryResultHandler<TQuery, TResponse>
         TQuery request,
         CancellationToken cancellationToken = default);
 
-    Task<Result<TResponse>> ISingleQueryResultHandler<TResponse>.GetSingleAsync(
+    Task<Result<TResponse>> IGetQueryResultHandler<TResponse>.GetAsync(
         IQueryRequest<TResponse> request,
         CancellationToken cancellationToken)
     {

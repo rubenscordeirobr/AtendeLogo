@@ -2,8 +2,8 @@
 
 namespace AtendeLogo.Application.Queries;
 
-public abstract class SingleResultQueryHandler<TQuery, TResponse> 
-    : ISingleQueryResultHandler<TQuery, TResponse>
+public abstract class GetQueryResultHandler<TQuery, TResponse> 
+    : IGetQueryResultHandler<TQuery, TResponse>
     where TQuery : IQueryRequest<TResponse>
     where TResponse : IResponse
 {
