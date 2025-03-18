@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace AtendeLogo.Common.Helpers;
@@ -26,8 +25,7 @@ public class HashHelper
     {
         return GenerateMd5GuidHash(Encoding.UTF8.GetBytes(input));
     }
-
-    
+     
     public static Guid GenerateMd5GuidHash(byte[] bytes)
     {
         var hashBytes = MD5.HashData(bytes);

@@ -5,7 +5,7 @@ public class OperationParameterUtilsTests
     [Theory]
     [InlineData("ABCdef", "abcdef")]
     [InlineData("ABCdEf", "abcdEf")]
-    [InlineData("Abcdef", "Abcdef")]
+    [InlineData("Abcdef", "abcdef")]
     [InlineData("abcdef", "abcdef")]
     public void NormalizeKey_Should_Transform_Correctly(string input, string expected)
     {

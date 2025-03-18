@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Services;
-using AtendeLogo.Common;
 
 namespace AtendeLogo.Application.UnitTests.Services;
 

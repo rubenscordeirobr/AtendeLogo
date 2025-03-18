@@ -33,14 +33,14 @@ public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantUserServic
         var guidAdminUserId = Guid.NewGuid();
 
         var adminUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
-        var tenantUserTemp = await adminUserRepository.GetByEmailAsync(SystemTenantConstants.TenantSystemEmail);
+        var tenantUserTemp = await adminUserRepository.GetByEmailAsync(SystemTenantConstants.Email);
 
         Guard.NotNull(tenantUserTemp);
 
         var query = new GetTenantUserByIdQuery(tenantUserTemp.Id);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -62,7 +62,7 @@ public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantUserServic
         var query = new GetTenantUserByIdQuery(Guid.NewGuid());
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

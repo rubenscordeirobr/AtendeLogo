@@ -11,6 +11,7 @@ public class AddressValidatorTests : IClassFixture<AnonymousServiceProviderMock>
 
         _validAddress = new AddressDto
         {
+            AddressName = "Valid Address Name",
             Neighborhood = "Valid Neighborhood",
             Street = "Valid Street",
             Number = "123",

@@ -3,7 +3,7 @@ using AtendeLogo.Application.Contracts.Security;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
-public class CreateTenantCommandHandler
+public sealed class CreateTenantCommandHandler
     : CommandHandler<CreateTenantCommand, CreateTenantResponse>
 {
     public IIdentityUnitOfWork _unitOfWork;
@@ -75,7 +75,7 @@ public class CreateTenantCommandHandler
         {
             await _unitOfWork.RollbackAsync(ex, cancellationToken);
 
-            var error = new InternalError(ex,
+            var error = new InternalServerError(ex,
                 "CreateTenantCommandHandler.HandleAsync",
                 "An error occurred while creating a tenant");
 

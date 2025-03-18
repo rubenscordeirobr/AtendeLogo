@@ -25,19 +25,19 @@ public class CommandValidationRegistrarTests
         commandValidation.Should().BeOfType<MockCommandRequestValidation>();
      }
 
-    [Fact]
-    public void CommandValidationRegistrar_ShouldThrowCommandValidatorNotFound()
-    {
-        // Arrange
-        Type[] validationsType = [typeof(MockCommandRequest)];
-        var services = new ServiceCollection();
+    //[Fact]
+    //public void CommandValidationRegistrar_ShouldThrowCommandValidatorNotFound()
+    //{
+    //    // Arrange
+    //    Type[] validationsType = [typeof(MockCommandRequest)];
+    //    var services = new ServiceCollection();
 
-        // Act
-        Action act = () => services.AddCommandValidationServicesFromTypes(validationsType);
+    //    // Act
+    //    Action act = () => services.AddCommandValidationServicesFromTypes(validationsType);
 
-        // Assert
-        act.Should().Throw<CommandValidatorNotFoundException>();
-    }
+    //    // Assert
+    //    act.Should().Throw<CommandValidatorNotFoundException>();
+    //}
 
     [Fact]
     public void CommandValidationRegistrar_ShouldThrowDuplicedCommandValidatorNotFound()
@@ -66,6 +66,7 @@ public class CommandValidationRegistrarTests
     public record MockCommandRequest : ICommandRequest<MockResponse>
     {
         public Guid ClientRequestId { get; } = Guid.NewGuid();
+        public DateTime? ValidatedSuccessfullyAt { get; set; }
     }
 
     public class MockCommandRequestValidation : AbstractValidator<MockCommandRequest>

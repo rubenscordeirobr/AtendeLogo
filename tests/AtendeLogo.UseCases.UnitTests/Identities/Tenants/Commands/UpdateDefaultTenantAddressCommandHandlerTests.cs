@@ -18,6 +18,7 @@ public class UpdateDefaultTenantAddressCommandHandlerTests : IClassFixture<Anony
             AddressName = "Address name",
             Address = new AddressDto
             {
+                AddressName = "Valid Address Name",
                 Street = "Street",
                 Number = "123",
                 Complement = "Complement",
@@ -50,7 +51,7 @@ public class UpdateDefaultTenantAddressCommandHandlerTests : IClassFixture<Anony
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var command = _validadeCommand with
         {
-            Tenant_Id = SystemTenantConstants.TenantSystem_Id
+            Tenant_Id = SystemTenantConstants.Tenant_Id
         };
 
         // Act

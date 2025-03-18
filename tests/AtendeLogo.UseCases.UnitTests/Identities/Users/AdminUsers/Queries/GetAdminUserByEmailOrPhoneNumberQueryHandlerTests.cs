@@ -31,7 +31,7 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<A
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
-        var superAdminUser = await adminUserRepository.GetByEmailAsync("superadmin@atendelogo.com.br");
+        var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);
 
         Guard.NotNull(superAdminUser);
 
@@ -39,7 +39,7 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<A
             superAdminUser.Email);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -62,7 +62,7 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<A
         var query = new GetAdminUserByEmailOrPhoneNumberQuery("nonexistent@example.com");
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

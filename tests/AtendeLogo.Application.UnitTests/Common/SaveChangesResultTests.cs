@@ -1,7 +1,5 @@
 ﻿using AtendeLogo.Application.Common;
 using AtendeLogo.Application.Contracts.Events;
-using AtendeLogo.Common;
-using AtendeLogo.Domain.Exceptions;
 using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Common;

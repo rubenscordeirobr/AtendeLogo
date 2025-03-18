@@ -1,6 +1,4 @@
 ﻿using AtendeLogo.Common.Infos;
-using AtendeLogo.Shared.Contantes;
-using AtendeLogo.Shared.Interfaces.Identities;
 using AtendeLogo.Persistence.Identity.Extensions;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Shared.Contracts;
@@ -62,7 +60,7 @@ public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
     public override UserSession GetCurrentSession()
     {
         var headerInfo = ClientRequestHeaderInfo.Unknown;
-        var clientSessionToken = AnonymousIdentityConstants.ClientAnonymousSystemSessionToken;
+        var clientSessionToken = AnonymousIdentityConstants.ClientSystemSessionToken;
 
         var userSession = new UserSession(
             applicationName: "AtendeLogo",
@@ -72,7 +70,7 @@ public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
             language: Language.Default,
             authenticationType: AuthenticationType.Anonymous,
             userRole: UserRole.None,
-            user_Id: AnonymousIdentityConstants.AnonymousUser_Id,
+            user_Id: AnonymousIdentityConstants.User_Id,
             expirationTime: null,
             tenant_Id: null
         );
@@ -96,8 +94,8 @@ public class SystemTenantUserSessionAccessorMock : UserSessionAccessorMock
             authenticationType: AuthenticationType.System,
             userRole: UserRole.Owner,
             expirationTime: null,
-            user_Id: SystemTenantConstants.TenantSystemOwnerUser_Id,
-            tenant_Id: SystemTenantConstants.TenantSystem_Id
+            user_Id: SystemTenantConstants.OwnerUser_Id,
+            tenant_Id: SystemTenantConstants.Tenant_Id
         );
         userSession.SetPropertyValue(x => x.Id, Guid.NewGuid());
         return userSession;

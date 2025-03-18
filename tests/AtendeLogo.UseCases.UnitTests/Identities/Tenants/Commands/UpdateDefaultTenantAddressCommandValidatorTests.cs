@@ -18,6 +18,7 @@ public class UpdateDefaultTenantAddressCommandValidatorTests : IClassFixture<Ano
             AddressName = "Address name",
             Address = new AddressDto
             {
+                AddressName = "Valid Address Name",
                 Street = "Street",
                 Number = "123",
                 Complement = "Complement",
@@ -120,6 +121,7 @@ public class UpdateDefaultTenantAddressCommandValidatorTests : IClassFixture<Ano
         {
             Address = new AddressDto
             {
+                AddressName = "Valid Address Name",
                 Street = string.Empty,
                 Number = string.Empty,
                 Complement = null,

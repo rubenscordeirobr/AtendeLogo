@@ -2,7 +2,4 @@
 
 namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
-public sealed record SystemUserResponse : UserResponse
-{
-
-}
+public sealed record SystemUserResponse : UserResponse;

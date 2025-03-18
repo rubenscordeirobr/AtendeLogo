@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.UnitTests.Mocks.EFCore;
-using AtendeLogo.Common;
 using AtendeLogo.Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

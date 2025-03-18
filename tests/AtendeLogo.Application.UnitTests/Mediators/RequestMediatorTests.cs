@@ -1,7 +1,6 @@
 ﻿using AtendeLogo.Application.Commands;
 using AtendeLogo.Application.Exceptions;
 using AtendeLogo.Application.Mediatores;
-using AtendeLogo.Common;
 using AtendeLogo.Shared.Contracts;
 using AtendeLogo.UseCases;
 using FluentValidation;
@@ -55,7 +54,7 @@ public class RequestMediatorTests
     }
 
     [Fact]
-    public void RequestMediator_ShouldThrowCommandValidatorNotFoundExeption()
+    public void RequestMediator_ShouldThrowCommandValidatorNotFoundException()
     {
         // Arrange
         var mediator = CreateMockRequestMediator();
@@ -69,7 +68,7 @@ public class RequestMediatorTests
     }
 
     [Fact]
-    public void RequestMediator_ShouldThrowRequestHandlerNotFoundExeption()
+    public void RequestMediator_ShouldThrowRequestHandlerNotFoundException()
     {
         // Arrange
         var mediator =CreateMockRequestMediator();
@@ -135,6 +134,7 @@ public class RequestMediatorTests
     public record MockCommandRequest : ICommandRequest<MockResponse>
     {
         public Guid ClientRequestId { get; }
+        public DateTime? ValidatedSuccessfullyAt { get; set; }
         public required string Name { get; init; }
     }
 
@@ -159,11 +159,13 @@ public class RequestMediatorTests
     public record MockValidatorNotRegisteredCommandRequest : ICommandRequest<MockResponse>
     {
         public Guid ClientRequestId => Guid.NewGuid();
+        public DateTime? ValidatedSuccessfullyAt { get; set; }
     }
 
     public record MockHandlerNotRegisteredCommandRequest : ICommandRequest<MockResponse>
     {
         public Guid ClientRequestId => Guid.NewGuid();
+        public DateTime? ValidatedSuccessfullyAt { get; set; }
     }
 
     public class MockHandlerNotRegisteredCommandRequestValidator : AbstractValidator<MockHandlerNotRegisteredCommandRequest>

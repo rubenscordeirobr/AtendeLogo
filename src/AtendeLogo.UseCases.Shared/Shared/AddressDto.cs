@@ -4,6 +4,7 @@ namespace AtendeLogo.UseCases.Shared;
  
 public sealed record AddressDto : IAddress
 {
+    public required string AddressName { get; init; }
     public required string Street { get; init; }
     public required string Number { get; init; }
     public string? Complement { get; init; }

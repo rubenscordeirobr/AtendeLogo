@@ -7,3 +7,4 @@ global using AtendeLogo.Shared.ValueObjects;
 global using Microsoft.Extensions.Logging;
 global using AtendeLogo.Application.Contracts.Persistence.Identities;
 global using AtendeLogo.Common;
+global using AtendeLogo.UseCases.Mappers;

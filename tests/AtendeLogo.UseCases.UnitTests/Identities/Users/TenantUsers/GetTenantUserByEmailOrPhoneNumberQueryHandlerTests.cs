@@ -31,14 +31,14 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var tenantUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
-        var tenantUser = await tenantUserRepository.GetByEmailAsync(SystemTenantConstants.TenantSystemEmail);
+        var tenantUser = await tenantUserRepository.GetByEmailAsync(SystemTenantConstants.Email);
 
         Guard.NotNull(tenantUser);
 
         var query = new GetTenantUserByEmailOrPhoneNumberQuery(tenantUser.Email);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -65,7 +65,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
         var query = new GetTenantUserByEmailOrPhoneNumberQuery(tenantUser.PhoneNumber.Number);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -87,7 +87,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
         var query = new GetTenantUserByEmailOrPhoneNumberQuery("nonexistent@example.com");
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

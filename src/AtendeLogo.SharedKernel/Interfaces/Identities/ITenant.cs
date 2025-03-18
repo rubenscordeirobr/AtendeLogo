@@ -8,8 +8,7 @@ public interface ITenant
     Language Language { get; }
     Currency Currency { get; }
     BusinessType BusinessType { get; }
-    TenantState TenantState { get; }
-    TenantStatus TenantStatus { get; }
     TenantType TenantType { get; }
     PhoneNumber PhoneNumber { get; }
+    TimeZoneOffset TimeZoneOffset { get; }
 }

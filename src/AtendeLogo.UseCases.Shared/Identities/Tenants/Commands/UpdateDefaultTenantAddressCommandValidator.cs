@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
 public class UpdateDefaultTenantAddressCommandValidator : AbstractValidator<UpdateDefaultTenantAddressCommand>
 {

@@ -1,12 +1,6 @@
-﻿using AtendeLogo.Domain.Primitives.Contracts;
-using AtendeLogo.Shared.Interfaces.Commom;
-using Microsoft.EntityFrameworkCore;
-using AtendeLogo.Persistence.Common.Configurations;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using AtendeLogo.Common;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using AtendeLogo.Persistence.Common.Converters;
-using AtendeLogo.Persistence.Common.Validations;
 
 namespace AtendeLogo.Application.UnitTests.Persistence.Common;
 

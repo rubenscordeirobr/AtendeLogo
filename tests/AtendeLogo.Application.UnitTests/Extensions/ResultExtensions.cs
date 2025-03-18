@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common;
-
-namespace AtendeLogo.Application.UnitTests.Extensions;
+﻿namespace AtendeLogo.Application.UnitTests.Extensions;
 
 public static class ResultExtensions
 {
@@ -19,40 +17,35 @@ public static class ResultExtensions
         result.Error
             .Should()
             .BeNull();
+
+        result.Value
+            .Should()
+            .NotBeNull();
+
+        result.Value
+            .Should()
+            .BeOfType<TResponse>();
     }
 
-    //public static void ShouldHaveValidationErrorFor<TRequest, TResponse>(
-    //    this Result<TResponse> result,
-    //    Expression<Func<TRequest, object>> propertyExpression)
-    //    where TResponse : notnull
-    //{
-    //    result.Error
-    //        .Should()
-    //        .NotBeNull();
+    public static void ShouldBeFailure<TError>(
+        this IResultValue result)
+        where TError : Error
+    {
+        result.IsFailure
+            .Should()
+            .BeTrue();
 
-    //    result.IsFailure
-    //        .Should()
-    //        .BeTrue();
+        result.IsSuccess
+            .Should()
+            .BeFalse();
 
-    //    result.IsSuccess
-    //        .Should()
-    //        .BeFalse();
+        result.Error
+            .Should()
+            .NotBeNull();
 
-    //    var errorCode = ErrorCodeFactory.CreateInvalidCodeFor(propertyExpression);
-    //    result.Error.Should()
-    //        .BeOfType<ValidationError>()
-    //        .Subject.Code
-    //        .Should()
-    //        .Be(errorCode);
-
-    //}
-
-    //public static void ShouldHaveValidationErrorFor(
-    //    this Result<CreateTenantResponse> result,
-    //    Expression<Func<CreateTenantCommand, object>> propertyExpression)
-    //{
-    //    result.ShouldHaveValidationErrorFor<CreateTenantCommand, CreateTenantResponse>(
-    //        propertyExpression);
-    //}
+        result.Error
+            .Should()
+            .BeOfType<TError>();
+    }
 }
 

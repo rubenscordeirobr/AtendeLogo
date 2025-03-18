@@ -4,6 +4,7 @@ namespace AtendeLogo.Application.UnitTests.Mocks;
 
 public class LoggerServiceMock<T> : ILogger<T>
 {
+
     public LoggerServiceMock()
     {
 

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using AtendeLogo.Application.Contracts.Persistence.Identities;
+﻿using AtendeLogo.Application.Contracts.Persistence.Identities;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.Shared.Models.Identities;
@@ -168,17 +167,15 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     private async Task<UserSession> CreateAnonymousSessionAsync(
         IUserSession? currentSession)
     {
-        var currentSessionId = currentSession?.Id ?? AnonymousIdentityConstants.AnonymousSystemSession_Id;
+        var currentSessionId = currentSession?.Id ?? AnonymousIdentityConstants.Session_Id;
         var headerInfo = _userSessionAccessor.GetClientRequestHeaderInfo();
-        var anynoumousUser = AnonymousIdentityConstants.AnonymousUser;
+        var anonymousUser = AnonymousIdentityConstants.AnonymousUser;
         var userSession = UserSessionFactory.Create(
-              user: anynoumousUser,
+              user: anonymousUser,
               clientHeaderInfo: headerInfo,
               authenticationType: AuthenticationType.Anonymous,
               rememberMe: true,
               tenant_id: null);
-
-        Debugger.Break();
 
         _unitWork.Add(userSession);
 

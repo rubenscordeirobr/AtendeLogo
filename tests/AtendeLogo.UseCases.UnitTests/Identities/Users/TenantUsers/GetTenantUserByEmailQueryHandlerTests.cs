@@ -31,14 +31,14 @@ public class GetTenantUserByEmailQueryHandlerTests : IClassFixture<TenantUserSer
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var tenantUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
-        var tenantUser = await tenantUserRepository.GetByEmailAsync(SystemTenantConstants.TenantSystemEmail);
+        var tenantUser = await tenantUserRepository.GetByEmailAsync(SystemTenantConstants.Email);
 
         Guard.NotNull(tenantUser);
 
         var query = new GetTenantUserByEmailQuery(tenantUser.Email);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -60,7 +60,7 @@ public class GetTenantUserByEmailQueryHandlerTests : IClassFixture<TenantUserSer
         var query = new GetTenantUserByEmailQuery("nonexistentuser@example.com");
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

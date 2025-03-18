@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
 
 public class TenantUserLogoutCommandValidator : CommandValidator<TenantUserLogoutCommand>
 {

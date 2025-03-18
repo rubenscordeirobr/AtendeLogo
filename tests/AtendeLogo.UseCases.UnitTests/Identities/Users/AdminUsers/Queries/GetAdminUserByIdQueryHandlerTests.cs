@@ -33,14 +33,14 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
         var guidAdminUserId = Guid.NewGuid();
 
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
-        var superAdminUser = await adminUserRepository.GetByEmailAsync("superadmin@atendelogo.com.br");
+        var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);
 
         Guard.NotNull(superAdminUser);
 
         var query = new GetAdminUserByIdQuery(superAdminUser.Id);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -62,7 +62,7 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
         var query = new GetAdminUserByIdQuery(Guid.NewGuid());
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

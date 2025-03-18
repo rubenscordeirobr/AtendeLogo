@@ -31,14 +31,14 @@ public class GetAdminUserByEmailQueryHandlerTests : IClassFixture<AnonymousServi
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
-        var superAdminUser = await adminUserRepository.GetByEmailAsync("superadmin@atendelogo.com.br");
+        var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);
 
         Guard.NotNull(superAdminUser);
 
         var query = new GetAdminUserByEmailQuery(superAdminUser.Email);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -60,7 +60,7 @@ public class GetAdminUserByEmailQueryHandlerTests : IClassFixture<AnonymousServi
         var query = new GetAdminUserByEmailQuery("nonexistent@example.com");
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

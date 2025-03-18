@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
 public sealed class GetSystemUserByIdQueryHandler
-    : SingleResultQueryHandler<GetSystemUserByIdQuery, SystemUserResponse>
+    : GetQueryResultHandler<GetSystemUserByIdQuery, SystemUserResponse>
 {
     private readonly ISystemUserRepository _systemUserRepository;
     public GetSystemUserByIdQueryHandler(

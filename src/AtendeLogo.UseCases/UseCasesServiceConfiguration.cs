@@ -15,6 +15,7 @@ public static class UseCasesServiceConfiguration
         services.AddApplicationHandlersFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<ITenantValidationService, TenantValidationService>();
+        services.AddScoped<ITenantUserValidationService, TenantUserValidationService>();
         services.AddScoped<ITenantAuthenticationValidationService, TenantAuthenticationValidationService>();
 
         return services;

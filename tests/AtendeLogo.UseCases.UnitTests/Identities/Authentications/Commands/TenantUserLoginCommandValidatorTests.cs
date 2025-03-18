@@ -20,7 +20,7 @@ public class TenantUserLoginCommandValidatorTests : IClassFixture<AnonymousServi
         _validCommand = new TenantUserLoginCommand
         {
             ClientRequestId = Guid.NewGuid(),
-            EmailOrPhoneNumber = SystemTenantConstants.TenantSystemEmail,
+            EmailOrPhoneNumber = SystemTenantConstants.Email,
             Password = "TenantAdmin@Teste%#",
             RememberMe = true
         };

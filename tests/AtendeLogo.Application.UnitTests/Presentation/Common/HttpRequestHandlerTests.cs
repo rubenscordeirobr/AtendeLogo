@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using AtendeLogo.Presentation.Common;
-using AtendeLogo.Presentation.Common.Enums;
 using AtendeLogo.Presentation.Common.Attributes;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
@@ -117,7 +116,7 @@ public class HttpRequestHandlerTests
         // Assert
         response.StatusCode
             .Should().Be((int)HttpStatusCode.InternalServerError);
-        response.ErroResult!.Code.Should().Be("HttpRequestHandler.InvalidEndPointType");
+        response.ErrorResponse!.Code.Should().Be("HttpRequestHandler.InvalidEndPointType");
     }
 
     [Fact]
@@ -136,7 +135,7 @@ public class HttpRequestHandlerTests
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
-        response.ErroResult!.Code.Should().Be("HttpRequestHandler.ErrorInvokingMethod");
+        response.ErrorResponse!.Code.Should().Be("HttpRequestHandler.ErrorInvokingMethod");
     }
   
 }

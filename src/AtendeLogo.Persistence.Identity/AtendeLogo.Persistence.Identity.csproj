@@ -1,18 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
     <InternalsVisibleTo Include="AtendeLogo.Persistence.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" />
+    
   </ItemGroup>
 	
   <ItemGroup>

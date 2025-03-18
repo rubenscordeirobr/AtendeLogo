@@ -1,11 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-
-  </PropertyGroup>
+ 
   <ItemGroup>
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
@@ -17,8 +12,6 @@
     <ProjectReference Include="..\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Shared\" />
-  </ItemGroup>
+
 
 </Project>

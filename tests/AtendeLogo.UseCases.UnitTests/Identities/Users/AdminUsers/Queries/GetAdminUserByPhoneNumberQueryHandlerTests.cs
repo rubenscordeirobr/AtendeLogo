@@ -31,14 +31,14 @@ public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<Anonymou
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
-        var superAdminUser = await adminUserRepository.GetByEmailAsync("superadmin@atendelogo.com.br");
+        var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);
 
         Guard.NotNull(superAdminUser);
 
         var query = new GetAdminUserByPhoneNumberQuery(superAdminUser.PhoneNumber.Number);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -60,7 +60,7 @@ public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<Anonymou
         var query = new GetAdminUserByPhoneNumberQuery("nonexistent");
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

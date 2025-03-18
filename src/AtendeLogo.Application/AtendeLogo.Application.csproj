@@ -1,11 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <RootNamespace>AtendeLogo.Application</RootNamespace>
-  </PropertyGroup>
+ 
   <ItemGroup>
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.UseCases.UnitTests" />
@@ -19,6 +14,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="FluentValidation" />
     
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿global using AtendeLogo.Common;
 global using AtendeLogo.Common.Enums;
-global using AtendeLogo.Shared.Contantes;
+global using AtendeLogo.Shared.Constants;
 global using AtendeLogo.Shared.Contracts;
 global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.Interfaces.Identities;
@@ -8,6 +8,8 @@ global using AtendeLogo.Shared.ValueObjects;
 global using AtendeLogo.UseCases.Common;
 global using AtendeLogo.UseCases.Common.Services;
 global using AtendeLogo.UseCases.Common.Validations;
-global using AtendeLogo.UseCases.Identities.Tenants.Commands;
 global using AtendeLogo.UseCases.Contracts.Identities;
+global using AtendeLogo.UseCases.Identities.Tenants.Commands;
+global using AtendeLogo.UseCases.Identities.Tenants.Queries;
 global using AtendeLogo.UseCases.Shared;
+global using FluentValidation;

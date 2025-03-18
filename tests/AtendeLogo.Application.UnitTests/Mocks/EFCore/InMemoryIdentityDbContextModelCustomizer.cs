@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.UnitTests.Mocks.Extensions;
-using AtendeLogo.Persistence.Common.Configurations;
 using AtendeLogo.Persistence.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

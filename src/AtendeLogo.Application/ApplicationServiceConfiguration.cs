@@ -12,14 +12,12 @@ public static class ApplicationServiceConfiguration
     public static IServiceCollection AddApplicationServices(
         this IServiceCollection services )
     {
-
-        services.AddScoped<IRequestMediator, RequestMediator>();
-        services.AddScoped<IEventMediator, EventMediator>();
-
-        services.AddTransient<IAuthenticationAttemptLimiterService, AuthenticationAttemptLimiterService>();
-        services.AddSingleton<ICommandTrackingService, CommandTrackingService>();
-        services.AddSingleton<ISessionCacheService, SessionCacheService>();
-        services.AddTransient<IUserSessionVerificationService, UserSessionVerificationService>();
+        services.AddSingleton<ICommandTrackingService, CommandTrackingService>()
+            .AddSingleton<ISessionCacheService, SessionCacheService>()
+            .AddScoped<IRequestMediator, RequestMediator>()
+            .AddScoped<IEventMediator, EventMediator>()
+            .AddTransient<IAuthenticationAttemptLimiterService, AuthenticationAttemptLimiterService>()
+            .AddTransient<IUserSessionVerificationService, UserSessionVerificationService>();
         
          
         services.AddApplicationHandlersFromAssembly(Assembly.GetExecutingAssembly());

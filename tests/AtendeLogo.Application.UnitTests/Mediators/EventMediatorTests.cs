@@ -2,7 +2,6 @@
 using AtendeLogo.Application.Contracts.Registrars;
 using AtendeLogo.Application.Exceptions;
 using AtendeLogo.Application.Mediatores;
-using AtendeLogo.Domain.Primitives.Contracts;
 using Microsoft.Extensions.Logging;
 using Moq;
 

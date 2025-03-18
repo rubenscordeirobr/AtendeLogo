@@ -1,9 +1,4 @@
-﻿using AtendeLogo.Domain.Exceptions;
-using AtendeLogo.Domain.Extensions;
-using AtendeLogo.Domain.Primitives.Contracts;
-using AtendeLogo.Shared.Contantes;
-using AtendeLogo.Shared.Interfaces.Identities;
-using Moq;
+﻿using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Domain.Extensions;
 
@@ -42,7 +37,7 @@ public class EntityDeletedExtensionsTests
         var entityMock = new Mock<ISoftDeletableEntity>();
         var userSessionMock = new Mock<IUserSession>();
 
-        userSessionMock.Setup(s => s.User_Id).Returns(AnonymousIdentityConstants.AnonymousUser_Id);
+        userSessionMock.Setup(s => s.User_Id).Returns(AnonymousIdentityConstants.User_Id);
         var userSession = userSessionMock.Object;
 
         // Act

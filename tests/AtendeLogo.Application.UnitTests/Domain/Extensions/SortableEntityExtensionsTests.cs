@@ -1,7 +1,4 @@
-﻿using AtendeLogo.Domain.Extensions;
-using AtendeLogo.Shared.Interfaces.Commom;
-
-namespace AtendeLogo.Application.UnitTests.Domain.Extensions;
+﻿namespace AtendeLogo.Application.UnitTests.Domain.Extensions;
 
 public class SortableEntityExtensionsTests
 {

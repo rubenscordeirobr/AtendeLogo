@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Presentation.Common;
+using AtendeLogo.Presentation.Common.Binders;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Reflection;

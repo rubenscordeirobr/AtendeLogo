@@ -70,7 +70,9 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
         {
 
             return Result.Failure<TenantUserLoginResponse>(
-                new OperationCanceledError("TenantUserLoginCommandHandler.HandleAsync", "Operation was cancelled."));
+                new OperationCanceledError(null, 
+                    "TenantUserLoginCommandHandler.HandleAsync", 
+                    "Operation was cancelled."));
         }
 
         var userSession = UserSessionFactory.Create(

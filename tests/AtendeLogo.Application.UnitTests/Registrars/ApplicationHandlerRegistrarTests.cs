@@ -3,8 +3,6 @@ using AtendeLogo.Application.Contracts.Events;
 using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Exceptions;
 using AtendeLogo.Application.Queries;
-using AtendeLogo.Common;
-using AtendeLogo.Domain.Primitives.Contracts;
 using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Application.UnitTests.Registrars;
@@ -67,15 +65,16 @@ public class ApplicationHandlerRegistrarTests
     public record MockCommandRequest : ICommandRequest<MockResponse>
     {
         public Guid ClientRequestId { get; } = Guid.NewGuid();
+        public DateTime? ValidatedSuccessfullyAt { get; set; }
     }
-     
+
     public record MockSingleQueryRequest : IQueryRequest<MockResponse>
     {
     }
 
     public record MockCollectionQueryRequest : IQueryRequest<MockResponse>
     {
-    } 
+    }
 
     public class MockCommandHandler : CommandHandler<MockCommandRequest, MockResponse>
     {
@@ -93,7 +92,7 @@ public class ApplicationHandlerRegistrarTests
         }
     }
 
-    public class MockSingleQueryHandler : SingleResultQueryHandler<MockSingleQueryRequest, MockResponse>
+    public class MockSingleQueryHandler : GetQueryResultHandler<MockSingleQueryRequest, MockResponse>
     {
         public override Task<Result<MockResponse>> HandleAsync(MockSingleQueryRequest request, CancellationToken cancellationToken = default)
         {
@@ -101,11 +100,14 @@ public class ApplicationHandlerRegistrarTests
         }
     }
 
-    public class MockCollectionQueryHandler : CollectionQueryHandler<MockCollectionQueryRequest, MockResponse>
+    public class MockCollectionQueryHandler : GetManyQueryHandler<MockCollectionQueryRequest, MockResponse>
     {
-        public override Task<IReadOnlyList<MockResponse>> HandleAsync(MockCollectionQueryRequest request, CancellationToken cancellationToken = default)
+        public override Task<Result<IReadOnlyList<MockResponse>>> HandleAsync(
+            MockCollectionQueryRequest request, 
+            CancellationToken cancellationToken = default)
         {
-            return Task.FromResult<IReadOnlyList<MockResponse>>(new List<MockResponse>());
+            var result = Result.Success<IReadOnlyList<MockResponse>>([]);
+            return Task.FromResult(result);
         }
     }
 

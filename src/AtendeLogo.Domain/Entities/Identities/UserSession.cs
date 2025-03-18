@@ -67,7 +67,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 
     public void TerminateSession(SessionTerminationReason reason)
     {
-        if (Id == AnonymousIdentityConstants.AnonymousSystemSession_Id)
+        if (Id == AnonymousIdentityConstants.Session_Id)
         {
             throw new InvalidOperationException("Anonymous system session cannot be terminated.");
         }

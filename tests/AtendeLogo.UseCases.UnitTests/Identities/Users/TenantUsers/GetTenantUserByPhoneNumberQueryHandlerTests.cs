@@ -39,7 +39,7 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantU
         var query = new GetTenantUserByPhoneNumberQuery(tenantUser.PhoneNumber.Number);
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();
@@ -61,7 +61,7 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantU
         var query = new GetTenantUserByPhoneNumberQuery("0987654321");
 
         // Act
-        var result = await mediator.GetSingleAsync(query, CancellationToken.None);
+        var result = await mediator.GetAsync(query, CancellationToken.None);
 
         // Assert
         result.Should().NotBeNull();

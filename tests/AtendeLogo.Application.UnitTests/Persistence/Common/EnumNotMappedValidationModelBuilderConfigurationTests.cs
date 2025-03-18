@@ -1,12 +1,8 @@
-﻿using AtendeLogo.Persistence.Common.Configurations;
-using AtendeLogo.Persistence.Common.Exceptions;
-using Microsoft.EntityFrameworkCore;
-
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace AtendeLogo.Application.UnitTests.Persistence.Common;
 
 public class EnumNotMappedValidationModelBuilderConfigurationTests
-
 {
     [Fact]
     public void EntityBuilderConfiguration_ShouldTrowEnumTypeNotMappedException()

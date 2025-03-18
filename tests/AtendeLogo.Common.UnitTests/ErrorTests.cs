@@ -59,7 +59,7 @@ public class ErrorTests
     }
 
     [Theory]
-    [InlineData(typeof(InternalError), typeof(Exception))]
+    [InlineData(typeof(InternalServerError), typeof(Exception))]
     [InlineData(typeof(DatabaseError), typeof(Exception))]
     [InlineData(typeof(OperationCanceledError), typeof(OperationCanceledException))]
     public void StatusCode_ShouldBeInternalServerError(Type errorType, Type exceptionType)

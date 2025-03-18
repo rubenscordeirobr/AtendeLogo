@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using AtendeLogo.Common.Converters;
 
-namespace AtendeLogo.Application.UnitTests.Presentation.Common;
+namespace AtendeLogo.Common.UnitTests.Converters;
 
 public class OperatorParameterConverterTests
 {
@@ -51,7 +51,7 @@ public class OperatorParameterConverterTests
     public void ToString_WhenCalled_ReturnsExpectedString(object? input, Type type, string? expected)
     {
         // Act
-        string? result = OperatorParameterConverter.ToString(input, type);
+        var result = OperatorParameterConverter.ToString(input, type);
 
         // Assert
         result.Should().Be(expected);

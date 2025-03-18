@@ -8,7 +8,7 @@ public static class UserSessionContextExtensions
     {
         Guard.NotNull(userSession);
 
-        return userSession.User_Id == AnonymousIdentityConstants.AnonymousUser_Id ||
+        return userSession.User_Id == AnonymousIdentityConstants.User_Id ||
             userSession.AuthenticationType == AuthenticationType.Anonymous;
     }
 

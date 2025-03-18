@@ -37,12 +37,11 @@ public class GetAllSystemUsersQueryHandlerTests : IClassFixture<AnonymousService
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().NotBeEmpty();
+        result.Value.Should().NotBeEmpty();
 
-        result.Should()
+        result.Value.Should()
             .AllBeOfType<SystemUserResponse>();
 
     }
-
 }
 

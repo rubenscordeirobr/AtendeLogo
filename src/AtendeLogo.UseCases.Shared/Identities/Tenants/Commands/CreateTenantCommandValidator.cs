@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-
-
-namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
 public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenantCommand>
 {
@@ -72,11 +69,19 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
          
         RuleFor(x => x.FiscalCode)
             .NotEmpty()
+            .WithMessage(localizer["Tenant.FiscalCodeRequired", "Fiscal code is required."])
             .MaximumLength(ValidationConstants.FiscalCodeMaxLength)
+            .WithMessage(localizer["Tenant.FiscalCodeTooLong", "Fiscal code cannot be longer than {MaxLength} characters."])
             .FiscalCode(x => x.Country)
             .WithMessage(localizer["Tenant.InvalidFiscalCode", "Invalid fiscal code."]);
 
         //Async validation
+        RuleFor(x => x.PhoneNumber)
+            .MustAsync(IsPhoneNumberAsync)
+            .WithErrorCode("Tenant.EmailUniqueValidation")
+            .WithMessage(
+                localizer["Tenant.EmailUniqueValidation", "The e-mail '{PropertyValue} is already in use."]);
+
         RuleFor(x => x.Email)
             .MustAsync(IsEmailUniqueAsync)
             .WithErrorCode("Tenant.EmailUniqueValidation")
@@ -89,6 +94,11 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
             .WithMessage(
                 localizer["Tenant.FiscalCodeUniqueValidation",
                           "The fiscal code '{PropertyValue}' is already in use."]);
+    }
+
+    private async Task<bool> IsPhoneNumberAsync(PhoneNumber phoneNumber, CancellationToken token)
+    {
+        return await _tenantValidationService.IsPhoneNumberUniqueAsync(phoneNumber.Number, token);
     }
 
     private async Task<bool> IsEmailUniqueAsync(string email, CancellationToken token)

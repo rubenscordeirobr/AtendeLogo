@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common;
-using AtendeLogo.Domain.Entities.Activities;
+﻿using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Persistence.Activity.Documents;
 
 namespace AtendeLogo.Application.UnitTests.Persistence.Activity;

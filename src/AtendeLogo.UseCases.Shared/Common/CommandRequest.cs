@@ -1,8 +1,10 @@
 ﻿namespace AtendeLogo.UseCases.Common;
 
-public abstract record CommandRequest<TResponse>
+public abstract record class CommandRequest<TResponse>
     : IRequest<TResponse>, ICommandRequest<TResponse>
     where TResponse : IResponse
 {
-    public required Guid ClientRequestId { get; init; }
+    public Guid ClientRequestId { get; init; } = Guid.NewGuid();
+
+    public DateTime? ValidatedSuccessfullyAt { get; set; }
 }
