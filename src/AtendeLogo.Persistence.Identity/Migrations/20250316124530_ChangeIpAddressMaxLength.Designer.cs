@@ -15,8 +15,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AtendeLogo.Persistence.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250308151633_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250316124530_ChangeIpAddressMaxLength")]
+    partial class ChangeIpAddressMaxLength
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             modelBuilder
                 .UseCollation("case_accent_insensitive")
                 .HasAnnotation("Npgsql:CollationDefinition:case_accent_insensitive", "und-u-ks-level1,und-u-ks-level1,icu,False")
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "authentication_type", new[] { "anonymous", "credentials", "facebook", "google", "microsoft", "sms", "system", "unknown", "whats_app" });
@@ -456,11 +456,6 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                     b.HasKey("Id")
                         .HasName("pk_users");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("ix_users_email")
-                        .HasFilter("is_deleted = false");
-
                     b.HasIndex("SortOrder")
                         .HasDatabaseName("ix_users_sort_order");
 
@@ -526,8 +521,8 @@ namespace AtendeLogo.Persistence.Identity.Migrations
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
                         .HasColumnName("ip_address")
                         .UseCollation("case_accent_insensitive");
 
@@ -669,6 +664,16 @@ namespace AtendeLogo.Persistence.Identity.Migrations
 
                     b.HasIndex("Tenant_Id")
                         .HasDatabaseName("ix_users_tenant_id");
+
+                    b.HasIndex("Email", "Tenant_Id", "Discriminator")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email_tenant_id_discriminator")
+                        .HasFilter("is_deleted = false");
+
+                    b.HasIndex("PhoneNumber", "Tenant_Id", "Discriminator")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_phone_number_tenant_id_discriminator")
+                        .HasFilter("is_deleted = false");
 
                     b.ToTable("users", t =>
                         {

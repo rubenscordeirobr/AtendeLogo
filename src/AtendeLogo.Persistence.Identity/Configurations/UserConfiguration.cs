@@ -17,9 +17,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Email)
             .IsRequired()
             .HasMaxLength(ValidationConstants.EmailMaxLength);
-         
-        builder.HasIndex(x => x.Email)
-            .IsUnique();
- 
     }
 }

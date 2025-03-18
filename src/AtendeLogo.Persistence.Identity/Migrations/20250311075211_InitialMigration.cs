@@ -243,9 +243,16 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                 filter: "is_deleted = false");
 
             migrationBuilder.CreateIndex(
-                name: "ix_users_email",
+                name: "ix_users_email_tenant_id_discriminator",
                 table: "users",
-                column: "email",
+                columns: new[] { "email", "tenant_id", "discriminator" },
+                unique: true,
+                filter: "is_deleted = false");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_users_phone_number_tenant_id_discriminator",
+                table: "users",
+                columns: new[] { "phone_number", "tenant_id", "discriminator" },
                 unique: true,
                 filter: "is_deleted = false");
 

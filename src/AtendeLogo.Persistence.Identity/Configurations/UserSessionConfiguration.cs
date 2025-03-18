@@ -15,7 +15,7 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
             .HasMaxLength(ValidationConstants.AuthTokenMaxLength);
 
         builder.HasIndex(x => x.AuthToken);
-            
+
         builder.Property(x => x.ApplicationName)
             .IsRequired()
             .HasMaxLength(ValidationConstants.NameMaxLength);
@@ -23,7 +23,7 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
         builder.Property(x => x.IpAddress)
             .IsRequired()
             .HasMaxLength(ValidationConstants.IpAddressMaxLength);
-
+         
         builder.Property(x => x.UserAgent)
             .IsRequired()
             .HasMaxLength(ValidationConstants.UserAgentMaxLength);
@@ -35,7 +35,7 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
         builder.Property(x => x.LastActivity)
             .HasDefaultValueSql("now()")
             .ValueGeneratedOnAdd();
-         
+
         builder.HasOne(x => x.User)
            .WithMany(x => x.Sessions)
            .HasForeignKey(x => x.User_Id)
@@ -46,7 +46,7 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
            .HasForeignKey(x => x.Tenant_Id)
            .IsRequired(false);
 
-        builder.HasIndex(x=> x.ClientSessionToken)
+        builder.HasIndex(x => x.ClientSessionToken)
             .IsUnique();
     }
 }
