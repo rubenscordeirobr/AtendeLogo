@@ -1,5 +1,6 @@
 ﻿using AtendeLogo.Common;
 using AtendeLogo.Domain.Primitives.Contracts;
+using AtendeLogo.Persistence.Common.Helpers;
 
 namespace AtendeLogo.Persistence.Common.Configurations;
 
@@ -42,8 +43,7 @@ public static class EntityBuilderConfiguration
             entityBuilder.Property(nameof(EntityBase.Id))
               .ValueGeneratedOnAdd()
               .HasDefaultValueSql("uuid_generate_v4()");
-        }
-      
+        } 
 
         entityBuilder.Property(nameof(EntityBase.CreatedAt))
                .HasDefaultValueSql("now()")
@@ -58,6 +58,7 @@ public static class EntityBuilderConfiguration
 
         entityBuilder.Property(nameof(EntityBase.CreatedSession_Id))
             .IsRequired();
+
         return entityBuilder;
     }
 
@@ -138,7 +139,11 @@ public static class EntityBuilderConfiguration
                     .Metadata
                     .GetColumnName();
 
-                indexBuilder.HasFilter($"{deletedColumnName} = false");
+                var softDeletedFilter = FilterExpressionHelper.AppendSoftDeleteFilter(
+                    index.GetFilter(), 
+                    deletedColumnName);
+
+                indexBuilder.HasFilter(softDeletedFilter);
             }
         }
         return entityBuilder;
@@ -148,7 +153,7 @@ public static class EntityBuilderConfiguration
         this EntityTypeBuilder entityBuilder)
     {
         var entityType = entityBuilder.Metadata;
-        foreach(var relationship in entityBuilder.Metadata.GetForeignKeys())
+        foreach (var relationship in entityBuilder.Metadata.GetForeignKeys())
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }

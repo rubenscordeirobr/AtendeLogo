@@ -113,7 +113,7 @@ public static class ValueObjectsConfiguration
         EntityTypeBuilder entityBuilder, 
         PropertyInfo property)
     {
-        entityBuilder.Property(property.Name)
+        entityBuilder.Property(typeof(PhoneNumber), property.Name)
            .IsRequired()
            .HasConversion(ValueConverters.PhoneNumberConverter)
            .HasMaxLength(ValidationConstants.PhoneNumberMaxLength);

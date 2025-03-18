@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+ 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <RootNamespace>AtendeLogo.Persistence.Common</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" />
+    
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />

@@ -15,13 +15,10 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     private readonly bool _isImplementDeletedInterface;
     private readonly bool _isImplementTenantOwnedInterface;
-     
+
     private bool _isIncludeDeleted = false;
 
     protected virtual int DefaultMaxRecords { get; } = RepositoryConstants.DefaultMaxRecords;
-
-    protected IQueryable<TEntity> Query
-        => GetInitialQuery();
 
     public RepositoryBase(
         DbContext dbContext,
@@ -40,48 +37,53 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     #region Queries
     public async Task<TEntity?> GetByIdAsync(
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includes)
     {
-        return await Query
+        return await CreateQuery(includes)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<TEntity?> FindAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default)
+        Expression<Func<TEntity, bool>> filterExpression,
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
-        Guard.NotNull(predicate);
+        Guard.NotNull(filterExpression);
 
-        return await Query
-            .FirstOrDefaultAsync(predicate, cancellationToken);
+        return await CreateQuery(includeExpressions)
+            .FirstOrDefaultAsync(filterExpression, cancellationToken);
     }
 
     public async Task<IEnumerable<TEntity>> FindAllAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default)
+        Expression<Func<TEntity, bool>> filterExpression,
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
-        Guard.NotNull(predicate);
+        Guard.NotNull(filterExpression);
 
-        return await Query
-            .Where(predicate)
+        return await CreateQuery(includeExpressions)
+            .Where(filterExpression)
             .ToListAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
-        return await Query
+        return await CreateQuery(includeExpressions)
             .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> AnyAsync(
         Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
         if (predicate == null)
             throw new ArgumentNullException(nameof(predicate));
 
-        return await Query
+        return await CreateQuery(includeExpressions)
             .AnyAsync(predicate, cancellationToken);
     }
 
@@ -94,7 +96,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         Guard.NotNull(entity);
 
         var refreshedEntity = await TryRefreshAsync(entity, cancellationToken);
-        if (refreshedEntity is  null)
+        if (refreshedEntity is null)
             throw new EntityNotFoundException(typeof(TEntity), entity!.Id);
 
         return refreshedEntity;
@@ -115,12 +117,12 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
             _trackingOption == TrackingOption.Tracking)
         {
             RemoveAnyEntityTracked(entity);
-           return await GetByIdAsync(entity.Id, cancellationToken);
+            return await GetByIdAsync(entity.Id, cancellationToken);
         }
 
         await entry.ReloadAsync(cancellationToken);
         return entity;
-        
+
     }
 
     private void RemoveAnyEntityTracked(TEntity entity)
@@ -141,11 +143,17 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     #region Filter
 
-    protected virtual IQueryable<TEntity> GetInitialQuery()
+    protected virtual IQueryable<TEntity> CreateQuery(
+        Expression<Func<TEntity, object?>>[] includeExpressions)
     {
         var query = _dbContext.Set<TEntity>()
               .ApplyTracking(_trackingOption)
               .Take(DefaultMaxRecords);
+
+        if (includeExpressions is not null)
+        {
+            query = includeExpressions.Aggregate(query, (current, include) => current.Include(include));
+        }
 
         if (_isImplementTenantOwnedInterface)
         {
@@ -177,6 +185,6 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         }
         return true;
     }
- 
+
     #endregion
 }

@@ -24,7 +24,6 @@ public static class EnumConfiguration
                 npgsqlOptionsBuilder.MapEnum<TEnum>();
             }
         }
-        
 
 #if DEBUG
         EnumMappingsTracker<TContext>.AddEnumType<TEnum>();
@@ -53,6 +52,7 @@ public static class EnumConfiguration
     }
 
 #if DEBUG
+
     private class EnumMappingsTracker<TContext>
         where TContext : DbContext
     {
@@ -77,5 +77,7 @@ public static class EnumConfiguration
             return EnumTypesMapped.Contains(enumType);
         }
     }
-}
+
 #endif
+}
+
