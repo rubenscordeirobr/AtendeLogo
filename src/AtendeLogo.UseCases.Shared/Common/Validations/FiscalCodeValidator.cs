@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Common.Utils;
-using FluentValidation;
 using FluentValidation.Validators;
 
 namespace AtendeLogo.UseCases.Shared;
@@ -42,8 +41,8 @@ public class FiscalCodeValidator<T> : PropertyValidator<T, string>
 
     public override bool IsValid(ValidationContext<T> context, string value)
     {
-        var coutry = GetCountry(context.InstanceToValidate);
-        return FiscalCodeValidationUtils.IsValid(value, coutry);
+        var country = GetCountry(context.InstanceToValidate);
+        return FiscalCodeValidationUtils.IsValid(value, country);
     }
 
     private Country GetCountry(T instanceToValidate)

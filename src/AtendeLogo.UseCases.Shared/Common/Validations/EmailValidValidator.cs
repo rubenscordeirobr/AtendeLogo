@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Common.Utils;
-using FluentValidation;
 using FluentValidation.Validators;
 
 namespace AtendeLogo.UseCases.Shared;

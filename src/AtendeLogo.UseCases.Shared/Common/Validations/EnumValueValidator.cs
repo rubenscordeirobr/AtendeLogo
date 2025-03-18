@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using AtendeLogo.Common.Attributes;
-using FluentValidation;
 using FluentValidation.Validators;
 
 namespace AtendeLogo.UseCases.Common.Validations;

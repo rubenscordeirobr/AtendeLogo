@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace AtendeLogo.UseCases.Shared;
+﻿namespace AtendeLogo.UseCases.Shared;
 
 public static partial class DefaultValidationsExtensions
 {

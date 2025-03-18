@@ -1,8 +1,8 @@
 ﻿using AtendeLogo.Common.Utils;
-using FluentValidation;
 using FluentValidation.Validators;
 
 namespace AtendeLogo.UseCases.Common.Validations;
+
 public static partial class DefaultValidationsExtensions
 {
     public static IRuleBuilderOptions<T, string> EmailAddressOrPhoneNumber<T>(
