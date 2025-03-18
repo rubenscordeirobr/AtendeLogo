@@ -1,0 +1,37 @@
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
+
+public sealed class DeleteTenantCommandHandler
+    : CommandHandler<DeleteTenantCommand, OperationResponse>
+{
+    private readonly IIdentityUnitOfWork _unitOfWork;
+
+    public DeleteTenantCommandHandler(
+        IIdentityUnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
+    protected override async Task<Result<OperationResponse>> HandleAsync(
+        DeleteTenantCommand command,
+        CancellationToken cancellationToken)
+    {
+        var tenant = await _unitOfWork.Tenants
+            .GetByIdAsync(command.Id, cancellationToken);
+
+        if (tenant is null)
+        {
+            return Result.NotFoundFailure<OperationResponse>(
+                "Tenant.NotFound",
+                $"Tenant with id {command.Id} not found.");
+        }
+
+        _unitOfWork.Delete(tenant);
+
+        var result = await _unitOfWork.SaveChangesAsync(silent: true, cancellationToken);
+        if (result.IsSuccess)
+        {
+            return Result.Success(new OperationResponse());
+        }
+        return Result.Failure<OperationResponse>(result.Error);
+    }
+}
