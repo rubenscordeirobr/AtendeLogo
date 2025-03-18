@@ -31,10 +31,15 @@ internal class CommandValidatorExecutor<TResponse>
         if(commandValidator is null)
         {
             var commandTypeName = _command.GetType().GetQualifiedName();
-            var mensagem = "Command Validator not found for command {CommandTypeName}";
+            var mensagem = $"Command Validator not found for command {commandTypeName}";
             _logger.LogError(mensagem, commandTypeName);
 
-            throw new CommandValidatorNotFoundException(mensagem, commandTypeName);
+            var exception = new CommandValidatorNotFoundException(mensagem, commandTypeName);
+          
+            return Result.Failure<bool>(new CommandValidatorNotFoundError(
+                exception,
+                Code: ErrorCodeFactory.CommandValidatorFoundCodeFor(commandTypeName),
+                Message: mensagem));
         }
              
         var validationContext = CreateValidationContext();
