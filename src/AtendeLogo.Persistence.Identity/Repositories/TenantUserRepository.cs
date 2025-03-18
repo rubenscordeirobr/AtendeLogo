@@ -1,10 +1,7 @@
-﻿using AtendeLogo.Domain.Extensions;
-
-namespace AtendeLogo.Persistence.Identity.Repositories;
+﻿namespace AtendeLogo.Persistence.Identity.Repositories;
 
 internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRepository
 {
-    
     public TenantUserRepository(
         IdentityDbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
@@ -27,11 +24,27 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
     {
         return AnyAsync(x => x.Email == emailOrPhoneNumber || x.PhoneNumber.Number == emailOrPhoneNumber, token);
     }
+     
+    public Task<bool> PhoneNumberExitsAsync(
+        string phoneNumber, 
+        CancellationToken token)
+    {
+        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber, token);
+    }
+
+    public Task<bool> PhoneNumberExitsAsync(
+        Guid currentTenantUser_Id, 
+        string phoneNumber,
+        CancellationToken token)
+    {
+        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != currentTenantUser_Id, token);
+    }
 
     #region Overrides
-    protected override IQueryable<TenantUser> GetInitialQuery()
+    protected override IQueryable<TenantUser> CreateQuery(
+        Expression<Func<TenantUser, object?>>[] includeExpressions)
     {
-        var query = base.GetInitialQuery();
+        var query = base.CreateQuery(includeExpressions);
         var userSession = _userSessionAccessor.GetCurrentSession();
         if (!userSession.IsTenantUser() && !userSession.IsSystemAdminUser())
         {
@@ -49,6 +62,6 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
         }
         return base.ShouldFilterTenantOwned();
     }
- 
+     
     #endregion
 }

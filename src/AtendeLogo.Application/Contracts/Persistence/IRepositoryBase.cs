@@ -6,22 +6,27 @@ public interface IRepositoryBase<TEntity> where TEntity : EntityBase
     //queries
     Task<TEntity?> GetByIdAsync(
         Guid id, 
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions);
 
     Task<TEntity?> FindAsync(
-        Expression<Func<TEntity, bool>> predicate, 
-        CancellationToken cancellationToken = default);
-   
+           Expression<Func<TEntity, bool>> filterExpression,
+           CancellationToken cancellationToken = default,
+           params Expression<Func<TEntity, object?>>[] includeExpressions);
+
     Task<IEnumerable<TEntity>> FindAllAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default);
-   
+        Expression<Func<TEntity, bool>> filterExpression,
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions);
+
     Task<IEnumerable<TEntity>> GetAllAsync(
-        CancellationToken cancellationToken = default);
-  
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions);
+
     Task<bool> AnyAsync(
-        Expression<Func<TEntity, bool>> predicate, 
-        CancellationToken cancellationToken = default);
+        Expression<Func<TEntity, bool>> filterExpression,
+        CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object?>>[] includeExpressions);
 
     Task<TEntity> RefreshAsync(
         TEntity entity,

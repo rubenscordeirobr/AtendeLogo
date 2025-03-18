@@ -42,11 +42,19 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
     {
         return AnyAsync(x => x.FiscalCode == fiscalCode && x.Id != currentTenant_Id, token);
     }
-
-    public Task<Tenant?> GetWithAddressByIdAsync(Guid id, CancellationToken cancellationToken = default)
+     
+    public Task<bool> PhoneNumberExitsAsync(
+        string phoneNumber,
+        CancellationToken token)
     {
-        return Query
-            .Include(x => x.DefaultAddress)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber, token);
+    }
+
+    public Task<bool> PhoneNumberExitsAsync(
+        Guid currentTenant_Id, 
+        string phoneNumber, 
+        CancellationToken token)
+    {
+        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != currentTenant_Id, token);
     }
 }
