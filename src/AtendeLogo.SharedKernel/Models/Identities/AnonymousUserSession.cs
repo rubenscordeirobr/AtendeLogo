@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Shared.Contantes;
+﻿using AtendeLogo.Shared.Constants;
 using AtendeLogo.Shared.Interfaces.Identities;
 
 namespace AtendeLogo.Shared.Models.Identities;
@@ -6,11 +6,11 @@ namespace AtendeLogo.Shared.Models.Identities;
 public class AnonymousUserSession : IUserSession
 {
     public Guid Id
-        => AnonymousIdentityConstants.AnonymousSystemSession_Id;
+        => AnonymousIdentityConstants.Session_Id;
     public Guid User_Id
-        => AnonymousIdentityConstants.AnonymousUser_Id;
+        => AnonymousIdentityConstants.User_Id;
     public string ClientSessionToken
-        => AnonymousIdentityConstants.ClientAnonymousSystemSessionToken;
+        => AnonymousIdentityConstants.ClientSystemSessionToken;
   
     public required string ApplicationName { get; init; }
     public required string IpAddress { get; init; }

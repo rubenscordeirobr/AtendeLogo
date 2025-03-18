@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using AtendeLogo.Shared.Contantes;
+using AtendeLogo.Shared.Constants;
 
 namespace AtendeLogo.Shared.ValueObjects;
 

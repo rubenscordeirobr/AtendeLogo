@@ -1,15 +1,15 @@
-﻿using AtendeLogo.Shared.Contantes;
+﻿using AtendeLogo.Shared.Constants;
 using AtendeLogo.Shared.Interfaces.Identities;
 
 namespace AtendeLogo.Shared.Models.Identities;
 
 public class AnonymousUser : IUser
 {
-    public Guid Id { get; } = AnonymousIdentityConstants.AnonymousUser_Id;
+    public Guid Id { get; } = AnonymousIdentityConstants.User_Id;
 
-    public string Name { get; } = AnonymousIdentityConstants.AnonymousName;
+    public string Name { get; } = AnonymousIdentityConstants.Name;
 
-    public string Email { get; } = AnonymousIdentityConstants.AnonymousEmail;
+    public string Email { get; } = AnonymousIdentityConstants.Email;
 
     public VerificationState EmailVerificationState { get; } = VerificationState.Verified;
 

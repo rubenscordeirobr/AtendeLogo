@@ -47,7 +47,7 @@ internal static class IdentityDbSeedExtensions
         var strongPassword = "%ANONYMOUS@anymous%";
         var phoneNumber = PhoneNumber.Create("+5542999999999").GetValue();
         var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
-        var anonymousSession_Id = AnonymousIdentityConstants.AnonymousSystemSession_Id;
+        var anonymousSession_Id = AnonymousIdentityConstants.Session_Id;
 
         var anonymousUser = new SystemUser(
             name: "Anonymous",
@@ -87,11 +87,11 @@ internal static class IdentityDbSeedExtensions
         var phoneNumber = PhoneNumber.Create("+5542998373996").GetValue();
 
         var password = Password.Create(strongPassword, "SYSTEM").GetValue();
-        var anonymousSession_Id = AnonymousIdentityConstants.AnonymousSystemSession_Id;
+        var anonymousSession_Id = AnonymousIdentityConstants.Session_Id;
 
         var anonymousUser = new AdminUser(
-            name: "Super Admin",
-            email: "superadmin@atendelogo.com.br",
+            name: SuperAdminUserConstants.Name,
+            email: SuperAdminUserConstants.Email,
             language: Language.Default,
             role: UserRole.Admin,
             userState: UserState.Active,
@@ -99,7 +99,7 @@ internal static class IdentityDbSeedExtensions
             phoneNumber: phoneNumber,
             password);
 
-        anonymousUser.SetCreateSession(AnonymousIdentityConstants.AnonymousSystemSession_Id);
+        anonymousUser.SetCreateSession(AnonymousIdentityConstants.Session_Id);
         dbContext.Add(anonymousUser);
     }
 
@@ -113,9 +113,9 @@ internal static class IdentityDbSeedExtensions
             .GetValue();
 
         var systemTenant = new Tenant(
-            name: SystemTenantConstants.TenantSystemName,
+            name: SystemTenantConstants.Name,
             fiscalCode: SystemTenantConstants.FiscalCode,
-            email: SystemTenantConstants.TenantSystemEmail,
+            email: SystemTenantConstants.Email,
             businessType: BusinessType.System,
             country: Country.Brazil,
             currency: Currency.BRL,
@@ -128,8 +128,8 @@ internal static class IdentityDbSeedExtensions
         );
 
         var tenantUser = systemTenant.AddUser(
-             name: SystemTenantConstants.TenantSystemName,
-             email: SystemTenantConstants.TenantSystemEmail,
+             name: SystemTenantConstants.Name,
+             email: SystemTenantConstants.Email,
              language: Language.Default,
              userState: UserState.Active,
              userStatus: UserStatus.System,
@@ -138,11 +138,11 @@ internal static class IdentityDbSeedExtensions
              password: password
          );
 
-        systemTenant.SetCreateSession(AnonymousIdentityConstants.AnonymousSystemSession_Id);
-        tenantUser.SetCreateSession(AnonymousIdentityConstants.AnonymousSystemSession_Id);
+        systemTenant.SetCreateSession(AnonymousIdentityConstants.Session_Id);
+        tenantUser.SetCreateSession(AnonymousIdentityConstants.Session_Id);
 
-        tenantUser.SetPropertyValue(x => x.Id, SystemTenantConstants.TenantSystemOwnerUser_Id);
-        systemTenant.SetPropertyValue(x => x.Id, SystemTenantConstants.TenantSystem_Id);
+        tenantUser.SetPropertyValue(x => x.Id, SystemTenantConstants.OwnerUser_Id);
+        systemTenant.SetPropertyValue(x => x.Id, SystemTenantConstants.Tenant_Id);
 
         dbContext.Add(systemTenant);
     }
