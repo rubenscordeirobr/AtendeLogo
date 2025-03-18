@@ -1,12 +1,12 @@
 ﻿using AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
-namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers;
+namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers.Queries;
 
-public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantUserServiceProviderMock>
+public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetTenantUserByIdQueryHandlerTests(TenantUserServiceProviderMock serviceProvider)
+    public GetTenantUserByIdQueryHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }

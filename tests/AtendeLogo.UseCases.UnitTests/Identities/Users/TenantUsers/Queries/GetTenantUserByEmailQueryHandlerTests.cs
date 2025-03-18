@@ -1,28 +1,28 @@
 ﻿using AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
-namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers;
+namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers.Queries;
 
-public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantUserServiceProviderMock>
+public class GetTenantUserByEmailQueryHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetTenantUserByPhoneNumberQueryHandlerTests(TenantUserServiceProviderMock serviceProvider)
+    public GetTenantUserByEmailQueryHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
     {
-        this._serviceProvider = serviceProvider;
+        _serviceProvider = serviceProvider;
     }
 
     [Fact]
-    public void Handle_ShouldBe_GetTenantUserByPhoneNumberQueryHandler()
+    public void Handle_ShouldBe_GetTenantUserByEmailQueryHandler()
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>() as IRequestMediatorTest;
-        var query = new GetTenantUserByPhoneNumberQuery("1234567890");
+        var query = new GetTenantUserByEmailQuery("tenantuser@example.com");
 
         // Act
         var handlerType = mediator!.GetRequestHandler(query);
 
         // Assert
-        handlerType.Should().BeOfType<GetTenantUserByPhoneNumberQueryHandler>();
+        handlerType.Should().BeOfType<GetTenantUserByEmailQueryHandler>();
     }
 
     [Fact]
@@ -31,12 +31,11 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantU
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var tenantUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
-        var tenantUser = await tenantUserRepository.GetByPhoneNumberAsync(SystemTenantConstants.PhoneNumber);
-
+        var tenantUser = await tenantUserRepository.GetByEmailAsync(SystemTenantConstants.Email);
 
         Guard.NotNull(tenantUser);
 
-        var query = new GetTenantUserByPhoneNumberQuery(tenantUser.PhoneNumber.Number);
+        var query = new GetTenantUserByEmailQuery(tenantUser.Email);
 
         // Act
         var result = await mediator.GetAsync(query, CancellationToken.None);
@@ -50,7 +49,7 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantU
             .BeOfType<TenantUserResponse>()
             .Subject;
 
-        tenantUserResponse.PhoneNumber.Should().Be(tenantUser.PhoneNumber);
+        tenantUserResponse.Email.Should().Be(tenantUser.Email);
     }
 
     [Fact]
@@ -58,7 +57,7 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantU
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetTenantUserByPhoneNumberQuery("0987654321");
+        var query = new GetTenantUserByEmailQuery("nonexistentuser@example.com");
 
         // Act
         var result = await mediator.GetAsync(query, CancellationToken.None);
