@@ -252,7 +252,7 @@ public static class TypeExtensions
                 $"The type {type.Name} does not implement the interface {interfaceDefinition.Name}");
         }
 
-        if(interfaces.Length > 1)
+        if (interfaces.Length > 1)
         {
             throw new ArgumentException(
                 $"The type {type.Name} implements the interface {interfaceDefinition.Name} more than once");
@@ -269,5 +269,23 @@ public static class TypeExtensions
                 ?? type;
         }
         return type;
+    }
+     
+    public static PropertyInfo? GetPropertyByName(
+        this Type type, string propertyName)
+    {
+        var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
+        return type.GetProperty(propertyName, flags);
+    }
+
+    public static PropertyInfo GetRequiredProperty
+        (this Type type, string propertyName)
+    {
+        var property = type.GetPropertyByName(propertyName);
+        if (property is null)
+        {
+            throw new InvalidOperationException($"The property {propertyName} was not found in the type {type.Name}");
+        }
+        return property;
     }
 }

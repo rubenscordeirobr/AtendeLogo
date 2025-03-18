@@ -107,8 +107,7 @@ public class TypeExtensionsTests
             new object[] { typeof(List<string>), "List<System.String>" },
             new object[] { typeof(Dictionary<int, string>), "Dictionary<System.Int32, System.String>" },
         };
-
-
+     
     [Theory]
     [MemberData(nameof(GetQualifiedTypeNameTestData))]
     public void GetQualifiedName_ShouldReturnExpectedResult(Type type, string expectedName)
@@ -197,8 +196,7 @@ public class TypeExtensionsTests
             new object[] { typeof(DerivedClass), new[] { typeof(BaseClass), typeof(object) }, true },
             new object[] { typeof(BaseClass), new[] { typeof(DerivedClass) }, false },
         };
-
-
+     
     [Theory]
     [MemberData(nameof(IsAssignableToOrDefinitionTestData))]
     public void IsAssignableToOrDefinition_ShouldReturnExpectedResult(Type type, Type[] targetTypes, bool expectedResult)
@@ -224,6 +222,75 @@ public class TypeExtensionsTests
         result.Should().Be(expectedType);
     }
 
+    [Fact]
+    public void GetPropertyByName_ShouldReturnPropertyInfo_WhenPropertyExists()
+    {
+        // Arrange
+        var type = typeof(DummyClass);
+
+        // Act
+        var propertyInfo = type.GetPropertyByName("Name");
+
+        // Assert
+        propertyInfo.Should().NotBeNull();
+        propertyInfo!.Name.Should().Be("Name");
+    }
+
+    [Fact]
+    public void GetPropertyByName_ShouldReturnPropertyInfo_IgnoringCase()
+    {
+        // Arrange
+        var type = typeof(DummyClass);
+
+        // Act
+        var propertyInfo = type.GetPropertyByName("name");
+
+        // Assert
+        propertyInfo.Should().NotBeNull();
+        propertyInfo!.Name.Should().Be("Name");
+    }
+
+    [Fact]
+    public void GetPropertyByName_ShouldReturnNull_WhenPropertyDoesNotExist()
+    {
+        // Arrange
+        var type = typeof(DummyClass);
+
+        // Act
+        var propertyInfo = type.GetPropertyByName("NonExistent");
+
+        // Assert
+        propertyInfo.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetRequiredProperty_ShouldReturnPropertyInfo_WhenPropertyExists()
+    {
+        // Arrange
+        var type = typeof(DummyClass);
+
+        // Act
+        var propertyInfo = type.GetRequiredProperty("Age");
+
+        // Assert
+        propertyInfo.Should().NotBeNull();
+        propertyInfo.Name.Should().Be("Age");
+    }
+
+    [Fact]
+    public void GetRequiredProperty_ShouldThrowInvalidOperationException_WhenPropertyDoesNotExist()
+    {
+        // Arrange
+        var type = typeof(DummyClass);
+
+        // Act
+        Action act = () => type.GetRequiredProperty("NonExistent");
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage($"The property NonExistent was not found in the type {type.Name}");
+    }
+
     private class BaseClass { }
     private class DerivedClass : BaseClass { }
 
@@ -247,5 +314,12 @@ public class TypeExtensionsTests
         public string? Property1 { get; set; }
         public int Property2 { get; set; }
         public string? Property3 { get; set; }
+    }
+
+    // Dummy class for testing purposes
+    private class DummyClass
+    {
+        public string? Name { get; set; }
+        public int Age { get; set; }
     }
 }
