@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Events;
-
-namespace AtendeLogo.Persistence.Common.UnitOfWorks;
+﻿namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
 internal class TransactionDomainEventManager
 {

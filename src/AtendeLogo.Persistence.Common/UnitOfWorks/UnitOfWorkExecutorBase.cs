@@ -1,10 +1,4 @@
-﻿using AtendeLogo.Application.Common;
-using AtendeLogo.Application.Contracts.Mediators;
-using AtendeLogo.Application.Contracts.Persistence;
-using AtendeLogo.Application.Events;
-using AtendeLogo.Domain.Primitives.Contracts;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
@@ -12,17 +6,21 @@ internal abstract class UnitOfWorkExecutorBase
 {
     private readonly DbContext _dbContext;
     private readonly IUserSessionAccessor _userSessionAccessor;
+    private readonly IEntityAuthorizationService _entityAuthorizationService;
+
     protected readonly ILogger<IUnitOfWork> _logger;
     protected readonly IEventMediator EventMediator;
 
     public UnitOfWorkExecutorBase(
         DbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
+        IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
     {
         _dbContext = dbContext;
         _userSessionAccessor = userSessionAccessor;
+        _entityAuthorizationService = entityAuthorizationService;
         _logger = logger;
 
         EventMediator = eventMediator;
@@ -33,47 +31,67 @@ internal abstract class UnitOfWorkExecutorBase
         CancellationToken cancellationToken)
     {
         var entries = _dbContext.ChangeTracker
-            .Entries<EntityBase>()
-            .Where(x => x.HasChanges())
-            .ToList();
+              .Entries<EntityBase>()
+              .Where(x => x.HasChanges())
+              .ToList();
 
         var userSession = _userSessionAccessor.GetCurrentSession();
         var domainEventContext = DomainEventContextFactory.Create(userSession, entries);
-
-        await PreProcessorDispatchAsync(domainEventContext);
-
-        domainEventContext.LockCancellation();
-
-        if (domainEventContext.IsCanceled)
-        {
-            _logger.LogError("Domain event context is canceled. {Message}.", domainEventContext.Error.Message);
-            return SaveChangesResult.DomainEventError(domainEventContext, domainEventContext.Error);
-        }
-
-        if (cancellationToken.IsCancellationRequested)
-        {
-            return SaveChangesResult.OperationCanceledError(cancellationToken, domainEventContext);
-        }
-
-        if (cancellationToken.IsCancellationRequested)
-        {
-            return SaveChangesResult.OperationCanceledError(new OperationCanceledException(cancellationToken), domainEventContext);
-        }
-
-        SetCreationAndUpdateDates(userSession, entries);
-
+       
         try
         {
+            ValidateAndSetUserSessions(userSession, entries);
+
+            await PreProcessorDispatchAsync(domainEventContext);
+
+            domainEventContext.LockCancellation();
+
+            if (domainEventContext.IsCanceled)
+            {
+                _logger.LogError("Domain event context was canceled. {Message}.", domainEventContext.Error.Message);
+
+                if (!silent)
+                {
+                    throw new DomainEventException(
+                        $"Domain event context WAS canceled. {domainEventContext.Error.Message}");
+                }
+                return SaveChangesResult.DomainEventError(domainEventContext, domainEventContext.Error);
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _logger.LogWarning("Operation canceled during save changes.");
+
+                if (!silent)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+                return SaveChangesResult.OperationCanceledError(cancellationToken, domainEventContext);
+            }
+
             var rowAffects = await _dbContext.SaveChangesAsync(cancellationToken);
-
             await DispatchAsyncDomainEventAsync(domainEventContext, rowAffects);
-
             return SaveChangesResult.Success(domainEventContext, rowAffects);
+
+        }
+        catch (UnauthorizedSecurityException ex)
+        {
+            _logger.LogError(ex,
+                "Unauthorized security exception during save changes.");
+
+            if (!silent)
+            {
+                throw;
+            }
+
+            var unauthorizedError = new UnauthorizedError("UnitOfWork.SaveChanges", ex.Message);
+            return SaveChangesResult.UnauthorizedError(
+                domainEventContext, unauthorizedError);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during save changes.");
-         
+
             if (!silent)
             {
                 throw;
@@ -90,7 +108,7 @@ internal abstract class UnitOfWorkExecutorBase
 
     public abstract Task<SaveChangesResult> SaveChangesAsync(bool silent, CancellationToken cancellationToken);
 
-    private void SetCreationAndUpdateDates(
+    private void ValidateAndSetUserSessions(
         IUserSession userSession,
         List<EntityEntry<EntityBase>> entries)
     {
@@ -99,12 +117,19 @@ internal abstract class UnitOfWorkExecutorBase
             switch (entry.State)
             {
                 case EntityState.Added:
+
+                    ValidateEntityChange(entry.Entity, userSession, EntityChangeState.Created);
+
                     entry.Entity.SetCreateSession(userSession.Id);
                     break;
                 case EntityState.Modified:
+
+                    ValidateEntityChange(entry.Entity, userSession, EntityChangeState.Updated);
                     entry.Entity.SetUpdateSession(userSession.Id);
                     break;
                 case EntityState.Deleted:
+
+                    ValidateEntityChange(entry.Entity, userSession, EntityChangeState.Deleted);
 
                     if (entry.Entity is ISoftDeletableEntity deletableEntity)
                     {
@@ -120,5 +145,13 @@ internal abstract class UnitOfWorkExecutorBase
                     throw new InvalidOperationException($"Invalid state {entry.State} for entity {entry.Entity.GetType().Name}.");
             }
         }
+    }
+
+    private void ValidateEntityChange(
+        EntityBase entity,
+        IUserSession userSession,
+        EntityChangeState state)
+    {
+        _entityAuthorizationService.ValidateEntityChange(entity, userSession, state);
     }
 }

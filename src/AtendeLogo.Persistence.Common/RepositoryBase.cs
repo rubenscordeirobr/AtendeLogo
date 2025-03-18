@@ -1,7 +1,4 @@
 ﻿using System.Linq.Expressions;
-using AtendeLogo.Application.Contracts.Persistence;
-using AtendeLogo.Common;
-using AtendeLogo.Domain.Primitives.Contracts;
 using AtendeLogo.Persistence.Common.Enums;
 using AtendeLogo.Persistence.Common.Exceptions;
 

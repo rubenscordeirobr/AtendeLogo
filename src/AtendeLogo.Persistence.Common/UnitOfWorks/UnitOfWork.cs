@@ -1,17 +1,14 @@
-﻿using AtendeLogo.Application.Common;
-using AtendeLogo.Application.Contracts.Mediators;
-using AtendeLogo.Application.Contracts.Persistence;
-using AtendeLogo.Common;
-using AtendeLogo.Persistence.Common.Exceptions;
-using Microsoft.Extensions.Logging;
+﻿using AtendeLogo.Persistence.Common.Exceptions;
 
 namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
 public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDisposable
     where TDbContext : DbContext
 {
-    protected readonly TDbContext DbContext;
-    protected readonly IUserSessionAccessor UserSessionAccessor;
+    protected readonly TDbContext _dbContext;
+    protected readonly IUserSessionAccessor _userSessionAccessor;
+
+    private readonly IEntityAuthorizationService _entityAuthorizationService;
     private readonly IEventMediator _eventMediator;
     private readonly ILogger<IUnitOfWork> _logger;
 
@@ -21,15 +18,17 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
     public UnitOfWork(
         TDbContext dbContext,
         IUserSessionAccessor userSessionService,
+        IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
     {
         Guard.NotNull(dbContext);
         Guard.NotNull(userSessionService);
 
-        DbContext = dbContext;
-        UserSessionAccessor = userSessionService;
+        _dbContext = dbContext;
+        _userSessionAccessor = userSessionService;
 
+        _entityAuthorizationService = entityAuthorizationService;
         _eventMediator = eventMediator;
         _logger = logger;
  
@@ -47,27 +46,27 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         {
             throw new InvalidOperationException("Entity already has an id.");
         }
-        DbContext.Set<TEntity>().Add(entity);
+        _dbContext.Set<TEntity>().Add(entity);
     }
 
     public void Update<TEntity>(TEntity entity) where TEntity : EntityBase
     {
         VerifyEntityIsTracked(entity);
-        DbContext.Set<TEntity>().Update(entity);
+        _dbContext.Set<TEntity>().Update(entity);
     }
 
     public void Delete<TEntity>(TEntity entity) where TEntity : EntityBase
     {
         VerifyEntityIsTracked(entity);
-        DbContext.Set<TEntity>().Remove(entity);
+        _dbContext.Set<TEntity>().Remove(entity);
     }
 
     public void Attach<TEntity>(TEntity entity) where TEntity : EntityBase
     {
-        var entry = DbContext.Entry(entity);
+        var entry = _dbContext.Entry(entity);
         if (entry.State == EntityState.Detached)
         {
-            DbContext.Set<TEntity>().Attach(entity);
+            _dbContext.Set<TEntity>().Attach(entity);
         }
     }
 
@@ -90,7 +89,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
     {
         try
         {
-            _lock.Wait(cancellationToken);
+            await _lock.WaitAsync(cancellationToken);
 
             if (_transactionExecutor != null)
             {
@@ -98,8 +97,9 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
             }
 
             var executor = new UnitOfWorkExecutor(
-                DbContext,
-                UserSessionAccessor,
+                _dbContext,
+                _userSessionAccessor,
+                _entityAuthorizationService,
                 _eventMediator,
                 _logger);
 
@@ -115,7 +115,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        if (DbContext.Database.IsInMemory())
+        if (_dbContext.Database.IsInMemory())
             return;
 
         if (_transactionExecutor != null)
@@ -125,11 +125,12 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         {
             _lock.Wait(cancellationToken);
 
-            var transaction = await DbContext.Database.BeginTransactionAsync(cancellationToken);
+            var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
            
             _transactionExecutor = new TransactionUnitOfWorkExecutor(
-                DbContext,
-                UserSessionAccessor,
+                _dbContext,
+                _userSessionAccessor,
+                _entityAuthorizationService,
                 _eventMediator,
                 _logger,
                 transaction);
@@ -139,6 +140,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
             _lock.Release();
         }
     }
+
     public async Task<SaveChangesResult> CommitAsync(
         CancellationToken cancellationToken = default)
     {
@@ -149,7 +151,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         bool silent,
         CancellationToken cancellationToken = default)
     {
-        if (DbContext.Database.IsInMemory())
+        if (_dbContext.Database.IsInMemory())
             return await SaveChangesAsync(silent, cancellationToken);
 
         if (_transactionExecutor == null)
@@ -174,7 +176,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         CancellationToken cancellationToken = default)
     {
 
-        if (DbContext.Database.IsInMemory())
+        if (_dbContext.Database.IsInMemory())
             return;
 
         if (_transactionExecutor == null)
@@ -226,7 +228,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     private void VerifyEntityIsTracked<TEntity>(TEntity entity) where TEntity : EntityBase
     {
-        var entry = DbContext.Entry(entity);
+        var entry = _dbContext.Entry(entity);
         if (entry.State == EntityState.Detached)
         {
             throw new InvalidOperationException($"Entity {entity} is not tracked. Make sure to get entity from DbContext with the tracking option enabled.");

@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common;
-using AtendeLogo.Domain.Primitives.Contracts;
-using AtendeLogo.Persistence.Common.Helpers;
+﻿using AtendeLogo.Persistence.Common.Helpers;
 
 namespace AtendeLogo.Persistence.Common.Configurations;
 

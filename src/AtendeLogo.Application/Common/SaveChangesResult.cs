@@ -17,7 +17,9 @@ public class SaveChangesResult
     public Exception? Exception
         => GetException();
 
-    public SaveChangesResult(IDomainEventContext eventDomainContext, Error error)
+    public SaveChangesResult(
+        IDomainEventContext eventDomainContext,
+        Error error)
     {
         Guard.NotNull(eventDomainContext);
         Guard.NotNull(error);
@@ -81,6 +83,13 @@ public class SaveChangesResult
     public static SaveChangesResult DomainEventError(
         IDomainEventContext domainEventContext,
         DomainEventError error)
+    {
+        return new SaveChangesResult(domainEventContext, error);
+    }
+
+    public static SaveChangesResult UnauthorizedError(
+        IDomainEventContext domainEventContext,
+        UnauthorizedError error)
     {
         return new SaveChangesResult(domainEventContext, error);
     }

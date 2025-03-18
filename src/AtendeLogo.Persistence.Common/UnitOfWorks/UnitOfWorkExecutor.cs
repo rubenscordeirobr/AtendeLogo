@@ -1,19 +1,14 @@
-﻿using AtendeLogo.Application.Common;
-using AtendeLogo.Application.Contracts.Mediators;
-using AtendeLogo.Application.Contracts.Persistence;
-using AtendeLogo.Application.Events;
-using Microsoft.Extensions.Logging;
-
-namespace AtendeLogo.Persistence.Common.UnitOfWorks;
+﻿namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
 internal class UnitOfWorkExecutor : UnitOfWorkExecutorBase
 {
     public UnitOfWorkExecutor(
         DbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
+        IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger)
-        : base(dbContext, userSessionAccessor, eventMediator, logger)
+        : base(dbContext, userSessionAccessor, entityAuthorizationService, eventMediator, logger)
     {
     }
 

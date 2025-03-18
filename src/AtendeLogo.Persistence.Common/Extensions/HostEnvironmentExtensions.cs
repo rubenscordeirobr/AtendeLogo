@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 
 namespace AtendeLogo.Persistence.Common.Extensions;
 

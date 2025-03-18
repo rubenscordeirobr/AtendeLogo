@@ -14,6 +14,7 @@ public static class ApplicationServiceConfiguration
     {
         services.AddSingleton<ICommandTrackingService, CommandTrackingService>()
             .AddSingleton<ISessionCacheService, SessionCacheService>()
+            .AddSingleton<IEntityAuthorizationService, EntityAuthorizationService>()
             .AddScoped<IRequestMediator, RequestMediator>()
             .AddScoped<IEventMediator, EventMediator>()
             .AddTransient<IAuthenticationAttemptLimiterService, AuthenticationAttemptLimiterService>()

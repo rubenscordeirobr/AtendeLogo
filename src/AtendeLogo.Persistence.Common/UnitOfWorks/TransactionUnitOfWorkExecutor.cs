@@ -1,10 +1,4 @@
-﻿using AtendeLogo.Application.Common;
-using AtendeLogo.Application.Contracts.Mediators;
-using AtendeLogo.Application.Contracts.Persistence;
-using AtendeLogo.Application.Events;
-using AtendeLogo.Common;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 
 namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
@@ -18,10 +12,11 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
     public TransactionUnitOfWorkExecutor(
         DbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
+        IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger<IUnitOfWork> logger,
         IDbContextTransaction transaction)
-        : base(dbContext, userSessionAccessor, eventMediator, logger)
+        : base(dbContext, userSessionAccessor, entityAuthorizationService, eventMediator, logger)
     {
         _transaction = transaction;
         _transactionDomainEventContext = new();
