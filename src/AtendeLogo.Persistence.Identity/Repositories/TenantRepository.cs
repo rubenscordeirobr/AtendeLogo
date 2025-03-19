@@ -10,6 +10,11 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
     {
     }
 
+    protected override bool ShouldFilterTenantOwned()
+    {
+        return false;
+    }
+
     public Task<Tenant?> GetByNameAsync(
         string name,
         CancellationToken cancellationToken)
@@ -33,14 +38,14 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
         string fiscalCode,
         CancellationToken token)
     {
-        return AnyAsync(x => x.FiscalCode == fiscalCode, token);
+        return AnyAsync(x => x.FiscalCode.Value == fiscalCode, token);
     }
 
     public Task<bool> FiscalCodeExistsAsync(
         Guid currentTenant_Id,
         string fiscalCode, CancellationToken token)
     {
-        return AnyAsync(x => x.FiscalCode == fiscalCode && x.Id != currentTenant_Id, token);
+        return AnyAsync(x => x.FiscalCode.Value == fiscalCode && x.Id != currentTenant_Id, token);
     }
      
     public Task<bool> PhoneNumberExitsAsync(

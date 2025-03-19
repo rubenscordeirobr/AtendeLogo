@@ -1,13 +1,12 @@
 ﻿namespace AtendeLogo.Domain.Entities.Identities;
 
-public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAggregate
+public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEntity, IEventAggregate
 {
     private readonly List<IDomainEvent> _events = new();
     private readonly List<TenantUser> _users = new();
     private readonly List<TenantAddress> _addresses = new();
 
     public string Name { get; private set; }
-    public string FiscalCode { get; private set; }
     public string Email { get; private set; }
     public BusinessType BusinessType { get; private set; }
     public Country Country { get; private set; }
@@ -16,6 +15,8 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
     public TenantState TenantState { get; private set; }
     public TenantStatus TenantStatus { get; private set; }
     public TenantType TenantType { get; private set; }
+
+    public FiscalCode FiscalCode { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
     public TimeZoneOffset TimeZoneOffset { get; private set; }
 
@@ -32,7 +33,6 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
     // EF Core constructor
     private Tenant(
         string name,
-        string fiscalCode,
         string email,
         BusinessType businessType,
         Country country,
@@ -41,16 +41,16 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
         TenantState tenantState,
         TenantStatus tenantStatus,
         TenantType tenantType,
+        FiscalCode fiscalCode,
         PhoneNumber phoneNumber)
-        : this(name, fiscalCode, email, businessType, country, currency,
-              language, tenantState, tenantStatus, tenantType, phoneNumber, TimeZoneOffset.Default)
+        : this(name, email, businessType, country, currency,
+              language, tenantState, tenantStatus, tenantType, fiscalCode, phoneNumber, TimeZoneOffset.Default)
     {
 
     }
 
     public Tenant(
         string name,
-        string fiscalCode,
         string email,
         BusinessType businessType,
         Country country,
@@ -59,6 +59,7 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
         TenantState tenantState,
         TenantStatus tenantStatus,
         TenantType tenantType,
+        FiscalCode fiscalCode,
         PhoneNumber phoneNumber,
         TimeZoneOffset timeZoneOffset)
     {
@@ -193,13 +194,37 @@ public sealed class Tenant : EntityBase, ITenant, ISoftDeletableEntity, IEventAg
         return user;
     }
 
-    #region IEntityDeleted, IOrderableEntity, IDomainEventAggregate
+    public void Update(
+        string name, 
+        Country country,
+        Language language, 
+        Currency currency,
+        BusinessType businessType, 
+        TenantType tenantType,
+        FiscalCode fiscalCode)
+    {
+        Name = name;
+        FiscalCode = fiscalCode;
+        Country = country;
+        Language = language;
+        Currency = currency;
+        BusinessType = businessType;
+        TenantType = tenantType;
+
+        _events.Add(new TenantUpdatedEvent(this));
+    }
+
+    #region ISoftDeletableEntity, IDomainEventAggregate, ITenantOwned 
+
     public bool IsDeleted { get; private set; }
     public DateTime? DeletedAt { get; private set; }
     public Guid? DeletedSession_Id { get; private set; }
 
     IReadOnlyList<IDomainEvent> IEventAggregate.DomainEvents
         => _events;
+
+    Guid ITenantOwned.Tenant_Id
+        => Id;
 
     #endregion
 }

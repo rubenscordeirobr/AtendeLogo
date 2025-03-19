@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Domain.Entities.Identities;
 
-public sealed class TenantAddress : EntityBase, IAddress, ISoftDeletableEntity, IAscendingSortable
+public sealed class TenantAddress : EntityBase, ITenantOwned, IAddress, ISoftDeletableEntity, IAscendingSortable
 {
     public string AddressName { get; private set; }
     public string Street { get; private set; }
