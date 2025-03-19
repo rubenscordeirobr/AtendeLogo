@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Domain.Entities.Identities.Events;
 
-public record TenantUserAddedEvent(
+public record TenantUserCreatedEvent(
     Tenant Tenant,
     TenantUser User ) : IDomainEvent;
 
