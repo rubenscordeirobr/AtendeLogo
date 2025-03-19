@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using AtendeLogo.Domain.Helpers;
 using AtendeLogo.Persistence.Common.Enums;
 using AtendeLogo.Persistence.Common.Exceptions;
 
@@ -25,12 +26,13 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         Guard.NotNull(dbContext);
 
         _dbContext = dbContext;
-        _isImplementDeletedInterface = typeof(ISoftDeletableEntity).IsAssignableFrom(typeof(TEntity));
-        _isImplementTenantOwnedInterface = typeof(ITenantOwned).IsAssignableFrom(typeof(TEntity));
         _trackingOption = trackingOption;
         _userSessionAccessor = userSessionAccessor;
-    }
 
+        _isImplementDeletedInterface = EntityReflectionHelper.IsImplementDeletedInterface<TEntity>();
+        _isImplementTenantOwnedInterface = EntityReflectionHelper.IsImplementTenantOwnedInterface<TEntity>();
+    }
+ 
     #region Queries
     public async Task<TEntity?> GetByIdAsync(
         Guid id,
