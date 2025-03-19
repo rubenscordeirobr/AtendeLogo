@@ -5,6 +5,9 @@ internal static class ValueConverters
     internal static PhoneNumberConverter PhoneNumberConverter
         => PhoneNumberConverter.Instance;
 
+    internal static FiscalCodeConverter FiscalCodeConverter
+        => FiscalCodeConverter.Instance;
+
     internal static NullableUtcDateTimeConverter NullableUtcDateTimeConverter
         => NullableUtcDateTimeConverter.Instance;
 

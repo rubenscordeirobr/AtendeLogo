@@ -33,6 +33,11 @@ public static class ValueObjectsConfigurationInMemory
                 ConfigurePhoneNumber(entityBuilder, property);
 
                 break;
+            case Type t when t == typeof(FiscalCode):
+
+                ConfigureFiscalCode(entityBuilder, property);
+
+                break;
 
             default:
                 throw new NotSupportedException($"Value object {property.Name} not supported");
@@ -70,5 +75,13 @@ public static class ValueObjectsConfigurationInMemory
            .IsRequired()
            .HasConversion(ValueConverters.PhoneNumberConverter)
            .HasMaxLength(ValidationConstants.PhoneNumberMaxLength);
+    }
+
+    private static void ConfigureFiscalCode(EntityTypeBuilder entityBuilder, PropertyInfo property)
+    {
+        entityBuilder.Property(property.Name)
+           .IsRequired()
+           .HasConversion(ValueConverters.FiscalCodeConverter)
+           .HasMaxLength(ValidationConstants.FiscalCodeMaxLength);
     }
 }

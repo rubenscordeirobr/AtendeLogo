@@ -52,18 +52,23 @@ public static class ValueObjectsConfiguration
                     property.Name, ConfigurePassword);
 
                 break;
+           
             case Type t when t == typeof(GeoLocation):
 
                 entityBuilder.ComplexProperty<GeoLocation>(
                     property.Name, ConfigureGeoLocation);
 
                 break;
+            case Type t when t == typeof(FiscalCode):
+
+                ConfigureFiscalCode(entityBuilder, property);
+                break;
             case Type t when t == typeof(PhoneNumber):
 
                 ConfigurePhoneNumber(entityBuilder, property);
 
                 break;
-
+          
             default:
                 throw new NotSupportedException($"Value object {property.Name} not supported");
         }
@@ -98,7 +103,7 @@ public static class ValueObjectsConfiguration
         builder.Property(p => p.Strength)
             .IsRequired();
     }
-
+     
     public static void ConfigureGeoLocation(
         ComplexPropertyBuilder<GeoLocation> builder)
     {
@@ -117,5 +122,15 @@ public static class ValueObjectsConfiguration
            .IsRequired()
            .HasConversion(ValueConverters.PhoneNumberConverter)
            .HasMaxLength(ValidationConstants.PhoneNumberMaxLength);
+    }
+
+    private static void ConfigureFiscalCode(
+       EntityTypeBuilder entityBuilder,
+       PropertyInfo property)
+    {
+        entityBuilder.Property(typeof(FiscalCode), property.Name)
+           .IsRequired()
+           .HasConversion(ValueConverters.FiscalCodeConverter)
+           .HasMaxLength(ValidationConstants.FiscalCodeMaxLength);
     }
 }

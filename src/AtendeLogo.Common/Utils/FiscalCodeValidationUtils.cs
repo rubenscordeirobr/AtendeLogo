@@ -41,7 +41,6 @@ public class FiscalCodeValidationUtils
         if (cpf.Distinct().Count() == 1)
             return false;
 
-
         int[] multiplicador1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
         int soma = 0;
         for (int i = 0; i < 9; i++)
@@ -49,8 +48,7 @@ public class FiscalCodeValidationUtils
 
         int resto = soma % 11;
         int digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
-
-
+         
         int[] multiplicador2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
         soma = 0;
         for (int i = 0; i < 10; i++)
@@ -88,6 +86,5 @@ public class FiscalCodeValidationUtils
 
         return cnpj[12] - '0' == digitoVerificador1 && cnpj[13] - '0' == digitoVerificador2;
     }
-
 }
 
