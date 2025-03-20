@@ -7,7 +7,7 @@ internal class PhoneNumberConverter : ValueConverter<PhoneNumber, string>
 {
     private PhoneNumberConverter() : base(
         phoneNumber => phoneNumber.Number,
-        numberString => new PhoneNumber(numberString) )
+        value => new PhoneNumber(value) )
     {
     }
 

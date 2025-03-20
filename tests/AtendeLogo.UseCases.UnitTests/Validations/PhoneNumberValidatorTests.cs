@@ -1,12 +1,15 @@
-﻿namespace AtendeLogo.UseCases.UnitTests.Validations;
+﻿using AtendeLogo.UseCases.Common.Validations;
 
-public class PhoneNumberValidatorTests : IClassFixture<AnonymousServiceProviderMock>
+namespace AtendeLogo.UseCases.UnitTests.Validations;
+
+public class PhoneNumberValidatorTests 
 {
     private readonly IValidator<PhoneNumber> _validator;
 
-    public PhoneNumberValidatorTests(AnonymousServiceProviderMock serviceProviderMock)
+    public PhoneNumberValidatorTests()
     {
-        _validator = serviceProviderMock.GetRequiredService<IValidator<PhoneNumber>>();
+        var localizer = new JsonStringLocalizerMock<ValidationMessages>();
+        _validator = new PhoneNumberValidator(localizer);
     }
 
     [Fact]

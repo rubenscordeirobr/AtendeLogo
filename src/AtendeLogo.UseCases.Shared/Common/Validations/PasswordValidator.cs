@@ -37,6 +37,8 @@ public class PasswordValidator : AbstractValidator<Password>
 {
     public PasswordValidator(IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        ClassLevelCascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.Strength)
             .NotEqual(PasswordStrength.Empty)
             .WithMessage(localizer["PasswordStrength.Empty", "Password strength cannot be empty."])

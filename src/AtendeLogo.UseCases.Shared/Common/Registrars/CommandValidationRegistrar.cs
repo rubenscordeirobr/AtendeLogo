@@ -38,6 +38,10 @@ internal class CommandValidationRegistrar
             }
 
             var serviceType = typeof(IValidator<>).MakeGenericType(commandType);
+            if (commandType.IsSubclassOf<ValueObjectBase>())
+            {
+                continue;
+            }
 
             ThrowIfHandAnyOtherCommandValidatorRegistredFor(
                 commandType,
@@ -70,7 +74,7 @@ internal class CommandValidationRegistrar
         Type validationType)
     {
         var implementationType = registredValidator.First().ImplementationType!;
-        return $" The command {commandType.GetQualifiedName()} can't be registrad for " +
+        return $" The command {commandType.GetQualifiedName()} can't be registered for " +
                $"the validator {validationType.GetQualifiedName()} because it is already registered for " +
                $"{implementationType.GetQualifiedName()}";
     }
