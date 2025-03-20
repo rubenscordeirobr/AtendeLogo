@@ -53,14 +53,14 @@ internal static class IdentityDbSeedExtensions
             name: "Anonymous",
             email: "anonymous@atendelogo.com.br",
             language: Language.Default,
-            role: UserRole.None,
+            role: UserRole.Anonymous,
             userState: UserState.Active,
             userStatus: UserStatus.Anonymous,
             phoneNumber: phoneNumber,
             password);
 
         anonymousUser.SetAnonymousId();
-         
+
         var headerInfo = new ClientRequestHeaderInfo(
             IpAddress: "LOCALHOST",
             ApplicationName: "AtendeLogo.Seed",
@@ -74,7 +74,7 @@ internal static class IdentityDbSeedExtensions
             rememberMe: true,
             tenant_id: null);
 
-        
+
         anonymousUserSession.SetAnonymousSystemSessionId();
 
         dbContext.Add(anonymousUser);
@@ -112,9 +112,10 @@ internal static class IdentityDbSeedExtensions
         var phoneNumber = PhoneNumber.Create(SystemTenantConstants.PhoneNumber)
             .GetValue();
 
+        var fiscalCode = FiscalCode.Create(SystemTenantConstants.FiscalCode, Country.Brazil).Value!;
+
         var systemTenant = new Tenant(
             name: SystemTenantConstants.Name,
-            fiscalCode: SystemTenantConstants.FiscalCode,
             email: SystemTenantConstants.Email,
             businessType: BusinessType.System,
             country: Country.Brazil,
@@ -123,11 +124,12 @@ internal static class IdentityDbSeedExtensions
             tenantState: TenantState.System,
             tenantStatus: TenantStatus.Active,
             tenantType: TenantType.System,
+            fiscalCode: fiscalCode,
             phoneNumber: phoneNumber,
             timeZoneOffset: TimeZoneOffset.Default
         );
 
-        var tenantUser = systemTenant.AddUser(
+        var tenantUser = systemTenant.CreateUser(
              name: SystemTenantConstants.Name,
              email: SystemTenantConstants.Email,
              language: Language.Default,

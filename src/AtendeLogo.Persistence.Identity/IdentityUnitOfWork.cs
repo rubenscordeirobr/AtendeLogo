@@ -14,14 +14,15 @@ internal class IdentityUnitOfWork : UnitOfWork<IdentityDbContext>, IIdentityUnit
     private ITenantUserRepository? _tenantUserTenantRepository;
     private ITenantRepository? _tenantRepository;
     private IUserSessionRepository? _userSessionRepository;
-
+     
     public IdentityUnitOfWork(
         IdentityDbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
+        IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger<IIdentityUnitOfWork> logger,
         TrackingOption trackingOption = TrackingOption.Tracking)
-        : base(dbContext, userSessionAccessor, eventMediator, logger)
+        : base(dbContext, userSessionAccessor, entityAuthorizationService, eventMediator, logger)
     {
         _trackingOption = trackingOption;
     }
@@ -29,27 +30,27 @@ internal class IdentityUnitOfWork : UnitOfWork<IdentityDbContext>, IIdentityUnit
     public IAdminUserRepository AdminUsers
         => LazyInitialize(
             ref _adminUserRepository,
-            () => new AdminUserRepository(DbContext, UserSessionAccessor, _trackingOption));
+            () => new AdminUserRepository(_dbContext, _userSessionAccessor, _trackingOption));
 
     public ISystemUserRepository SystemUsers
         => LazyInitialize(
             ref _systemUserRepository,
-            () => new SystemUserRepository(DbContext, UserSessionAccessor, _trackingOption));
+            () => new SystemUserRepository(_dbContext, _userSessionAccessor, _trackingOption));
 
     public ITenantUserRepository TenantUsers
         => LazyInitialize(
             ref _tenantUserTenantRepository,
-            () => new TenantUserRepository(DbContext, UserSessionAccessor, _trackingOption));
+            () => new TenantUserRepository(_dbContext, _userSessionAccessor, _trackingOption));
 
     public ITenantRepository Tenants
         => LazyInitialize(
             ref _tenantRepository,
-            () => new TenantRepository(DbContext, UserSessionAccessor, _trackingOption));
+            () => new TenantRepository(_dbContext, _userSessionAccessor, _trackingOption));
 
     public IUserSessionRepository UserSessions
         => LazyInitialize(
             ref _userSessionRepository,
-            () => new UserSessionRepository(DbContext, UserSessionAccessor, _trackingOption));
+            () => new UserSessionRepository(_dbContext, _userSessionAccessor, _trackingOption));
 
     public override async ValueTask DisposeAsync()
     {

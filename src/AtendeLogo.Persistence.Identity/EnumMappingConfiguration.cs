@@ -13,6 +13,7 @@ public static partial class EnumMappingConfiguration
         optionsBuilder
             .AddMapEnum<TContext, UserStatus>(isInMemory)
             .AddMapEnum<TContext, UserRole>(isInMemory)
+            .AddMapEnum<TContext, UserType>(isInMemory)
             .AddMapEnum<TContext, AuthenticationType>(isInMemory)
             .AddMapEnum<TContext, BusinessType>(isInMemory)
             .AddMapEnum<TContext, Country>(isInMemory)
@@ -22,7 +23,6 @@ public static partial class EnumMappingConfiguration
             .AddMapEnum<TContext, TenantState>(isInMemory)
             .AddMapEnum<TContext, TenantStatus>(isInMemory)
             .AddMapEnum<TContext, TenantType>(isInMemory)
-            //.AddMapEnum<TContext, UserRole>(isInMemory)
             .AddMapEnum<TContext, UserState>(isInMemory)
             .AddMapEnum<TContext, VerificationState>(isInMemory);
     }
