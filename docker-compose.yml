@@ -1,4 +1,14 @@
 services:
+  identity-api:
+    image: ${DOCKER_REGISTRY-}identity-api
+    container_name: identity-api
+    build:
+      context: .
+      dockerfile: src/AtendeLogo.IdentityApi/Dockerfile
+    ports:
+      - 5000:8080
+      - 5001:8081
+
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -8,9 +18,9 @@ services:
     environment:
       - POSTGRES_USER=atende_logo_user
       - POSTGRES_PASSWORD=Temp@Teste123%$
-      - POSTGRES_DB=postgres  
     volumes:
       - ./scripts/postgres-init:/docker-entrypoint-initdb.d/
+      - K:\Docker\Volumes\Postgres\Data:/var/lib/postgresql/data
 
   redis:
     container_name: redis
