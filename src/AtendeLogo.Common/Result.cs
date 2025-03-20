@@ -9,6 +9,7 @@ public class Result<T> : IResultValue where T : notnull
     public bool IsSuccess { get; }
 
     [MemberNotNullWhen(true, nameof(Error))]
+    [MemberNotNullWhen(false, nameof(Value))]
     public bool IsFailure
         => !IsSuccess;
 

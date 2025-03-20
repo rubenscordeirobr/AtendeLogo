@@ -2,7 +2,6 @@
 
 namespace AtendeLogo.Common;
 
-
 public abstract record Error
 {
     public string Code { get; }

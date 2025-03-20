@@ -12,7 +12,7 @@ public static class ErrorCodeFactory
 
     public static string CreateInvalidCodeFor<T>(Expression<Func<T, object>> propertyExpression)
     {
-        var propertyName = propertyExpression.GetMemberName();
+        var propertyName = propertyExpression.GetMemberPath();
         return CreateInvalidCodeFor(typeof(T), propertyName);
     }
 
