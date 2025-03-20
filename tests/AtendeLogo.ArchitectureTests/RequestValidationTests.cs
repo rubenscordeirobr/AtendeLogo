@@ -1,10 +1,6 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.UnitTests.Mocks;
-using AtendeLogo.ArchitectureTests.TestSupport;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Shared.Contracts;
-using FluentAssertions;
-using Xunit.Abstractions;
 
 namespace AtendeLogo.ArchitectureTests;
 

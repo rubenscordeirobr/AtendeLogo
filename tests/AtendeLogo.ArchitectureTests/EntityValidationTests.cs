@@ -1,9 +1,5 @@
-﻿using AtendeLogo.ArchitectureTests.TestSupport;
-using AtendeLogo.Common;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Xunit.Abstractions;
 
 namespace AtendeLogo.ArchitectureTests;
 

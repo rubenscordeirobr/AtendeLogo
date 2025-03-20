@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace AtendeLogo.ArchitectureTests.TestSupport ;
+﻿namespace AtendeLogo.ArchitectureTests.TestSupport ;
 
 public class UnitTestTypeNamesCollection
 {

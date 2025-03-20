@@ -1,12 +1,7 @@
-﻿using System.Reflection;
+﻿
 using AtendeLogo.Application.UnitTests.Mocks;
-using AtendeLogo.ArchitectureTests.TestSupport;
-using FluentAssertions;
-using FluentValidation.Validators;
-using FluentValidation;
-using Xunit.Abstractions;
-using AtendeLogo.Common;
-using AtendeLogo.Common.Extensions;
+
+
 
 namespace AtendeLogo.ArchitectureTests;
 

@@ -3,14 +3,12 @@ using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Contracts.Persistence;
 using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Application.UnitTests.Mocks;
-using AtendeLogo.ArchitectureTests.Extensions;
 using AtendeLogo.Infrastructure;
 using AtendeLogo.Persistence.Activity;
 using AtendeLogo.Persistence.Identity;
 using AtendeLogo.Presentation;
 using AtendeLogo.UseCases;
 using AtendeLogo.UseCases.Common.Services;
-using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +23,7 @@ namespace AtendeLogo.ArchitectureTests.TestSupport ;
 public class ApplicationServiceCollection : ServiceCollection
 {
     public IReadOnlyList<ServiceDescriptor> ApplicationServices { get; }
-    public IReadOnlyList<Type> ImplementedServiceTypes { get; }
+    public IReadOnlyList<Type> RegisteredImplementedServiceTypes { get; }
 
     public ApplicationServiceCollection()
     {
@@ -50,7 +48,7 @@ public class ApplicationServiceCollection : ServiceCollection
         AddMockDependency(fakeConfiguration);
          
         ApplicationServices = RetrieveApplicationServices();
-        ImplementedServiceTypes = GetImplementedServiceTypes();
+        RegisteredImplementedServiceTypes = GetImplementedServiceTypes();
     }
 
     private void AddMockDependency(IConfigurationRoot fakeConfiguration)

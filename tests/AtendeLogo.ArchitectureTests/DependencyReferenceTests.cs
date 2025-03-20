@@ -1,11 +1,8 @@
-﻿using AtendeLogo.ArchitectureTests.TestSupport;
-using AtendeLogo.ArchitectureTests.Extensions;
-using FluentAssertions;
-using NetArchTest.Rules;
+﻿using NetArchTest.Rules;
 
 namespace AtendeLogo.ArchitectureTests;
 
-public class DependencyReferenceTests :IClassFixture<ApplicationAssemblyContext>
+public class DependencyReferenceTests : IClassFixture<ApplicationAssemblyContext>
 {
     private readonly ApplicationAssemblyContext _context;
     public DependencyReferenceTests(ApplicationAssemblyContext assemblyContext)
@@ -23,6 +20,7 @@ public class DependencyReferenceTests :IClassFixture<ApplicationAssemblyContext>
             _context.UseCasesSharedAssemblyName,
             _context.UseCasesAssemblyName,
             _context.PresentationAssemblyName,
+            _context.ClientGatewayAssemblyName,
              .._context.InfrastructuresAssemblyNames];
 
         //Act
@@ -146,5 +144,30 @@ public class DependencyReferenceTests :IClassFixture<ApplicationAssemblyContext>
                .Should()
                .BeTrue(because: "Presentation layer should not have dependencies on Domain layer." +
                                 $" FailingTypeNames {result.GetFailingTypeNames()}");
+    }
+
+    [Fact]
+    public void ClientGatewayAssembly_ShouldNotHaveDomainDependencies()
+    {
+        //Arrange
+        string[] dependencies = [
+           _context.DomainAssemblyName,
+           _context.ApplicationAssemblyName,
+           _context.PresentationAssemblyName,
+           .._context.InfrastructuresAssemblyNames,
+        ];
+
+        //Act
+        var result = Types.InAssembly(_context.ClientGatewayAssembly)
+            .ShouldNot()
+            .HaveDependencyOnAny(dependencies)
+            .GetResult();
+
+        //Assert
+        result.IsSuccessful
+                .Should()
+                .BeTrue($"The ClientGatewayAssembly should not have dependencies on Domain, " +
+                        $"Application, UseCases and Infrastructure layers.\r\n" +
+                        $"FailingTypeNames {result.GetFailingTypeNames()}");
     }
 }

@@ -1,15 +1,14 @@
 ﻿using AtendeLogo.Application.Contracts.Events;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Domain.Primitives;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AtendeLogo.ArchitectureTests.TestSupport ;
+namespace AtendeLogo.ArchitectureTests.TestSupport;
 
 public class ApplicationServiceProvider : IServiceProvider
 {
     private readonly IServiceProvider _serviceProvider;
     public IServiceCollection Services { get; }
-  
+
     public ApplicationServiceProvider()
     {
         Services = new ApplicationServiceCollection();
@@ -26,23 +25,23 @@ public class ApplicationServiceProvider : IServiceProvider
     {
         if (serviceType.IsGenericType && serviceType.ContainsGenericParameters)
         {
-            var isEnityStateHandlerType = serviceType
+            var isEntityStateHandlerType = serviceType
                        .ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventHandler<>)) ||
                        serviceType.ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventPreProcessorHandler<>));
 
-            if (isEnityStateHandlerType)
+            if (isEntityStateHandlerType)
             {
                 return serviceType.MakeGenericType(typeof(EntityBase));
             }
 
             var genericParameter = serviceType.GetGenericArguments()[0];
-            if(genericParameter.IsGenericType && serviceType.ContainsGenericParameters)
+            if (genericParameter.IsGenericType && serviceType.ContainsGenericParameters)
             {
-                var parameterNormalized=  NormalizeServiceType(genericParameter);
+                var parameterNormalized = NormalizeServiceType(genericParameter);
                 return serviceType.GetGenericTypeDefinition()
                     .MakeGenericType(parameterNormalized);
             }
-             
+
             throw new InvalidOperationException($" The service {serviceType} has ContainsGenericParameters");
 
         }

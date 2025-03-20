@@ -1,0 +1,10 @@
+﻿global using Xunit;
+global using FluentAssertions;
+global using AtendeLogo.ArchitectureTests.TestSupport;
+global using AtendeLogo.ArchitectureTests.Extensions;
+global using System.Reflection;
+global using Xunit.Abstractions;
+global using FluentValidation.Validators;
+global using FluentValidation;
+global using AtendeLogo.Common;
+global using AtendeLogo.Common.Extensions;

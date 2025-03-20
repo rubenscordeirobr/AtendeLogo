@@ -1,39 +1,38 @@
-﻿using AtendeLogo.ArchitectureTests.TestSupport;
-using AtendeLogo.Common.Extensions;
-using FluentAssertions;
-using FluentValidation;
-using Xunit.Abstractions;
+﻿namespace AtendeLogo.ArchitectureTests;
 
-namespace AtendeLogo.ArchitectureTests;
-
-public class RegisteredServiceValidationTests 
-    : IClassFixture<ApplicationServiceProvider>, IClassFixture<UnitTestTypeNamesCollection>
+public class RegisteredServiceValidationTests
+    : IClassFixture<ApplicationServiceProvider>,
+      IClassFixture<ClientGatewayServiceProvider>,
+      IClassFixture<UnitTestTypeNamesCollection>
 {
     private readonly ApplicationServiceProvider _serviceProvider;
+    private readonly ClientGatewayServiceProvider _clientGatewayServiceProvider;
     private readonly UnitTestTypeNamesCollection _unitTestsTypes;
     private readonly ITestOutputHelper _output;
 
     public RegisteredServiceValidationTests(
         ApplicationServiceProvider serviceProvider,
+        ClientGatewayServiceProvider clientGatewayServiceProvider,
         UnitTestTypeNamesCollection unitTestsTypes,
         ITestOutputHelper output)
     {
         _serviceProvider = serviceProvider;
+        _clientGatewayServiceProvider = clientGatewayServiceProvider;
         _unitTestsTypes = unitTestsTypes;
         _output = output;
     }
 
-    public static IEnumerable<object[]> ImplementedServiceTypesData
+    public static IEnumerable<object[]> RegisteredImplementedServiceTypes
     {
         get
         {
-            var serviceTypes = new ApplicationServiceCollection().ImplementedServiceTypes;
+            var serviceTypes = new ApplicationServiceCollection().RegisteredImplementedServiceTypes;
             return serviceTypes.Select(type => new object[] { type });
         }
     }
-     
+
     [Theory]
-    [MemberData(nameof(ImplementedServiceTypesData))]
+    [MemberData(nameof(RegisteredImplementedServiceTypes))]
     public void RegisteredServiceType_ShouldHaveUnitTests(Type serviceType)
     {
         //Arrange
@@ -50,7 +49,7 @@ public class RegisteredServiceValidationTests
     }
 
     [Theory]
-    [MemberData(nameof(ImplementedServiceTypesData))]
+    [MemberData(nameof(RegisteredImplementedServiceTypes))]
     public void VerifyRegisteredService_ShouldHavePublicConstructorWithAllDependencies(Type serviceType)
     {
         ////Arrange
@@ -76,7 +75,7 @@ public class RegisteredServiceValidationTests
         _output.WriteLine($"Service {serviceType.Name} has a public constructor with all dependencies");
     }
 
-    public static IEnumerable<object[]> ApplicationsServiceTypesData
+    public static IEnumerable<object[]> ImplementServiceTypes
     {
         get
         {
@@ -87,14 +86,16 @@ public class RegisteredServiceValidationTests
     }
 
     [Theory]
-    [MemberData(nameof(ApplicationsServiceTypesData))]
+    [MemberData(nameof(ImplementServiceTypes))]
     public void VerifyApplicationService_ShouldBeRegistered(Type serviceType)
     {
         //Arrange
         var services = _serviceProvider.Services;
-         
+        var clientServices = _clientGatewayServiceProvider.Services;
+
         //Act
-        var serviceDescriptor = services.Where(x=> x.ServiceType == serviceType || x.ImplementationType == serviceType) .FirstOrDefault();
+        var serviceDescriptor = services.Where(x => x.ServiceType == serviceType || x.ImplementationType == serviceType).FirstOrDefault()
+            ?? clientServices.Where(x => x.ServiceType == serviceType || x.ImplementationType == serviceType).FirstOrDefault();
 
         //Assert
         serviceDescriptor.Should()

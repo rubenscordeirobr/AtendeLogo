@@ -1,6 +1,4 @@
-﻿using AtendeLogo.ArchitectureTests.Extensions;
-using AtendeLogo.Common.Extensions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.ArchitectureTests.Extensions;
 

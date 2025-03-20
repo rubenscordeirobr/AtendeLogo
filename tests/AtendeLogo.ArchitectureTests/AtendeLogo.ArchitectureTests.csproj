@@ -1,11 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
  
   <ItemGroup>
@@ -21,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\AtendeLogo.Application\AtendeLogo.Application.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.ClientGateway\AtendeLogo.ClientGateway.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Common\AtendeLogo.Common.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Domain\AtendeLogo.Domain.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
@@ -34,9 +31,5 @@
     <ProjectReference Include="..\AtendeLogo.Application.UnitTests\AtendeLogo.Application.UnitTests.csproj" />
     <ProjectReference Include="..\AtendeLogo.UseCases.UnitTests\AtendeLogo.UseCases.UnitTests.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
+ 
 </Project>

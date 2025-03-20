@@ -1,13 +1,6 @@
-﻿using System.Reflection;
-using AtendeLogo.Application.Contracts.Handlers;
-using AtendeLogo.Application.Contracts.Persistence;
-using AtendeLogo.Application.Contracts.Services;
-using AtendeLogo.Common.Extensions;
+﻿using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Domain.Primitives;
-using AtendeLogo.Presentation.Common;
 using AtendeLogo.Shared.Contracts;
-using AtendeLogo.UseCases.Common.Services;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 
@@ -16,7 +9,6 @@ namespace AtendeLogo.ArchitectureTests.TestSupport;
 public class ApplicationAssemblyContext
 {
     private readonly Lock _lock = new();
-
     public Assembly CommonAssembly { get; }
     public Assembly DomainAssembly { get; }
     public Assembly SharedKernelAssembly { get; }
@@ -27,9 +19,10 @@ public class ApplicationAssemblyContext
     public Assembly IdentityPersistenceAssembly { get; }
     public Assembly ActivityPersistenceAssembly { get; }
     public Assembly UseCasesSharedAssembly { get; }
+    public Assembly ClientGatewayAssembly { get; }
     public Assembly[] InfrastructuresAssemblies { get; }
-    public string[] InfrastructuresAssemblyNames { get; }
     public Assembly[] AllAssemblies { get; }
+    public string[] InfrastructuresAssemblyNames { get; }
 
     public string CommonAssemblyName
         => CommonAssembly.GetName().Name!;
@@ -60,6 +53,9 @@ public class ApplicationAssemblyContext
 
     public string UseCasesSharedAssemblyName
         => UseCasesSharedAssembly.GetName().Name!;
+
+    public string ClientGatewayAssemblyName
+        => ClientGatewayAssembly.GetName().Name!;
 
     public IReadOnlyList<Type> Types
     {
@@ -134,6 +130,7 @@ public class ApplicationAssemblyContext
 
         SharedKernelAssembly = typeof(Shared.ValueObjects.ValueObjectBase).Assembly;
         UseCasesSharedAssembly = typeof(UseCases.Common.Validations.ValidationMessages).Assembly;
+        ClientGatewayAssembly = typeof(ClientGateway.Common.Contracts.IHttpClientExecutor).Assembly;
 
         InfrastructuresAssemblies = [
             InfrastructureAssembly,
@@ -157,7 +154,8 @@ public class ApplicationAssemblyContext
             IdentityPersistenceAssembly,
             ActivityPersistenceAssembly,
             SharedKernelAssembly,
-            UseCasesSharedAssembly
+            UseCasesSharedAssembly,
+            ClientGatewayAssembly,
         ];
 
         if (AllAssemblies.Any(a => a == null || a.GetName().Name.IsNullOrWhiteSpace()))
@@ -173,16 +171,9 @@ public class ApplicationAssemblyContext
 
     private IReadOnlyList<Type> GetServiceTypes()
     {
-        Type[] targetTypes = [
-            typeof(IRepositoryBase<>),
-            typeof(IApplicationHandler),
-            typeof(IValidator),
-            typeof(IValidationService),
-            typeof(IApplicationService)
-        ];
-        return [.. Types.Where(t => !t.IsSubclassOf<ApiEndpointBase>() && t.IsAssignableTo(targetTypes))];
+        return [.. Types.Where(t => ServiceReflectionHelper.IsImplementService(t))];
     }
-
+     
     private IReadOnlyList<Type> GetImplementServiceTypes()
     {
         return [.. ServiceTypes.Where(t => t.IsConcrete())];
@@ -249,7 +240,7 @@ public class ApplicationAssemblyContext
     private IReadOnlyDictionary<Type, Type> GetEntityTypeToConfigurationTypeMap()
     {
         var dictionary = new Dictionary<Type, Type>();
-        var entityeConfigurationTypes = EntityConfigurationTypes;
+        var entityConfigurationTypes = EntityConfigurationTypes;
         foreach (var configurationEntityType in EntityConfigurationTypes)
         {
             var entityType = configurationEntityType.GetInterfaces()
@@ -258,7 +249,7 @@ public class ApplicationAssemblyContext
                 .Select(x => x.GetGenericArguments().First())
                 .First();
             dictionary[entityType] = configurationEntityType;
-        } 
+        }
 
         return dictionary.AsReadOnly();
     }
@@ -276,7 +267,7 @@ public class ApplicationAssemblyContext
         var handlerTypes = Types
             .Where(x => x.IsConcrete())
             .Where(t => t.ImplementsGenericInterfaceDefinition(typeof(IRequestHandler<,>)));
-        
+
         foreach (var handlerType in handlerTypes)
         {
             var requestType = handlerType.GetInterfaces()
