@@ -8,3 +8,5 @@ global using Microsoft.Extensions.Logging;
 global using AtendeLogo.Application.Contracts.Persistence.Identities;
 global using AtendeLogo.Common;
 global using AtendeLogo.UseCases.Mappers;
+global using AtendeLogo.Application.Commands;
+global using AtendeLogo.UseCases.Common;
