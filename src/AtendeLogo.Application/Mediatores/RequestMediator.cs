@@ -46,11 +46,11 @@ internal partial class RequestMediator : IRequestMediator, IRequestMediatorTest
             return Result.Failure<TResponse>(validationResult.Error);
         }
 
-        var clienteRequestId = command.ClientRequestId;
-        if (await _tackingService.ExistsAsync(clienteRequestId, cancellationToken))
+        var clientRequestId = command.ClientRequestId;
+        if (await _tackingService.ExistsAsync(clientRequestId, cancellationToken))
         {
             var existingResult = await _tackingService
-                .TryGetResultAsync<TResponse>(clienteRequestId, cancellationToken);
+                .TryGetResultAsync<TResponse>(clientRequestId, cancellationToken);
 
             if (existingResult?.IsSuccess == true)
             {
@@ -71,7 +71,7 @@ internal partial class RequestMediator : IRequestMediator, IRequestMediatorTest
 
         if (result.IsSuccess)
         {
-            await _tackingService.TrackAsync(clienteRequestId, result);
+            await _tackingService.TrackAsync(clientRequestId, result);
         }
         return result;
     }
