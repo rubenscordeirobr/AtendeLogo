@@ -3,6 +3,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="AtendeLogo.Persistence.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
+    <InternalsVisibleTo Include="AtendeLogo.TestCommon" />
   </ItemGroup>
 
   <ItemGroup>

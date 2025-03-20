@@ -1,7 +1,6 @@
 ﻿using AtendeLogo.Common.Utils;
-using AtendeLogo.Shared.Contracts;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
+namespace AtendeLogo.TestCommon.Mocks.Infrastructure;
 
 public class JsonStringLocalizerMock<T> : IJsonStringLocalizer<T>
 {

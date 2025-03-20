@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Common.Utils;
 
-namespace AtendeLogo.UseCases.UnitTests.TestSupport;
+namespace AtendeLogo.TestCommon.Utils;
 
 public static class BrazilianFakeUtils
 {
@@ -8,31 +8,31 @@ public static class BrazilianFakeUtils
    
     public static string GenerateCpf()
     {
-        int[] cpf = new int[11];
+        var cpf = new int[11];
 
         // Generate the first 9 digits randomly
-        for (int i = 0; i < 9; i++)
+        for (var i = 0; i < 9; i++)
         {
             cpf[i] = _random.Next(0, 10);
         }
 
         // Calculate the first verification digit
-        int sum = 0;
-        for (int i = 0; i < 9; i++)
+        var sum = 0;
+        for (var i = 0; i < 9; i++)
         {
             sum += cpf[i] * (10 - i);
         }
-        int remainder = (sum * 10) % 11;
-        cpf[9] = (remainder == 10 || remainder == 11) ? 0 : remainder;
+        var remainder = sum * 10 % 11;
+        cpf[9] = remainder == 10 || remainder == 11 ? 0 : remainder;
 
         // Calculate the second verification digit
         sum = 0;
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             sum += cpf[i] * (11 - i);
         }
-        remainder = (sum * 10) % 11;
-        cpf[10] = (remainder == 10 || remainder == 11) ? 0 : remainder;
+        remainder = sum * 10 % 11;
+        cpf[10] = remainder == 10 || remainder == 11 ? 0 : remainder;
 
         // Format CPF as "000.000.000-00"
         return string.Format("{0}{1}{2}.{3}{4}{5}.{6}{7}{8}-{9}{10}",
@@ -42,7 +42,7 @@ public static class BrazilianFakeUtils
             cpf[9], cpf[10]);
     }
 
-    internal static string GenerateFakePhoneNumber()
+    public static string GenerateFakePhoneNumber()
     {
         return $"+55 11 9{RandomUtils.GenerateRandomNumber(4)}-{RandomUtils.GenerateRandomNumber(4)}";
     }

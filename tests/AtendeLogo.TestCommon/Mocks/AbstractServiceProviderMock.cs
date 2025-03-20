@@ -1,7 +1,8 @@
-﻿using AtendeLogo.Application.UnitTests.Mocks.Extensions;
+﻿using AtendeLogo.Application;
+using AtendeLogo.TestCommon.Extensions;
 using AtendeLogo.UseCases;
 
-namespace AtendeLogo.Application.UnitTests.Mocks;
+namespace AtendeLogo.TestCommon.Mocks;
 
 public abstract class AbstractServiceProviderMock : IServiceProvider
 {

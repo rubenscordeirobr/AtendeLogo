@@ -1,9 +1,4 @@
-﻿
-using AtendeLogo.Application.UnitTests.Mocks;
-
-
-
-namespace AtendeLogo.ArchitectureTests;
+﻿namespace AtendeLogo.ArchitectureTests;
 
 public class CommandValidationTests
     : IClassFixture<ApplicationAssemblyContext>, 

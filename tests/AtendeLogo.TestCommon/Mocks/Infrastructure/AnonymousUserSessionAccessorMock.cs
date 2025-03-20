@@ -1,9 +1,8 @@
 ﻿using AtendeLogo.Common.Infos;
 using AtendeLogo.Persistence.Identity.Extensions;
 using AtendeLogo.Common.Helpers;
-using AtendeLogo.Shared.Contracts;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
+namespace AtendeLogo.TestCommon.Mocks.Infrastructure;
 
 public abstract class UserSessionAccessorMock : IUserSessionAccessor
 {

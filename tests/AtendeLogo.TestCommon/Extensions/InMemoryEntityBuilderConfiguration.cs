@@ -1,9 +1,9 @@
-﻿using AtendeLogo.Application.UnitTests.Mocks.EFCore;
-using AtendeLogo.Common.Extensions;
+﻿using AtendeLogo.Common.Extensions;
+using AtendeLogo.TestCommon.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.Extensions;
+namespace AtendeLogo.TestCommon.Extensions;
 
 public static class InMemoryEntityBuilderConfiguration
 {

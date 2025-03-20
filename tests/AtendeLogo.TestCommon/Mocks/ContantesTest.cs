@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Application.UnitTests.Mocks;
+﻿namespace AtendeLogo.TestCommon.Mocks;
 
 public static class ContantesTest
 {

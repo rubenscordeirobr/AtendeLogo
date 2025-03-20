@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.EFCore;
+namespace AtendeLogo.TestCommon.EFCore;
 
 public class RelationalInMemoryDbContextOptionsBuilder : InMemoryDbContextOptionsBuilder,
     IRelationalDbContextOptionsBuilderInfrastructure

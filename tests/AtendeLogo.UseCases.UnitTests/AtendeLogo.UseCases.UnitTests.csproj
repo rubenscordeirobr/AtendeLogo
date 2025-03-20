@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AtendeLogo.Application.UnitTests\AtendeLogo.Application.UnitTests.csproj" />
+    <ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
   </ItemGroup>
  
 </Project>

@@ -5,6 +5,7 @@
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.UseCases.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
+    <InternalsVisibleTo Include="AtendeLogo.TestCommon" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 

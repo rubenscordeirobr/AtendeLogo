@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
-
-namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
+﻿namespace AtendeLogo.TestCommon.Mocks.Infrastructure;
 
 internal class SecureConfigurationMock: ISecureConfiguration
 {

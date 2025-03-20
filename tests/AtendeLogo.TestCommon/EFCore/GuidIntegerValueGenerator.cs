@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.EFCore;
+namespace AtendeLogo.TestCommon.EFCore;
 
 public class GuidIntegerValueGenerator : ValueGenerator<Guid>
 {

@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
-using AtendeLogo.Application.UnitTests.Mocks;
-using AtendeLogo.Shared.Contracts;
+
 
 namespace AtendeLogo.ArchitectureTests;
 

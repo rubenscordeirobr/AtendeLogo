@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace AtendeLogo.Application.UnitTests.Mocks;
+namespace AtendeLogo.TestCommon.Mocks;
 
 public class HttpContextAccessorMock : IHttpContextAccessor
 {

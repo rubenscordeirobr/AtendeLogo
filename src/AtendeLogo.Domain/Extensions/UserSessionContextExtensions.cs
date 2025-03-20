@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Entities.Identities;
-
-namespace AtendeLogo.Domain.Extensions;
+﻿namespace AtendeLogo.Domain.Extensions;
 
 public static class UserSessionContextExtensions
 {

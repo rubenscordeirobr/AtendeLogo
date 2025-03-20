@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Application.Models.Communication;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.Infrastructure;
+namespace AtendeLogo.TestCommon.Mocks.Infrastructure;
 
 internal class EmailSenderMock : IEmailSender
 {

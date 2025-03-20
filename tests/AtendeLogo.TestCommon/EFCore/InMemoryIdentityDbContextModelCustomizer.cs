@@ -1,9 +1,8 @@
-﻿using AtendeLogo.Application.UnitTests.Mocks.Extensions;
-using AtendeLogo.Persistence.Identity;
+﻿using AtendeLogo.TestCommon.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.EFCore;
+namespace AtendeLogo.TestCommon.EFCore;
 
 public class InMemoryIdentityDbContextModelCustomizer : IModelCustomizer
 {

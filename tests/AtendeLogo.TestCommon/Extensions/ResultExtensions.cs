@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Application.UnitTests.Extensions;
+﻿namespace AtendeLogo.TestCommon.Extensions;
 
 public static class ResultExtensions
 {

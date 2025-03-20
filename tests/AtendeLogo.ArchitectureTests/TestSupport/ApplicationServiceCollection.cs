@@ -2,7 +2,6 @@
 using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Contracts.Persistence;
 using AtendeLogo.Application.Contracts.Services;
-using AtendeLogo.Application.UnitTests.Mocks;
 using AtendeLogo.Infrastructure;
 using AtendeLogo.Persistence.Activity;
 using AtendeLogo.Persistence.Identity;

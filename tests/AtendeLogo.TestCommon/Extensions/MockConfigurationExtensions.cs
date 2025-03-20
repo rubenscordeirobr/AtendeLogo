@@ -1,9 +1,7 @@
-﻿using AtendeLogo.Application.Contracts.Security;
-using AtendeLogo.Persistence.Identity;
-using AtendeLogo.Shared.Contracts;
+﻿using AtendeLogo.TestCommon.Mocks;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.UnitTests.Mocks;
+namespace AtendeLogo.TestCommon.Extensions;
 
 public static class MockConfigurationExtensions
 {

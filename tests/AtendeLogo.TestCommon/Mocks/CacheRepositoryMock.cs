@@ -1,7 +1,6 @@
-﻿
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
-namespace AtendeLogo.Application.UnitTests.Mocks;
+namespace AtendeLogo.TestCommon.Mocks;
 
 public class CacheRepositoryMock : ICacheRepository
 {

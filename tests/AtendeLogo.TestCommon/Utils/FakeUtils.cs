@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Common.Utils;
 
-namespace AtendeLogo.UseCases.UnitTests.TestSupport;
+namespace AtendeLogo.TestCommon.Utils;
 
 public static class FakeUtils
 {

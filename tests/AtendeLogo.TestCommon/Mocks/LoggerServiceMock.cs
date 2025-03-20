@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.UnitTests.Mocks;
+namespace AtendeLogo.TestCommon.Mocks;
 
 public class LoggerServiceMock<T> : ILogger<T>
 {

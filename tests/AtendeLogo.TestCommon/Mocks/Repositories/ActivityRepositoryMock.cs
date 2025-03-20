@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Domain.Entities.Activities;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.Repositories;
+namespace AtendeLogo.TestCommon.Mocks.Repositories;
 
 public class ActivityRepositoryMock : IActivityRepository
 {

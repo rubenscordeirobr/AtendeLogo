@@ -6,11 +6,13 @@ public class UnitTestTypeNamesCollection
 
     public UnitTestTypeNamesCollection()
     {
-        var applicationTestsAssemply = typeof(Application.UnitTests.Mocks.ContantesTest).Assembly;
-        var useCaseTestsAssemply = typeof(UseCases.UnitTests.TestSupport.BrazilianFakeUtils).Assembly;
+        var applicationTestsAssembly = typeof(Application.UnitTests.Domain.Extensions.EntityDeletedExtensionsTests).Assembly;
+        var useCaseTestsAssembly = typeof(UseCases.UnitTests.Activities.Events.EntityCreatedEventHandlerTests).Assembly;
+        var identityFunctionalTestsAssembly = typeof(IdentityApi.FunctionalTests.HttpClientTests).Assembly;
        
-        var allTypes = applicationTestsAssemply.GetTypes()
-            .Concat(useCaseTestsAssemply.GetTypes());
+        var allTypes = applicationTestsAssembly.GetTypes()
+            .Concat(useCaseTestsAssembly.GetTypes())
+            .Concat(identityFunctionalTestsAssembly.GetTypes());
 
         _unitTestTypes = allTypes
             .Where(type => type.Name.EndsWith("Tests"))

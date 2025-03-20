@@ -1,11 +1,10 @@
-﻿using AtendeLogo.Application.UnitTests.Mocks.EFCore;
-using AtendeLogo.Application.UnitTests.Mocks.Extensions;
-using AtendeLogo.Persistence.Identity;
-using AtendeLogo.Persistence.Identity.Seed;
+﻿using AtendeLogo.Persistence.Identity.Seed;
+using AtendeLogo.TestCommon.EFCore;
+using AtendeLogo.TestCommon.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace AtendeLogo.Application.UnitTests.Mocks.Extensions;
+namespace AtendeLogo.TestCommon.Extensions;
 
 public static class InMemoryIdentityDbContextBuilderExtensions
 {
