@@ -25,7 +25,7 @@ public static class InMemoryIdentityDbContextBuilderExtensions
                         });
                     optionsBuilder.ReplaceService<IModelCustomizer, InMemoryIdentityDbContextModelCustomizer>();
                 },
-                contextLifetime: ServiceLifetime.Scoped,
+                contextLifetime: ServiceLifetime.Transient,
                 optionsLifetime: ServiceLifetime.Singleton);
          
 

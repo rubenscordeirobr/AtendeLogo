@@ -8,19 +8,19 @@ public static class ResultExtensions
     {
         result.IsSuccess
             .Should()
-            .BeTrue();
+            .BeTrue($"Should be successful, but get error {result.Error?.Message}");
 
         result.IsFailure
             .Should()
-            .BeFalse();
+            .BeFalse($"Should not be failure, but get error {result.Error?.Message}");
 
         result.Error
             .Should()
-            .BeNull();
+            .BeNull($"Should not have error, but get error {result.Error?.Message}");
 
         result.Value
             .Should()
-            .NotBeNull();
+            .NotBeNull($"Should have value, but get error {result.Error?.Message}");
 
         result.Value
             .Should()
@@ -33,19 +33,19 @@ public static class ResultExtensions
     {
         result.IsFailure
             .Should()
-            .BeTrue();
+            .BeTrue($"Should be failure, but get value {result.Value}");
 
         result.IsSuccess
             .Should()
-            .BeFalse();
+            .BeFalse($"Should not be successful, but get value {result.Value}");
 
         result.Error
             .Should()
-            .NotBeNull();
+            .NotBeNull($"Should have error, but get value {result.Value}");
 
         result.Error
             .Should()
-            .BeOfType<TError>();
+            .BeOfType<TError>($"Should be {typeof(TError).Name} error, but get {result.Error?.GetType().Name}");
     }
 }
 
