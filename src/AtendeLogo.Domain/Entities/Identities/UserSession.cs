@@ -21,6 +21,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public AuthenticationType AuthenticationType { get; private set; }
     public SessionTerminationReason? TerminationReason { get; private set; }
     public UserRole UserRole { get; private set; }
+    public UserType UserType { get; private set; }
     public Guid User_Id { get; private set; }
     public User? User { get; private set; }
     public Guid? Tenant_Id { get; private set; }
@@ -36,6 +37,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         AuthenticationType authenticationType,
         Language language,
         UserRole userRole,
+        UserType userType,
         TimeSpan? expirationTime,
         Guid user_Id,
         Guid? tenant_Id)
@@ -47,6 +49,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         AuthenticationType = authenticationType;
         Language = language;
         UserRole = userRole;
+        UserType = userType;
         ExpirationTime = expirationTime;
         User_Id = user_Id;
         Tenant_Id = tenant_Id;

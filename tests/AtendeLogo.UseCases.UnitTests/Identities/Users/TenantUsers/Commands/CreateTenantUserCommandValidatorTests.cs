@@ -23,7 +23,7 @@ public class CreateTenantUserCommandValidatorTests : IClassFixture<AnonymousServ
             Email = "tenantuser@example.com",
             Password = "Password123!",
             PhoneNumber = new PhoneNumber("+5542999990000"),
-            Role = UserRole.TenantAdmin
+            Role = UserRole.Admin
         };
     }
 

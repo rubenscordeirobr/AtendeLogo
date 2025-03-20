@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.UseCases.Identities.Authentications.Commands;
-using AtendeLogo.UseCases.UnitTests.TestSupport;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Authentications.Commands;
 

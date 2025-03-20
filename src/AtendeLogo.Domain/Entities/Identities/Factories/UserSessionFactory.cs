@@ -24,6 +24,7 @@ public static class UserSessionFactory
              userAgent: clientHeaderInfo.UserAgent,
              authenticationType: authenticationType,
              userRole: user.Role,
+             userType: user.UserType,
              language: user.Language,
              expirationTime: expirantionTime,
              user_Id: user.Id,

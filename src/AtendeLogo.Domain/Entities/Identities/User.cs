@@ -17,7 +17,9 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     public PhoneNumber PhoneNumber { get; private set; }
     public Password Password { get; private set; }
     public List<UserSession> Sessions { get; } = [];
-     
+
+    public abstract UserType UserType { get; }
+
     protected User(
         string name,
         string email,
@@ -59,10 +61,10 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     }
 
     #region IEntityDeleted, IOrderableEntity, IDomainEventAggregate
-    public bool IsDeleted { get; private set; }
-    public DateTime? DeletedAt { get; private set; }
-    public Guid? DeletedSession_Id { get; private set; }
-    public double? SortOrder { get; private set; }
+    public bool IsDeleted { get; protected set; }
+    public DateTime? DeletedAt { get; protected set; }
+    public Guid? DeletedSession_Id { get; protected set; }
+    public double? SortOrder { get; protected set; }
 
     IReadOnlyList<IDomainEvent> IEventAggregate.DomainEvents
         => _events;

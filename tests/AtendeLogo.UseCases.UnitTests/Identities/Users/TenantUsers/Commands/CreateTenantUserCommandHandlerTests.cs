@@ -10,14 +10,17 @@ public class CreateTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
     public CreateTenantUserCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
     {
         _serviceProvider = serviceProvider;
+
+        var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
+        var fakeEmail = FakeUtils.GenerateFakeEmail();
         _validCommand = new CreateTenantUserCommand
         {
             Tenant_Id =  SystemTenantConstants.Tenant_Id,
             Name = "User FullName",
-            Email = "user@atendelogo.com",
+            Email = fakeEmail,
             Password = "Password123!",
-            PhoneNumber = new PhoneNumber("+55 42 99977 1020"),
-            Role = UserRole.TenantAdmin
+            PhoneNumber = new PhoneNumber(fakePhoneNumber),
+            Role = UserRole.Admin
         };
     }
 

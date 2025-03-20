@@ -27,6 +27,7 @@ internal sealed partial class GetAllSystemUsersQueryHandler
             PhoneNumber = user.PhoneNumber,
             UserState = user.UserState,
             UserStatus = user.UserStatus,
+            UserType = user.UserType,
             EmailVerificationState = user.EmailVerificationState,
             PhoneNumberVerificationState = user.PhoneNumberVerificationState
         }).ToList();

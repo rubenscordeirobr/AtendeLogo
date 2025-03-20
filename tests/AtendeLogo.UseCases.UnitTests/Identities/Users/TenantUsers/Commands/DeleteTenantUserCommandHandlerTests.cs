@@ -23,6 +23,43 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
         handlerType.Should().BeOfType<DeleteTenantUserCommandHandler>();
     }
 
+
+    [Fact]
+    public async Task HandleAsync_ReturnSuccess()
+    {
+        //// Arrange
+        var serviceProvideMock = new TenantOwnerUserServiceProviderMock();
+        var mediator = serviceProvideMock.GetRequiredService<IRequestMediator>();
+
+        var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
+        var fakeEmail = FakeUtils.GenerateFakeEmail();
+        var createUserCommand = new CreateTenantUserCommand
+        {
+            Tenant_Id = SystemTenantConstants.Tenant_Id,
+            Name = "User FullName",
+            Email = fakeEmail,
+            Password = "Password123!",
+            PhoneNumber = new PhoneNumber(fakePhoneNumber),
+            Role = UserRole.Admin
+        };
+
+        var createUserResult = await mediator.RunAsync(createUserCommand, CancellationToken.None);
+
+        createUserResult.IsSuccess
+            .Should()
+            .BeTrue("The user should be created successfully");
+
+
+
+        var deleteCommand = new DeleteTenantUserCommand(createUserResult.Value!.Id);
+         
+        //Act
+        var result = await mediator.RunAsync(deleteCommand, CancellationToken.None);
+
+        //// Assert
+        result.ShouldBeSuccessful();
+    }
+
     [Fact]
     public async Task HandleAsync_ReturnNotFoundFailure()
     {
@@ -49,15 +86,5 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
 
         // Assert
         result.ShouldBeFailure<UnauthorizedError>();
-    }
-
-    [Fact]
-    public async Task HandleAsync_ReturnSuccess()
-    {
-        // Act
-        var result = await _mediator.RunAsync(_validCommand, CancellationToken.None);
-
-        // Assert
-        result.ShouldBeSuccessful();
     }
 }

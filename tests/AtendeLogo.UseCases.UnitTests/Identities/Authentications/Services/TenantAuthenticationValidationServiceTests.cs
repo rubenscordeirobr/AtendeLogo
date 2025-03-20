@@ -145,7 +145,7 @@ public class TenantAuthenticationValidationServiceTests
             name: "Test User",
             email: "test@example.com",
             language: Language.Default,
-            role: UserRole.None,
+            role: UserRole.Anonymous,
             userState: UserState.New,
             userStatus: UserStatus.Online,
             phoneNumber: new PhoneNumber("+5542999990000")!,

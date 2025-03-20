@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Domain.Enums;
 using AtendeLogo.Domain.Extensions;
-using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.Services;
 
@@ -26,8 +25,8 @@ public class EntityAuthorizationService : IEntityAuthorizationService
         }
 
         throw new UnauthorizedSecurityException(
-           $"Access Denied: User {userSession.User_Id} (Role: {userSession.UserRole}, Tenant_Id: {userSession.Tenant_Id}) " +
-           $"is not authorized to perform '{entityChangeState}' on entity '{entity.GetType().Name}' (ID: {entity.Id}, Tenant_Id: {(entity as IEntityTenant)?.Tenant_Id}).");
+            $"Access Denied: User {userSession.User_Id} (Role: {userSession.UserRole}, Tenant_Id: {userSession.Tenant_Id}) " +
+            $"is not authorized to perform '{entityChangeState}' on entity '{entity.GetType().Name}' (ID: {entity.Id}, Tenant_Id: {(entity as ITenantOwned)?.Tenant_Id}).");
     }
 
     private bool HasAuthorization(
@@ -37,26 +36,36 @@ public class EntityAuthorizationService : IEntityAuthorizationService
     {
         if (userSession.IsAnonymous())
         {
-            return CheckAnonymousPermission(entity, entityChangeState);
+            return CheckAnonymousPermission(entity, userSession, entityChangeState);
         }
 
         if (userSession.IsTenantUser())
         {
-            if (entity is IEntityTenant entityTenant)
+            if (entity is ITenantOwned entityTenant)
             {
                 return entityTenant.Tenant_Id == userSession.Tenant_Id;
             }
             return false;
         }
-        return userSession.UserRole is UserRole.SystemAdmin or UserRole.System;
+        return userSession.IsSystemAdminUser();
     }
 
     private bool CheckAnonymousPermission(
         EntityBase entity,
+        IUserSession userSession,
         EntityChangeState entityChangeState)
     {
-        return entityChangeState == EntityChangeState.Created && 
-            entity is Tenant or TenantUser or UserSession;
+        if (entityChangeState == EntityChangeState.Created)
+        {
+            return entity is Tenant or TenantUser or UserSession;
+
+        }
+        if (entityChangeState == EntityChangeState.Updated)
+        {
+            return entity.CreatedSession_Id == userSession.Id;
+        }
+        return false;
+            
     }
 
     private static void ValidateRole(

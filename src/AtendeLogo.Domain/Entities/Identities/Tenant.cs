@@ -167,7 +167,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
         _events.Add(new TenantDefaultAddressUpdatedEvent(this, previousAddress, address));
     }
 
-    public TenantUser AddUser(
+    public TenantUser CreateUser(
         string name,
         string email,
         Language language,
@@ -190,7 +190,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
          );
 
         _users.Add(user);
-        _events.Add(new TenantUserAddedEvent(this, user));
+        _events.Add(new TenantUserCreatedEvent(this, user));
         return user;
     }
 

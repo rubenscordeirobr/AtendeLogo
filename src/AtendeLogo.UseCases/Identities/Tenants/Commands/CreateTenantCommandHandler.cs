@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Application.Commands;
-using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Application.Contracts.Security;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
@@ -44,7 +43,7 @@ public sealed class CreateTenantCommandHandler
             phoneNumber: command.PhoneNumber,
             timeZoneOffset: TimeZoneOffset.Default);
  
-       var user = tenant.AddUser(
+       var user = tenant.CreateUser(
            name: command.Name,
            email: command.Email,
            language: command.Language,
@@ -63,6 +62,7 @@ public sealed class CreateTenantCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken);
            
             tenant.SetCreateOwner(user);
+
             _unitOfWork.Update(tenant);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

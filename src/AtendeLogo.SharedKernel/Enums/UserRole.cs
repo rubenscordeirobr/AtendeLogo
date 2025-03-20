@@ -2,11 +2,10 @@
 
 public enum UserRole
 {
-    None = 0,
-    System,
+    Anonymous = 0,
+    SystemAdmin,
     Owner,
     Admin,
-    Manager,
     Operator,
     Viewer,
     ChatAgent,

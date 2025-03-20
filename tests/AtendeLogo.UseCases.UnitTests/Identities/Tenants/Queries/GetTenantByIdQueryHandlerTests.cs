@@ -33,6 +33,7 @@ public class GetTenantByIdQueryHandlerTests : IClassFixture<AnonymousServiceProv
         var tenantRepository = _serviceProvider.GetRequiredService<ITenantRepository>();
 
         var systemTenant = await tenantRepository.GetByNameAsync(SystemTenantConstants.Name, CancellationToken.None);
+       
         systemTenant.Should()
             .NotBeNull("because the tenant with name 'SystemTenant' should exist in the test data.");
 

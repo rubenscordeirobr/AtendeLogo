@@ -16,13 +16,13 @@ public sealed class DeleteTenantCommandHandler
         CancellationToken cancellationToken)
     {
         var tenant = await _unitOfWork.Tenants
-            .GetByIdAsync(command.Id, cancellationToken);
+            .GetByIdAsync(command.Tenant_Id, cancellationToken);
 
         if (tenant is null)
         {
             return Result.NotFoundFailure<OperationResponse>(
                 "Tenant.NotFound",
-                $"Tenant with id {command.Id} not found.");
+                $"Tenant with id {command.Tenant_Id} not found.");
         }
 
         _unitOfWork.Delete(tenant);

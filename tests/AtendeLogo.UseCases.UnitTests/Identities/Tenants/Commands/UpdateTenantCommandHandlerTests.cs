@@ -10,10 +10,11 @@ public class UpdateTenantCommandHandlerTests : IClassFixture<TenantOwnerUserServ
     public UpdateTenantCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
     {
         _serviceProvider = serviceProvider;
+        var fakeCpf = BrazilianFakeUtils.GenerateCpf();
         _validadeCommand = new UpdateTenantCommand
         {
             Name = "Tenant name",
-            FiscalCode = new FiscalCode("04866748940"),
+            FiscalCode = new FiscalCode(fakeCpf),
             Country = Country.Brazil,
             Language = Language.Portuguese,
             Currency = Currency.BRL,

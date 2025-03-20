@@ -4,26 +4,33 @@ using AtendeLogo.Shared.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Application.UnitTests.Mocks;
+
 public static class MockConfigurationExtensions
 {
     public static IServiceCollection AddMockInfrastructureServices(
         this IServiceCollection services,
-        bool isAnonymousUserSession)
+        UserRole userRole)
     {
-        services.AddSingleton(typeof(IJsonStringLocalizer<>), typeof(JsonStringLocalizer<>))
+        services.AddSingleton(typeof(IJsonStringLocalizer<>), typeof(JsonStringLocalizerMock<>))
             .AddSingleton<ISecureConfiguration, SecureConfigurationMock>()
             .AddSingleton<ICacheRepository, CacheRepositoryMock>()
             .AddSingleton<IEmailSender, EmailSenderMock>();
 
-        if (isAnonymousUserSession)
+        switch (userRole)
         {
-            services.AddSingleton<IUserSessionAccessor, AnonymousUserSessionAccessorMock>();
+            case UserRole.Anonymous:
+                services.AddSingleton<IUserSessionAccessor, AnonymousUserSessionAccessorMock>();
+                break;
+            case UserRole.Owner:
+                services.AddSingleton<IUserSessionAccessor, TenantOwnerUserSessionAccessorMock>();
+                break;
+            case UserRole.SystemAdmin:
+                services.AddSingleton<IUserSessionAccessor, SystemAdminUserSessionAccessorMock>();
+                break;
+            default:
+                throw new NotImplementedException(
+                    $"UserRole {userRole} not implemented in MockConfigurationExtensions");
         }
-        else
-        {
-            services.AddSingleton<IUserSessionAccessor, SystemTenantUserSessionAccessorMock>();
-        }
-
         return services;
     }
 

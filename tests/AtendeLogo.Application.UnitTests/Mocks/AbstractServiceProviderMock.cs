@@ -6,14 +6,14 @@ namespace AtendeLogo.Application.UnitTests.Mocks;
 public abstract class AbstractServiceProviderMock : IServiceProvider
 {
     private IServiceProvider _serviceProvider;
-    protected abstract bool IsAnonymous { get; }
+    protected abstract UserRole UserRole { get; }
     public AbstractServiceProviderMock()
     {
         _serviceProvider = new ServiceCollection()
               .AddApplicationServices()
               .AddLoggerServiceMock()
               .AddInMemoryIdentityDbContext()
-              .AddMockInfrastructureServices(IsAnonymous)
+              .AddMockInfrastructureServices(UserRole)
               .AddPersistenceServicesMock()
               .AddUserCasesServices()
               .AddUserCasesSharedServices()
@@ -26,13 +26,17 @@ public abstract class AbstractServiceProviderMock : IServiceProvider
     }
 }
 
-public class TenantUserServiceProviderMock : AbstractServiceProviderMock
+public class TenantOwnerUserServiceProviderMock : AbstractServiceProviderMock
 {
-    protected override bool IsAnonymous => false;
+    protected override UserRole UserRole => UserRole.Owner;
 }
 
 public class AnonymousServiceProviderMock : AbstractServiceProviderMock
 {
-    protected override bool IsAnonymous => true;
-   
+    protected override UserRole UserRole => UserRole.Anonymous;
+}
+
+public class SystemAdminUserServiceProviderMock : AbstractServiceProviderMock
+{
+    protected override UserRole UserRole => UserRole.SystemAdmin;
 }

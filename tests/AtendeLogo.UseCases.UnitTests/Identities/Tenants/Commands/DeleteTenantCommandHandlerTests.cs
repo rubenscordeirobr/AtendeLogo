@@ -25,6 +25,48 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
     }
 
     [Fact]
+    public async Task HandleAsync_ReturnSuccess()
+    {
+        //// Arrange
+        var serviceProvideMock = new SystemAdminUserServiceProviderMock();
+        var mediator = serviceProvideMock.GetRequiredService<IRequestMediator>();
+
+        var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
+        var fakeEmail = FakeUtils.GenerateFakeEmail();
+        var fakeCpf = BrazilianFakeUtils.GenerateCpf();
+        var createCommand = new CreateTenantCommand
+        {
+            ClientRequestId = Guid.NewGuid(),
+            Name = "Tenant name",
+            FiscalCode = new FiscalCode(fakeCpf),
+            TenantName = "Tenant name",
+            Email = fakeEmail,
+            Password = "Password123!",
+            Country = Country.Brazil,
+            Language = Language.Portuguese,
+            Currency = Currency.BRL,
+            BusinessType = BusinessType.CivilRegistryOffice,
+            TenantType = TenantType.Company,
+            PhoneNumber = new PhoneNumber(fakePhoneNumber)
+        };
+
+        var createTenantResult = await mediator.RunAsync(createCommand, CancellationToken.None);
+
+        createTenantResult.IsSuccess
+            .Should()
+            .BeTrue("The tenant should be created successfully");
+
+
+        var deleteCommand = new DeleteTenantCommand(createTenantResult.Value!.Id);
+
+        //Act
+        var result = await mediator.RunAsync(deleteCommand, CancellationToken.None);
+
+        //// Assert
+        result.ShouldBeSuccessful();
+    }
+
+    [Fact]
     public async Task HandleAsync_ReturnNotFoundFailure()
     {
         // Arrange
@@ -50,16 +92,6 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
 
         // Assert
         result.ShouldBeFailure<UnauthorizedError>();
-    }
-
-    [Fact]
-    public async Task HandleAsync_ReturnSuccess()
-    {
-        // Arrange
-        var result = await _mediator.RunAsync(_validadeCommand, CancellationToken.None);
-
-        // Assert
-        result.ShouldBeSuccessful();
     }
 }
  

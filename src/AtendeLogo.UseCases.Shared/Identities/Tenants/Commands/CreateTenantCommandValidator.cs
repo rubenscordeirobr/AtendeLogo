@@ -5,8 +5,8 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
     private readonly ITenantValidationService _tenantValidationService;
 
     public CreateTenantCommandValidator(
-        IJsonStringLocalizer<ValidationMessages> localizer,
-        ITenantValidationService tenantValidationService)
+        ITenantValidationService tenantValidationService,
+        IJsonStringLocalizer<ValidationMessages> localizer)
         : base(localizer)
     {
         _tenantValidationService = tenantValidationService;
@@ -68,19 +68,15 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
             .WithMessage(localizer["Tenant.InvalidTenantType", "Invalid tenant type."]);
          
         RuleFor(x => x.FiscalCode)
-            .NotEmpty()
-            .WithMessage(localizer["Tenant.FiscalCodeRequired", "Fiscal code is required."])
-            .MaximumLength(ValidationConstants.FiscalCodeMaxLength)
-            .WithMessage(localizer["Tenant.FiscalCodeTooLong", "Fiscal code cannot be longer than {MaxLength} characters."])
-            .FiscalCode(x => x.Country)
+            .FiscalCode(x => x.Country, localizer)
             .WithMessage(localizer["Tenant.InvalidFiscalCode", "Invalid fiscal code."]);
 
         //Async validation
         RuleFor(x => x.PhoneNumber)
             .MustAsync(IsPhoneNumberAsync)
-            .WithErrorCode("Tenant.EmailUniqueValidation")
+            .WithErrorCode("Tenant.PhoneNumberUniqueValidation")
             .WithMessage(
-                localizer["Tenant.EmailUniqueValidation", "The e-mail '{PropertyValue} is already in use."]);
+                localizer["Tenant.PhoneNumberUniqueValidation", "The phone number '{PropertyValue} is already in use."]);
 
         RuleFor(x => x.Email)
             .MustAsync(IsEmailUniqueAsync)
@@ -106,8 +102,8 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
         return await _tenantValidationService.IsEmailUniqueAsync(email, token);
     }
 
-    private async Task<bool> IsFiscalCodeUniqueAsync(string fiscalCode, CancellationToken token)
+    private async Task<bool> IsFiscalCodeUniqueAsync(FiscalCode fiscalCode, CancellationToken token)
     {
-        return await _tenantValidationService.IsFiscalCodeUniqueAsync(fiscalCode, token);
+        return await _tenantValidationService.IsFiscalCodeUniqueAsync(fiscalCode.Value, token);
     }
 }

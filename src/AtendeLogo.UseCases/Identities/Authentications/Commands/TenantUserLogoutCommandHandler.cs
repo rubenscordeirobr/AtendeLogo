@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Commands;
-
-namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
 
 public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCommand, TenantUserLogoutResponse>
 {

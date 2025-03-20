@@ -66,7 +66,7 @@ public class EntityAuthorizationServiceTests
         {
             Id = Guid.NewGuid(),
             AuthenticationType = AuthenticationType.Credentials,
-            UserRole = UserRole.TenantViewer,
+            UserRole = UserRole.Viewer,
             Tenant_Id = Guid.NewGuid(),
             User_Id = Guid.NewGuid()
         };
@@ -90,7 +90,8 @@ public class EntityAuthorizationServiceTests
             Id = Guid.NewGuid(),
             AuthenticationType = AuthenticationType.Credentials,
             UserRole = UserRole.SystemAdmin,
-            User_Id = Guid.NewGuid()
+            User_Id = Guid.NewGuid(),
+            UserType = UserType.SystemUser
         };
 
         // Act
@@ -122,6 +123,7 @@ public class EntityAuthorizationServiceTests
         public AuthenticationType AuthenticationType { get; set; }
         public SessionTerminationReason? TerminationReason { get; set; }
         public UserRole UserRole { get; set; }
+        public UserType UserType { get; set; }
         public GeoLocation? GeoLocation { get; set; }
         public Guid? Tenant_Id { get; set; }
         public Guid User_Id { get; set; }
@@ -133,8 +135,8 @@ public class EntityAuthorizationServiceTests
     }
     public class FakeEntity : EntityBase { }
      
-    public class FakeTenant : EntityBase, IEntityTenant
+    public class FakeTenant : EntityBase, ITenantOwned
     {
-        public Guid? Tenant_Id { get; set; }
+        public Guid Tenant_Id { get; set; }
     }
 }

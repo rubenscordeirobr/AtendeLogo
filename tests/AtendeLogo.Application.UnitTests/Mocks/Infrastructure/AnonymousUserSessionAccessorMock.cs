@@ -18,8 +18,7 @@ public abstract class UserSessionAccessorMock : IUserSessionAccessor
     }
 
     public abstract UserSession GetCurrentSession();
-
-
+     
     public string? GetClientSessionToken()
     {
         return null;
@@ -49,8 +48,7 @@ public class UserAuthenticationServiceMock : IEndpointService
 
     public string ServiceName
         => "UserAuthentication";
-
-
+     
     public bool IsAllowAnonymous
         => true;
 }
@@ -69,7 +67,8 @@ public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
             userAgent: "SYSTEM",
             language: Language.Default,
             authenticationType: AuthenticationType.Anonymous,
-            userRole: UserRole.None,
+            userRole: UserRole.Anonymous,
+            userType: UserType.Anonymous,
             user_Id: AnonymousIdentityConstants.User_Id,
             expirationTime: null,
             tenant_Id: null
@@ -78,7 +77,7 @@ public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
         return userSession;
     }
 }
-public class SystemTenantUserSessionAccessorMock : UserSessionAccessorMock
+public class TenantOwnerUserSessionAccessorMock : UserSessionAccessorMock
 {
     public override UserSession GetCurrentSession()
     {
@@ -93,9 +92,34 @@ public class SystemTenantUserSessionAccessorMock : UserSessionAccessorMock
             language: Language.Default,
             authenticationType: AuthenticationType.System,
             userRole: UserRole.Owner,
+            userType: UserType.TenantUser,
             expirationTime: null,
             user_Id: SystemTenantConstants.OwnerUser_Id,
             tenant_Id: SystemTenantConstants.Tenant_Id
+        );
+        userSession.SetPropertyValue(x => x.Id, Guid.NewGuid());
+        return userSession;
+    }
+}
+public class SystemAdminUserSessionAccessorMock : UserSessionAccessorMock
+{
+    public override UserSession GetCurrentSession()
+    {
+        var headerInfo = ClientRequestHeaderInfo.Unknown;
+        var clientSessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
+
+        var userSession = new UserSession(
+            applicationName: "AtendeLogo",
+            clientSessionToken: clientSessionToken,
+            ipAddress: headerInfo.IpAddress,
+            userAgent: "SYSTEM",
+            language: Language.Default,
+            authenticationType: AuthenticationType.System,
+            userRole: UserRole.SystemAdmin,
+            userType: UserType.SystemUser,
+            expirationTime: null,
+            user_Id: Guid.NewGuid(),
+            tenant_Id: null
         );
         userSession.SetPropertyValue(x => x.Id, Guid.NewGuid());
         return userSession;

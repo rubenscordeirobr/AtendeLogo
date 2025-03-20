@@ -55,6 +55,7 @@ public class EntityDeletedExtensionsTests
         
         var userSessionMock = new Mock<IUserSession>();
         userSessionMock.Setup(s => s.User_Id).Returns(Guid.NewGuid());
+        userSessionMock.Setup(s => s.UserType).Returns(UserType.AdminUser);
         var userSession = userSessionMock.Object;
 
         // Act
@@ -72,18 +73,19 @@ public class EntityDeletedExtensionsTests
 
         // Mock IEntityTenant behavior
         var tenantId = Guid.NewGuid();
-        var tenantEntity = entityMock.As<IEntityTenant>();
+        var tenantEntity = entityMock.As<ITenantOwned>();
         tenantEntity.Setup(e => e.Tenant_Id).Returns(tenantId);
 
         // Mock IUserSession with a different Tenant_Id
         var userSessionMock = new Mock<IUserSession>();
-        userSessionMock.Setup(s => s.Tenant_Id).Returns(Guid.NewGuid()); 
+        userSessionMock.Setup(s => s.Tenant_Id).Returns(Guid.NewGuid());
+        userSessionMock.Setup(s => s.UserType).Returns(UserType.TenantUser);
 
         // Act
         Action act = () => entityMock.Object.MarkAsDeleted(userSessionMock.Object);
 
         // Assert
-        act.Should().Throw<DomainSecurityException>();
+        act.Should().Throw<UnauthorizedSecurityException>();
     }
      
     [Fact]
@@ -97,6 +99,7 @@ public class EntityDeletedExtensionsTests
         var userSessionMock = new Mock<IUserSession>();
         userSessionMock.Setup(s => s.User_Id).Returns(Guid.NewGuid());
         userSessionMock.Setup(s => s.Id).Returns(userSessionId);
+        userSessionMock.Setup(s => s.UserType).Returns(UserType.AdminUser);
 
         var userSession = userSessionMock.Object;
 

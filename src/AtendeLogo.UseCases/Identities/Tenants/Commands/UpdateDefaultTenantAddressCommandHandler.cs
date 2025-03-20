@@ -1,10 +1,7 @@
-﻿using AtendeLogo.Application.Commands;
-using AtendeLogo.UseCases.Common;
-
-namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
 public sealed class UpdateDefaultTenantAddressCommandHandler
-    : CommandHandler<UpdateDefaultTenantAddressCommand, SuccessResponse>
+    : CommandHandler<UpdateDefaultTenantAddressCommand, OperationResponse>
 {
     public IIdentityUnitOfWork _unitOfWork;
 
@@ -14,7 +11,7 @@ public sealed class UpdateDefaultTenantAddressCommandHandler
         _unitOfWork = unitOfWork;
     }
 
-    protected override async Task<Result<SuccessResponse>> HandleAsync(
+    protected override async Task<Result<OperationResponse>> HandleAsync(
         UpdateDefaultTenantAddressCommand command, CancellationToken cancellationToken)
     {
         var tenant = await _unitOfWork.Tenants
@@ -22,7 +19,7 @@ public sealed class UpdateDefaultTenantAddressCommandHandler
 
         if (tenant == null)
         {
-            return Result.NotFoundFailure<SuccessResponse>(
+            return Result.NotFoundFailure<OperationResponse>(
                  "Tenant.NotFound",
                  $"Tenant with id {command.Tenant_Id} not found.");
         }
@@ -44,9 +41,9 @@ public sealed class UpdateDefaultTenantAddressCommandHandler
         var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
         if (result.IsSuccess)
         {
-            return Result.Success(new SuccessResponse());
+            return Result.Success(new OperationResponse());
         }
-        return Result.Failure<SuccessResponse>(result.Error);
+        return Result.Failure<OperationResponse>(result.Error);
     }
 }
 

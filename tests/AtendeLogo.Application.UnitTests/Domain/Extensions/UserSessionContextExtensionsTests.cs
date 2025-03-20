@@ -27,6 +27,7 @@ public class UserSessionContextExtensionsTests
         var userSession = new Mock<IUserSession>();
         userSession.Setup(us => us.User_Id).Returns(Guid.NewGuid());
         userSession.Setup(us => us.AuthenticationType).Returns(AuthenticationType.Credentials);
+        userSession.Setup(us => us.UserType).Returns(UserType.AdminUser);
 
         // Act
         var result = userSession.Object.IsAnonymous();

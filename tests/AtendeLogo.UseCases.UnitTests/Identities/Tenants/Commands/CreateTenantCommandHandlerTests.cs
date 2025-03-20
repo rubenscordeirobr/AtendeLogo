@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.UseCases.Identities.Tenants.Commands;
-using AtendeLogo.UseCases.UnitTests.TestSupport;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
@@ -8,23 +7,28 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
     private readonly IServiceProvider _serviceProvider;
     private readonly CreateTenantCommand _validadeCommand;
 
-    public CreateTenantCommandHandlerTests(AnonymousServiceProviderMock serviceProvide)
+    public CreateTenantCommandHandlerTests(AnonymousServiceProviderMock serviceProvider)
     {
-        _serviceProvider = serviceProvide;
+        _serviceProvider = serviceProvider;
+
+        var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
+        var fakeEmail = FakeUtils.GenerateFakeEmail();
+        var fakeCpf = BrazilianFakeUtils.GenerateCpf();
+
         _validadeCommand = new CreateTenantCommand
         {
             ClientRequestId = Guid.NewGuid(),
             Name = "Tenant name",
-            FiscalCode = "04866748940",
+            FiscalCode = new FiscalCode(fakeCpf),
             TenantName = "Tenant name",
-            Email = "tenant1@atendelogo.com",
+            Email = fakeEmail,
             Password = "Password123!",
             Country = Country.Brazil,
             Language = Language.Portuguese,
             Currency = Currency.BRL,
             BusinessType = BusinessType.CivilRegistryOffice,
             TenantType = TenantType.Company,
-            PhoneNumber = new PhoneNumber("+55 42 99977 1020")
+            PhoneNumber = new PhoneNumber(fakePhoneNumber)
         };
     }
 
@@ -114,14 +118,14 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var command = _validadeCommand with
         {
-            FiscalCode = string.Empty
+            FiscalCode = new FiscalCode(string.Empty)
         };
 
         // Act
         var result = await mediator.TestRunAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.FiscalCode);
+        result.ShouldHaveValidationErrorFor(x => x.FiscalCode.Value);
     }
 }
 

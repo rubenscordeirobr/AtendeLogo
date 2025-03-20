@@ -32,4 +32,9 @@ public sealed class SystemUser : User
                VerificationState.NotVerified, VerificationState.NotVerified, phoneNumber, password)
     {
     }
+
+    public override UserType UserType
+        => Id == AnonymousIdentityConstants.User_Id
+            ? UserType.Anonymous
+            : UserType.SystemUser;
 }

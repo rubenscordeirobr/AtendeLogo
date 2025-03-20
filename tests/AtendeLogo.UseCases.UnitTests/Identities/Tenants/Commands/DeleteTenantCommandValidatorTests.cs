@@ -26,7 +26,7 @@ public class DeleteTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         var result = _validator.TestValidate(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(c => c.Id)
+        result.ShouldHaveValidationErrorFor(c => c.Tenant_Id)
             .WithErrorMessage("Id is required.");
     }
 
@@ -40,6 +40,6 @@ public class DeleteTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         var result = _validator.TestValidate(command);
 
         // Assert
-        result.ShouldNotHaveValidationErrorFor(c => c.Id);
+        result.ShouldNotHaveValidationErrorFor(c => c.Tenant_Id);
     }
 }

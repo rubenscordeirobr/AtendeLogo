@@ -31,6 +31,7 @@ public sealed class GetSystemUserByIdQueryHandler
             Language = user.Language,
             UserState = user.UserState,
             UserStatus = user.UserStatus,
+            UserType = user.UserType,
             EmailVerificationState = user.EmailVerificationState,
             PhoneNumberVerificationState = user.PhoneNumberVerificationState,
             Role = user.Role,

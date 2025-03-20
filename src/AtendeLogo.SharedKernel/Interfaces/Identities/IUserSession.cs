@@ -13,6 +13,8 @@ public interface IUserSession
     Language Language { get; }
     AuthenticationType AuthenticationType { get; }
     SessionTerminationReason? TerminationReason { get; }
+    UserRole UserRole { get; }
+    UserType UserType { get; }
     GeoLocation? GeoLocation { get; }
     Guid? Tenant_Id { get; }
     Guid User_Id { get; }

@@ -9,7 +9,8 @@ public static class UserSessionContextExtensions
         Guard.NotNull(userSession);
 
         return userSession.User_Id == AnonymousIdentityConstants.User_Id ||
-            userSession.AuthenticationType == AuthenticationType.Anonymous;
+            userSession.AuthenticationType == AuthenticationType.Anonymous ||
+            userSession.UserType == UserType.Anonymous;
     }
 
     public static bool IsTenantUser(this IUserSession userSession)
@@ -23,12 +24,17 @@ public static class UserSessionContextExtensions
     public static bool IsSystemAdminUser(this IUserSession userSession)
     {
         Guard.NotNull(userSession);
+
         if (userSession.IsAnonymous())
         {
             return false;
         }
 
-        Guard.NotNull(userSession.User);
-        return userSession.User is AdminUser;
+        if (userSession.UserType  is UserType.AdminUser or UserType.SystemUser)
+        {
+            return userSession.UserRole is UserRole.Admin or UserRole.SystemAdmin;
+        }
+        return false;
+            
     }
 }

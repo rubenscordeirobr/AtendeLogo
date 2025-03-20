@@ -3,9 +3,11 @@ namespace AtendeLogo.Domain.Entities.Identities;
 
 public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
 {
+    public override UserType UserType { get; } = UserType.TenantUser;
+
     public Guid Tenant_Id { get; private set; }
     public Tenant? Tenant { get; private set; }
-
+     
     // EF Core constructor
     private TenantUser(
        string name,

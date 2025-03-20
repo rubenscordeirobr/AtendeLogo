@@ -2,7 +2,8 @@
 
 public sealed class AdminUser : User
 {
-    
+    public override UserType UserType { get; } = UserType.AdminUser;
+
     private AdminUser(
         string name,
         string email,
@@ -33,3 +34,5 @@ public sealed class AdminUser : User
     {
     }
 }
+    
+ 

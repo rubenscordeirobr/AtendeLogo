@@ -2,7 +2,6 @@
 using AtendeLogo.UseCases.Common.Validations;
 using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
-using AtendeLogo.UseCases.UnitTests.TestSupport;
 using Moq;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
@@ -22,7 +21,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         {
             ClientRequestId = Guid.NewGuid(),
             Name = "Tenant name",
-            FiscalCode = "04866748940",
+            FiscalCode = new FiscalCode("04866748940"),
             TenantName = "Tenant name",
             Email = "tenant1@atendelogo.com",
             Password = "Password123!",
@@ -47,10 +46,12 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         // Arrange
         var randowEmail = Guid.NewGuid().ToString().Substring(0, 8) + "@atendelogo.com";
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
+        var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
         var command = _validadCommand with
         {
             Email = randowEmail,
-            FiscalCode = fakeCpf
+            FiscalCode = new FiscalCode(fakeCpf),
+            PhoneNumber = new PhoneNumber(fakePhoneNumber)
         };
 
         // Act
@@ -139,14 +140,14 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         // Arrange
         var command = _validadCommand with
         {
-            FiscalCode = fiscalCode!
+            FiscalCode = new FiscalCode(fiscalCode!)
         };
 
         // Act
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.FiscalCode);
+        result.ShouldHaveValidationErrorFor(x => x.FiscalCode.Value);
     }
 
     [Theory]
@@ -267,7 +268,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
 
         var tenantValidationSetup = new Mock<ITenantValidationService>();
-      
+
         tenantValidationSetup
             .Setup(x => x.IsEmailUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
@@ -279,9 +280,8 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
             .ReturnsAsync(true);
 
         var validator = new CreateTenantCommandValidator(
-            localizer,
-            tenantValidationSetup.Object);
- 
+            tenantValidationSetup.Object,
+            localizer);
 
         // Act
         var result = await validator.TestValidateAsync(_validadCommand);
@@ -308,12 +308,11 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         tenantValidationSetup
             .Setup(x => x.IsPhoneNumberUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-         
-        var validator = new CreateTenantCommandValidator(
-            localizer,
-            tenantValidationSetup.Object);
- 
 
+        var validator = new CreateTenantCommandValidator(
+            tenantValidationSetup.Object,
+            localizer);
+         
         // Act
         var result = await validator.TestValidateAsync(_validadCommand);
 
@@ -339,11 +338,11 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         tenantValidationSetup
             .Setup(x => x.IsEmailUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-         
+
         var validator = new CreateTenantCommandValidator(
-            localizer,
-            tenantValidationSetup.Object);
-  
+            tenantValidationSetup.Object,
+            localizer);
+
         // Act
         var result = await validator.TestValidateAsync(_validadCommand);
 

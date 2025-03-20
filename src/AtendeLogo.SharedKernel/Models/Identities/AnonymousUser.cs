@@ -21,5 +21,7 @@ public class AnonymousUser : IUser
 
     public Language Language { get; } = Language.Default;
 
-    public UserRole Role { get; } = UserRole.None;
+    public UserRole Role { get; } = UserRole.Anonymous;
+
+    public UserType UserType { get; } = UserType.Anonymous;
 }
