@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.UseCases.UnitTests.TestSupport;
+﻿using AtendeLogo.Common.Utils;
+
+namespace AtendeLogo.UseCases.UnitTests.TestSupport;
 
 public static class BrazilianFakeUtils
 {
@@ -39,5 +41,10 @@ public static class BrazilianFakeUtils
             cpf[6], cpf[7], cpf[8],
             cpf[9], cpf[10]);
     }
-}
 
+    internal static string GenerateFakePhoneNumber()
+    {
+        return $"+55 11 9{RandomUtils.GenerateRandomNumber(4)}-{RandomUtils.GenerateRandomNumber(4)}";
+    }
+ 
+}
