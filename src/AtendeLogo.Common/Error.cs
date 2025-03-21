@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using AtendeLogo.Common.Mappers;
 
 namespace AtendeLogo.Common;
 
@@ -134,3 +135,20 @@ public partial record DeserializationError
                $"Json: {json}");
     }
 }
+public record CreateHttpRequestMessageError(
+    Exception Exception,
+    string Code,
+    string Message)
+    : Error(Exception, Code, Message);
+
+public record RequestError(
+    Exception Exception,
+    string Code,
+    string Message)
+    : Error(Exception, Code, Message);
+
+public record TaskTimeoutError(
+    Exception? Exception,
+    string Code,
+    string Message)
+    : Error(Exception, Code, Message);
