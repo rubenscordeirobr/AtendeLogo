@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using AtendeLogo.Common.Utils;
 using AtendeLogo.Shared.Constants;
 
 namespace AtendeLogo.Shared.ValueObjects;
@@ -37,7 +37,7 @@ public sealed record Password : ValueObjectBase
         => HashValue;
 
     public string ToJson()
-        => JsonSerializer.Serialize(this);
+        => JsonUtils.Serialize(this);
 
     public static Password Empty
         => new(string.Empty, PasswordStrength.Empty);
@@ -81,7 +81,7 @@ public sealed record Password : ValueObjectBase
 
     public static Password Parse(string json)
     {
-        var password = JsonSerializer.Deserialize<Password>(json);
+        var password = JsonUtils.Deserialize<Password>(json);
         return password ?? Empty;
     }
 }

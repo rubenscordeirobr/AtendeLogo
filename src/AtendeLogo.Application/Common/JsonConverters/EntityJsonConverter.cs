@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Application.Common.JsonConverters;
 
@@ -19,7 +20,7 @@ internal class EntityJsonConverter<TEntity> : JsonConverter<TEntity>
         jsonSerializerOptions.Converters.Clear();
 
         // Deserialize the object normally
-        var entityBase = JsonSerializer.Deserialize<TEntity>(jsonObject.GetRawText(), jsonSerializerOptions);
+        var entityBase = JsonUtils.Deserialize<TEntity>(jsonObject.GetRawText(), jsonSerializerOptions);
 
         if (entityBase is null)
             return null;

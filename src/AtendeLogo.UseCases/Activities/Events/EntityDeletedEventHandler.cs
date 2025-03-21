@@ -1,9 +1,9 @@
-﻿using AtendeLogo.Domain.Entities.Activities;
-using System.Dynamic;
-using System.Text.Json;
-using AtendeLogo.Domain.Primitives;
-using AtendeLogo.Common.Extensions;
+﻿using System.Dynamic;
 using AtendeLogo.Application.Contracts.Persistence.Activities;
+using AtendeLogo.Common.Extensions;
+using AtendeLogo.Common.Utils;
+using AtendeLogo.Domain.Entities.Activities;
+using AtendeLogo.Domain.Primitives;
 
 namespace AtendeLogo.UseCases.Activities.Events;
 
@@ -41,7 +41,7 @@ public sealed class EntityDeletedEventHandler<TEntity> : IEntityDeletedEventHand
             ((IDictionary<string, object>)data)[property.PropertyName] = property.Value ?? "null";
         }
 
-        var dataSerialized = JsonSerializer.Serialize(data);
+        var dataSerialized = JsonUtils.Serialize(data);
         var qualifiedTypeName = entity.GetType().GetQualifiedName();
 
         var activity = new CreatedActivity
@@ -64,6 +64,5 @@ public sealed class EntityDeletedEventHandler<TEntity> : IEntityDeletedEventHand
             _logger.LogError(ex, "Error on add activity for entity {EntityType} {EntityId}", entity.GetType().Name, entity.Id);
             throw;
         }
-
     }
 }

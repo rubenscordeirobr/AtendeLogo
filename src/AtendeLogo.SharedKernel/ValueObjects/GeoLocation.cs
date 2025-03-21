@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Shared.ValueObjects;
 
@@ -11,7 +11,7 @@ public sealed record GeoLocation : ValueObjectBase
        => $"Latitude: {Latitude}, Longitude:{Longitude}";
 
     public string ToJson()
-      => JsonSerializer.Serialize(this);
+      => JsonUtils.Serialize(this);
 
     public static Result<GeoLocation> Create(double latitude, double longitude)
     {
@@ -44,7 +44,7 @@ public sealed record GeoLocation : ValueObjectBase
         if (string.IsNullOrWhiteSpace(value))
             return Empty;
         
-        var geoLocation = JsonSerializer.Deserialize<GeoLocation>(value);
+        var geoLocation = JsonUtils.Deserialize<GeoLocation>(value);
         return geoLocation ?? Empty;
     }
 }

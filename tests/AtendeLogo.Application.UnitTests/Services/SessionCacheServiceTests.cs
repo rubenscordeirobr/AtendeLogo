@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AtendeLogo.Application.Services;
 using AtendeLogo.Common.Helpers;
+using AtendeLogo.Common.Utils;
 using AtendeLogo.Persistence.Identity.Extensions;
 
 namespace AtendeLogo.Application.UnitTests.Services;
@@ -67,7 +68,7 @@ public class SessionCacheServiceTests
          
         var cacheKey = $"user-session:{HashHelper.CreateMd5GuidHash(clientSessionToken)}";
 
-        await cacheRepository.StringSetAsync(cacheKey, JsonSerializer.Serialize(expectedSession), TimeSpan.FromHours(1));
+        await cacheRepository.StringSetAsync(cacheKey, JsonUtils.Serialize(expectedSession), TimeSpan.FromHours(1));
 
         // Act
         var result = await service.GetSessionAsync(clientSessionToken);
@@ -122,7 +123,7 @@ public class SessionCacheServiceTests
 
         // Assert
         var cachedValue = await cacheRepository.StringGetAsync(cacheKey);
-        cachedValue.Should().Be(JsonSerializer.Serialize(session));
+        cachedValue.Should().Be(JsonUtils.Serialize(session, options: JsonSerializerOptions.Web));
     }
 
     [Fact]

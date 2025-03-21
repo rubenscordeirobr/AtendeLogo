@@ -1,9 +1,9 @@
-﻿using AtendeLogo.Domain.Entities.Activities;
-using System.Dynamic;
-using System.Text.Json;
-using AtendeLogo.Domain.Primitives;
-using AtendeLogo.Common.Extensions;
+﻿using System.Dynamic;
 using AtendeLogo.Application.Contracts.Persistence.Activities;
+using AtendeLogo.Common.Extensions;
+using AtendeLogo.Common.Utils;
+using AtendeLogo.Domain.Entities.Activities;
+using AtendeLogo.Domain.Primitives;
 
 namespace AtendeLogo.UseCases.Activities.Events;
 
@@ -40,7 +40,7 @@ public sealed class EntityCreatedEventHandler<TEntity> : IEntityCreatedEventHand
             ((IDictionary<string, object>)data)[property.PropertyName] = property.Value ?? "null";
         }
         
-        var dataSerialized = JsonSerializer.Serialize(data);
+        var dataSerialized = JsonUtils.Serialize(data);
         var qualifiedTypeName = entity.GetType().GetQualifiedName();
 
         var activity = new CreatedActivity

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using AtendeLogo.Application.Common.JsonConverters;
+using AtendeLogo.Common.Utils;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Application.Services;
@@ -12,16 +13,10 @@ public abstract class CacheServiceBase
     private readonly TimeSpan _defaultExpiration;
     protected abstract string PrefixCacheName { get; }
 
-    protected virtual JsonSerializerOptions JsonOptions { get; }
-        = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            IncludeFields = true,
-            IgnoreReadOnlyProperties = false,
-            WriteIndented = true,
-            IgnoreReadOnlyFields= true,
-        };
+    protected virtual JsonSerializerOptions JsonSerializationOptions { get; } = JsonSerializerOptions.Web;
 
+    protected virtual JsonSerializerOptions JsonDeserializationOptions { get; } = JsonSerializerOptions.Web;
+         
     protected CacheServiceBase(
         ICacheRepository _repository,
         ILogger logger,
@@ -91,7 +86,7 @@ public abstract class CacheServiceBase
         try
         {
             var options = GetJsonOptions<T>();
-            return JsonSerializer.Deserialize<T>(cachedValue, options);
+            return JsonUtils.Deserialize<T>(cachedValue, options);
         }
         catch (JsonException)
         {
@@ -102,7 +97,8 @@ public abstract class CacheServiceBase
      
     private async Task AddToCacheAsyncInternal<T>(string cacheKey, T value, TimeSpan? expiration = null)
     {
-        var serializedValue = JsonSerializer.Serialize(value);
+        JsonUtils.EnableIndentationInDevelopment(JsonSerializationOptions);
+        var serializedValue = JsonUtils.Serialize(value, options: JsonSerializationOptions);
         await _repository.StringSetAsync(cacheKey, serializedValue, expiration ?? _defaultExpiration);
     }
 
@@ -127,11 +123,11 @@ public abstract class CacheServiceBase
 
             Guard.NotNull(converterInstance, nameof(converterInstance));
 
-            return new JsonSerializerOptions(JsonOptions) 
+            return new JsonSerializerOptions(JsonDeserializationOptions) 
             {
                 Converters = { converterInstance }
             };
         }
-        return JsonOptions;
+        return JsonDeserializationOptions;
     }
 }

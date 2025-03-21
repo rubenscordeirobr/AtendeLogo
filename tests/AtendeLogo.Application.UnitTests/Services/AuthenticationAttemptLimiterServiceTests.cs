@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using AtendeLogo.Application.Models.Security;
 using AtendeLogo.Application.Services;
+using AtendeLogo.Common.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -47,7 +48,7 @@ public class AuthenticationAttemptLimiterServiceTests
         // Create a DTO and then serialize to JSON
         var recordDto = new AuthenticationAttemptRecord(failedAttempts, lastFailed);
         
-        string jsonRecord = JsonSerializer.Serialize(recordDto);
+        string jsonRecord = JsonUtils.Serialize(recordDto, options: JsonSerializerOptions.Web);
         _cacheRepositoryMock
             .Setup(x => x.StringGetAsync(It.IsAny<string>()))
             .ReturnsAsync(jsonRecord);
@@ -69,7 +70,7 @@ public class AuthenticationAttemptLimiterServiceTests
         // Arrange
         string ipAddress = "1.2.3.4";
       
-        var authenticationAttemptRecordSerializado = JsonSerializer.Serialize(new AuthenticationAttemptRecord(1, DateTime.UtcNow.AddSeconds(-10)));
+        var authenticationAttemptRecordSerializado = JsonUtils.Serialize(new AuthenticationAttemptRecord(1, DateTime.UtcNow.AddSeconds(-10)));
         
         _cacheRepositoryMock.SetupSequence(x => x.StringGetAsync(It.IsAny<string>()))
             .ReturnsAsync((string?)null)
@@ -84,7 +85,7 @@ public class AuthenticationAttemptLimiterServiceTests
             .Callback<string, string, TimeSpan>((cacheKey, value, expiration) =>
             {
                 // Deserialize the stored record for inspection
-                var record = JsonSerializer.Deserialize<AuthenticationAttemptRecord>(value);
+                var record = JsonUtils.Deserialize<AuthenticationAttemptRecord>(value, options: JsonSerializerOptions.Web);
                 if (capturedRecordFirstCall == null)
                 {
                     capturedRecordFirstCall = record;

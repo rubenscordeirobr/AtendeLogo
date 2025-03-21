@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Shared.ValueObjects;
 
@@ -21,7 +21,7 @@ public sealed record TimeZoneOffset : ValueObjectBase
         => $"Offset: {Offset} Location:{Location}";
 
     public string ToJson()
-        => JsonSerializer.Serialize(this);
+        => JsonUtils.Serialize(this);
 
     public static Result<TimeZoneOffset> Create(string offset, string location)
     {
@@ -53,7 +53,7 @@ public sealed record TimeZoneOffset : ValueObjectBase
      
     public static TimeZoneOffset Parse(string json)
     {
-        return JsonSerializer.Deserialize<TimeZoneOffset>(json)
+        return JsonUtils.Deserialize<TimeZoneOffset>(json)
             ?? Default;
     }
 }

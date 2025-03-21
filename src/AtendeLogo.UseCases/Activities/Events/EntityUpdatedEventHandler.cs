@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
-using System.Text.Json;
 using AtendeLogo.Application.Contracts.Persistence.Activities;
 using AtendeLogo.Common.Extensions;
+using AtendeLogo.Common.Utils;
 using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Domain.Primitives;
 
@@ -48,8 +48,8 @@ public sealed class EntityUpdatedEventHandler<TEntity> : IEntityUpdatedEventHand
             ((IDictionary<string, object>)oldData)[property.PropertyName] = property.PreviousValue ?? "null";
         }
 
-        var oldDataSerialized = JsonSerializer.Serialize(oldData);
-        var newDataSerialized = JsonSerializer.Serialize(newData);
+        var oldDataSerialized = JsonUtils.Serialize(oldData);
+        var newDataSerialized = JsonUtils.Serialize(newData);
 
         var qualifiedTypeName = entity.GetType().GetQualifiedName();
 
