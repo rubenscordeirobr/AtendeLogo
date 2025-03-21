@@ -36,8 +36,7 @@ public class UserSessionAccessor : IUserSessionAccessor
         var headerInfo = _httpContext.GetRequestHeaderInfo();
         return AnonymousUserSessionFactory.CreateAnonymousSession(headerInfo);
     }
-
-
+     
     public ClientRequestHeaderInfo GetClientRequestHeaderInfo()
     {
         return _httpContext.GetRequestHeaderInfo();
@@ -87,12 +86,7 @@ public class UserSessionAccessor : IUserSessionAccessor
             _logger.LogError(ex, "Error removing client session cookie.");
         }
     }
-
-    public Type? GetCurrentEndpointType()
-    {
-        return TryGetHttpContextItem<Type>(HttpContextItensConstants.EndpointType);
-
-    }
+     
 
     public IEndpointService? GetCurrentEndpointInstance()
     {

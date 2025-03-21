@@ -6,38 +6,42 @@ namespace AtendeLogo.TestCommon.Mocks.Infrastructure;
 
 public abstract class UserSessionAccessorMock : IUserSessionAccessor
 {
+    private UserSession? CurrentSession
+        => field ??= GetCurrentSession();
+
     public void AddClientSessionCookie(string session)
     {
         // Do nothing        
     }
-
+     
     public void RemoveClientSessionCookie(string clientSessionToken)
     {
         // Do nothing
     }
 
-    public abstract UserSession GetCurrentSession();
-     
+    protected abstract UserSession GetCurrentSession();
+
     public string? GetClientSessionToken()
     {
-        return null;
+        return CurrentSession?.ClientSessionToken;
     }
 
     IUserSession IUserSessionAccessor.GetCurrentSession()
     {
-        return GetCurrentSession();
+        return CurrentSession!;
     }
 
     public ClientRequestHeaderInfo GetClientRequestHeaderInfo()
     {
-        return new ClientRequestHeaderInfo("localhost", "Tests", "Tests");
+        var currentSession = CurrentSession!;
+        return new ClientRequestHeaderInfo(
+            currentSession.IpAddress, 
+            currentSession.UserAgent,
+            currentSession.ApplicationName);
     }
-
-    public Type? GetCurrentEndpointType()
-        => typeof(UserAuthenticationServiceMock);
-
+     
     public IEndpointService? GetCurrentEndpointInstance()
-        =>  new UserAuthenticationServiceMock();
+        => new UserAuthenticationServiceMock();
 }
 
 public class UserAuthenticationServiceMock : IEndpointService
@@ -47,23 +51,23 @@ public class UserAuthenticationServiceMock : IEndpointService
 
     public string ServiceName
         => "UserAuthentication";
-     
+
     public bool IsAllowAnonymous
         => true;
 }
 
 public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
 {
-    public override UserSession GetCurrentSession()
+    protected override UserSession GetCurrentSession()
     {
-        var headerInfo = ClientRequestHeaderInfo.Unknown;
+        var headerInfo = ClientRequestHeaderInfo.System;
         var clientSessionToken = AnonymousIdentityConstants.ClientSystemSessionToken;
 
         var userSession = new UserSession(
             applicationName: "AtendeLogo",
             clientSessionToken: clientSessionToken,
             ipAddress: headerInfo.IpAddress,
-            userAgent: "SYSTEM",
+            userAgent: headerInfo.UserAgent,
             language: Language.Default,
             authenticationType: AuthenticationType.Anonymous,
             userRole: UserRole.Anonymous,
@@ -78,10 +82,10 @@ public class AnonymousUserSessionAccessorMock : UserSessionAccessorMock
 }
 public class TenantOwnerUserSessionAccessorMock : UserSessionAccessorMock
 {
-    public override UserSession GetCurrentSession()
+    protected override UserSession GetCurrentSession()
     {
         var headerInfo = ClientRequestHeaderInfo.Unknown;
-        var clientSessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
+        var clientSessionToken = HashHelper.CreateSha256Hash(SystemTenantConstants.Tenant_Id);
 
         var userSession = new UserSession(
             applicationName: "AtendeLogo",
@@ -102,10 +106,11 @@ public class TenantOwnerUserSessionAccessorMock : UserSessionAccessorMock
 }
 public class SystemAdminUserSessionAccessorMock : UserSessionAccessorMock
 {
-    public override UserSession GetCurrentSession()
+    private static Guid RandomGuid = new Guid("d41b2318-bcd5-42ea-ae4d-31ad0b69ed22");
+    protected override UserSession GetCurrentSession()
     {
         var headerInfo = ClientRequestHeaderInfo.Unknown;
-        var clientSessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
+        var clientSessionToken = HashHelper.CreateSha256Hash(RandomGuid);
 
         var userSession = new UserSession(
             applicationName: "AtendeLogo",

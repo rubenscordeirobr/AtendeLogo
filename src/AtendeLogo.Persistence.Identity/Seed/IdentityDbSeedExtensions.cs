@@ -61,11 +61,7 @@ internal static class IdentityDbSeedExtensions
 
         anonymousUser.SetAnonymousId();
 
-        var headerInfo = new ClientRequestHeaderInfo(
-            IpAddress: "LOCALHOST",
-            ApplicationName: "AtendeLogo.Seed",
-            UserAgent: "SYSTEM"
-        );
+        var headerInfo = ClientRequestHeaderInfo.System;
 
         var anonymousUserSession = UserSessionFactory.Create(
             user: anonymousUser,
@@ -73,7 +69,6 @@ internal static class IdentityDbSeedExtensions
             authenticationType: AuthenticationType.Anonymous,
             rememberMe: true,
             tenant_id: null);
-
 
         anonymousUserSession.SetAnonymousSystemSessionId();
 

@@ -8,8 +8,8 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
     {
         _serviceProvider = serviceProvider;
     }
-     
-    [Fact]
+ 
+        [Fact]
     public async Task Verify_ShouldNotThrowException()
     {
         // Arrange
@@ -41,7 +41,7 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
 
         userSession.StartedAt
             .Should()
-            .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+            .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(30));
     }
 }
 

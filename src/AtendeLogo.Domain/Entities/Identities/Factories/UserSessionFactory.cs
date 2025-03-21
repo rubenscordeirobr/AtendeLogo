@@ -13,7 +13,7 @@ public static class UserSessionFactory
         Guid? tenant_id )
     {
         var clientSessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
-        var expirantionTime = rememberMe
+        var expirationTime = rememberMe
             ? TimeSpan.FromDays(365)
             : TimeSpan.FromMinutes(30);
 
@@ -26,7 +26,7 @@ public static class UserSessionFactory
              userRole: user.Role,
              userType: user.UserType,
              language: user.Language,
-             expirationTime: expirantionTime,
+             expirationTime: expirationTime,
              user_Id: user.Id,
              tenant_Id: tenant_id
         );

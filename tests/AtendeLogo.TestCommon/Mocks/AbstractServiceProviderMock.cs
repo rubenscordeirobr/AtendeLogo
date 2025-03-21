@@ -10,15 +10,16 @@ public abstract class AbstractServiceProviderMock : IServiceProvider
     protected abstract UserRole UserRole { get; }
     public AbstractServiceProviderMock()
     {
-        _serviceProvider = new ServiceCollection()
+        var services = new ServiceCollection()
               .AddApplicationServices()
               .AddLoggerServiceMock()
               .AddInMemoryIdentityDbContext()
               .AddMockInfrastructureServices(UserRole)
               .AddPersistenceServicesMock()
               .AddUserCasesServices()
-              .AddUserCasesSharedServices()
-              .BuildServiceProvider();
+              .AddUserCasesSharedServices();
+         
+        _serviceProvider = services.BuildServiceProvider();
     }
 
     public object? GetService(Type serviceType)

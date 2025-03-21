@@ -1,0 +1,20 @@
+﻿namespace AtendeLogo.TestCommon.Extensions;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection Remove<T>(
+        this IServiceCollection services)
+    {
+        var typeRemove = typeof(T);
+        var descriptorsToRemove = services
+            .Where(descriptor => descriptor.ServiceType == typeRemove)
+            .ToList();
+
+        foreach (var descriptor in descriptorsToRemove)
+        {
+            services.Remove(descriptor);
+        }
+        return services;
+
+    }
+}

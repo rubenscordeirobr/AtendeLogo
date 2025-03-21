@@ -10,6 +10,5 @@ public interface IUserSessionAccessor : IApplicationService
     IUserSession GetCurrentSession();
 
     ClientRequestHeaderInfo GetClientRequestHeaderInfo();
-    Type? GetCurrentEndpointType();
     IEndpointService? GetCurrentEndpointInstance();
 }

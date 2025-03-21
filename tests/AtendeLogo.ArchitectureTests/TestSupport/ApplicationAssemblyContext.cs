@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Domain.Primitives;
-using AtendeLogo.Shared.Contracts;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 
