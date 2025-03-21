@@ -1,10 +1,9 @@
 ﻿using System.Linq.Expressions;
 
-namespace AtendeLogo.Common;
+namespace AtendeLogo.Common.Factories;
 
 public static class ErrorCodeFactory
 {
-    
     public static string CreateInvalidCodeFor(Type type, string propertyName)
     {
         return $"{type.Name}.{propertyName}Invalid";

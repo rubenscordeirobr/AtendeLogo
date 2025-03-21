@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
+using AtendeLogo.Common.Factories;
 
-namespace AtendeLogo.Common.UnitTests;
+namespace AtendeLogo.Common.UnitTests.Factories;
 
 public class ErrorCodeFactoryTests
 {
