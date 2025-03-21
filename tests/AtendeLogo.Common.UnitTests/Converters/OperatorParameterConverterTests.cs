@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
+using System.Reflection;
 using AtendeLogo.Common.Converters;
 
 namespace AtendeLogo.Common.UnitTests.Converters;
@@ -107,7 +109,7 @@ public class OperatorParameterConverterTests
             yield return new object[] { "", typeof(int?), null! };
 
             // Null string for nullable type returns null
-            yield return new object[] {null!, typeof(int?), null! };
+            yield return new object[] { null!, typeof(int?), null! };
         }
     }
 
@@ -127,6 +129,53 @@ public class OperatorParameterConverterTests
         {
             result.Should().Be(expected);
         }
+    }
+
+    public class TestClass
+    {
+        public void DummyMethod(
+            int nonNullableInt,
+            int? nullableInt,
+            string nonNullableString,
+            string? nullableString
+        )
+        { }
+    }
+    public static IEnumerable<object[]> ParseParameterInfoTestData
+    {
+        get
+        {
+            var method = typeof(TestClass).GetMethod(nameof(TestClass.DummyMethod))!;
+            var parameters = method.GetParameters();
+
+            yield return new object[] { "", parameters[0], 0 };                 // int (non-nullable), returns default 0
+            yield return new object[] { "", parameters[1], null! };             // int? (nullable), returns null
+            yield return new object[] { "42", parameters[0], 42 };              // int (non-nullable)
+            yield return new object[] { null!, parameters[1], null! };          // int? (nullable), null input, returns null
+            yield return new object[] { "", parameters[2], "" };                // string (non-nullable), empty input, returns ""
+            yield return new object[] { null!, parameters[3], null! };          // string? (nullable), null input, returns null
+            yield return new object[] { "Hello", parameters[2], "Hello" };      // string (non-nullable), valid input
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(ParseParameterInfoTestData))]
+    public void Parse_WithParameterInfo_ReturnsExpectedResult(string? input, ParameterInfo parameter, object? expected)
+    {
+        var result = OperatorParameterConverter.Parse(input, parameter);
+
+        if (expected is null)
+        {
+            result.Should().BeNull();
+            return;
+        }
+
+        if (result is ICollection collection)
+        {
+            collection.Should().BeEquivalentTo(expected);
+            return;
+        }
+        result.Should().Be(expected);
     }
 }
 

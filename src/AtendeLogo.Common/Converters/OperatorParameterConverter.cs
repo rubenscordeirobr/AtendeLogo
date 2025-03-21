@@ -1,9 +1,15 @@
-﻿using System.Globalization;
+﻿using System.Collections.Concurrent;
+using System.Globalization;
+using System.Reflection;
+using AtendeLogo.Common.Factories;
 
 namespace AtendeLogo.Common.Converters;
 
 public static class OperatorParameterConverter
 {
+    private static readonly NullabilityInfoContext NullabilityContext = new();
+    private static readonly ConcurrentDictionary<ParameterInfo, NullabilityState> NullabilityCache = new();
+
     public static string? ToString(object value)
     {
         if (value is null)
@@ -14,7 +20,7 @@ public static class OperatorParameterConverter
         var type = value.GetType();
         return ToString(value, type);
     }
-
+     
     public static string? ToString(object? value, Type type)
     {
         var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -51,6 +57,22 @@ public static class OperatorParameterConverter
         return Convert.ToString(value, CultureInfo.InvariantCulture);
     }
 
+    public static object? Parse(string? stringValue, ParameterInfo parameter)
+    {
+        var value = Parse(stringValue, parameter.ParameterType);
+        if (value is null)
+        {
+            var nullability = NullabilityCache.GetOrAdd(parameter,
+                   param => NullabilityContext.Create(param).ReadState);
+
+            if (nullability == NullabilityState.NotNull)
+            {
+                return TypeDefaultValueFactory.GetNotNullDefaultValue(parameter.ParameterType);
+            }
+        }
+        return value;
+    }
+
     public static object? Parse(string? value, Type type)
     {
         var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -59,7 +81,7 @@ public static class OperatorParameterConverter
         {
             return isNullable
                 ? null
-                : Activator.CreateInstance(type);
+                : TypeDefaultValueFactory.CreateDefaultValue(type);
         }
 
         if (isNullable)
