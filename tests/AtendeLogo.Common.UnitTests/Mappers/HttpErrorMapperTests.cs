@@ -1,6 +1,7 @@
 ﻿using System.Net;
+using AtendeLogo.Common.Mappers;
 
-namespace AtendeLogo.Common.UnitTests;
+namespace AtendeLogo.Common.UnitTests.Mappers;
 
 public class HttpErrorMapperTests
 {
