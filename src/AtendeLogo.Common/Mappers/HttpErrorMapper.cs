@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using AtendeLogo.Common.Enums;
 
-namespace AtendeLogo.Common;
+namespace AtendeLogo.Common.Mappers;
 
 public static class HttpErrorMapper
 {
