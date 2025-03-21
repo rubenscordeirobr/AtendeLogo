@@ -5,6 +5,7 @@ public class UpdateDefaultTenantAddressCommandValidator : AbstractValidator<Upda
     public UpdateDefaultTenantAddressCommandValidator(
         IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(localizer);
 
         RuleFor(x => x.Tenant_Id)
             .NotEmpty()

@@ -3,7 +3,9 @@ using AtendeLogo.Presentation.Common.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Reflection;
- 
+
+namespace AtendeLogo.Application.UnitTests.Presentation.Common;
+
 public class HttpGetDescriptorSelectorTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
@@ -106,6 +108,7 @@ public class HttpGetDescriptorSelectorTests
         queryTemplate.Should().BeEmpty();
     }
 }
+
 public class SelectorTestEndpoint
 {
     // QueryTemplate: "filter={filter}"

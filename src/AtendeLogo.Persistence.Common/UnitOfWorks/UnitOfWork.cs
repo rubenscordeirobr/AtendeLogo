@@ -1,37 +1,35 @@
-﻿using AtendeLogo.Persistence.Common.Exceptions;
+﻿namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
-namespace AtendeLogo.Persistence.Common.UnitOfWorks;
-
-public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDisposable
+public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork
     where TDbContext : DbContext
 {
-    protected readonly TDbContext _dbContext;
-    protected readonly IUserSessionAccessor _userSessionAccessor;
+    protected TDbContext DbContext { get; }
+    protected IUserSessionAccessor UserSessionAccessor { get; }
 
     private readonly IEntityAuthorizationService _entityAuthorizationService;
     private readonly IEventMediator _eventMediator;
-    private readonly ILogger<IUnitOfWork> _logger;
+    private readonly ILogger _logger;
 
     private TransactionUnitOfWorkExecutor? _transactionExecutor;
     private readonly SemaphoreSlim _lock = new(1, 1);
 
-    public UnitOfWork(
+    protected UnitOfWork(
         TDbContext dbContext,
         IUserSessionAccessor userSessionService,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
-        ILogger<IUnitOfWork> logger)
+        ILogger logger)
     {
         Guard.NotNull(dbContext);
         Guard.NotNull(userSessionService);
 
-        _dbContext = dbContext;
-        _userSessionAccessor = userSessionService;
+        DbContext = dbContext;
+        UserSessionAccessor = userSessionService;
 
         _entityAuthorizationService = entityAuthorizationService;
         _eventMediator = eventMediator;
         _logger = logger;
- 
+
         if (dbContext.ChangeTracker.HasChanges())
         {
             throw new InvalidOperationException("There are tracked entities. Use SaveChangesAsync for this operation.");
@@ -42,36 +40,40 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     public void Add<TEntity>(TEntity entity) where TEntity : EntityBase
     {
-        if (entity.Id != default)
+        Guard.NotNull(entity);
+
+        if (entity.Id != Guid.Empty)
         {
             throw new InvalidOperationException("Entity already has an id.");
         }
-        _dbContext.Set<TEntity>().Add(entity);
+        DbContext.Set<TEntity>().Add(entity);
     }
 
     public void Update<TEntity>(TEntity entity) where TEntity : EntityBase
     {
         VerifyEntityIsTracked(entity);
-        _dbContext.Set<TEntity>().Update(entity);
+        DbContext.Set<TEntity>().Update(entity);
     }
 
     public void Delete<TEntity>(TEntity entity) where TEntity : EntityBase
     {
         VerifyEntityIsTracked(entity);
-        _dbContext.Set<TEntity>().Remove(entity);
+        DbContext.Set<TEntity>().Remove(entity);
     }
 
     public void Attach<TEntity>(TEntity entity) where TEntity : EntityBase
     {
-        var entry = _dbContext.Entry(entity);
+        var entry = DbContext.Entry(entity);
         if (entry.State == EntityState.Detached)
         {
-            _dbContext.Set<TEntity>().Attach(entity);
+            DbContext.Set<TEntity>().Attach(entity);
         }
     }
 
     protected T LazyInitialize<T>(ref T? repository, Func<T> factory) where T : class
     {
+        Guard.NotNull(factory);
+
         return repository ??= factory();
     }
 
@@ -82,7 +84,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
     {
         return await SaveChangesAsync(silent: false, cancellationToken);
     }
- 
+
     public async Task<SaveChangesResult> SaveChangesAsync(
         bool silent,
         CancellationToken cancellationToken = default)
@@ -97,8 +99,8 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
             }
 
             var executor = new UnitOfWorkExecutor(
-                _dbContext,
-                _userSessionAccessor,
+                DbContext,
+                UserSessionAccessor,
                 _entityAuthorizationService,
                 _eventMediator,
                 _logger);
@@ -115,7 +117,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        if (_dbContext.Database.IsInMemory())
+        if (DbContext.Database.IsInMemory())
             return;
 
         if (_transactionExecutor != null)
@@ -123,13 +125,13 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
         try
         {
-            _lock.Wait(cancellationToken);
+            await _lock.WaitAsync(cancellationToken);
 
-            var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
-           
+            var transaction = await DbContext.Database.BeginTransactionAsync(cancellationToken);
+
             _transactionExecutor = new TransactionUnitOfWorkExecutor(
-                _dbContext,
-                _userSessionAccessor,
+                DbContext,
+                UserSessionAccessor,
                 _entityAuthorizationService,
                 _eventMediator,
                 _logger,
@@ -151,15 +153,15 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         bool silent,
         CancellationToken cancellationToken = default)
     {
-        if (_dbContext.Database.IsInMemory())
+        if (DbContext.Database.IsInMemory())
             return await SaveChangesAsync(silent, cancellationToken);
 
         if (_transactionExecutor == null)
             throw new InvalidOperationException("There is no active transaction to commit.");
-     
+
         try
         {
-            _lock.Wait(cancellationToken);
+            await _lock.WaitAsync(cancellationToken);
 
             var result = await _transactionExecutor.CommitAsync(silent, cancellationToken);
             _transactionExecutor = null;
@@ -176,7 +178,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
         CancellationToken cancellationToken = default)
     {
 
-        if (_dbContext.Database.IsInMemory())
+        if (DbContext.Database.IsInMemory())
             return;
 
         if (_transactionExecutor == null)
@@ -184,7 +186,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
 
         try
         {
-            _lock.Wait(cancellationToken);
+            await _lock.WaitAsync(cancellationToken);
 
             await _transactionExecutor.TryRollbackAsync(exception, cancellationToken);
             _transactionExecutor = null;
@@ -196,39 +198,30 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork, IAsyncDispos
     }
 
     #endregion
-     
-    public async virtual ValueTask DisposeAsync()
+
+    public virtual async ValueTask DisposeAsync()
     {
-        if (_transactionExecutor != null)
+        _lock.Dispose();
+
+        if (_transactionExecutor is not null)
         {
-            await HandleTransactionOpenExceptionAsync();
+            try
+            {
+                await _transactionExecutor.DisposeAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during transaction dispose.");
+            }
+
+            _transactionExecutor = null;
         }
-    }
-
-    private async Task HandleTransactionOpenExceptionAsync()
-    {
-        Guard.NotNull(_transactionExecutor);
-
-        Exception? rollbackInnerException = null;
-        try
-        {
-            await _transactionExecutor.DisposeAsync();
-        }
-        catch (Exception ex)
-        {
-            rollbackInnerException = ex;
-        }
-
-        _transactionExecutor = null;
-
-        throw new TransactionOpenException(
-            "Failed to dispose unit of work. There is an open transaction. Rollback was invoked",
-            rollbackInnerException);
+        GC.SuppressFinalize(this);
     }
 
     private void VerifyEntityIsTracked<TEntity>(TEntity entity) where TEntity : EntityBase
     {
-        var entry = _dbContext.Entry(entity);
+        var entry = DbContext.Entry(entity);
         if (entry.State == EntityState.Detached)
         {
             throw new InvalidOperationException($"Entity {entity} is not tracked. Make sure to get entity from DbContext with the tracking option enabled.");

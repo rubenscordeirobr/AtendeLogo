@@ -2,7 +2,9 @@
 
 public enum SessionTerminationReason
 {
-    IpAddressChanged = 1,
+    [UndefinedValue]
+    Unknown = 0,
+    IpAddressChanged,
     UserAgentChanged,
     PasswordChanged,
     SessionExpired,

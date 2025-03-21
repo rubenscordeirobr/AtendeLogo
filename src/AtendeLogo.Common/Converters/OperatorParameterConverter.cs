@@ -23,7 +23,8 @@ public static class OperatorParameterConverter
      
     public static string? ToString(object? value, Type type)
     {
-        var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        Guard.NotNull(type);
+
         if (value is null)
         {
             return null;
@@ -59,6 +60,8 @@ public static class OperatorParameterConverter
 
     public static object? Parse(string? stringValue, ParameterInfo parameter)
     {
+        Guard.NotNull(parameter);
+
         var value = Parse(stringValue, parameter.ParameterType);
         if (value is null)
         {
@@ -75,6 +78,8 @@ public static class OperatorParameterConverter
 
     public static object? Parse(string? value, Type type)
     {
+        Guard.NotNull(type);
+
         var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
         if (string.IsNullOrEmpty(value) || value == "null")

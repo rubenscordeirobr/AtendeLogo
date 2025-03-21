@@ -17,9 +17,12 @@ internal class TenantAuthenticationValidationService : ITenantAuthenticationVali
         _secureConfiguration = secureConfiguration;
     }
 
-    public async Task<bool> VerifyTenantUserCredentialsAsync(string emailOrPhoneNumber, string password, CancellationToken token)
+    public async Task<bool> VerifyTenantUserCredentialsAsync(
+        string emailOrPhoneNumber,
+        string password, 
+        CancellationToken cancellationToken = default)
     {
-        var tenantUser = await _tenantUserRepository.GetByEmailOrPhoneNumberAsync(emailOrPhoneNumber, token);
+        var tenantUser = await _tenantUserRepository.GetByEmailOrPhoneNumberAsync(emailOrPhoneNumber, cancellationToken);
         if (tenantUser == null)
         {
             return false;
@@ -34,9 +37,9 @@ internal class TenantAuthenticationValidationService : ITenantAuthenticationVali
 
     public Task<bool> EmailOrPhoneNumberExitsAsync(
         string emailOrPhoneNumber,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return _tenantUserRepository.EmailOrPhoneNumberExits(emailOrPhoneNumber, token);
+        return _tenantUserRepository.EmailOrPhoneNumberExits(emailOrPhoneNumber, cancellationToken);
     }
      
 }

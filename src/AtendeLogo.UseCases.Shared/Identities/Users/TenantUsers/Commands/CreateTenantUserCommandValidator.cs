@@ -9,6 +9,9 @@ public class CreateTenantUserCommandValidator : CommandValidator<CreateTenantUse
         IJsonStringLocalizer<ValidationMessages> localizer)
         : base(localizer)
     {
+        Guard.NotNull(validationService);
+        Guard.NotNull(localizer);
+
         _validationService = validationService;
          
         RuleFor(x => x.Tenant_Id)

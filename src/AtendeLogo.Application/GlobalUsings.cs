@@ -13,3 +13,5 @@ global using AtendeLogo.Shared.Constants;
 global using AtendeLogo.Shared.Contracts;
 global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.Interfaces.Identities;
+
+

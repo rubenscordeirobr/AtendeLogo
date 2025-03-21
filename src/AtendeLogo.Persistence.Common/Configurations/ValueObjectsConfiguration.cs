@@ -12,6 +12,9 @@ public static class ValueObjectsConfiguration
         EntityTypeBuilder entityBuilder,
         bool isInMemory)
     {
+        Guard.NotNull(entityBuilder);
+        Guard.NotNull(mutableEntityType);
+
         var entityType = mutableEntityType.ClrType;
         if (!entityType.IsSubclassOf<EntityBase>())
         {
@@ -25,8 +28,7 @@ public static class ValueObjectsConfiguration
         }
         return mutableEntityType;
     }
-
-
+     
     private static EntityTypeBuilder ConfigureValueObjects(
         this EntityTypeBuilder entityBuilder,
         PropertyInfo property,
@@ -52,7 +54,7 @@ public static class ValueObjectsConfiguration
                     property.Name, ConfigurePassword);
 
                 break;
-           
+
             case Type t when t == typeof(GeoLocation):
 
                 entityBuilder.ComplexProperty<GeoLocation>(
@@ -68,15 +70,14 @@ public static class ValueObjectsConfiguration
                 ConfigurePhoneNumber(entityBuilder, property);
 
                 break;
-          
+
             default:
                 throw new NotSupportedException($"Value object {property.Name} not supported");
         }
         return entityBuilder;
     }
-   
-
-    public static void ConfigureTimeZoneOffset(
+     
+    internal static void ConfigureTimeZoneOffset(
               ComplexPropertyBuilder<TimeZoneOffset> builder)
     {
         builder.Property(tz => tz.Offset)
@@ -93,7 +94,7 @@ public static class ValueObjectsConfiguration
         builder.Ignore(t => t.OffsetTimeSpan);
     }
 
-    public static void ConfigurePassword(
+    internal static void ConfigurePassword(
         ComplexPropertyBuilder<Password> builder)
     {
         builder.Property(p => p.HashValue)
@@ -103,8 +104,8 @@ public static class ValueObjectsConfiguration
         builder.Property(p => p.Strength)
             .IsRequired();
     }
-     
-    public static void ConfigureGeoLocation(
+
+    internal static void ConfigureGeoLocation(
         ComplexPropertyBuilder<GeoLocation> builder)
     {
         builder.Property(gl => gl.Latitude)
@@ -115,11 +116,11 @@ public static class ValueObjectsConfiguration
     }
 
     private static void ConfigurePhoneNumber(
-        EntityTypeBuilder entityBuilder, 
+        EntityTypeBuilder entityBuilder,
         PropertyInfo property)
     {
-        entityBuilder.Property(typeof(PhoneNumber), property.Name)
-           .IsRequired()
+        entityBuilder.Property<PhoneNumber>(property.Name)
+            .IsRequired()
            .HasConversion(ValueConverters.PhoneNumberConverter)
            .HasMaxLength(ValidationConstants.PhoneNumberMaxLength);
     }
@@ -128,7 +129,10 @@ public static class ValueObjectsConfiguration
        EntityTypeBuilder entityBuilder,
        PropertyInfo property)
     {
-        entityBuilder.Property(typeof(FiscalCode), property.Name)
+        Guard.NotNull(entityBuilder);
+        Guard.NotNull(property);
+
+        entityBuilder.Property<FiscalCode>(property.Name)
            .IsRequired()
            .HasConversion(ValueConverters.FiscalCodeConverter)
            .HasMaxLength(ValidationConstants.FiscalCodeMaxLength);

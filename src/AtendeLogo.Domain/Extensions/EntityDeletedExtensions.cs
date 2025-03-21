@@ -16,12 +16,11 @@ public static class EntityDeletedExtensions
             throw new InvalidOperationException("Cannot delete entity with anonymous session");
         }
 
-        if (userSession.IsTenantUser() && entity is ITenantOwned entityTenant)
+        if (userSession.IsTenantUser() &&
+            entity is ITenantOwned entityTenant &&
+            entityTenant.Tenant_Id != userSession.Tenant_Id)
         {
-            if (entityTenant.Tenant_Id != userSession.Tenant_Id)
-            {
-                throw new UnauthorizedSecurityException("Cannot delete entity from another tenant");
-            }
+            throw new UnauthorizedSecurityException("Cannot delete entity from another tenant");
         }
 
         var entityType = entity.GetType();

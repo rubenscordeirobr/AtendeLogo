@@ -14,6 +14,8 @@ public class UpdateTenantCommandHandler
         UpdateTenantCommand command,
         CancellationToken cancellationToken)
     {
+        Guard.NotNull(command);
+
         var tenant = await _unitOfWork.Tenants.GetByIdAsync(command.Tenant_Id, cancellationToken);
         if(tenant is null)
         {

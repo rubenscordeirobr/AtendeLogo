@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public class GetAdminUserByPhoneNumberQueryHandler
-    : GetQueryResultHandler<GetAdminUserByPhoneNumberQuery, AdminUserResponse>
+    : IGetQueryResultHandler<GetAdminUserByPhoneNumberQuery, AdminUserResponse>
 {
     private readonly IAdminUserRepository _adminUserRepository;
     public GetAdminUserByPhoneNumberQueryHandler(
@@ -9,10 +9,13 @@ public class GetAdminUserByPhoneNumberQueryHandler
     {
         _adminUserRepository = adminUserRepository;
     }
-    public override async Task<Result<AdminUserResponse>> HandleAsync(
+
+    public async Task<Result<AdminUserResponse>> HandleAsync(
         GetAdminUserByPhoneNumberQuery query,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(query);
+
         var user = await _adminUserRepository.GetByPhoneNumberAsync(query.PhoneNumber, cancellationToken);
         if (user is null)
         {

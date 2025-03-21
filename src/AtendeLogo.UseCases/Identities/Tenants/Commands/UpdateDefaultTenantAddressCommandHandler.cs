@@ -3,17 +3,21 @@
 public sealed class UpdateDefaultTenantAddressCommandHandler
     : CommandHandler<UpdateDefaultTenantAddressCommand, OperationResponse>
 {
-    public IIdentityUnitOfWork _unitOfWork;
+    private readonly IIdentityUnitOfWork _unitOfWork;
 
     public UpdateDefaultTenantAddressCommandHandler(
         IIdentityUnitOfWork unitOfWork)
     {
+        Guard.NotNull(unitOfWork);
+
         _unitOfWork = unitOfWork;
     }
 
     protected override async Task<Result<OperationResponse>> HandleAsync(
         UpdateDefaultTenantAddressCommand command, CancellationToken cancellationToken)
     {
+        Guard.NotNull(command);
+
         var tenant = await _unitOfWork.Tenants
             .GetByIdAsync(command.Tenant_Id, cancellationToken, t => t.DefaultAddress);
 

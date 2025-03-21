@@ -2,7 +2,7 @@
 namespace AtendeLogo.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class CountryAbbreviationAttribute : Attribute
+public sealed class CountryAbbreviationAttribute : Attribute
 {
     public string Abbreviation { get; }
 

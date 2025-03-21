@@ -1,7 +1,7 @@
 ﻿
 namespace AtendeLogo.UseCases.Identities.Tenants.Queries;
 
-public sealed class GetTenantByIdQueryHandler : GetQueryResultHandler<GetTenantByIdQuery, TenantResponse>
+public sealed class GetTenantByIdQueryHandler : IGetQueryResultHandler<GetTenantByIdQuery, TenantResponse>
 {
     private readonly ITenantRepository _tenantRepository;
 
@@ -11,10 +11,12 @@ public sealed class GetTenantByIdQueryHandler : GetQueryResultHandler<GetTenantB
         _tenantRepository = tenantRepository;
     }
 
-    public override async Task<Result<TenantResponse>> HandleAsync(
+    public async Task<Result<TenantResponse>> HandleAsync(
         GetTenantByIdQuery query,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(query);
+
         var tenant = await _tenantRepository.GetByIdAsync(query.Id,
             cancellationToken,
             t => t.DefaultAddress);

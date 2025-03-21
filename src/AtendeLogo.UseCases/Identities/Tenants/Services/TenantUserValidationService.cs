@@ -12,31 +12,33 @@ internal class TenantUserValidationService : ITenantUserValidationService
         _tenantUserRepository = tenantUserRepository;
     }
 
-    public async Task<bool> IsEmailUniqueAsync(string email, CancellationToken token)
+    public async Task<bool> IsEmailUniqueAsync(
+        string email, 
+        CancellationToken cancellationToken = default)
     {
-        return await _tenantUserRepository.EmailExistsAsync(email, token) == false;
+        return !await _tenantUserRepository.EmailExistsAsync(email, cancellationToken);
     }
 
     public async Task<bool> IsEmailUniqueAsync(
         Guid currentUser_Id, 
         string email,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return await _tenantUserRepository.EmailExistsAsync(currentUser_Id, email, token) == false;
+        return !await _tenantUserRepository.EmailExistsAsync(currentUser_Id, email, cancellationToken);
     }
 
     public async Task<bool> IsPhoneNumberUniqueAsync(
         string phoneNumber,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return await _tenantUserRepository.PhoneNumberExitsAsync(phoneNumber, token) == false;
+        return !await _tenantUserRepository.PhoneNumberExitsAsync(phoneNumber, cancellationToken);
     }
 
     public async Task<bool> IsPhoneNumberUniqueAsync(
         Guid currentUser_Id, 
         string number, 
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return await _tenantUserRepository.PhoneNumberExitsAsync(currentUser_Id, number, token) == false;
+        return !await _tenantUserRepository.PhoneNumberExitsAsync(currentUser_Id, number, cancellationToken);
     }
 }

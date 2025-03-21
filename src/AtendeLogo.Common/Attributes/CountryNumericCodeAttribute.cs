@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class CountryNumericCodeAttribute : Attribute
+public sealed class CountryNumericCodeAttribute : Attribute
 {
     public int NumericCode { get; }
 

@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Persistence.Common.Configurations;
+﻿using AtendeLogo.Application.Exceptions;
+using AtendeLogo.Persistence.Common.Configurations;
 
 namespace AtendeLogo.Persistence.Identity;
 
@@ -17,7 +18,7 @@ internal class IdentityDbContext : DbContext, IDbSeedAsync
 
     public override int SaveChanges()
     {
-        throw new Exception("Use SaveChangesAsync instead");
+        throw new SyncSaveChangesNotAllowedException("Use SaveChangesAsync instead");
     }
 
     public override async Task<int> SaveChangesAsync(

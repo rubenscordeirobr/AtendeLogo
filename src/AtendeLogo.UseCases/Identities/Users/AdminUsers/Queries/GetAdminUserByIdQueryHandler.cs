@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public class GetAdminUserByIdQueryHandler
-     : GetQueryResultHandler<GetAdminUserByIdQuery, AdminUserResponse>
+     : IGetQueryResultHandler<GetAdminUserByIdQuery, AdminUserResponse>
 {
     private readonly IAdminUserRepository _adminUserRepository;
     public GetAdminUserByIdQueryHandler(
@@ -10,10 +10,12 @@ public class GetAdminUserByIdQueryHandler
         _adminUserRepository = adminUserRepository;
 
     }
-    public override async Task<Result<AdminUserResponse>> HandleAsync(
+    public async Task<Result<AdminUserResponse>> HandleAsync(
         GetAdminUserByIdQuery query,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(query);
+
         var user = await _adminUserRepository.GetByIdAsync(query.Id, cancellationToken);
         if (user is null)
         {

@@ -1,9 +1,9 @@
 ﻿using AtendeLogo.Application.Events;
 using AtendeLogo.Domain.Primitives.Contracts;
 
-namespace AtendeLogo.Application.Mediatores;
+namespace AtendeLogo.Application.Mediators;
 
-internal class DomainEventDataFactory
+internal static class DomainEventDataFactory
 {
     internal static object Create(
         IDomainEventContext eventContext,
@@ -13,7 +13,7 @@ internal class DomainEventDataFactory
             .MakeGenericType(domainEvent.GetType());
 
         var instance = Activator.CreateInstance(type, eventContext, domainEvent);
-        if(instance == null)
+        if (instance == null)
         {
             throw new InvalidOperationException($"Failed to create DomainEventData instance {type}");
         }

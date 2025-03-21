@@ -3,9 +3,9 @@
 public interface ICommandHandler<TResponse> : IRequestHandler<TResponse>
     where TResponse : IResponse
 {
-    Task IApplicationHandler.HandleAsync(object domainEvent)
+    Task IApplicationHandler.HandleAsync(object handlerObject)
     {
-        return RunAsync((ICommandRequest<TResponse>)domainEvent);
+        return RunAsync((ICommandRequest<TResponse>)handlerObject);
     }
 
     Task<Result<TResponse>> RunAsync(

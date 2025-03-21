@@ -8,6 +8,8 @@ public static partial class DefaultValidationsExtensions
         IJsonStringLocalizer<ValidationMessages> localizer,
         Country country)
     {
+        Guard.NotNull(ruleBuilder);
+
         return ruleBuilder
             .SetValidator(new FiscalCodeValidator(country, localizer));
 
@@ -17,6 +19,8 @@ public static partial class DefaultValidationsExtensions
         Func<T, Country> funcCountry,
         IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(ruleBuilder);
+
         return ruleBuilder
             .SetValidator((instance, fiscalCode) => new FiscalCodeValidator(funcCountry(instance), localizer));
     }
@@ -24,57 +28,20 @@ public static partial class DefaultValidationsExtensions
  
 public class FiscalCodeValidator : AbstractValidator<FiscalCode>
 {
-    private readonly Country _country;
-    private readonly IJsonStringLocalizer<ValidationMessages> _localizer;
-
-
     public FiscalCodeValidator(
         Country country,
         IJsonStringLocalizer<ValidationMessages> localizer)
     {
-        _country = country;
-        _localizer = localizer;
+        Guard.NotNull(localizer);
 
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(x => x.Value)
             .NotEmpty()
-            .WithMessage(_localizer["FiscalCode.Value", "Fiscal code is required."])
+            .WithMessage(localizer["FiscalCode.Value", "Fiscal code is required."])
             .MaximumLength(ValidationConstants.FiscalCodeMaxLength)
-            .WithMessage(_localizer["FiscalCode.MaxLength", "Fiscal code cannot be longer than {MaxLength} characters."])
-            .Must((fiscalCode, value) => FiscalCodeValidationUtils.IsValid(value, _country))
-            .WithMessage(_localizer["FiscalCode.Invalid", "Invalid fiscal code."]);
+            .WithMessage(localizer["FiscalCode.MaxLength", "Fiscal code cannot be longer than {MaxLength} characters."])
+            .Must((fiscalCode, value) => FiscalCodeValidationUtils.IsValid(value, country))
+            .WithMessage(localizer["FiscalCode.Invalid", "Invalid fiscal code."]);
     }
 }
-//public class FiscalCodeValidator<T> : PropertyValidator<T, FiscalCode>
-//{
-//    private readonly Country? _country;
-//    private readonly Func<T, Country>? _funcCountry;
-
-//    public override string Name
-//        => "FiscarCodeValidator";
-
-//    public FiscalCodeValidator(Country country)
-//    {
-//        _country = country;
-//    }
-
-//    public FiscalCodeValidator(Func<T, Country> funcCountry)
-//    {
-//        _funcCountry = funcCountry;
-//    }
-
-//    public override bool IsValid(ValidationContext<T> context, FiscalCode fiscalCode)
-//    {
-//        var country = GetCountry(context.InstanceToValidate);
-//        return FiscalCodeValidationUtils.IsValid(fiscalCode.Value, country);
-//    }
-
-//    private Country GetCountry(T instanceToValidate)
-//    {
-//        if (_funcCountry != null)
-//            return _funcCountry(instanceToValidate);
-
-//        return _country ?? Country.Unknown;
-//    }
-//}

@@ -2,7 +2,9 @@
 
 public enum UserRole
 {
-    Anonymous = 0,
+    [UndefinedValue]
+    None = 0,
+    Anonymous,
     SystemAdmin,
     Owner,
     Admin,

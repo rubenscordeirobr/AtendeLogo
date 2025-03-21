@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.TestCommon.Mocks.Infrastructure;
 
-internal class EmailSenderMock : IEmailSender
+public sealed class EmailSenderMock : IEmailSender
 {
     public Task<bool> SendEmailAsync(Email email)
     {

@@ -8,11 +8,13 @@ public static class EntityBuilderConfiguration
         this EntityTypeBuilder entityBuilder,
         bool isInMemory)
     {
+        Guard.NotNull(entityBuilder);
+
         return entityBuilder.ConfigureEntityBase(isInMemory)
-                .ConfigureDeletableEntity()
+                .ConfigureSoftDeletableEntity()
                 .ConfigureSortable()
                 .ConfigureIndexes()
-                .ConfigureRestrictDeleteBehaviror()
+                .ConfigureRestrictDeleteBehavior()
                 .ConfigureNotEmptyGuidConstraint();
     }
 
@@ -26,7 +28,7 @@ public static class EntityBuilderConfiguration
 
         if (!entityType.IsSubclassOfOrEquals<EntityBase>())
         {
-            throw new Exception($"The entity {entityType.Name} must be a subclass of EntityBase");
+            throw new InvalidEntityTypeException($"The entity {entityType.Name} must be a subclass of EntityBase");
         }
 
         var baseType = entityType.BaseType;
@@ -60,12 +62,12 @@ public static class EntityBuilderConfiguration
         return entityBuilder;
     }
 
-    private static EntityTypeBuilder ConfigureDeletableEntity(
+    private static EntityTypeBuilder ConfigureSoftDeletableEntity(
         this EntityTypeBuilder entityBuilder)
     {
-        var isDeleteable = typeof(ISoftDeletableEntity).IsAssignableFrom(entityBuilder.Metadata.ClrType);
+        var isSoftDeletable = typeof(ISoftDeletableEntity).IsAssignableFrom(entityBuilder.Metadata.ClrType);
 
-        if (isDeleteable)
+        if (isSoftDeletable)
         {
             entityBuilder.Property(nameof(ISoftDeletableEntity.IsDeleted))
                 .IsRequired()
@@ -91,11 +93,8 @@ public static class EntityBuilderConfiguration
         {
             var isDescending = typeof(IDescendingSortable).IsAssignableFrom(entityType.ClrType);
 
-            var sortProperty = entityType.FindProperty(nameof(ISortable.SortOrder));
-            if (sortProperty == null)
-            {
-                throw new Exception($"The entity {entityType.ClrType.Name} implements ISortable but does not have a property named 'SortOrder'");
-            }
+            var sortProperty = entityType.FindProperty(nameof(ISortable.SortOrder))
+                ?? throw new SortablePropertyMissingException($"The entity {entityType.ClrType.Name} implements ISortable but does not have a property named 'SortOrder'");
 
             var propertyBuilder = entityBuilder.Property(nameof(ISortable.SortOrder));
 
@@ -131,7 +130,7 @@ public static class EntityBuilderConfiguration
 
             if (isDeleted && index.IsUnique)
             {
-                var indexBuilder = entityBuilder.HasIndex(index.Properties.Select(x => x.Name).ToArray());
+                var indexBuilder = entityBuilder.HasIndex([.. index.Properties.Select(x => x.Name)]);
                 var deletedColumnName = entityBuilder
                     .Property(nameof(ISoftDeletableEntity.IsDeleted))
                     .Metadata
@@ -147,10 +146,10 @@ public static class EntityBuilderConfiguration
         return entityBuilder;
     }
 
-    private static EntityTypeBuilder ConfigureRestrictDeleteBehaviror(
+    private static EntityTypeBuilder ConfigureRestrictDeleteBehavior(
         this EntityTypeBuilder entityBuilder)
     {
-        var entityType = entityBuilder.Metadata;
+    
         foreach (var relationship in entityBuilder.Metadata.GetForeignKeys())
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
@@ -174,8 +173,8 @@ public static class EntityBuilderConfiguration
         var guidProperties = entityType.GetDeclaredPropertiesOfType<Guid>();
         foreach (var property in guidProperties)
         {
-            var propertyBuiler = entityBuilder.Property(property.Name);
-            var columnName = propertyBuiler.Metadata.GetColumnName();
+            var propertyBuilder = entityBuilder.Property(property.Name);
+            var columnName = propertyBuilder.Metadata.GetColumnName();
 
             entityBuilder.ToTable((tableBuilder) =>
             {

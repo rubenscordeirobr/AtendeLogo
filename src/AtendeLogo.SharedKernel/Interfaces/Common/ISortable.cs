@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Shared.Interfaces.Commom;
+﻿namespace AtendeLogo.Shared.Interfaces.Common;
 
 public interface ISortable
 {

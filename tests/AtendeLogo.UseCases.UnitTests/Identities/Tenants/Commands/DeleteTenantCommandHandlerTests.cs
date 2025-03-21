@@ -5,12 +5,12 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
 public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServiceProviderMock>
 {
-    private readonly IRequestMediatorTest _mediator;
+    private readonly IRequestMediator _mediator;
     private readonly DeleteTenantCommand _validadeCommand;
 
     public DeleteTenantCommandHandlerTests(SystemAdminUserServiceProviderMock serviceProvider)
     {
-        _mediator = (IRequestMediatorTest)serviceProvider.GetRequiredService<IRequestMediator>();
+        _mediator = serviceProvider.GetRequiredService<IRequestMediator>();
         _validadeCommand = new DeleteTenantCommand(SystemTenantConstants.Tenant_Id);
     }
 
@@ -18,7 +18,8 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
     public void Handler_ShouldBe_DeleteTenantCommandHandler()
     {
         // Act
-        var handlerType = _mediator!.GetRequestHandler(_validadeCommand);
+        var mediatorTest = (IRequestMediatorTest)_mediator;
+        var handlerType = mediatorTest.GetRequestHandler(_validadeCommand);
 
         // Assert
         handlerType.Should().BeOfType<DeleteTenantCommandHandler>();
@@ -85,7 +86,7 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
     {
         // Arrange
         var anonymousServiceProvider = new AnonymousServiceProviderMock();
-        var mediator = (IRequestMediatorTest)anonymousServiceProvider.GetRequiredService<IRequestMediator>();
+        var mediator = anonymousServiceProvider.GetRequiredService<IRequestMediator>();
 
         // Act
         var result = await mediator.RunAsync(_validadeCommand, CancellationToken.None);

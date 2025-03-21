@@ -31,7 +31,7 @@ public class SessionCacheService : CacheServiceBase, ISessionCacheService
     {
         Guard.NotNull(session);
 
-        if(session.Id == default)
+        if(session.Id == Guid.Empty)
         {
             throw new InvalidOperationException("Cannot add session with empty Id");
         }

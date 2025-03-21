@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Common.Utils;
+﻿using AtendeLogo.Common.Exceptions;
+using AtendeLogo.Common.Utils;
 using FluentValidation.Validators;
 
 namespace AtendeLogo.UseCases.Shared;
@@ -6,17 +7,20 @@ namespace AtendeLogo.UseCases.Shared;
 public static partial class DefaultValidationsExtensions
 {
     [Obsolete("Use EmailAddressValid ")]
-    public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder, EmailValidationMode mode = EmailValidationMode.AspNetCoreCompatible)
+    public static IRuleBuilderOptions<T, string> EmailAddress<T>(
+        this IRuleBuilder<T, string> ruleBuilder, 
+        EmailValidationMode mode = EmailValidationMode.AspNetCoreCompatible)
     {
-        throw new Exception($"Use {nameof(EmailAddressValid)}");
+        throw new DeprecatedException($"Use {nameof(EmailAddressValid)}");
     }
 
     public static IRuleBuilderOptions<T, string> EmailAddressValid<T>(
      this IRuleBuilder<T, string> ruleBuilder)
     {
+        Guard.NotNull(ruleBuilder);
+
         return ruleBuilder.SetValidator(new EmailValidValidator<T>());
     }
-
 }
 
 public class EmailValidValidator<T> : PropertyValidator<T, string>, IEmailValidator

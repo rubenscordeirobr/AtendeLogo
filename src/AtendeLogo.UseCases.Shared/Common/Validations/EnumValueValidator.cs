@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using AtendeLogo.Common.Attributes;
+using AtendeLogo.Common.Exceptions;
 using FluentValidation.Validators;
 
 namespace AtendeLogo.UseCases.Common.Validations;
@@ -9,11 +10,13 @@ public static partial class DefaultValidationsExtensions
     [Obsolete("Use IsInEnumValue instead.")]
     public static IRuleBuilderOptions<T, TProperty> IsInEnum<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
     {
-        throw new Exception("Use IsInEnumValue instead.");
+        throw new DeprecatedException("Use IsInEnumValue instead.");
     }
 
     public static IRuleBuilderOptions<T, TProperty> IsInEnumValue<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
     {
+        Guard.NotNull(ruleBuilder);
+
         return ruleBuilder
             .SetValidator(new EnumValueValidator<T, TProperty>());
 

@@ -31,7 +31,7 @@ public sealed record Password : ValueObjectBase
         => other is not null && HashValue == other.HashValue;
 
     public override int GetHashCode()
-        => HashValue.GetHashCode();
+        => string.GetHashCode(HashValue, StringComparison.Ordinal);
 
     public sealed override string ToString()
         => HashValue;

@@ -6,7 +6,7 @@ public interface IDomainEventData<out TEvent>
     where TEvent : IDomainEvent
 {
     IDomainEventContext Context { get; }
-    TEvent Event { get; }
+    TEvent DomainEvent { get; }
 
     void Cancel(DomainEventError error);
 

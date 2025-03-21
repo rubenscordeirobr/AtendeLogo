@@ -31,7 +31,7 @@ internal class CommandValidationRegistrar
 
         foreach (var (validationType, interfaceType) in mappedTypes)
         {
-            var commandType = interfaceType.GetGenericArguments().First();
+            var commandType = interfaceType.GetGenericArguments()[0];
             if (validationType is null)
             {
                 throw new InvalidOperationException($"Validation not found for command: {commandType.Name}");
@@ -43,7 +43,7 @@ internal class CommandValidationRegistrar
                 continue;
             }
 
-            ThrowIfHandAnyOtherCommandValidatorRegistredFor(
+            EnsureNoOtherCommandValidatorRegistered(
                 commandType,
                 serviceType,
                 validationType);
@@ -52,30 +52,30 @@ internal class CommandValidationRegistrar
         }
     }
 
-    private void ThrowIfHandAnyOtherCommandValidatorRegistredFor(
+    private void EnsureNoOtherCommandValidatorRegistered(
         Type commandType,
         Type serviceType,
         Type validationType)
     {
-        var registredValidator = _services.Where(
+        var registeredValidators = _services.Where(
             service => service.ServiceType == serviceType &&
                         service.ImplementationType != validationType);
 
-        if (registredValidator.Any())
+        if (registeredValidators.Any())
         {
-            var erroMessage = GetErrorMessage(registredValidator, commandType, serviceType, validationType);
-            throw new CommandValidatorAlreadyExistsException(erroMessage);
+            var errorMessage = GetErrorMessage(registeredValidators, commandType, serviceType, validationType);
+            throw new CommandValidatorAlreadyExistsException(errorMessage);
         }
     }
 
-    private string GetErrorMessage(IEnumerable<ServiceDescriptor> registredValidator,
+    private string GetErrorMessage(IEnumerable<ServiceDescriptor> registeredValidators,
         Type commandType,
         Type serviceType,
         Type validationType)
     {
-        var implementationType = registredValidator.First().ImplementationType!;
-        return $" The command {commandType.GetQualifiedName()} can't be registered for " +
-               $"the validator {validationType.GetQualifiedName()} because it is already registered for " +
+        var implementationType = registeredValidators.First().ImplementationType!;
+        return $"The service  {serviceType.GetQualifiedName()} for the command {commandType.GetQualifiedName()} can't be registered for " +
+               $" the implementation {validationType.GetQualifiedName()} because it is already registered for " +
                $"{implementationType.GetQualifiedName()}";
     }
 }

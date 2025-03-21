@@ -30,7 +30,7 @@ internal static class IdentityDbSeedExtensions
         dbContext.AddSuperAdminUser();
         dbContext.AddSystemTenant();
 
-        if (!(dbContext is IDbSeedAsync dbSeed))
+        if (dbContext is not IDbSeedAsync _)
         {
             throw new InvalidOperationException("DbContext must implement IDbSeedAsync");
         }
@@ -44,10 +44,9 @@ internal static class IdentityDbSeedExtensions
 
     private static void AddAnonymousUserAndSessionAsync(this IdentityDbContext dbContext)
     {
-        var strongPassword = "%ANONYMOUS@anymous%";
-        var phoneNumber = PhoneNumber.Create("+5542999999999").GetValue();
-        var password = Password.Create(strongPassword, "ANONYMOUS").GetValue();
-        var anonymousSession_Id = AnonymousIdentityConstants.Session_Id;
+        var strongPassword = "%ANONYMOUS@anonymous%";
+        var phoneNumber = PhoneNumber.Create("+5542999999999").GetRequiredValue();
+        var password = Password.Create(strongPassword, "ANONYMOUS").GetRequiredValue();
 
         var anonymousUser = new SystemUser(
             name: "Anonymous",
@@ -79,10 +78,9 @@ internal static class IdentityDbSeedExtensions
     private static void AddSuperAdminUser(this IdentityDbContext dbContext)
     {
         var strongPassword = "SuperAdmin@Teste%#";
-        var phoneNumber = PhoneNumber.Create("+5542998373996").GetValue();
+        var phoneNumber = PhoneNumber.Create("+5542998373996").GetRequiredValue();
 
-        var password = Password.Create(strongPassword, "SYSTEM").GetValue();
-        var anonymousSession_Id = AnonymousIdentityConstants.Session_Id;
+        var password = Password.Create(strongPassword, "SYSTEM").GetRequiredValue();
 
         var anonymousUser = new AdminUser(
             name: SuperAdminUserConstants.Name,
@@ -102,10 +100,10 @@ internal static class IdentityDbSeedExtensions
     {
         var strongPassword = "TenantAdmin@Teste%#";
         var password = Password.Create(strongPassword, "SYSTEM")
-            .GetValue();
+            .GetRequiredValue();
 
         var phoneNumber = PhoneNumber.Create(SystemTenantConstants.PhoneNumber)
-            .GetValue();
+            .GetRequiredValue();
 
         var fiscalCode = FiscalCode.Create(SystemTenantConstants.FiscalCode, Country.Brazil).Value!;
 

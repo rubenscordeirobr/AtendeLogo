@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
 public sealed class GetSystemUserByIdQueryHandler
-    : GetQueryResultHandler<GetSystemUserByIdQuery, SystemUserResponse>
+    : IGetQueryResultHandler<GetSystemUserByIdQuery, SystemUserResponse>
 {
     private readonly ISystemUserRepository _systemUserRepository;
     public GetSystemUserByIdQueryHandler(
@@ -10,10 +10,12 @@ public sealed class GetSystemUserByIdQueryHandler
         _systemUserRepository = systemUserRepository;
     }
 
-    public override async Task<Result<SystemUserResponse>> HandleAsync(
+    public async Task<Result<SystemUserResponse>> HandleAsync(
         GetSystemUserByIdQuery query,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(query);
+
         var user = await _systemUserRepository.GetByIdAsync(query.Id, cancellationToken);
         if (user is null)
         {

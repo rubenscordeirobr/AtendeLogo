@@ -28,7 +28,7 @@ public abstract class EntityBase
 
     public override string ToString()
     {
-        if (Id == default)
+        if (Id == Guid.Empty)
         {
             return $"{GetType().Name}: Id={Id}";
         }
@@ -38,25 +38,22 @@ public abstract class EntityBase
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
-        {
             return true;
-        }
 
-        if (obj is not EntityBase other ||
-            GetType() != obj.GetType())
-        {
+        if (obj is null || obj.GetType() != GetType())
             return false;
-        }
 
-        if (Id == default || other.Id == default)
-        {
+        if (obj is not EntityBase other)
             return false;
-        }
+
+        if (Id == Guid.Empty || other.Id == Guid.Empty)
+            return false;
+
         return Id == other.Id;
     }
 
     public override int GetHashCode()
     {
-        return (GetType().ToString() + Id).GetHashCode();
+        return HashCode.Combine(GetType(), Id);
     }
 }

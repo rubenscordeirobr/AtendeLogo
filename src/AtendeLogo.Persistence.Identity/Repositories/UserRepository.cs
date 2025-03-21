@@ -6,7 +6,7 @@ internal abstract class UserRepository<TUserEntity> : RepositoryBase<TUserEntity
     protected override int DefaultMaxRecords
         => GetDefaultMaxRecords();
 
-    public UserRepository(IdentityDbContext dbContext,
+    protected UserRepository(IdentityDbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
         TrackingOption trackingOption = TrackingOption.NoTracking)
         : base(dbContext, userSessionAccessor, trackingOption)
@@ -38,7 +38,7 @@ internal abstract class UserRepository<TUserEntity> : RepositoryBase<TUserEntity
 
     private int GetDefaultMaxRecords()
     {
-        var userSession = _userSessionAccessor.GetCurrentSession();
+        var userSession = GetCurrentSession();
         return (!userSession.IsTenantUser() && !userSession.IsSystemAdminUser())
             ? 1
             : base.DefaultMaxRecords;

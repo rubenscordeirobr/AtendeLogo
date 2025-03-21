@@ -15,6 +15,8 @@ public sealed class DeleteTenantUserCommandHandler
         DeleteTenantUserCommand command,
         CancellationToken cancellationToken)
     {
+        Guard.NotNull(command);
+
         var tenantUser = await _unitOfWork.TenantUsers
             .GetByIdAsync(command.Id, cancellationToken);
 

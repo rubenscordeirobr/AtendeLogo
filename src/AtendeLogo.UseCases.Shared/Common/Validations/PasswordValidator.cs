@@ -6,6 +6,8 @@ public static partial class DefaultValidationsExtensions
      this IRuleBuilder<T, Password> ruleBuilder,
      IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(ruleBuilder);
+
         return ruleBuilder
             .SetValidator(new PasswordValidator(localizer));
     }
@@ -14,6 +16,9 @@ public static partial class DefaultValidationsExtensions
          this IRuleBuilder<T, string> ruleBuilder,
          IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(ruleBuilder);
+        Guard.NotNull(localizer);
+
         var options = ruleBuilder
             .NotEmpty()
                 .WithMessage(localizer["PasswordEmpty", "Password cannot be empty"])
@@ -37,6 +42,8 @@ public class PasswordValidator : AbstractValidator<Password>
 {
     public PasswordValidator(IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(localizer);
+
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(x => x.Strength)

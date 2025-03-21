@@ -1,7 +1,7 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
 public class GetTenantUserByEmailOrPhoneNumberQueryHandler
-    : GetQueryResultHandler<GetTenantUserByEmailOrPhoneNumberQuery, TenantUserResponse>
+    : IGetQueryResultHandler<GetTenantUserByEmailOrPhoneNumberQuery, TenantUserResponse>
 {
     private readonly ITenantUserRepository _tenantUserRepository;
     public GetTenantUserByEmailOrPhoneNumberQueryHandler(
@@ -9,10 +9,12 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandler
     {
         _tenantUserRepository = tenantUserRepository;
     }
-    public override async Task<Result<TenantUserResponse>> HandleAsync(
+    public async Task<Result<TenantUserResponse>> HandleAsync(
         GetTenantUserByEmailOrPhoneNumberQuery query,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(query);
+
         var user = await _tenantUserRepository.GetByEmailOrPhoneNumberAsync(query.EmailOrPhoneNumber, cancellationToken);
         if (user is null)
         {
@@ -26,7 +28,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandler
             Name = user.Name,
             Email = user.Email,
             ProfilePictureUrl = user.ProfilePictureUrl,
-            Language =user.Language,
+            Language = user.Language,
             PhoneNumber = user.PhoneNumber,
             UserState = user.UserState,
             UserStatus = user.UserStatus,

@@ -10,7 +10,7 @@ public interface IDomainEventContext
     bool IsCanceled { get; }
     DomainEventError? Error { get; }
 
-    void AddExecutedEventResults(IDomainEvent domainEvent, List<ExecutedDomainEventResult> results);
+    void AddExecutedEventResults(IDomainEvent domainEvent, IReadOnlyList<ExecutedDomainEventResult> results);
     void Cancel(DomainEventError error);
 }
 

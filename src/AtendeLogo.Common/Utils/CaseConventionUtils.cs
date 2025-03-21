@@ -66,7 +66,7 @@ public static partial class CaseConventionUtils
         if (CamelCaseRegex().IsMatch(input))
             return CaseType.CamelCase;
 
-        if (input.Contains('_') &&
+        if (input.Contains('_', StringComparison.Ordinal) &&
             SnakeCaseRegex().IsMatch(input))
             return CaseType.SnakeCase;
 

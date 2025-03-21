@@ -1,18 +1,23 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
 public class GetTenantUserByPhoneNumberQueryHandler
-    : GetQueryResultHandler<GetTenantUserByPhoneNumberQuery, TenantUserResponse>
+    : IGetQueryResultHandler<GetTenantUserByPhoneNumberQuery, TenantUserResponse>
 {
     private readonly ITenantUserRepository _tenantUserRepository;
     public GetTenantUserByPhoneNumberQueryHandler(
         ITenantUserRepository tenantUserRepository)
     {
+        Guard.NotNull(tenantUserRepository);
+
         _tenantUserRepository = tenantUserRepository;
     }
-    public override async Task<Result<TenantUserResponse>> HandleAsync(
+
+    public async Task<Result<TenantUserResponse>> HandleAsync(
         GetTenantUserByPhoneNumberQuery query,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(query);
+
         var user = await _tenantUserRepository.GetByPhoneNumberAsync(query.PhoneNumber, cancellationToken);
         if (user is null)
         {

@@ -21,12 +21,10 @@ internal static class PropertyConfiguration
 
     internal static IMutableProperty ConfigureCollation(this IMutableProperty mutableProperty)
     {
-        if (mutableProperty.ClrType == typeof(string))
+        if (mutableProperty.ClrType == typeof(string) &&
+            mutableProperty.GetCollation() == null)
         {
-            if (mutableProperty.GetCollation() == null)
-            {
-                mutableProperty.SetCollation("case_accent_insensitive");
-            }
+            mutableProperty.SetCollation("case_accent_insensitive");
         }
         return mutableProperty;
     }
@@ -48,13 +46,11 @@ internal static class PropertyConfiguration
             mutableProperty.SetValueConverter(ValueConverters.EmptyNullableGuidConverter);
         }
 
-        if (RequiresNotEmptyGuidValidation(mutableProperty.PropertyInfo))
+        if (mutableProperty.ClrType == typeof(Guid) &&
+            RequiresNotEmptyGuidValidation(mutableProperty.PropertyInfo))
         {
-            var propertyType = mutableProperty.ClrType;
-            if (mutableProperty.ClrType == typeof(Guid))
-            {
-                mutableProperty.SetValueConverter(new NotEmptyGuidValidation(mutableProperty.PropertyInfo));
-            }
+            mutableProperty.SetValueConverter(new NotEmptyGuidValidation(mutableProperty.PropertyInfo));
+
         }
         return mutableProperty;
     }

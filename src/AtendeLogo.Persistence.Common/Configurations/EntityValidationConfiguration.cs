@@ -56,7 +56,7 @@ public static class EntityValidationConfiguration
         }
 
         var isDeclaredInValueObject = declaringType
-            .IsSubclassOf<ValueObjectBase>() == true;
+            .IsSubclassOf<ValueObjectBase>();
 
         if (isDeclaredInValueObject)
         {

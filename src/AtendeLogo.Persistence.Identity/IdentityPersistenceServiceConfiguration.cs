@@ -55,12 +55,14 @@ public static class IdentityPersistenceServiceConfiguration
 
     public static async Task ApplyMigrationsAsync(this IApplicationBuilder app)
     {
+        Guard.NotNull(app);
+
         using var scope = app.ApplicationServices.CreateScope();
 
         var services = scope.ServiceProvider;
         var dbContext = services.GetRequiredService<IdentityDbContext>();
 
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync();
         await dbContext.SeedAsync();
     }
 }

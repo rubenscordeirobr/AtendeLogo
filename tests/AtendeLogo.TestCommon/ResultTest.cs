@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Shared.Contracts;
-
-namespace AtendeLogo.UseCases.UnitTests.TestSupport;
+﻿namespace AtendeLogo.TestCommon;
 
 // Existing code
 public class ResultTest<T>

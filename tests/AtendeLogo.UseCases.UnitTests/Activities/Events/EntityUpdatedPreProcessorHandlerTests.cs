@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Mediatores;
+﻿using AtendeLogo.Application.Mediators;
 
 namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 

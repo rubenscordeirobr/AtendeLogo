@@ -5,7 +5,7 @@ using AtendeLogo.Shared.Models.Identities;
 
 namespace AtendeLogo.Application.Services;
 
-public class UserSessionVerificationService : IUserSessionVerificationService, IAsyncDisposable
+public class UserSessionVerificationService : IUserSessionVerificationService, IUserSessionVerificationServiceTest, IAsyncDisposable
 {
     private readonly ISessionCacheService _sessionCacheService;
     private readonly IIdentityUnitOfWork _unitWork;
@@ -31,6 +31,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         return session;
 
     }
+
     private async Task<IUserSession> GetValidUserSessionAsync()
     {
         var userSession = await GetUserSessionAsync();
@@ -43,7 +44,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
                 return userSession;
             }
         }
-        return await CreateAnonymousSessionAsync(userSession);
+        return await CreateAnonymousSessionAsync();
     }
 
     private async Task<IUserSession?> GetUserSessionAsync()
@@ -164,10 +165,8 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         await _sessionCacheService.AddSessionAsync(userSession);
     }
 
-    private async Task<UserSession> CreateAnonymousSessionAsync(
-        IUserSession? currentSession)
+    private async Task<UserSession> CreateAnonymousSessionAsync()
     {
-        var currentSessionId = currentSession?.Id ?? AnonymousIdentityConstants.Session_Id;
         var headerInfo = _userSessionAccessor.GetClientRequestHeaderInfo();
         var anonymousUser = AnonymousIdentityConstants.AnonymousUser;
         var userSession = UserSessionFactory.Create(
@@ -190,6 +189,17 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     public ValueTask DisposeAsync()
     {
+        GC.SuppressFinalize(this);
         return _unitWork.DisposeAsync();
     }
+ 
+    #region IUserSessionVerificationServiceTest
+
+    Task<UserSession> IUserSessionVerificationServiceTest.CreateAnonymousSessionAsync()
+    {
+        return CreateAnonymousSessionAsync();
+    }
+
+    #endregion
+
 }

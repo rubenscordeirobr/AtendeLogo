@@ -27,6 +27,8 @@ public sealed class EntityDeletedEventHandler<TEntity> : IEntityDeletedEventHand
     public async Task HandleAsync(
         IEntityDeletedEvent<TEntity> domainEvent)
     {
+        Guard.NotNull(domainEvent);
+
         var userSession = _userSessionAccessor.GetCurrentSession();
         var entity = domainEvent.Entity;
 

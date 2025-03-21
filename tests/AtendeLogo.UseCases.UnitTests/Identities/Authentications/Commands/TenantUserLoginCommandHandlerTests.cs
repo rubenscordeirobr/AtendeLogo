@@ -47,7 +47,7 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
         var result = await mediator.TestRunAsync(command);
 
         // Assert
-        result.ShouldNotBeSuccessful();
+        result.ShouldBeFailure();
         result.Error!.Message.Should().Contain("does not exist");
     }
 
@@ -62,7 +62,7 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
         var result = await mediator.TestRunAsync(command);
 
         // Assert
-        result.ShouldNotBeSuccessful();
+        result.ShouldBeFailure();
         result.ShouldHaveValidationErrorFor(x => x.Password);
     }
 
@@ -77,7 +77,7 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
         var result = await mediator.TestRunAsync(command);
 
         // Assert
-        result.ShouldNotBeSuccessful();
+        result.ShouldBeFailure();
         result.Error!.Message.Should().Contain("Invalid credentials");
     }
 }

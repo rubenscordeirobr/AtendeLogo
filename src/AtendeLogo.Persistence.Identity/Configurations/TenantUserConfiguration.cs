@@ -4,6 +4,8 @@ public class TenantUserConfiguration : IEntityTypeConfiguration<TenantUser>
 {
     public void Configure(EntityTypeBuilder<TenantUser> builder)
     {
+        Guard.NotNull(builder);
+
         builder.HasBaseType<User>();
 
         builder.HasOne(x => x.Tenant)
@@ -13,7 +15,7 @@ public class TenantUserConfiguration : IEntityTypeConfiguration<TenantUser>
 
         var metadata = builder.Metadata;
 
-        // If the "Discriminator" property exists, it indicates an EF Core relational database; 
+        // If the "Discriminator" property exists, it indicates an EF Core relational database
         // otherwise, it is an EF Core in-memory database.
         var isExitsDiscriminator = metadata.GetProperties().Any(x => x.Name == "Discriminator");
         if (!isExitsDiscriminator)

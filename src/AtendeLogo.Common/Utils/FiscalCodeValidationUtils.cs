@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Common.Utils;
 
-public class FiscalCodeValidationUtils
+public static class FiscalCodeValidationUtils
 {
     public static bool IsValid(string? fiscalCode, Country country)
     {

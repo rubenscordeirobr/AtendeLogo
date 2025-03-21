@@ -10,6 +10,9 @@ public class EntityAuthorizationService : IEntityAuthorizationService
          IUserSession userSession,
          EntityChangeState entityChangeState)
     {
+        Guard.NotNull(entity);
+        Guard.NotNull(userSession);
+
         ValidateAuthorization(entity, userSession, entityChangeState);
         ValidateRole(entity, userSession, entityChangeState);
     }
@@ -65,10 +68,10 @@ public class EntityAuthorizationService : IEntityAuthorizationService
             return entity.CreatedSession_Id == userSession.Id;
         }
         return false;
-            
+
     }
 
-    private static void ValidateRole(
+    private void ValidateRole(
         EntityBase entity,
         IUserSession userSession,
         EntityChangeState state)

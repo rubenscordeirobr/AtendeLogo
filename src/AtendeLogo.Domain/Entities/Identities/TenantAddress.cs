@@ -29,6 +29,7 @@ public sealed class TenantAddress : EntityBase, ITenantOwned, IAddress, ISoftDel
            : this(addressName, street, number, complement, neighborhood,
                  city, state, zipCode, country, tenant.Id)
     {
+        Tenant = tenant;
     }
 
     // EF Core
@@ -72,6 +73,7 @@ public sealed class TenantAddress : EntityBase, ITenantOwned, IAddress, ISoftDel
     }
 
     #region IEntityDeleted, IOrderableEntity
+
     public bool IsDeleted { get; private set; }
     public DateTime? DeletedAt { get; private set; }
     public Guid? DeletedSession_Id { get; private set; }

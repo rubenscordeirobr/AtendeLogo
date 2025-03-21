@@ -6,9 +6,9 @@ namespace AtendeLogo.TestCommon.Mocks;
 
 public abstract class AbstractServiceProviderMock : IServiceProvider
 {
-    private IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider;
     protected abstract UserRole UserRole { get; }
-    public AbstractServiceProviderMock()
+    protected AbstractServiceProviderMock()
     {
         var services = new ServiceCollection()
               .AddApplicationServices()

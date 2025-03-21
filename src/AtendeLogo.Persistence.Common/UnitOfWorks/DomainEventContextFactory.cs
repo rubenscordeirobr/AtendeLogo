@@ -3,32 +3,37 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
-internal class DomainEventContextFactory
+internal static class DomainEventContextFactory
 {
     internal static DomainEventContext Create(
         IUserSession userSession,
         IEnumerable<EntityEntry<EntityBase>> entries)
     {
-        var aggregateEvents = entries
-            .Select(e => e.Entity as IEventAggregate)
-            .Where(e => e is not null)
-            .Cast<IEventAggregate>()
-            .SelectMany(x => x.DomainEvents)
-            .ToList();
+        Guard.NotNull(userSession);
+        Guard.NotNull(entries);
 
-        var entityChangeEvents = entries
-            .Where(entry => entry is not null)
-            .Select(entry => CreateEntityStateChangedEven(entry))
-            .ToList();
+        var domainEvents = new List<IDomainEvent>();
 
-        var allEvents = aggregateEvents
-            .Concat(entityChangeEvents)
-            .ToList();
+        foreach (var entry in entries)
+        {
+            if (entry is null) continue;
 
-        return new DomainEventContext(allEvents);
+            if (entry.Entity is IEventAggregate aggregate && aggregate.DomainEvents?.Any() == true)
+            {
+                domainEvents.AddRange(aggregate.DomainEvents);
+            }
+
+            var changeEvent = CreateEntityStateChangedEven(entry);
+            if (changeEvent is not null)
+            {
+                domainEvents.Add(changeEvent);
+            }
+        }
+
+        return new DomainEventContext(domainEvents);
     }
 
-    private static IEntityStateChangedEvent CreateEntityStateChangedEven(
+    private static IEntityStateChangedEvent? CreateEntityStateChangedEven(
         EntityEntry<EntityBase> entry)
     {
         return entry.State switch
@@ -52,10 +57,8 @@ internal class DomainEventContextFactory
         var propertyEvents = GetPropertyEvents<TPropertyEvent>(entry);
         var parameters = new object[] { entity, propertyEvents };
 
-        var entityChangedEvent = Activator.CreateInstance(eventType, parameters);
-
-        if (entityChangedEvent is null)
-            throw new InvalidOperationException("Failed to create entity state changed event.");
+        var entityChangedEvent = Activator.CreateInstance(eventType, parameters)
+            ?? throw new InvalidOperationException("Failed to create entity state changed event.");
 
         if (entityChangedEvent is IEntityStateChangedEvent entityStateChangedEvent)
             return entityStateChangedEvent;
@@ -63,7 +66,7 @@ internal class DomainEventContextFactory
         throw new InvalidOperationException("Failed to create entity state changed event. Invalid event type.");
     }
 
-    private static IReadOnlyList<TPropertyEvent> GetPropertyEvents<TPropertyEvent>(
+    private static List<TPropertyEvent> GetPropertyEvents<TPropertyEvent>(
         EntityEntry<EntityBase> entry)
         where TPropertyEvent : IPropertyEvent
     {
@@ -86,12 +89,12 @@ internal class DomainEventContextFactory
         return state switch
         {
             EntityState.Modified => CreateChangedPropertyEvent(property),
-            EntityState.Added | EntityState.Detached => CreatePropertyValueEvent(property),
+            EntityState.Added or EntityState.Detached => CreatePropertyValueEvent(property),
             _ => null
         };
     }
 
-    private static IPropertyEvent? CreateChangedPropertyEvent(PropertyEntry property)
+    private static ChangedPropertyEvent? CreateChangedPropertyEvent(PropertyEntry property)
     {
         if (!property.IsModified)
             return null;
@@ -109,7 +112,7 @@ internal class DomainEventContextFactory
          );
     }
 
-    private static IPropertyEvent CreatePropertyValueEvent(PropertyEntry property)
+    private static PropertyValueEvent CreatePropertyValueEvent(PropertyEntry property)
     {
         return new PropertyValueEvent(
             PropertyName: property.Metadata.Name,

@@ -13,16 +13,16 @@ public abstract record Error
 
     protected Error(string code, string message)
     {
-        Guard.NotNullOrWhiteSpace(code, nameof(code));
-        Guard.NotNullOrWhiteSpace(message, nameof(message));
+        Guard.NotNullOrWhiteSpace(code);
+        Guard.NotNullOrWhiteSpace(message);
 
         Code = code;
         Message = message;
     }
-    public Error(Exception? exception, string code, string message)
+    protected Error(Exception? exception, string code, string message)
     {
-        Guard.NotNullOrWhiteSpace(code, nameof(code));
-        Guard.NotNullOrWhiteSpace(message, nameof(message));
+        Guard.NotNullOrWhiteSpace(code);
+        Guard.NotNullOrWhiteSpace(message);
 
         Code = code;
         Message = message;
@@ -33,10 +33,10 @@ public abstract record Error
         => $"{Code}: {Message}";
 
     public static implicit operator string(Error error)
-        => error.ToString();
+        => error?.ToString() ?? string.Empty;
 
     public virtual HttpStatusCode StatusCode
-        => HttpErrorMapper.GetHttpStatusCode(this);
+        => HttpErrorMapper.MapHttpStatusCode(this);
 }
 
 public record BadRequestError(string Code,
@@ -126,12 +126,13 @@ public partial record DeserializationError
         string code,
         string json)
     {
+
         json = json.SafeTrim(1024, "[truncated]");
         return new DeserializationError(ex,
                code,
                $"An error occurred while deserializing. " +
                $"Type : {typeof(T).Name}" +
-               $"Message: {ex.Message}\r\n" +
+               $"Message: {ex?.Message}\r\n" +
                $"Json: {json}");
     }
 }

@@ -6,6 +6,8 @@ public class TenantUserLogoutCommandValidator : CommandValidator<TenantUserLogou
         IJsonStringLocalizer<ValidationMessages> localizer)
         : base(localizer)
     {
+        Guard.NotNull(localizer);
+
         RuleFor(x => x.ClientSessionToken)
             .NotEmpty()
                 .WithMessage(localizer["TenantUserLogout.AuthTokenRequired", "Auth token is required."])

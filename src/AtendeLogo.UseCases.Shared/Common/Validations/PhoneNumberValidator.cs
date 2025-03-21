@@ -7,6 +7,8 @@ public static partial class DefaultValidationsExtensions
         this IRuleBuilder<T, PhoneNumber> ruleBuilder,
         IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(ruleBuilder);
+
         return ruleBuilder
             .SetValidator(new PhoneNumberValidator(localizer));
     }
@@ -15,6 +17,9 @@ public static partial class DefaultValidationsExtensions
         this IRuleBuilder<T, string> ruleBuilder,
         IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(ruleBuilder);
+        Guard.NotNull(localizer);
+
         return ruleBuilder
             .NotEmpty()
             .WithMessage(localizer["PhoneNumber.Number", "Phone number cannot be empty."])
@@ -28,6 +33,8 @@ public class PhoneNumberValidator : AbstractValidator<PhoneNumber>
 {
     public PhoneNumberValidator(IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(localizer);
+
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(x => x.Number)

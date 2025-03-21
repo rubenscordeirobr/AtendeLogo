@@ -9,7 +9,7 @@ public abstract class UserSessionAccessorMock : IUserSessionAccessor
     private UserSession? CurrentSession
         => field ??= GetCurrentSession();
 
-    public void AddClientSessionCookie(string session)
+    public void AddClientSessionCookie(string clientSessionToken)
     {
         // Do nothing        
     }

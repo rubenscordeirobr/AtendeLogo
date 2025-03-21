@@ -1,16 +1,19 @@
 ﻿
+using AtendeLogo.Application.Extensions;
+
 namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
 internal sealed partial class GetAllSystemUsersQueryHandler
-    : GetManyQueryHandler<GetAllSystemUsersQuery, SystemUserResponse>
+    : IGetManyQueryHandler<GetAllSystemUsersQuery, SystemUserResponse>
 {
     private readonly ISystemUserRepository _systemUserRepository;
     public GetAllSystemUsersQueryHandler(
         ISystemUserRepository systemUserRepository)
     {
-        _systemUserRepository = systemUserRepository; ;
+        _systemUserRepository = systemUserRepository;
     }
-    public override async Task<Result<IReadOnlyList<SystemUserResponse>>> HandleAsync(
+
+    public async Task<Result<IReadOnlyList<SystemUserResponse>>> HandleAsync(
         GetAllSystemUsersQuery request,
         CancellationToken cancellationToken = default)
     {
@@ -32,6 +35,6 @@ internal sealed partial class GetAllSystemUsersQueryHandler
             PhoneNumberVerificationState = user.PhoneNumberVerificationState
         }).ToList();
 
-        return Success(userResponses);
+        return this.Success(userResponses);
     }
 }

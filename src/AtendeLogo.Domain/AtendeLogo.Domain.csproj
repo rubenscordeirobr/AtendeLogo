@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<PropertyGroup>
+		<AnalysisMode>all</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
+		<InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
+		<InternalsVisibleTo Include="AtendeLogo.UseCases.UnitTests" />
+		<InternalsVisibleTo Include="AtendeLogo.TestCommon" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
+		<ProjectReference Include="..\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
+	</ItemGroup>
  
-  <ItemGroup>
-    <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
-    <InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
-    <InternalsVisibleTo Include="AtendeLogo.UseCases.UnitTests" />
-    <InternalsVisibleTo Include="AtendeLogo.TestCommon" />
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
-    <ProjectReference Include="..\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
-  </ItemGroup>
-
-
-
 </Project>

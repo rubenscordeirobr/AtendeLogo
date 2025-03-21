@@ -2,7 +2,6 @@
 using AtendeLogo.Application.Contracts.Events;
 using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Application.Queries;
 using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Application.UnitTests.Registrars;
@@ -92,18 +91,18 @@ public class ApplicationHandlerRegistrarTests
         }
     }
 
-    public class MockSingleQueryHandler : GetQueryResultHandler<MockSingleQueryRequest, MockResponse>
+    public class MockSingleQueryHandler : IGetQueryResultHandler<MockSingleQueryRequest, MockResponse>
     {
-        public override Task<Result<MockResponse>> HandleAsync(MockSingleQueryRequest request, CancellationToken cancellationToken = default)
+        public Task<Result<MockResponse>> HandleAsync(MockSingleQueryRequest request, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Result.Success(new MockResponse()));
         }
     }
 
-    public class MockCollectionQueryHandler : GetManyQueryHandler<MockCollectionQueryRequest, MockResponse>
+    public class MockCollectionQueryHandler : IGetManyQueryHandler<MockCollectionQueryRequest, MockResponse>
     {
-        public override Task<Result<IReadOnlyList<MockResponse>>> HandleAsync(
-            MockCollectionQueryRequest request, 
+        public Task<Result<IReadOnlyList<MockResponse>>> HandleAsync(
+            MockCollectionQueryRequest request,
             CancellationToken cancellationToken = default)
         {
             var result = Result.Success<IReadOnlyList<MockResponse>>([]);

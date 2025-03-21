@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <RootNamespace>AtendeLogo.Shared</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AnalysisMode>all</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+		<RootNamespace>AtendeLogo.Shared</RootNamespace>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
-  </ItemGroup>
- 
 </Project>

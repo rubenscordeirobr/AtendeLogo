@@ -3,8 +3,13 @@ using System.Text.Json;
 
 namespace AtendeLogo.Common.Utils;
 
-public class JsonUtils
+public static class JsonUtils
 {
+    private static JsonSerializerOptions? _cacheJsonSerializerOptions;
+
+    public static JsonSerializerOptions CacheJsonSerializerOptions
+        => (_cacheJsonSerializerOptions ??= CreateCacheJsonSerializerOptions());
+
     public static string Serialize(object? obj, JsonSerializerOptions? options = null)
     {
         options ??= JsonSerializerOptions.Web;
@@ -26,13 +31,19 @@ public class JsonUtils
     {
         Guard.NotNull(jsonSerializerOptions);
 
-        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development" &&
+            Environment.GetEnvironmentVariable("XUNIT_ENVIRONMENT") != "TEST")
         {
             return;
         }
-
         if (jsonSerializerOptions.WriteIndented)
             return;
+
+        if (jsonSerializerOptions.IsReadOnly)
+        {
+            ReflectionUtils.SetFiledValue(jsonSerializerOptions, "_writeIndented", true);
+            return;
+        }
 
         jsonSerializerOptions.WriteIndented = true;
     }
@@ -72,6 +83,18 @@ public class JsonUtils
             return "array";
         }
         return "object";
+    }
+
+    private static JsonSerializerOptions CreateCacheJsonSerializerOptions()
+    {
+        return new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            IncludeFields = true,
+            IgnoreReadOnlyProperties = false,
+            WriteIndented = true,
+            IgnoreReadOnlyFields = true,
+        };
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Application.Contracts.Security;
+using AtendeLogo.Common.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -32,7 +33,7 @@ public class SecureConfiguration : ISecureConfiguration
  
         if (string.IsNullOrEmpty(salt))
         {
-            throw new Exception("Salt key is not configured properly.");
+            throw new MissingConfigurationException("Salt key is not configured properly.");
         }
         return salt;
     }

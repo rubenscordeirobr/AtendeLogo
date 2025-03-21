@@ -18,6 +18,8 @@ public static class EFExtensions
 
     public static bool HasChanges(this EntityEntry entry)
     {
+        Guard.NotNull(entry);
+
         return entry.State switch
         {
             EntityState.Added => true,
@@ -28,7 +30,7 @@ public static class EFExtensions
     }
 
     public static bool IsInMemory(this DatabaseFacade database)
-          => database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
+          => database?.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
 
 }
 

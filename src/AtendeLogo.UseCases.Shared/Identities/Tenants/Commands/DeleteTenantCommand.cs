@@ -7,6 +7,8 @@ public class DeleteTenantCommandValidator : CommandValidator<DeleteTenantCommand
         IJsonStringLocalizer<ValidationMessages> localizer)
         : base(localizer)
     {
+        Guard.NotNull(localizer);
+
         RuleFor(x => x.Tenant_Id)
             .NotEmptyGuid()
             .WithMessage(localizer["Tenant.IdRequired", "Id is required."]);

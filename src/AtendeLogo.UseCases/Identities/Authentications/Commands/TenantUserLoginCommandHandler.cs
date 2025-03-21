@@ -33,6 +33,8 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
         TenantUserLoginCommand command,
         CancellationToken cancellationToken)
     {
+        Guard.NotNull(command);
+
         var clientHeaderInfo = _userSessionAccessor.GetClientRequestHeaderInfo();
         var maxAuthenticationResult = await _authenticationLimiter.MaxAuthenticationReachedAsync(clientHeaderInfo.IpAddress);
         if (maxAuthenticationResult.IsMaxReached)
@@ -85,7 +87,7 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
 
         _userSessionAccessor.AddClientSessionCookie(userSession.ClientSessionToken);
 
-        await _sessionCacheService.AddSessionAsync(userSession);
+        await _sessionCacheService.AddSessionAsync(userSession, cancellationToken);
 
         var response = new TenantUserLoginResponse
         {

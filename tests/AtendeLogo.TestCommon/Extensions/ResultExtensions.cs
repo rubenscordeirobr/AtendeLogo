@@ -6,6 +6,8 @@ public static class ResultExtensions
         this Result<TResponse> result)
         where TResponse : notnull
     {
+        Guard.NotNull(result);
+
         result.IsSuccess
             .Should()
             .BeTrue($"Should be successful, but get error {result.Error?.Message}");
@@ -31,6 +33,8 @@ public static class ResultExtensions
         this IResultValue result)
         where TError : Error
     {
+        Guard.NotNull(result);
+
         result.IsFailure
             .Should()
             .BeTrue($"Should be failure, but get value {result.Value}");

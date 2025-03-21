@@ -1,13 +1,17 @@
 ﻿using System.Linq.Expressions;
 using AtendeLogo.Common.Factories;
 
-namespace AtendeLogo.UseCases.UnitTests.TestSupport;
+namespace AtendeLogo.TestCommon.Extensions;
 
 public static class ResultTestExtensions
 {
     public static void ShouldBeSuccessful<T>(
         this ResultTest<T> result)
     {
+        Guard.NotNull(result);
+
+        result.ShouldBeSuccessful();
+
         result.Error.Should()
             .BeNull();
 
@@ -20,9 +24,11 @@ public static class ResultTestExtensions
             .BeTrue();
     }
 
-    public static void ShouldNotBeSuccessful<T>(
+    public static void ShouldBeFailure<T>(
        this ResultTest<T> result)
     {
+        Guard.NotNull(result);
+
         result.Error.Should()
             .NotBeNull();
 
@@ -39,6 +45,9 @@ public static class ResultTestExtensions
         this ResultTest<T> result,
         Expression<Func<T, object>> propertyExpression)
     {
+        Guard.NotNull(result);
+        Guard.NotNull(propertyExpression);
+
         result.Error.Should()
             .NotBeNull();
 

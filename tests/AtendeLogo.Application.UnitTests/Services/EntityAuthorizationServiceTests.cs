@@ -1,7 +1,6 @@
 ﻿using AtendeLogo.Application.Services;
 using AtendeLogo.Domain.Enums;
 using AtendeLogo.Persistence.Identity.Extensions;
-using AtendeLogo.Shared.ValueObjects;
 
 namespace AtendeLogo.Application.UnitTests.Services;
  

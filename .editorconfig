@@ -15,11 +15,11 @@ vsspell_section_id = 90ec7a963caf4b8d9953f149ca5253a0
 
 # XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
-indent_size = 2
+indent_size = 4
 
 # XML config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
-indent_size = 2
+indent_size = 4
 
 # Code files
 [*.{cs,csx,vb,vbx}]
@@ -150,19 +150,82 @@ csharp_using_directive_placement = outside_namespace:warning
 csharp_prefer_simple_using_statement = false:warning
 csharp_style_prefer_method_group_conversion = true:suggestion
 csharp_style_prefer_top_level_statements = true:silent
-csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_primary_constructors = true:none
 csharp_prefer_system_threading_lock = true:suggestion
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
-###############################
-# VB Coding Conventions       #
-###############################
-[*.vb]
-# Modifier preferences
-visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion###############################
-######################################
-# Configure Nullable Reference Types #
-######################################
-[{**/*Dto.cs,**/*Request.cs,**/*Response.cs}]
+
+# IDE 
+# IDE0083
+dotnet_diagnostic.IDE0083.severity = warning;
+
+
+# Code Analysis
 # CS8618: Non-nullable field is uninitialized. Consider declaring as nullable.
-dotnet_diagnostic.CS8618.severity = none
+dotnet_diagnostic.CS8618.severity = silent;
+
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = silent
+
+# CA1308 : Normalize strings to uppercase
+dotnet_diagnostic.CA1308.severity = none
+
+# CA1848: Use the LoggerMessage delegates
+dotnet_diagnostic.CA1848.severity = none
+ 
+# CA1032: Implement standard exception constructors
+dotnet_diagnostic.CA1032.severity = none
+
+# CA2007: Do not directly await a Task
+dotnet_diagnostic.CA2007.severity = none
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = none
+
+# CA1040: Avoid empty interfaces
+dotnet_diagnostic.CA1040.severity = silent
+
+# CA1054: URI parameters should not be strings
+dotnet_diagnostic.CA1054.severity = none
+
+# CA1056: URI properties should not be strings
+dotnet_diagnostic.CA1056.severity = none
+
+# CA1033: Interface methods should be callable by child types
+dotnet_diagnostic.CA1033.severity = none
+
+# CA1711: Identifiers should not have incorrect suffix
+dotnet_code_quality.ca1711.allowed_suffixes = EventHandler
+
+# CA1716: Identifiers should not match keywords
+dotnet_code_quality.CA1716.analyzed_symbol_kinds = NamedType, Method, Property, Event
+
+# CA1716 : Identifiers should not match keywords allowed keywords
+dotnet_code_quality.CA1716.allowed_keywords = Error, Shared
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = none
+
+
+# SonarLint
+# S2094 :  Remove this empty record, write its code or make it an interface
+dotnet_diagnostic.S2094.severity = none
+
+# S2326 : T is not used in the interface
+dotnet_diagnostic.S2326.severity = none
+
+# S1694 : Convert abstract class to interface
+dotnet_diagnostic.S1694.severity = none
+
+# S2325 : Mark members as static
+dotnet_diagnostic.S2325.severity = none
+
+# S2139 : Exceptions should be either logged or rethrown but not both
+dotnet_diagnostic.S2139.severity = none
+
+# S6608 : Indexing at Count -1 should be used instead of the Enumerable extension method Last()
+dotnet_diagnostic.S6608.severity = warning
+
+
+# S1135
+dotnet_diagnostic.S1135.severity = suggestion

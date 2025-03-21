@@ -7,8 +7,11 @@ public static class TypeHelper
         Type interfaceDefinitionType,
         bool isConcrete = true)
     {
+        Guard.NotNull(types);
+        Guard.NotNull(interfaceDefinitionType);
+
         var typeMappings = new List<(Type, Type)>();
-     
+
         var queryType = types
            .Where(type => type.ImplementsGenericInterfaceDefinition(interfaceDefinitionType));
 
@@ -16,15 +19,14 @@ public static class TypeHelper
         {
             queryType = queryType.Where(type => type.IsConcrete());
         }
-         
+
         foreach (var type in queryType.ToList())
         {
             var interfaces = type.GetInterfaces();
 
             var implementedInterface = interfaces
-               .Where(type => type.IsGenericType)
-               .Where(type => type.GetGenericTypeDefinition() == interfaceDefinitionType)
-               .FirstOrDefault();
+               .FirstOrDefault(type => type.IsGenericType &&
+                    type.GetGenericTypeDefinition() == interfaceDefinitionType);
 
             if (implementedInterface == null)
             {

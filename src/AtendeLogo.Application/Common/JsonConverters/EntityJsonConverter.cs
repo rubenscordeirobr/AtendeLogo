@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using AtendeLogo.Common.Utils;
 
@@ -58,10 +59,10 @@ internal class EntityJsonConverter<TEntity> : JsonConverter<TEntity>
                     return guid;
 
                 ThrowIfDebug($"DateTime value {valueSerilized} could not be parsed");
-            } 
+            }
             else if (typeof(TPropertyType) == typeof(DateTime))
             {
-                if (DateTime.TryParse(valueSerilized, out var dateTime))
+                if (DateTime.TryParse(valueSerilized, CultureInfo.InvariantCulture, out var dateTime))
                     return dateTime;
 
                 ThrowIfDebug($"DateTime value {valueSerilized} could not be parsed");

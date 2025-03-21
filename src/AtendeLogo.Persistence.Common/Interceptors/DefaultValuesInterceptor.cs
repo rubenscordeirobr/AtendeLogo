@@ -10,7 +10,9 @@ public class DefaultValuesInterceptor : DbCommandInterceptor
        CommandEventData eventData,
        InterceptionResult<DbDataReader> result)
     {
-        ProcessDefaulValueParameters(command);
+        Guard.NotNull(command);
+
+        ProcessDefaultValueParameters(command);
         return base.ReaderExecuting(command, eventData, result);
     }
 
@@ -19,7 +21,9 @@ public class DefaultValuesInterceptor : DbCommandInterceptor
         CommandEventData eventData,
         InterceptionResult<int> result)
     {
-        ProcessDefaulValueParameters(command);
+        Guard.NotNull(command);
+
+        ProcessDefaultValueParameters(command);
         return base.NonQueryExecuting(command, eventData, result);
     }
 
@@ -28,11 +32,13 @@ public class DefaultValuesInterceptor : DbCommandInterceptor
         CommandEventData eventData,
         InterceptionResult<object> result)
     {
-        ProcessDefaulValueParameters(command);
+        Guard.NotNull(command);
+
+        ProcessDefaultValueParameters(command);
         return base.ScalarExecuting(command, eventData, result);
     }
 
-    private void ProcessDefaulValueParameters(DbCommand command)
+    private void ProcessDefaultValueParameters(DbCommand command)
     {
         foreach (DbParameter parameter in command.Parameters)
         {
@@ -41,7 +47,7 @@ public class DefaultValuesInterceptor : DbCommandInterceptor
                 parameter.Value = DBNull.Value;
             }
 
-            if(parameter.Value is Guid guid && guid == default)
+            if(parameter.Value is Guid guid && guid == Guid.Empty)
             {
                 parameter.Value = DBNull.Value;
             }

@@ -4,7 +4,9 @@ public static class SystemUserExtensions
 {
     public static void SetAnonymousId(this SystemUser user)
     {
-        if (user.Id != default)
+        Guard.NotNull(user);
+
+        if (user.Id != Guid.Empty)
         {
             throw new InvalidOperationException("Id is already set.");
         }

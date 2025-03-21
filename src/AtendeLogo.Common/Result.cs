@@ -41,7 +41,7 @@ public class Result<T> : IResultValue where T : notnull
         return Result.Failure<TConvert>(Error);
     }
 
-    public T GetValue()
+    public T GetRequiredValue()
     {
         if (!IsSuccess || Value is null)
             throw new InvalidOperationException("Cannot get value from failed result");

@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Attributes;
-
-namespace AtendeLogo.Shared.Enums;
+﻿namespace AtendeLogo.Shared.Enums;
  
 public enum AuthenticationType
 {

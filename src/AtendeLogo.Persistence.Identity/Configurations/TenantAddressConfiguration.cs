@@ -4,6 +4,8 @@ public class TenantAddressConfiguration : IEntityTypeConfiguration<TenantAddress
 {
     public void Configure(EntityTypeBuilder<TenantAddress> builder)
     {
+        Guard.NotNull(builder);
+
         builder.Property(x => x.AddressName)
             .IsRequired()
             .HasMaxLength(ValidationConstants.AddressNameMaxLength);

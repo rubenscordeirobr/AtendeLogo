@@ -11,6 +11,10 @@ public class UpdateTenantCommandValidator : CommandValidator<UpdateTenantCommand
         IJsonStringLocalizer<ValidationMessages> localizer) 
         : base(localizer)
     {
+
+        Guard.NotNull(tenantValidationService);
+        Guard.NotNull(localizer);
+
         _tenantValidationService = tenantValidationService;
 
         RuleFor(x => x.Name)

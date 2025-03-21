@@ -3,13 +3,13 @@ using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.Contracts.Events;
 
-public interface IDomainEventHandler<TEvent> : IApplicationHandler
+public interface IDomainEventHandler<in TEvent> : IApplicationHandler
     where TEvent : IDomainEvent
 {
     Task HandleAsync(TEvent domainEvent);
 
-    Task IApplicationHandler.HandleAsync(object domainEvent)
+    Task IApplicationHandler.HandleAsync(object handlerObject)
     {
-        return HandleAsync((TEvent)domainEvent);
+        return HandleAsync((TEvent)handlerObject);
     }
 }

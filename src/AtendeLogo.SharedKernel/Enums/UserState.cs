@@ -2,6 +2,8 @@
 
 public enum UserState
 {
+    [UndefinedValue]
+    Unknown = 0,
     New = 1,
     Active,
     Inactive ,

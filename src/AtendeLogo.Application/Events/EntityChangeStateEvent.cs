@@ -7,7 +7,8 @@ public abstract record EntityChangeStateEvent<TEntity>: IEntityStateChangedEvent
 {
     public TEntity Entity { get; }
     public abstract EntityChangeState State { get; }
-    public EntityChangeStateEvent(TEntity entity)
+    
+    protected EntityChangeStateEvent(TEntity entity)
     {
         Entity = entity;
     }

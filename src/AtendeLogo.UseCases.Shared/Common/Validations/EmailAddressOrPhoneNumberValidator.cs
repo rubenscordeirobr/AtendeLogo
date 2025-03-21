@@ -8,6 +8,8 @@ public static partial class DefaultValidationsExtensions
     public static IRuleBuilderOptions<T, string> EmailAddressOrPhoneNumber<T>(
         this IRuleBuilder<T, string> ruleBuilder)
     {
+        Guard.NotNull(ruleBuilder);
+
         return ruleBuilder.SetValidator(new EmailValidValidator<T>());
     }
 }

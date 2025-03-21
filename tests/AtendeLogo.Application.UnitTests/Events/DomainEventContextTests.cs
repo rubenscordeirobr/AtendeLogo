@@ -46,33 +46,24 @@ public class DomainEventContextTests
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("The context cannot be canceled.");
     }
-
-    [Fact]
-    public void GetException_WhenNotCanceled_ShouldThrowInvalidOperationException()
-    {
-        // Arrange
-        var context = new DomainEventContext(new List<IDomainEvent>());
-
-        // Act
-        Action act = () => context.GetException();
-
-        // Assert
-        act.Should().Throw<InvalidOperationException>();
-    }
-
+ 
     [Fact]
     public void GetException_WhenCanceled_ShouldReturnExceptionWithErrorMessage()
     {
         // Arrange
-        var context = new DomainEventContext(new List<IDomainEvent>());
+        var context = new DomainEventContext([]);
         var error = new DomainEventError("DomainTest.Error", "Test error");
         context.Cancel(error);
 
         // Act
-        var exception = context.GetException();
+        var exception = context.Exception;
+
+        context.IsCanceled
+            .Should()
+            .BeTrue();
 
         // Assert
-        exception.Message.Should().Be("Test error");
+        exception!.Message.Should().Be("Test error");
     }
 
     [Fact]

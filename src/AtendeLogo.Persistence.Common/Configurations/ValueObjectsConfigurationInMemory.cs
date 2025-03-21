@@ -11,6 +11,9 @@ public static class ValueObjectsConfigurationInMemory
         this EntityTypeBuilder entityBuilder,
         PropertyInfo property )
     {
+        Guard.NotNull(entityBuilder);
+        Guard.NotNull(property);
+
         switch (property.PropertyType)
         {
             case Type t when t == typeof(TimeZoneOffset):

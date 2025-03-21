@@ -12,7 +12,7 @@ internal class NullableUtcDateTimeConverter : ValueConverter<DateTime?, DateTime
 
     private static DateTime? ConverterUtcDateTime(DateTime? dateTime)
     {
-        if (dateTime == null || dateTime == default )
+        if (dateTime == null || dateTime.Value == default )
         {
             return null;
         }

@@ -10,6 +10,10 @@ public static class DictionaryExtensions
         Func<TValue> valueFactory)
         where TKey : notnull
     {
+        Guard.NotNull(dictionary);
+        Guard.NotNull(key);
+        Guard.NotNull(valueFactory);
+
         if (dictionary.TryGetValue(key, out var value))
         {
             return value;
@@ -25,6 +29,8 @@ public static class DictionaryExtensions
         TValue value)
         where TKey : notnull
     {
+        Guard.NotNull(dictionary);
+
         if (!dictionary.TryAdd(key, value))
         {
             dictionary[key] = value;
@@ -37,14 +43,22 @@ public static class DictionaryExtensions
         IEnumerable<TValue> values)
         where TKey : notnull
     {
-        if (keys.Count() != values.Count())
+        Guard.NotNull(dictionary);
+     
+        Guard.NotNull(keys);
+        Guard.NotNull(values);
+
+        var keyList = keys as IList<TKey> ?? [.. keys];
+        var valueList = values as IList<TValue> ?? [.. values];
+
+        if (keyList.Count != valueList.Count)
         {
             throw new ArgumentException("Keys and values must have the same length.");
         }
 
-        for (int i = 0; i < keys.Count(); i++)
+        for (int i = 0; i < keyList.Count; i++)
         {
-            dictionary.AddOrUpdate(keys.ElementAt(i), values.ElementAt(i));
+            dictionary.AddOrUpdate(keyList[i], valueList[i]);
         }
     }
 
@@ -54,6 +68,8 @@ public static class DictionaryExtensions
        Func<TValue> valueFactory)
        where TKey : notnull
     {
+        Guard.NotNull(dictionary);
+
         lock (((IDictionary)dictionary).SyncRoot)
         {
             return GetOrAdd(dictionary, key, valueFactory);
@@ -66,7 +82,9 @@ public static class DictionaryExtensions
         TValue value)
         where TKey : notnull
     {
-        lock(((IDictionary)dictionary).SyncRoot)
+        Guard.NotNull(dictionary);
+
+        lock (((IDictionary)dictionary).SyncRoot)
         {
              AddOrUpdate(dictionary, key, value);
         }
@@ -78,6 +96,8 @@ public static class DictionaryExtensions
         IEnumerable<TValue> values)
         where TKey : notnull
     {
+        Guard.NotNull(dictionary);
+
         lock (((IDictionary)dictionary).SyncRoot)
         {
             AddRangeOrUpdate(dictionary, keys, values);

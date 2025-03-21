@@ -20,6 +20,8 @@ public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCom
         TenantUserLogoutCommand command,
         CancellationToken cancellationToken)
     {
+        Guard.NotNull(command);
+
         var clientSessionToken = command.ClientSessionToken;
         var userSession = await _unitOfWork.UserSessions.GetByClientTokenAsync(
             command.ClientSessionToken, cancellationToken);

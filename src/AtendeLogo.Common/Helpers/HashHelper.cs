@@ -3,7 +3,7 @@ using System.Text;
 
 namespace AtendeLogo.Common.Helpers;
 
-public class HashHelper
+public static class HashHelper
 {
     public static string GenerateSha256HashFromString(string input)
     {

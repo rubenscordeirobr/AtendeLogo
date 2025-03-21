@@ -7,6 +7,8 @@ public static partial class ModelBuilderConfiguration
         bool isInMemory)
         where TContext : DbContext
     {
+        Guard.NotNull(modelBuilder);
+
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
         modelBuilder.HasCollation("case_accent_insensitive",
@@ -32,7 +34,7 @@ public static partial class ModelBuilderConfiguration
             var entityBuilder = modelBuilder.Entity(entityType);
             if (entityBuilder == null)
             {
-                throw new Exception($"Entity builder not found for {mutableEntityType.ClrType.Name}");
+                throw new EntityBuilderNotFoundException($"Entity builder not found for {mutableEntityType.ClrType.Name}");
             }
 
             entityBuilder.ConfigureEntityDefaultSettings(isInMemory);

@@ -10,6 +10,8 @@ public static class InMemoryEntityBuilderConfiguration
     public static ModelBuilder ConfigureInMemoryEntities(
       this ModelBuilder modelBuilder)
     {
+        Guard.NotNull(modelBuilder);
+
         var entitiesType = modelBuilder.Model.GetEntityTypes();
         foreach (var mutableEntityType in entitiesType)
         {
@@ -27,6 +29,8 @@ public static class InMemoryEntityBuilderConfiguration
     public static EntityTypeBuilder ConfigureInMemoryEntity(
         this EntityTypeBuilder entityBuilder)
     {
+        Guard.NotNull(entityBuilder);
+
         var entityType = entityBuilder.Metadata.ClrType;
         Guard.NotNull(entityType);
 
@@ -35,7 +39,6 @@ public static class InMemoryEntityBuilderConfiguration
             throw new InvalidOperationException($"The entity {entityType.Name} must be a subclass of EntityBase");
         }
 
-        var baseType = entityType.BaseType;
         var idProperty = entityBuilder.Property(nameof(EntityBase.Id));
 
         Guard.NotNull(idProperty);

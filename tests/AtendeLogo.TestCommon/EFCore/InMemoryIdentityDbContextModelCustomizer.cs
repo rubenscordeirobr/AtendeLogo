@@ -8,8 +8,7 @@ public class InMemoryIdentityDbContextModelCustomizer : IModelCustomizer
 {
     public void Customize(ModelBuilder modelBuilder, DbContext context)
     {
-        //TODO in memory database configuration
-        if (context is IdentityDbContext identityDb)
+        if (context is IdentityDbContext _)
         {
             modelBuilder
                 .ConfigureModelDefaultConfiguration<IdentityDbContext>(isInMemory: true)

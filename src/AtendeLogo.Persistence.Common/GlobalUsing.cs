@@ -12,7 +12,7 @@ global using AtendeLogo.Domain.Primitives;
 global using AtendeLogo.Domain.Primitives.Contracts;
 global using AtendeLogo.Persistence.Common.Extensions;
 global using AtendeLogo.Shared.Constants;
-global using AtendeLogo.Shared.Interfaces.Commom;
+global using AtendeLogo.Shared.Interfaces.Common;
 global using AtendeLogo.Shared.Interfaces.Identities;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;

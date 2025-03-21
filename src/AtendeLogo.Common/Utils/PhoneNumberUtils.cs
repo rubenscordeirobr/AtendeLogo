@@ -7,7 +7,6 @@ public static partial class PhoneNumberUtils
 {
     public static Country GetCountryCode(string fullNumber)
     {
-        var onlyNumber = fullNumber.GetOnlyNumbers('+');
         var internationalDialingCode = GetInternationalDialingCode(fullNumber);
         return PhoneNumberUtilsInternal.GetCountryCodeInternal(
             internationalDialingCode,
@@ -25,13 +24,13 @@ public static partial class PhoneNumberUtils
     }
     public static bool IsFullPhoneNumberValid(string? fullPhoneNumber)
     {
-        if(fullPhoneNumber == null)
+        if (fullPhoneNumber == null)
         {
-            return  false;
+            return false;
         }
 
         var countryCode = GetCountryCode(fullPhoneNumber);
-        var phoneFormatInfo = PhoneNumberFormatRegistry .TryGet(countryCode);
+        var phoneFormatInfo = PhoneNumberFormatRegistry.TryGet(countryCode);
         if (phoneFormatInfo == null)
         {
             return false;
@@ -41,17 +40,18 @@ public static partial class PhoneNumberUtils
         var nationalNumber = numbers.SafeSubstring(phoneFormatInfo.InternationalDialingCodeLength);
         return IsNationalNumberValid(phoneFormatInfo, nationalNumber);
     }
-     
+
     public static bool IsNationalNumberValid(
         Country countryCode,
-        string nationalNumber)
+        string? nationalNumber)
     {
-        if(countryCode == Country.Unknown)
-        {
+        if (countryCode == Country.Unknown)
             return false;
-        }
 
-        var phoneFormatInfo = PhoneNumberFormatRegistry .TryGet(countryCode);
+        if (string.IsNullOrEmpty(nationalNumber))
+            return false;
+
+        var phoneFormatInfo = PhoneNumberFormatRegistry.TryGet(countryCode);
         if (phoneFormatInfo == null)
         {
             return false;
@@ -60,13 +60,13 @@ public static partial class PhoneNumberUtils
     }
 
     private static bool IsNationalNumberValid(
-        PhoneNumberFormatInfo phoneFormatInfo, 
+        PhoneNumberFormatInfo phoneFormatInfo,
         string nationalNumber)
     {
-        var minLenght = phoneFormatInfo.MinNationalNumberLength;
+        var minLength = phoneFormatInfo.MinNationalNumberLength;
         var maxLength = phoneFormatInfo.MaxNationalNumberLength;
-        return nationalNumber.Length >= minLenght
+        return nationalNumber.Length >= minLength
             && nationalNumber.Length <= maxLength;
     }
 }
- 
+

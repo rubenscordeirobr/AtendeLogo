@@ -6,7 +6,7 @@ public sealed class DomainEventData<TEvent> :IDomainEventData<TEvent>
     where TEvent : IDomainEvent
 {
     public IDomainEventContext Context { get; }
-    public TEvent Event { get; }
+    public TEvent DomainEvent { get; }
 
     public DomainEventData(IDomainEventContext context, TEvent domainEvent)
     {
@@ -14,7 +14,7 @@ public sealed class DomainEventData<TEvent> :IDomainEventData<TEvent>
         Guard.NotNull(domainEvent);
 
         Context = context;
-        Event = domainEvent;
+        DomainEvent = domainEvent;
     }
 
     public void Cancel(DomainEventError error)

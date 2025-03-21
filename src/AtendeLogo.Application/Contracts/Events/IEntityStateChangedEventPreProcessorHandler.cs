@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Application.Contracts.Events;
 
-public interface IEntityStateChangedEventPreProcessorHandler<TEvent> : IPreProcessorHandler<TEvent>
+public interface IEntityStateChangedEventPreProcessorHandler<in TEvent> : IPreProcessorHandler<TEvent>
     where TEvent : IEntityStateChangedEvent
 {
 }

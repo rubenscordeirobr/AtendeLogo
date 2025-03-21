@@ -2,9 +2,9 @@
 
 namespace AtendeLogo.Persistence.Common.Configurations;
 
-public static class UseSnakeCaseNamingConventionExtensions
+internal static class UseSnakeCaseNamingConventionExtensions
 {
-    public static void UseSnakeCaseNamingConvention(this ModelBuilder modelBuilder)
+    internal static void UseSnakeCaseNamingConvention(this ModelBuilder modelBuilder)
     {
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
@@ -48,5 +48,4 @@ public static class UseSnakeCaseNamingConventionExtensions
             }
         }
     }
-
 }

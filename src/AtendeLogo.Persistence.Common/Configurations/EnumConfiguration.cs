@@ -17,12 +17,10 @@ public static class EnumConfiguration
          where TContext : DbContext
          where TEnum : struct, Enum
     {
-        if (!isInMemory)
+        if (!isInMemory &&
+            optionsBuilder is NpgsqlDbContextOptionsBuilder npgsqlOptionsBuilder)
         {
-            if (optionsBuilder is NpgsqlDbContextOptionsBuilder npgsqlOptionsBuilder)
-            {
-                npgsqlOptionsBuilder.MapEnum<TEnum>();
-            }
+            npgsqlOptionsBuilder.MapEnum<TEnum>();
         }
 
 #if DEBUG
@@ -36,40 +34,34 @@ public static class EnumConfiguration
        where TContext : DbContext
 
     {
+        Guard.NotNull(mutableProperty);
 #if DEBUG
-        if (mutableProperty.ClrType.IsEnum)
+        if (mutableProperty.ClrType.IsEnum &&
+            !EnumMappingsTracker<TContext>.Contains(mutableProperty.ClrType))
         {
-            if (!EnumMappingsTracker<TContext>.Contains(mutableProperty.ClrType))
-            {
-                var declaredTypeName = mutableProperty.PropertyInfo?.DeclaringType?.GetQualifiedName() ?? "Unknown";
-                var errorMessages = $"The enum type '{mutableProperty.ClrType?.Name}' not mapped." +
-                                    $" The property '{declaredTypeName}.{mutableProperty.Name}' must map the enum in NpgsqlDbContextOptionsBuilder using AddMapEnum method";
+            var declaredTypeName = mutableProperty.PropertyInfo?.DeclaringType?.GetQualifiedName() ?? "Unknown";
+            var errorMessages = $"The enum type '{mutableProperty.ClrType?.Name}' not mapped." +
+                                $" The property '{declaredTypeName}.{mutableProperty.Name}' must map the enum in NpgsqlDbContextOptionsBuilder using AddMapEnum method";
 
-                throw new EnumTypeNotMappedException(errorMessages);
-            }
+            throw new EnumTypeNotMappedException(errorMessages);
         }
+
 #endif
     }
 
 #if DEBUG
 
-    private class EnumMappingsTracker<TContext>
+    private static class EnumMappingsTracker<TContext>
         where TContext : DbContext
     {
         private static readonly Type _dbContextType = typeof(TContext);
         private static ConcurrentHashSet<Type> EnumTypesMapped
-            => _enumTypeMappings.GetOrAdd(_dbContextType, new ConcurrentHashSet<Type>());
+            => _enumTypeMappings.GetOrAdd(_dbContextType, []);
 
         public static void AddEnumType<TEnum>()
             where TEnum : Enum
         {
             EnumTypesMapped.Add(typeof(TEnum));
-        }
-
-        internal static bool Contains<TEnum>()
-             where TEnum : Enum
-        {
-            return EnumTypesMapped.Contains(typeof(TEnum));
         }
 
         internal static bool Contains(Type enumType)

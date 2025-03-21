@@ -5,8 +5,8 @@ namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 public sealed class CreateTenantCommandHandler
     : CommandHandler<CreateTenantCommand, CreateTenantResponse>
 {
-    public IIdentityUnitOfWork _unitOfWork;
-    private ISecureConfiguration _secureConfiguration;
+    private readonly IIdentityUnitOfWork _unitOfWork;
+    private readonly ISecureConfiguration _secureConfiguration;
 
     public CreateTenantCommandHandler(
         IIdentityUnitOfWork unitOfWork,
@@ -20,6 +20,7 @@ public sealed class CreateTenantCommandHandler
         CreateTenantCommand command, 
         CancellationToken cancellationToken)
     {
+        Guard.NotNull(command);
 
         var salt = _secureConfiguration.GetPasswordSalt();
         var password = Password.Create(command.Password, salt);

@@ -4,6 +4,8 @@ public static class TypeDefaultValueFactory
 {
     public static object? CreateDefaultValue(Type type)
     {
+        Guard.NotNull(type);
+
         return type.IsValueType
             ? Activator.CreateInstance(type)
             : null;
@@ -11,6 +13,8 @@ public static class TypeDefaultValueFactory
 
     public static object GetNotNullDefaultValue(Type type)
     {
+        Guard.NotNull(type);
+
         if (type.IsValueType)
         {
             return Activator.CreateInstance(type)!;

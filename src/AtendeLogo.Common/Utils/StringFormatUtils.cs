@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Common.Utils;
 
-public class StringFormatUtils
+public static class StringFormatUtils
 {
     private static readonly Regex PlaceholderRegex = new(@"\{(\w+)\}", RegexOptions.Compiled);
 
@@ -10,11 +10,11 @@ public class StringFormatUtils
     {
         Guard.NotNull(format);
 
-        if(args.Length> 0)
+        if (args?.Length > 0)
         {
             return PlaceholderRegex.Replace(format, match =>
             {
-                var index = Math.Min(args.Length -1, match.Index);
+                var index = Math.Min(args.Length - 1, match.Index);
                 return args[index].ToString() ?? string.Empty;
             });
         }

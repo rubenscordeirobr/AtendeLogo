@@ -20,10 +20,13 @@ public static class StringExtensions
         return new string(value.Where(char.IsDigit).ToArray());
     }
 
-    public static string GetOnlyNumbers(this string? value, string allowedExtraChars)
+    public static string GetOnlyNumbers(this string? value, string? allowedExtraChars)
     {
         if (value is null)
             return string.Empty;
+
+        if(allowedExtraChars is null)
+            return value.GetOnlyNumbers();
 
         return value.GetOnlyNumbers(allowedExtraChars.ToCharArray());
     }
@@ -33,7 +36,7 @@ public static class StringExtensions
         if (value is null)
             return string.Empty;
 
-        if (allowedExtraChars.Length > 10)
+        if (allowedExtraChars?.Length > 10)
         {
             var allowedChars = new HashSet<char>(allowedExtraChars);
             return new string(value.Where(ch => char.IsDigit(ch) || allowedChars.Contains(ch)).ToArray());

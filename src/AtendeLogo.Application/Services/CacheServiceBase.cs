@@ -13,10 +13,10 @@ public abstract class CacheServiceBase
     private readonly TimeSpan _defaultExpiration;
     protected abstract string PrefixCacheName { get; }
 
-    protected virtual JsonSerializerOptions JsonSerializationOptions { get; } = JsonSerializerOptions.Web;
+    protected virtual JsonSerializerOptions JsonOptions { get; }
+        = JsonUtils.CacheJsonSerializerOptions;
 
-    protected virtual JsonSerializerOptions JsonDeserializationOptions { get; } = JsonSerializerOptions.Web;
-         
+
     protected CacheServiceBase(
         ICacheRepository _repository,
         ILogger logger,
@@ -27,7 +27,7 @@ public abstract class CacheServiceBase
         _defaultExpiration = expiration;
     }
 
-    protected async Task<bool> ExistsInCacheAsync(Guid key)
+    protected async Task<bool> ExistsInCacheAsync(Guid key, CancellationToken cancellationToken)
     {
         var cacheKey = BuildCacheKey(key);
         return await _repository.KeyExistsAsync(cacheKey);
@@ -78,7 +78,7 @@ public abstract class CacheServiceBase
     private async Task<T?> GetAsyncInternal<T>(string cachedKey, CancellationToken cancellationToken = default)
     {
         var cachedValue = await _repository.StringGetAsync(cachedKey);
-        if (cachedValue is null || cancellationToken.IsCancellationRequested) 
+        if (cachedValue is null || cancellationToken.IsCancellationRequested)
         {
             return default;
         }
@@ -88,17 +88,17 @@ public abstract class CacheServiceBase
             var options = GetJsonOptions<T>();
             return JsonUtils.Deserialize<T>(cachedValue, options);
         }
-        catch (JsonException)
+        catch (JsonException ex)
         {
-            _logger.LogError("Failed to deserialize cached value for key {Key} to {Type}", cachedKey, typeof(T).Name);
+            _logger.LogError(ex, "Failed to deserialize cached value for key {Key} to {Type}", cachedKey, typeof(T).Name);
             return default;
         }
     }
-     
+
     private async Task AddToCacheAsyncInternal<T>(string cacheKey, T value, TimeSpan? expiration = null)
     {
-        JsonUtils.EnableIndentationInDevelopment(JsonSerializationOptions);
-        var serializedValue = JsonUtils.Serialize(value, options: JsonSerializationOptions);
+        JsonUtils.EnableIndentationInDevelopment(JsonOptions);
+        var serializedValue = JsonUtils.Serialize(value, options: JsonOptions);
         await _repository.StringSetAsync(cacheKey, serializedValue, expiration ?? _defaultExpiration);
     }
 
@@ -121,13 +121,13 @@ public abstract class CacheServiceBase
             var converterType = typeof(EntityJsonConverter<>).MakeGenericType(typeof(T));
             var converterInstance = Activator.CreateInstance(converterType) as JsonConverter<T>;
 
-            Guard.NotNull(converterInstance, nameof(converterInstance));
+            Guard.NotNull(converterInstance);
 
-            return new JsonSerializerOptions(JsonDeserializationOptions) 
+            return new JsonSerializerOptions(JsonOptions)
             {
                 Converters = { converterInstance }
             };
         }
-        return JsonDeserializationOptions;
+        return JsonOptions;
     }
 }

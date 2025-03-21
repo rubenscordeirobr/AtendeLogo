@@ -5,6 +5,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection Remove<T>(
         this IServiceCollection services)
     {
+        Guard.NotNull(services);
+
         var typeRemove = typeof(T);
         var descriptorsToRemove = services
             .Where(descriptor => descriptor.ServiceType == typeRemove)

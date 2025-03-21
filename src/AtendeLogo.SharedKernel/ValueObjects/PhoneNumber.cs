@@ -4,7 +4,8 @@ namespace AtendeLogo.Shared.ValueObjects;
 
 public record PhoneNumber : ValueObjectBase
 {
-    private PhoneNumberInfo _phoneNumberInfo;
+    private readonly PhoneNumberInfo _phoneNumberInfo;
+
     public Country CountryCode 
         => _phoneNumberInfo.CountryCode;
     public InternationalDialingCode InternationalDialingCode

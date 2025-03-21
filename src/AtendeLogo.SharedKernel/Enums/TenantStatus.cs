@@ -2,7 +2,9 @@
 
 public enum TenantStatus
 {
-    Active = 1,
+    [UndefinedValue]
+    Unknown = 0,
+    Active,
     Inactive,
     Suspended,
     Pending,

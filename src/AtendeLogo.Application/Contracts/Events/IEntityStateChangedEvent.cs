@@ -10,7 +10,7 @@ public interface IEntityStateChangedEvent : IDomainEvent
     EntityBase EntityBase { get; }
 }
 
-public interface IEntityStateChangedEvent<TEntity> : IEntityStateChangedEvent
+public interface IEntityStateChangedEvent<out TEntity> : IEntityStateChangedEvent
     where TEntity : EntityBase
 {
     TEntity Entity { get; }

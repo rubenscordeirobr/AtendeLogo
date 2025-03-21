@@ -11,7 +11,7 @@ public class AnonymousUserSession : IUserSession
         => AnonymousIdentityConstants.User_Id;
     public string ClientSessionToken
         => AnonymousIdentityConstants.ClientSystemSessionToken;
-  
+
     public required string ApplicationName { get; init; }
     public required string IpAddress { get; init; }
     public required string UserAgent { get; init; }
@@ -19,13 +19,13 @@ public class AnonymousUserSession : IUserSession
     public bool IsActive { get; } = true;
     public DateTime StartedAt { get; } = DateTime.UtcNow;
     public DateTime LastActivity => DateTime.UtcNow;
-    public DateTime? TerminatedAt { get; } = null;
-    public SessionTerminationReason? TerminationReason { get; } = null;
+    public DateTime? TerminatedAt { get; }
+    public SessionTerminationReason? TerminationReason { get; }
     public Language Language { get; } = Language.Default;
     public AuthenticationType AuthenticationType { get; } = AuthenticationType.Anonymous;
     public UserRole UserRole { get; } = UserRole.Anonymous;
     public UserType UserType { get; } = UserType.Anonymous;
-    public GeoLocation? GeoLocation { get; } = null;
-    public Guid? Tenant_Id { get; } = null;
-    public IUser? User { get; } = null;
+    public GeoLocation? GeoLocation { get; }
+    public Guid? Tenant_Id { get; }
+    public IUser? User { get; }
 }

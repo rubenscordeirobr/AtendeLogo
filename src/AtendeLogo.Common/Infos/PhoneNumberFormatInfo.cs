@@ -15,6 +15,7 @@ public partial record PhoneNumberFormatInfo
     //Ex Brazil (##) #####-####
     public required string PrimaryNationalFormat { get; init; }
     public required int InternationalDialingCodeLength { get; init; }
+
     public (string Format, int NationalLength)[]? AlternateNationalFormats { get; init; }
 
     public string GetBetterNationalFormat(int nationalNumberLength)

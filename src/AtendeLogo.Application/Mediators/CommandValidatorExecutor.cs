@@ -4,18 +4,18 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Mediatores;
+namespace AtendeLogo.Application.Mediators;
 
 internal class CommandValidatorExecutor<TResponse>
     where TResponse : IResponse
 {
     private readonly IServiceProvider _serviceProvider;
-    private ICommandRequest<TResponse> _command;
-    private readonly ILogger<RequestMediator> _logger;
+    private readonly ICommandRequest<TResponse> _command;
+    private readonly ILogger _logger;
 
     internal CommandValidatorExecutor(
         IServiceProvider serviceProvider,
-        ILogger<RequestMediator> logger,
+        ILogger logger,
         ICommandRequest<TResponse> request )
     {
         _serviceProvider = serviceProvider;
@@ -32,15 +32,17 @@ internal class CommandValidatorExecutor<TResponse>
         if(commandValidator is null)
         {
             var commandTypeName = _command.GetType().GetQualifiedName();
-            var mensagem = $"Command Validator not found for command {commandTypeName}";
-            _logger.LogError(mensagem, commandTypeName);
+             
+            _logger.LogError("Command Validator not found for command {CommandTypeName}", commandTypeName);
 
-            var exception = new CommandValidatorNotFoundException(mensagem, commandTypeName);
+            var errorMessage = $"Command Validator not found for command {commandTypeName}";
+            var exception = new CommandValidatorNotFoundException(
+                errorMessage);
           
             return Result.Failure<bool>(new CommandValidatorNotFoundError(
                 exception,
                 Code: ErrorCodeFactory.CommandValidatorFoundCodeFor(commandTypeName),
-                Message: mensagem));
+                Message: errorMessage));
         }
              
         var validationContext = CreateValidationContext();

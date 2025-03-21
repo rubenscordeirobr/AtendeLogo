@@ -2,9 +2,10 @@
 using AtendeLogo.Application.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Mediatores;
+namespace AtendeLogo.Application.Mediators;
 
-internal partial class RequestMediator : IRequestMediator, IRequestMediatorTest
+internal partial class RequestMediator : IRequestMediator , IRequestMediatorTest
+
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ICommandTrackingService _tackingService;
@@ -63,10 +64,11 @@ internal partial class RequestMediator : IRequestMediator, IRequestMediatorTest
         if (result == null)
         {
             var commandTypeName = command.GetType().GetQualifiedName();
-            var message = "Handler not found for command {CommandTypeName}";
-            _logger.LogError(message, commandTypeName);
+            var message = $"Handler not found for command {commandTypeName}";
 
-            throw new RequestHandlerNotFoundException(message, commandTypeName);
+            _logger.LogError("Handler not found for command {CommandTypeName}", commandTypeName);
+
+            throw new RequestHandlerNotFoundException(message);
         }
 
         if (result.IsSuccess)
@@ -81,21 +83,21 @@ internal partial class RequestMediator : IRequestMediator, IRequestMediatorTest
     #region Query
 
     public Task<Result<TResponse>> GetAsync<TResponse>(
-        IQueryRequest<TResponse> queryRequest,
+        IQueryRequest<TResponse> query,
         CancellationToken cancellationToken = default)
         where TResponse : IResponse
     {
-        var handler = GetRequestHandler<IGetQueryResultHandler<TResponse>, TResponse>(queryRequest);
-        return handler.GetAsync(queryRequest, cancellationToken);
+        var handler = GetRequestHandler<IGetQueryResultHandler<TResponse>, TResponse>(query);
+        return handler.GetAsync(query, cancellationToken);
     }
 
     public Task<Result<IReadOnlyList<TResponse>>> GetManyAsync<TResponse>(
-        IQueryRequest<TResponse> queryRequest,
+        IQueryRequest<TResponse> query,
         CancellationToken cancellationToken = default)
             where TResponse : IResponse
     {
-        var handler = GetRequestHandler<IGetManyQueryHandler<TResponse>, TResponse>(queryRequest);
-        return handler.GetManyAsync(queryRequest, cancellationToken);
+        var handler = GetRequestHandler<IGetManyQueryHandler<TResponse>, TResponse>(query);
+        return handler.GetManyAsync(query, cancellationToken);
     }
 
     #endregion

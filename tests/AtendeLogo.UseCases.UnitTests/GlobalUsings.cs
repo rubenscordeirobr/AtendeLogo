@@ -14,7 +14,6 @@ global using AtendeLogo.TestCommon.Mocks.Repositories;
 global using AtendeLogo.TestCommon.Utils;
 global using AtendeLogo.UseCases.Activities.Events;
 global using AtendeLogo.UseCases.Shared;
-global using AtendeLogo.UseCases.UnitTests.TestSupport;
 global using AutoFixture;
 global using FluentAssertions;
 global using FluentValidation;

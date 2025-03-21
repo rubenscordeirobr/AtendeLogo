@@ -23,13 +23,13 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
     }
 
     [Fact]
-    public async Task Verify_ShouldCreateNewUserSession()
+    public async Task Verify_ShouldCreateAnonymousSession()
     {
         // Arrange
-        var registrationService = _serviceProvider.GetRequiredService<IUserSessionVerificationService>();
+        var registrationService = (IUserSessionVerificationServiceTest)_serviceProvider.GetRequiredService<IUserSessionVerificationService>();
 
         //Act
-        var userSession = await registrationService.VerifyAsync();
+        var userSession = await registrationService.CreateAnonymousSessionAsync();
 
         // Assert
         userSession.Should().NotBeNull();
@@ -41,7 +41,7 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
 
         userSession.StartedAt
             .Should()
-            .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(30));
+            .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
     }
 }
 

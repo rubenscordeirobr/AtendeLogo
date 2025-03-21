@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Globalization;
+using System.Text.Json.Serialization;
 using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Shared.ValueObjects;
@@ -8,7 +9,7 @@ public sealed record TimeZoneOffset : ValueObjectBase
     public string Offset { get; private set; }
     public string Location { get; private set; }
     public TimeSpan OffsetTimeSpan
-        => TimeSpan.Parse(Offset);
+        => TimeSpan.Parse(Offset, CultureInfo.InvariantCulture);
 
     [JsonConstructor]
     private TimeZoneOffset(string offset, string location)
@@ -39,7 +40,7 @@ public sealed record TimeZoneOffset : ValueObjectBase
                 "Location cannot be empty.");
         }
 
-        if (!TimeSpan.TryParse(offset, out var offsetTimeSpan))
+        if (!TimeSpan.TryParse(offset, CultureInfo.InvariantCulture, out var _))
         {
             return Result.ValidationFailure<TimeZoneOffset>(
                 "TimeZone.InvalidOffset",
@@ -47,10 +48,10 @@ public sealed record TimeZoneOffset : ValueObjectBase
         }
         return Result.Success(new TimeZoneOffset(offset, location));
     }
-     
+
     public static TimeZoneOffset Default
         => new("00:00", "UTC");
-     
+
     public static TimeZoneOffset Parse(string json)
     {
         return JsonUtils.Deserialize<TimeZoneOffset>(json)

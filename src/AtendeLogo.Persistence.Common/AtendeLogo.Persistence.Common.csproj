@@ -1,6 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
- 
+  <PropertyGroup>
+    <AnalysisMode>all</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
+    <InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
+  </ItemGroup>
   <PropertyGroup>
     <RootNamespace>AtendeLogo.Persistence.Common</RootNamespace>
   </PropertyGroup>
@@ -8,7 +15,7 @@
     <PackageReference Include="Aspire.Npgsql" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" />
-    
+
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />

@@ -2,9 +2,9 @@
 
 public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEntity, IEventAggregate
 {
-    private readonly List<IDomainEvent> _events = new();
-    private readonly List<TenantUser> _users = new();
-    private readonly List<TenantAddress> _addresses = new();
+    private readonly List<IDomainEvent> _events = [];
+    private readonly List<TenantUser> _users = [];
+    private readonly List<TenantAddress> _addresses = [];
 
     public string Name { get; private set; }
     public string Email { get; private set; }
@@ -79,6 +79,8 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
 
     public void SetDefaultAddress(TenantAddress address)
     {
+        Guard.NotNull(address);
+
         DefaultAddress?.RemoveDefault();
 
         DefaultAddress = address;
@@ -87,7 +89,9 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
 
     public void SetCreateOwner(TenantUser tenantUser)
     {
-        if(OwnerUser_Id != default)
+        Guard.NotNull(tenantUser);
+
+        if (OwnerUser_Id != default)
         {
             throw new InvalidOperationException(" The owner cannot be changed.");
         }

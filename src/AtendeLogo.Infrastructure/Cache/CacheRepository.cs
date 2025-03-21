@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AtendeLogo.Common;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
 namespace AtendeLogo.Infrastructure.Cache;
@@ -12,6 +13,8 @@ public class CacheRepository : ICacheRepository
         IConnectionMultiplexer connection,
         ILogger<CacheRepository> logger)
     {
+        Guard.NotNull(connection);
+
         _database = connection.GetDatabase();
         _logger = logger;
     }

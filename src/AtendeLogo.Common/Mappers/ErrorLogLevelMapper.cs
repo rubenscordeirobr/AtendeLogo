@@ -4,7 +4,7 @@ namespace AtendeLogo.Common.Mappers;
 
 public static class ErrorLogLevelMapper
 {
-    public static LogLevel ResolveErrorLevel(Error error)
+    public static LogLevel MapErrorLevel(Error error)
     {
         return error switch
         {
@@ -17,12 +17,12 @@ public static class ErrorLogLevelMapper
             TaskTimeoutError => LogLevel.Warning,
             // Errors
             BadRequestError => LogLevel.Error,
-            InvalidOperationError => LogLevel.Error,
             DomainEventError => LogLevel.Error,
             RequestError => LogLevel.Error,
             DeserializationError => LogLevel.Error,
             CreateHttpRequestMessageError => LogLevel.Error,
             UnknownError => LogLevel.Error,
+            InvalidOperationError => LogLevel.Error,
             //Critical
             DatabaseError => LogLevel.Critical,
             CommandValidatorNotFoundError => LogLevel.Critical,

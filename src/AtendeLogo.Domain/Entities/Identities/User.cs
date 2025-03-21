@@ -4,7 +4,8 @@ namespace AtendeLogo.Domain.Entities.Identities;
 
 public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscendingSortable, IEventAggregate
 {
-    private readonly List<IDomainEvent> _events = new();
+    private readonly List<IDomainEvent> _events = [];
+    private readonly List<UserSession> _sessions = new();
     public string Name { get; protected set; }
     public string Email { get; protected set; }
     public string? ProfilePictureUrl { get; protected set; }
@@ -16,7 +17,7 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     public VerificationState PhoneNumberVerificationState { get; protected set; }
     public PhoneNumber PhoneNumber { get; private set; }
     public Password Password { get; private set; }
-    public List<UserSession> Sessions { get; } = [];
+    public IReadOnlyList<UserSession> Sessions => _sessions;
 
     public abstract UserType UserType { get; }
 

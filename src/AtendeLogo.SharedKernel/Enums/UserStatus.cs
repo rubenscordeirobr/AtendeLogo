@@ -2,6 +2,8 @@
 
 public enum UserStatus
 {
+    [UndefinedValue]
+    Unknown = 0,
     Anonymous = 1,
     New,
     System,

@@ -10,7 +10,7 @@ public class HttpErrorMapperTests
     public void GetHttpStatusCode_Should_Return_ExpectedStatus(Error error, HttpStatusCode expectedStatus)
     {
         // Act
-        var status = HttpErrorMapper.GetHttpStatusCode(error);
+        var status = HttpErrorMapper.MapHttpStatusCode(error);
         // Assert
         status.Should().Be(expectedStatus);
     }

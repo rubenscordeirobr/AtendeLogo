@@ -14,7 +14,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         IUserSessionAccessor userSessionAccessor,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
-        ILogger<IUnitOfWork> logger,
+        ILogger logger,
         IDbContextTransaction transaction)
         : base(dbContext, userSessionAccessor, entityAuthorizationService, eventMediator, logger)
     {
@@ -70,14 +70,14 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
 
             if (domainEventContext.IsCanceled)
             {
-                await TryRollbackAsync(domainEventContext.GetException(), cancellationToken);
+                await TryRollbackAsync(domainEventContext.Exception, cancellationToken);
                 return SaveChangesResult.DomainEventError(domainEventContext, domainEventContext.Error);
             }
 
             if (cancellationToken.IsCancellationRequested)
             {
                 await TryRollbackAsync(new OperationCanceledException(cancellationToken), cancellationToken);
-                return SaveChangesResult.OperationCanceledError(cancellationToken, domainEventContext);
+                return SaveChangesResult.OperationCanceledError(domainEventContext, cancellationToken);
             }
 
             var result = await ExecuteSaveChangesAsync(silent, cancellationToken);
@@ -95,7 +95,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         }
         catch (OperationCanceledException ex)
         {
-            _logger.LogError(ex, "Operation canceled during transaction commit.");
+            Logger.LogError(ex, "Operation canceled during transaction commit.");
 
             await TryRollbackAsync(ex, cancellationToken);
             if (!silent)
@@ -106,7 +106,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during transaction commit.");
+            Logger.LogError(ex, "Error during transaction commit.");
             await TryRollbackAsync(ex, cancellationToken);
             if (silent)
             {
@@ -130,12 +130,12 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
             if (_transaction is null)
                 return;
 
-            _logger.LogError(exception, "Rollback transaction due to error.");
+            Logger.LogError(exception, "Rollback transaction due to error.");
             await _transaction.RollbackAsync(cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during transaction rollback.");
+            Logger.LogError(ex, "Error during transaction rollback.");
         }
         finally
         {
@@ -155,7 +155,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during transaction dispose.");
+            Logger.LogError(ex, "Error during transaction dispose.");
         }
     }
 
@@ -163,7 +163,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
     {
         if (_transaction is not null)
         {
-            await TryRollbackAsync(new OperationCanceledException("The transaction excecuted was with oppend transaction."), default);
+            await TryRollbackAsync(new OperationCanceledException("The transaction executed was with opened transaction."), default);
         }
         _transaction = null;
     }

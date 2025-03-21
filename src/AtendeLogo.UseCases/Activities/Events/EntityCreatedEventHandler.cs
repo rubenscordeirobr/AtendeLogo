@@ -26,6 +26,8 @@ public sealed class EntityCreatedEventHandler<TEntity> : IEntityCreatedEventHand
 
     public async Task HandleAsync(IEntityCreatedEvent<TEntity> domainEvent)
     {
+        Guard.NotNull(domainEvent);
+
         var userSession = _userSessionAccessor.GetCurrentSession();
         var entity = domainEvent.Entity;
        

@@ -12,7 +12,7 @@ public class NullableGuidValueConverter : ValueConverter<Guid?, Guid?>
 
     internal static Guid? Convert(Guid? value)
     {
-        return value is null || value == default
+        return value == null || value.Value == Guid.Empty
             ? null
             : value;
     }

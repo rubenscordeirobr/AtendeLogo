@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using AtendeLogo.Application.Services;
+﻿using AtendeLogo.Application.Services;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Common.Utils;
 using AtendeLogo.Persistence.Identity.Extensions;
@@ -123,7 +122,7 @@ public class SessionCacheServiceTests
 
         // Assert
         var cachedValue = await cacheRepository.StringGetAsync(cacheKey);
-        cachedValue.Should().Be(JsonUtils.Serialize(session, options: JsonSerializerOptions.Web));
+        cachedValue.Should().Be(JsonUtils.Serialize(session, options: JsonUtils.CacheJsonSerializerOptions));
     }
 
     [Fact]

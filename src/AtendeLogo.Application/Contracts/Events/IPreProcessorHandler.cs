@@ -3,7 +3,7 @@ using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.Contracts.Events;
 
-public interface IPreProcessorHandler<TEvent> :IApplicationHandler
+public interface IPreProcessorHandler<in TEvent> :IApplicationHandler
     where TEvent : IDomainEvent
 {
     Task PreProcessAsync(

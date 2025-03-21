@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Domain.Entities.Activities;
+﻿using AtendeLogo.Common;
+using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Shared.Enums;
 
 namespace AtendeLogo.Persistence.Activity.Documents;
@@ -7,6 +8,8 @@ public static class ActivityDocumentMapper
 {
     public static ActivityDocument MapToDocument(ActivityBase activity)
     {
+        Guard.NotNull(activity);
+
         var document = new ActivityDocument
         {
             Tenant_Id = activity.Tenant_Id,
@@ -49,6 +52,8 @@ public static class ActivityDocumentMapper
 
     public static ActivityBase MapToDomain(ActivityDocument document)
     {
+        Guard.NotNull(document);
+
         switch (document.ActivityType)
         {
             case ActivityType.Created:

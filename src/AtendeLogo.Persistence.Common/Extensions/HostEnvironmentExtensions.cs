@@ -13,10 +13,11 @@ public static class HostEnvironmentExtensions
         }
 
         var subEnv = Environment.GetEnvironmentVariable("ASPNETCORE_SUB_ENVIRONMENT");
+      
         return string.Equals(
             subEnv,
             "DockerCompose",
-            StringComparison.InvariantCultureIgnoreCase);
+            StringComparison.OrdinalIgnoreCase);
 
     }
 
@@ -32,7 +33,7 @@ public static class HostEnvironmentExtensions
         return string.Equals(
             subEnv,
             "Test",
-            StringComparison.InvariantCultureIgnoreCase);
+            StringComparison.OrdinalIgnoreCase);
     }
 
     public static bool IsAspire(this IHostEnvironment hostEnvironment)
@@ -47,7 +48,7 @@ public static class HostEnvironmentExtensions
         return string.Equals(
             subEnv,
             "Aspire",
-            StringComparison.InvariantCultureIgnoreCase);
+            StringComparison.OrdinalIgnoreCase);
 
     }
 }

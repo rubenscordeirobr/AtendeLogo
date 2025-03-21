@@ -66,7 +66,7 @@ public class ResultTests
         var result = Result.Failure<string>(error);
 
         // Act
-        Action act = () => result.GetValue();
+        Action act = () => result.GetRequiredValue();
 
         // Assert
         act.Should().Throw<InvalidOperationException>()

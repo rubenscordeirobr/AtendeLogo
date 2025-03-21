@@ -1,6 +1,11 @@
-﻿namespace AtendeLogo.Common.Enums;
+﻿using AtendeLogo.Common.Attributes;
+
+namespace AtendeLogo.Common.Enums;
 
 public enum ExtendedHttpStatusCode
 {
+    [UndefinedValue]
+    Unknown = 0,
+
     RequestAborted = 499
 }

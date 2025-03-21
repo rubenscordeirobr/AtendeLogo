@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using AtendeLogo.Application.Contracts.Security;
-using AtendeLogo.Application.Mediatores;
+using AtendeLogo.Application.Mediators;
 using AtendeLogo.Application.Registrars;
 using AtendeLogo.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ namespace AtendeLogo.Application;
 public static class ApplicationServiceConfiguration
 {
     public static IServiceCollection AddApplicationServices(
-        this IServiceCollection services )
+        this IServiceCollection services)
     {
         services.AddSingleton<ICommandTrackingService, CommandTrackingService>()
             .AddSingleton<ISessionCacheService, SessionCacheService>()
@@ -19,8 +19,8 @@ public static class ApplicationServiceConfiguration
             .AddScoped<IEventMediator, EventMediator>()
             .AddTransient<IAuthenticationAttemptLimiterService, AuthenticationAttemptLimiterService>()
             .AddTransient<IUserSessionVerificationService, UserSessionVerificationService>();
-        
-         
+
+
         services.AddApplicationHandlersFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
@@ -30,6 +30,8 @@ public static class ApplicationServiceConfiguration
        this IServiceCollection services,
        Assembly assembly)
     {
+        Guard.NotNull(assembly);
+
         var serviceRegistrar = new ApplicationHandlerRegistrar(services);
         serviceRegistrar.RegisterFromAssembly(assembly);
         return services;
@@ -44,3 +46,4 @@ public static class ApplicationServiceConfiguration
         return services;
     }
 }
+ 

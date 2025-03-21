@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using AtendeLogo.Application.Contracts.Persistence.Activities;
+using AtendeLogo.Common;
 using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Persistence.Activity.Documents;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,8 @@ public class ActivityRepository : IActivityRepository
         IMongoDatabase database,
         ILogger<ActivityRepository> logger)
     {
+        Guard.NotNull(database);
+
         _collection = database.GetCollection<ActivityDocument>("activities");
         _logger = logger;
     }
@@ -36,7 +39,7 @@ public class ActivityRepository : IActivityRepository
             var documents = await _collection
                 .Find(filter, options)
                 .SortByDescending(d => d.ActivityAt)
-                .Limit(ACTIVITY_QUERY_LIMIT)
+                .Limit(limit)
                 .ToListAsync();
 
             return documents.Select(ActivityDocumentMapper.MapToDomain);

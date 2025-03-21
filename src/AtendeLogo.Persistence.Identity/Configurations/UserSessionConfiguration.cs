@@ -4,6 +4,8 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
 {
     public void Configure(EntityTypeBuilder<UserSession> builder)
     {
+        Guard.NotNull(builder);
+
         builder.Property(x => x.ClientSessionToken)
             .IsRequired()
             .HasMaxLength(ValidationConstants.AuthTokenMaxLength);

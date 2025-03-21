@@ -8,10 +8,12 @@ public class GuidIntegerValueGenerator : ValueGenerator<Guid>
 {
     public override Guid Next(EntityEntry entry)
     {
-        if (entry.Entity is EntityBase entity)
+        Guard.NotNull(entry);
+
+        if (entry.Entity is EntityBase entity &&
+            entity.Id != Guid.Empty)
         {
-            if (entity.Id != default)
-                return entity.Id;
+            return entity.Id;
         }
         return GuidExtensions.NewGuidZeroPrefixed();
     }

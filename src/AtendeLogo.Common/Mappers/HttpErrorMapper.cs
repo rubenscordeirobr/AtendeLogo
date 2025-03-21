@@ -5,7 +5,7 @@ namespace AtendeLogo.Common.Mappers;
 
 public static class HttpErrorMapper
 {
-    public static HttpStatusCode GetHttpStatusCode(Error error)
+    public static HttpStatusCode MapHttpStatusCode(Error error)
     {
         return error switch
         {

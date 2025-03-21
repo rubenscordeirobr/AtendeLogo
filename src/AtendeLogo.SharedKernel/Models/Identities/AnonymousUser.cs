@@ -15,9 +15,9 @@ public class AnonymousUser : IUser
 
     public VerificationState PhoneNumberVerificationState { get; } = VerificationState.Verified;
 
-    public string? ProfilePictureUrl { get; } = null;
+    public string? ProfilePictureUrl { get; }
 
-    public PhoneNumber? PhoneNumber { get; } = null;
+    public PhoneNumber? PhoneNumber { get; }
 
     public Language Language { get; } = Language.Default;
 

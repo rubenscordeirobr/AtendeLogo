@@ -37,7 +37,7 @@ public class SaveChangesResultTests
     }
 
     [Fact]
-    public void Successo_ShouldReturnSuccessResult()
+    public void Constructor_Success_ShouldReturnSuccessResult()
     {
         var affectedRows = 5;
 
@@ -97,7 +97,7 @@ public class SaveChangesResultTests
     {
         var cancellationToken = new CancellationToken(true);
 
-        var result = SaveChangesResult.OperationCanceledError(cancellationToken, _domainEventContext);
+        var result = SaveChangesResult.OperationCanceledError(_domainEventContext, cancellationToken);
 
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();

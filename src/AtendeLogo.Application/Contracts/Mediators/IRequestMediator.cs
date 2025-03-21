@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Application.Contracts.Mediators;
 
-public interface IRequestMediator : IQueryMediador, ICommandMediator
+public interface IRequestMediator : IQueryMediator, ICommandMediator
 {
 
 }

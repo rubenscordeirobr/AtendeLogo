@@ -5,11 +5,13 @@ namespace AtendeLogo.Application.Events;
 
 public sealed class DomainEventContext : IDomainEventContext
 {
+    private readonly Dictionary<IDomainEvent, List<ExecutedDomainEventResult>> _dispatchedHandlers = [];
+
     private bool _canBeCanceled = true;
-    private Dictionary<IDomainEvent, List<ExecutedDomainEventResult>> _dispatchedHandlers = new();
     public IReadOnlyList<IDomainEvent> Events { get; }
 
     [MemberNotNullWhen(true, nameof(Error))]
+    [MemberNotNullWhen(true, nameof(Exception))]
     public bool IsCanceled { get; private set; }
 
     public DomainEventError? Error { get; private set; }
@@ -37,33 +39,32 @@ public sealed class DomainEventContext : IDomainEventContext
         _canBeCanceled = false;
     }
 
-    public Exception GetException()
-    {
-        if (!IsCanceled)
-        {
-            throw new InvalidOperationException("The context is not canceled.");
-        }
-        return new Exception(Error?.Message);
-    }
+    public Exception? Exception
+        => IsCanceled
+            ? new DomainEventException(Error.Message)
+            : null;
 
-    public void AddExecutedEventResults(IDomainEvent domainEvent, List<ExecutedDomainEventResult> results)
+    public void AddExecutedEventResults(
+        IDomainEvent domainEvent,
+        IReadOnlyList<ExecutedDomainEventResult> results)
     {
-        if (_dispatchedHandlers.ContainsKey(domainEvent))
+        _dispatchedHandlers.TryAdd(domainEvent, []);
+        if (_dispatchedHandlers.TryGetValue(domainEvent, out var value))
         {
-            _dispatchedHandlers[domainEvent].AddRange(results);
+            value.AddRange(results);
         }
         else
         {
-            _dispatchedHandlers.Add(domainEvent, results);
+            _dispatchedHandlers.Add(domainEvent, [.. results]);
         }
     }
 
     public IReadOnlyList<ExecutedDomainEventResult> GetExecutedEventResults(IDomainEvent domainEvent)
     {
-        if (!_dispatchedHandlers.ContainsKey(domainEvent))
+        if (!_dispatchedHandlers.TryGetValue(domainEvent, out var value))
         {
-            return Array.Empty<ExecutedDomainEventResult>();
+            return [];
         }
-        return _dispatchedHandlers[domainEvent];
+        return value;
     }
 }

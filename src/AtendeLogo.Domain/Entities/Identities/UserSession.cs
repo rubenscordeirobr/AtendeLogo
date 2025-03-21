@@ -2,6 +2,7 @@
 
 namespace AtendeLogo.Domain.Entities.Identities;
 
+
 public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 {
     private const int UpdateCheckIntervalMinutes = 5;
@@ -57,7 +58,12 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     }
 
     public bool IsUpdatePending()
-      => this.IsActive && LastActivity.IsExpired(TimeSpan.FromMinutes(UpdateCheckIntervalMinutes));
+    {
+        return IsActive
+            && LastActivity.IsExpired(TimeSpan.FromMinutes(UpdateCheckIntervalMinutes))
+            && Id != AnonymousIdentityConstants.Session_Id;
+    }
+      
 
     public bool IsExpired()
     {

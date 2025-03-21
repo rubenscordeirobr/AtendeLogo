@@ -13,39 +13,40 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
     public Task<bool> EmailExistsAsync(
         Guid currentTenantUser_Id,
         string email,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return AnyAsync(x => x.Email == email && x.Id != currentTenantUser_Id, token);
+        return AnyAsync(x => x.Email == email && x.Id != currentTenantUser_Id, cancellationToken);
     }
 
     public Task<bool> EmailOrPhoneNumberExits(
         string emailOrPhoneNumber,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return AnyAsync(x => x.Email == emailOrPhoneNumber || x.PhoneNumber.Number == emailOrPhoneNumber, token);
-    }
-     
-    public Task<bool> PhoneNumberExitsAsync(
-        string phoneNumber, 
-        CancellationToken token)
-    {
-        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber, token);
+        return AnyAsync(x => x.Email == emailOrPhoneNumber || x.PhoneNumber.Number == emailOrPhoneNumber, cancellationToken);
     }
 
     public Task<bool> PhoneNumberExitsAsync(
-        Guid currentTenantUser_Id, 
         string phoneNumber,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != currentTenantUser_Id, token);
+        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber, cancellationToken);
+    }
+
+    public Task<bool> PhoneNumberExitsAsync(
+        Guid currentTenantUser_Id,
+        string phoneNumber,
+        CancellationToken cancellationToken = default)
+    {
+        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != currentTenantUser_Id, cancellationToken);
     }
 
     #region Overrides
     protected override IQueryable<TenantUser> CreateQuery(
-        Expression<Func<TenantUser, object?>>[] includeExpressions)
+        Expression<Func<TenantUser, object?>>[]? includeExpressions)
     {
         var query = base.CreateQuery(includeExpressions);
-        var userSession = _userSessionAccessor.GetCurrentSession();
+
+        var userSession = GetCurrentSession();
         if (!userSession.IsTenantUser() && !userSession.IsSystemAdminUser())
         {
             return query.Take(1);
@@ -55,13 +56,13 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
 
     protected override bool ShouldFilterTenantOwned()
     {
-        var endpointInstance = _userSessionAccessor.GetCurrentEndpointInstance();
-        if(endpointInstance?.ServiceRole == ServiceRole.UserAuthentication)
+        var endpointInstance = GetCurrentEndpointInstance();
+        if (endpointInstance?.ServiceRole == ServiceRole.UserAuthentication)
         {
             return false;
         }
         return base.ShouldFilterTenantOwned();
     }
-     
+
     #endregion
 }

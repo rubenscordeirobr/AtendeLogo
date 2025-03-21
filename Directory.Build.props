@@ -1,24 +1,45 @@
 <Project>
-  <PropertyGroup>
 
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <PropertyGroup>
+
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <InvariantGlobalization>true</InvariantGlobalization>
+
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(IsTestProject)' != 'true'">
+
+        <AnalysisMode>all</AnalysisMode>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(IsTestProject)' == 'true'">
+
+        <AnalysisMode>none</AnalysisMode>
+        <AnalysisLevel>none</AnalysisLevel>
+
+    </PropertyGroup>
     
-    <LangVersion>preview</LangVersion>
-    <!--
-    <AnalysisMode>minimum</AnalysisMode>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    -->
- 
-  </PropertyGroup>
-  <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj'">
- 
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+    <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+        <AnalysisMode>none</AnalysisMode>
+        <AnalysisLevel>none</AnalysisLevel>
+        <SonarQubeExclude>true</SonarQubeExclude>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj' and '$(IsTestProject)' != 'true'">
+
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+
+        <PackageReference Include="SonarAnalyzer.CSharp">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
 </Project>

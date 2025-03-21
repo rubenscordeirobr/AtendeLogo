@@ -4,12 +4,12 @@ public interface IGetQueryResultHandler<TResponse> : IRequestHandler<TResponse>
     where TResponse : IResponse
 {
     internal Task<Result<TResponse>> GetAsync(
-         IQueryRequest<TResponse> request,
+         IQueryRequest<TResponse> query,
          CancellationToken cancellationToken = default);
 
-    Task IApplicationHandler.HandleAsync(object domainEvent)
+    Task IApplicationHandler.HandleAsync(object handlerObject)
     {
-        return GetAsync((IQueryRequest<TResponse>)domainEvent);
+        return GetAsync((IQueryRequest<TResponse>)handlerObject);
     }
 }
 
@@ -19,13 +19,13 @@ public interface IGetQueryResultHandler<TQuery, TResponse>
     where TResponse : IResponse
 {
     Task<Result<TResponse>> HandleAsync(
-        TQuery request,
+        TQuery query,
         CancellationToken cancellationToken = default);
 
     Task<Result<TResponse>> IGetQueryResultHandler<TResponse>.GetAsync(
-        IQueryRequest<TResponse> request,
+        IQueryRequest<TResponse> query,
         CancellationToken cancellationToken)
     {
-        return HandleAsync((TQuery)request, cancellationToken);
+        return HandleAsync((TQuery)query, cancellationToken);
     }
 }

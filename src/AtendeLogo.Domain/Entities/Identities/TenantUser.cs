@@ -1,7 +1,6 @@
-﻿
-namespace AtendeLogo.Domain.Entities.Identities;
+﻿namespace AtendeLogo.Domain.Entities.Identities;
 
-public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
+public sealed class TenantUser : User, ITenantOwned
 {
     public override UserType UserType { get; } = UserType.TenantUser;
 
@@ -38,7 +37,7 @@ public sealed class TenantUser : User, ITenantOwned, ISoftDeletableEntity
         : base(name, email, null, language, role, userState, userStatus, 
                VerificationState.NotVerified, VerificationState.NotVerified, phoneNumber, password)
     {
-        Guard.NotNull(tenant, nameof(tenant));
+        Guard.NotNull(tenant);
         Tenant = tenant;
     }
 }

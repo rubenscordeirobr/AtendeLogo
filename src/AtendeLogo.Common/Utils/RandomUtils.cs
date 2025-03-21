@@ -4,6 +4,7 @@ public static class RandomUtils
 {
     private static readonly Random _random = new();
 
+    
     public static string GenerateRandomNumber(int length)
     {
         var digits = new char[length];

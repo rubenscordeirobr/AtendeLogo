@@ -2,6 +2,8 @@
 
 public enum ServiceRole
 {
+    [UndefinedValue]
+    None = 0,
     General,
     UserAuthentication,
 }

@@ -1,6 +1,6 @@
-﻿using AtendeLogo.Shared.Contracts;
+﻿using AtendeLogo.Application.Contracts.Mediators;
 
-namespace AtendeLogo.UseCases.UnitTests.TestSupport;
+namespace AtendeLogo.TestCommon.Extensions;
 
 public static class CommandMediatorExtensions
 {

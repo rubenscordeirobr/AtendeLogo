@@ -12,6 +12,9 @@ public static class UserSessionFactory
         bool rememberMe,
         Guid? tenant_id )
     {
+        Guard.NotNull(user);
+        Guard.NotNull(clientHeaderInfo);
+
         var clientSessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
         var expirationTime = rememberMe
             ? TimeSpan.FromDays(365)

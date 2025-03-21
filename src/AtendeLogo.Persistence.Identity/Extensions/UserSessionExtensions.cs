@@ -4,11 +4,11 @@ internal static class UserSessionExtensions
 {
     internal static void SetAnonymousSystemSessionId(this UserSession session)
     {
-        if (session.Id != default)
+        if (session.Id != Guid.Empty)
         {
             throw new InvalidOperationException("Id is already set.");
         }
-        
+
         var clientToken = HashHelper.CreateSha256Hash(AnonymousIdentityConstants.Session_Id);
 
         session.SetCreateSession(AnonymousIdentityConstants.Session_Id);

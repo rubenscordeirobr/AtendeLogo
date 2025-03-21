@@ -8,6 +8,8 @@ public static class AnonymousUserSessionFactory
 {
     public static IUserSession CreateAnonymousSession( ClientRequestHeaderInfo headerInfo)
     {
+        Guard.NotNull(headerInfo);
+
         return new AnonymousUserSession
         {
             ApplicationName = headerInfo.ApplicationName,

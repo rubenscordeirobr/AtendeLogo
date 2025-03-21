@@ -12,7 +12,7 @@ internal static class FilterExpressionHelper
             return deletedFilter;
         }
 
-        if(currentFilter.Contains(deletedColumnName))
+        if(currentFilter.Contains(deletedColumnName, StringComparison.InvariantCultureIgnoreCase))
         {
             return currentFilter;
         }

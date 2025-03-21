@@ -19,6 +19,8 @@ public class CreateTenantUserCommandHandler : CommandHandler<CreateTenantUserCom
         CreateTenantUserCommand command,
         CancellationToken cancellationToken)
     {
+        Guard.NotNull(command);
+
         var tenant = await _unitOfWork.Tenants.GetByIdAsync(command.Tenant_Id);
         if (tenant is null)
         {

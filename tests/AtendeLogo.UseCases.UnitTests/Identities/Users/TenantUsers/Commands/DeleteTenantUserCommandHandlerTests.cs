@@ -1,15 +1,15 @@
 ﻿using AtendeLogo.UseCases.Identities.Users.TenantUsers.Commands;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers.Commands;
- 
+
 public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
 {
-    private readonly IRequestMediatorTest _mediator;
+    private readonly IRequestMediator _mediator;
     private readonly DeleteTenantUserCommand _validCommand;
 
     public DeleteTenantUserCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
     {
-        _mediator = (IRequestMediatorTest)serviceProvider.GetRequiredService<IRequestMediator>();
+        _mediator = serviceProvider.GetRequiredService<IRequestMediator>();
         _validCommand = new DeleteTenantUserCommand(SystemTenantConstants.OwnerUser_Id);
     }
 
@@ -17,7 +17,8 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
     public void Handler_ShouldBe_DeleteTenantUserCommandHandler()
     {
         // Act
-        var handlerType = _mediator.GetRequestHandler(_validCommand);
+        var mediatorTest = (IRequestMediatorTest)_mediator;
+        var handlerType = mediatorTest.GetRequestHandler(_validCommand);
 
         // Assert
         handlerType.Should().BeOfType<DeleteTenantUserCommandHandler>();
@@ -52,7 +53,7 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
 
 
         var deleteCommand = new DeleteTenantUserCommand(createUserResult.Value!.Id);
-         
+
         //Act
         var result = await mediator.RunAsync(deleteCommand, CancellationToken.None);
 
@@ -79,7 +80,7 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
     {
         // Arrange
         var anonymousServiceProvider = new AnonymousServiceProviderMock();
-        var mediator = (IRequestMediatorTest)anonymousServiceProvider.GetRequiredService<IRequestMediator>();
+        var mediator = anonymousServiceProvider.GetRequiredService<IRequestMediator>();
 
         // Act
         var result = await mediator.RunAsync(_validCommand, CancellationToken.None);

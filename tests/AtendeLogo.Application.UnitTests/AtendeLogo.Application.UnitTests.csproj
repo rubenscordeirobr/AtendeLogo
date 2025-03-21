@@ -1,39 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="AutoFixture" />
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" />
-    
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
-    <PackageReference Include="StackExchange.Redis" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
-  </ItemGroup>
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<RunSettingsFilePath>$(MSBuildProjectDirectory)\test.runsettings</RunSettingsFilePath>
+		<IsTestProject>true</IsTestProject>
+        <AnalysisMode>none</AnalysisMode>
+        <AnalysisLevel>none</AnalysisLevel>
+        <SonarQubeExclude>true</SonarQubeExclude>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\AtendeLogo.Application\AtendeLogo.Application.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
-    <ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoFixture" />
+		<PackageReference Include="FluentAssertions" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="StackExchange.Redis" />
+		<PackageReference Include="xunit" />
+		<PackageReference Include="xunit.runner.visualstudio" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\AtendeLogo.Application\AtendeLogo.Application.csproj" />
+		<ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
+		<ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
+		<ProjectReference Include="..\..\src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
+		<ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
+		<ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="UseCases\" />
+	</ItemGroup>
 
 </Project>

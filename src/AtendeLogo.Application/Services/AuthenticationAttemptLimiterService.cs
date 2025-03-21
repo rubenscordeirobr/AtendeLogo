@@ -49,7 +49,7 @@ public class AuthenticationAttemptLimiterService : CacheServiceBase, IAuthentica
         await AddToCacheAsync(ipAddress, record);
     }
 
-    private record AuthenticationAttemptRecord(
+    private sealed record AuthenticationAttemptRecord(
         int FailedAttempts,
         DateTime LastFailedAttempt
     );

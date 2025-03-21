@@ -5,7 +5,7 @@ using AtendeLogo.Application.Exceptions;
 using AtendeLogo.Domain.Primitives.Contracts;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Mediatores;
+namespace AtendeLogo.Application.Mediators;
 
 internal partial class EventMediator : IEventMediator
 {
@@ -63,6 +63,7 @@ internal partial class EventMediator : IEventMediator
             _logger.LogError(ex, "Error on create event data for event {EventType}", domainEvent.GetType());
 
             var exception = new InvalidOperationException($"Error on create event data for event {domainEvent.GetType()}", ex);
+
             results.Add(new ExecutedDomainEventResult(
                 DomainEvent: domainEvent,
                 HandlerType: typeof(DomainEventDataFactory),
@@ -126,7 +127,7 @@ internal partial class EventMediator : IEventMediator
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error on handle event {EventType} with handler {handlerType}",
+            _logger.LogError(ex, "Error on handle event {EventType} with handler {HandlerType}",
                 domainEvent.GetType(),
                 handlerType);
 
@@ -144,25 +145,22 @@ internal partial class EventMediator : IEventMediator
 
     private Type NormalizeHandlerType(IDomainEvent domainEvent, Type handlerType)
     {
-        if (handlerType.IsGenericType)
+        if (handlerType.IsGenericType && handlerType.ContainsGenericParameters)
         {
-            if (handlerType.ContainsGenericParameters)
+            if (domainEvent is IEntityStateChangedEvent entityStateChangedEvent)
             {
-                if (domainEvent is IEntityStateChangedEvent entityStateChangedEvent)
+                var isEntityStateEventHandlerType = handlerType
+                    .ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventHandler<>)) ||
+                    handlerType.ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventPreProcessorHandler<>));
+
+                if (isEntityStateEventHandlerType)
                 {
-                    var isEntityStateEventHandlerType = handlerType
-                        .ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventHandler<>)) ||
-                        handlerType.ImplementsGenericInterfaceDefinition(typeof(IEntityStateChangedEventPreProcessorHandler<>));
-
-                    if (isEntityStateEventHandlerType)
-                    {
-                        return handlerType.MakeGenericType(entityStateChangedEvent.EntityBase.GetType());
-                    }
-
-                    throw new InvalidOperationException($"Event {domainEvent.GetType().Name} not implements  {nameof(IEntityStateChangedEvent)}");
+                    return handlerType.MakeGenericType(entityStateChangedEvent.EntityBase.GetType());
                 }
-                throw new InvalidOperationException($"Event {domainEvent.GetType().Name} has generic arguments with ContainsGenericParameters");
+
+                throw new InvalidOperationException($"Event {domainEvent.GetType().Name} not implements  {nameof(IEntityStateChangedEvent)}");
             }
+            throw new InvalidOperationException($"Event {domainEvent.GetType().Name} has generic arguments with ContainsGenericParameters");
         }
         return handlerType;
 

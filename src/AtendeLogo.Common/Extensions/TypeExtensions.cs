@@ -7,11 +7,15 @@ public static class TypeExtensions
 {
     public static bool IsConcrete(this Type type)
     {
+        Guard.NotNull(type);
+
         return !type.IsAbstract && !type.IsInterface;
     }
 
     public static bool IsSubclassOf<T>(this Type type)
     {
+        Guard.NotNull(type);
+
         return type.IsSubclassOf(typeof(T));
     }
 
@@ -21,6 +25,8 @@ public static class TypeExtensions
     }
     public static bool IsSubclassOfOrEquals(this Type type, Type otherType)
     {
+        Guard.NotNull(type);
+
         return type.IsSubclassOf(otherType) || type == otherType;
     }
 
@@ -28,6 +34,9 @@ public static class TypeExtensions
         this Type type,
         Type definitionType)
     {
+        Guard.NotNull(type);
+        Guard.NotNull(definitionType);
+
         if (!definitionType.IsGenericType)
         {
             return false;
@@ -52,6 +61,8 @@ public static class TypeExtensions
         this Type type,
         bool isIgnoreNotMappedAtribute = true)
     {
+        Guard.NotNull(type);
+
         var properties = type.GetProperties()
             .Where(x => x.DeclaringType == type);
 
@@ -69,19 +80,23 @@ public static class TypeExtensions
     public static IEnumerable<PropertyInfo> GetDeclaredPropertiesOfType(
         this Type type,
         Type propertyType,
-        bool isIgnoreNotMappedAtribute = true)
+        bool ignoreNotMappedAttribute = true)
     {
+        Guard.NotNull(type);
+
         var properties = type.GetProperties()
             .Where(x => x.DeclaringType == type)
             .Where(x => x.PropertyType.IsSubclassOfOrEquals(propertyType));
 
-        return (isIgnoreNotMappedAtribute)
+        return (ignoreNotMappedAttribute)
             ? properties.Where(property => property.GetCustomAttribute<NotMappedAttribute>() == null)
             : properties;
     }
 
     public static IEnumerable<Type> GetAssignableTypes(this Type eventType)
     {
+        Guard.NotNull(eventType);
+
         var assignableTypes = new List<Type> { eventType };
         assignableTypes.AddRange(eventType.GetInterfaces());
         if (eventType.BaseType != null && eventType.BaseType != typeof(object))
@@ -94,29 +109,25 @@ public static class TypeExtensions
 
     public static string GetQualifiedName(this Type type)
     {
-        return GetQualifiedTypeNameInternal(type);
+        Guard.NotNull(type);
 
-        static string GetQualifiedTypeNameInternal(Type type)
+        if (type.IsGenericType)
         {
-            if (type.IsGenericType)
-            {
-                var genericArguments = type.GetGenericArguments()
-                    .Select(GetQualifiedName);
+            var genericArguments = type.GetGenericArguments()
+                .Select(GetQualifiedName);
 
-                return $"{type.Name.Split('`')[0]}<{string.Join(", ", genericArguments)}>";
-            }
-            if (type.FullName is not null)
-                return type.FullName;
-
-            if (type.Namespace is not null)
-            {
-                return string.IsNullOrWhiteSpace(type.Namespace)
-                ? type.Name
-                : $"{type.Namespace}.{type.Name}";
-            }
-            return type.Name;
-
+            return $"{type.Name.Split('`')[0]}<{string.Join(", ", genericArguments)}>";
         }
+        if (type.FullName is not null)
+            return type.FullName;
+
+        if (type.Namespace is not null)
+        {
+            return string.IsNullOrWhiteSpace(type.Namespace)
+            ? type.Name
+            : $"{type.Namespace}.{type.Name}";
+        }
+        return type.Name;
     }
 
     public static IDictionary<string, PropertyInfo> GetPropertiesFromInterface<TInterface>(
@@ -131,16 +142,16 @@ public static class TypeExtensions
         Type interfaceType)
 
     {
+        Guard.NotNull(type);
+        Guard.NotNull(interfaceType);
+
         if (!type.IsAssignableTo(interfaceType))
         {
             var message = $"The type {type.Name} does not implement the interface {interfaceType.Name}";
             throw new InvalidOperationException(message);
         }
 
-        var properties = type.GetProperties();
         var interfaceProperties = interfaceType.GetProperties();
-        var result = new Dictionary<string, PropertyInfo>();
-
         var interfacePropertyNames = new HashSet<string>(
            interfaceType.GetProperties().Select(p => p.Name));
 
@@ -175,9 +186,11 @@ public static class TypeExtensions
 
     public static string GetSingleName(this Type type)
     {
+        Guard.NotNull(type);
+
         if (type.IsGenericType)
         {
-            return type.Name.Substring(0, type.Name.IndexOf('`'));
+            return type.Name.Substring(0, type.Name.IndexOf('`', StringComparison.Ordinal));
         }
         return type.Name;
     }
@@ -208,6 +221,9 @@ public static class TypeExtensions
         this Type type,
         Type targetType)
     {
+        Guard.NotNull(type);
+        Guard.NotNull(targetType);
+
         if (targetType.IsGenericTypeDefinition)
         {
             return type.ImplementsGenericInterfaceDefinition(targetType);
@@ -232,6 +248,9 @@ public static class TypeExtensions
       this Type type,
       Type interfaceDefinition)
     {
+        Guard.NotNull(type);
+        Guard.NotNull(interfaceDefinition);
+
         if (!interfaceDefinition.IsGenericTypeDefinition)
         {
             throw new ArgumentException("The interface definition must be a generic type definition", nameof(interfaceDefinition));
@@ -263,6 +282,8 @@ public static class TypeExtensions
 
     public static Type GetUnderlyingType(this Type type)
     {
+        Guard.NotNull(type);
+         
         if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
             return Nullable.GetUnderlyingType(type)
@@ -270,10 +291,12 @@ public static class TypeExtensions
         }
         return type;
     }
-     
+
     public static PropertyInfo? GetPropertyByName(
         this Type type, string propertyName)
     {
+        Guard.NotNull(type);
+
         var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
         return type.GetProperty(propertyName, flags);
     }

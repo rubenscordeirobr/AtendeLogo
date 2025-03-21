@@ -55,7 +55,7 @@ public class BodyParameterBinderTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();
-        result.Error!.Code.Should().Be("HttpRequestHandler.RequestBodyEmpty");
+        result.Error!.Code.Should().Be("HttpRequestExecutor.RequestBodyEmpty");
         result.Error.Message.Should().Contain(descriptor.Method.Name);
         result.Error.Message.Should().Contain(parameter.Name);
     }
@@ -75,7 +75,7 @@ public class BodyParameterBinderTests
         // Assert
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().NotBeNull();
-        result.Error!.Code.Should().Be("HttpRequestHandler.RequestBodyDeserializationFailed");
+        result.Error!.Code.Should().Be("HttpRequestExecutor.RequestBodyDeserializationFailed");
         result.Error.Message.Should().Contain(descriptor.Method.Name);
         result.Error.Message.Should().Contain(parameter.Name);
     }

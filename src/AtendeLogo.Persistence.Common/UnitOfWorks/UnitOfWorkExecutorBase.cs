@@ -8,20 +8,20 @@ internal abstract class UnitOfWorkExecutorBase
     private readonly IUserSessionAccessor _userSessionAccessor;
     private readonly IEntityAuthorizationService _entityAuthorizationService;
 
-    protected readonly ILogger<IUnitOfWork> _logger;
-    protected readonly IEventMediator EventMediator;
+    protected ILogger Logger { get; }
+    protected IEventMediator EventMediator { get; }
 
-    public UnitOfWorkExecutorBase(
+    protected UnitOfWorkExecutorBase(
         DbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
-        ILogger<IUnitOfWork> logger)
+        ILogger logger)
     {
         _dbContext = dbContext;
         _userSessionAccessor = userSessionAccessor;
         _entityAuthorizationService = entityAuthorizationService;
-        _logger = logger;
+        Logger = logger;
 
         EventMediator = eventMediator;
     }
@@ -37,7 +37,7 @@ internal abstract class UnitOfWorkExecutorBase
 
         var userSession = _userSessionAccessor.GetCurrentSession();
         var domainEventContext = DomainEventContextFactory.Create(userSession, entries);
-       
+
         try
         {
             ValidateAndSetUserSessions(userSession, entries);
@@ -48,7 +48,7 @@ internal abstract class UnitOfWorkExecutorBase
 
             if (domainEventContext.IsCanceled)
             {
-                _logger.LogError("Domain event context was canceled. {Message}.", domainEventContext.Error.Message);
+                Logger.LogError("Domain event context was canceled. {Message}.", domainEventContext.Error.Message);
 
                 if (!silent)
                 {
@@ -60,13 +60,13 @@ internal abstract class UnitOfWorkExecutorBase
 
             if (cancellationToken.IsCancellationRequested)
             {
-                _logger.LogWarning("Operation canceled during save changes.");
+                Logger.LogWarning("Operation canceled during save changes.");
 
                 if (!silent)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                 }
-                return SaveChangesResult.OperationCanceledError(cancellationToken, domainEventContext);
+                return SaveChangesResult.OperationCanceledError(domainEventContext, cancellationToken);
             }
 
             var rowAffects = await _dbContext.SaveChangesAsync(cancellationToken);
@@ -76,7 +76,7 @@ internal abstract class UnitOfWorkExecutorBase
         }
         catch (UnauthorizedSecurityException ex)
         {
-            _logger.LogError(ex,
+            Logger.LogError(ex,
                 "Unauthorized security exception during save changes.");
 
             if (!silent)
@@ -90,7 +90,7 @@ internal abstract class UnitOfWorkExecutorBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during save changes.");
+            Logger.LogError(ex, "Error during save changes.");
 
             if (!silent)
             {

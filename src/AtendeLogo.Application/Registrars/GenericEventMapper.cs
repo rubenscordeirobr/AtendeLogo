@@ -15,7 +15,7 @@ internal class GenericEventMapper(HandlerKind kind)
             throw new InvalidOperationException("Event type must have only one generic argument");
         }
 
-        var genericEntityParameterType = genericArguments.First();
+        var genericEntityParameterType = genericArguments[0];
         var entityType = NormalizarGerenicType(eventType, genericEntityParameterType);
 
         TypeGuard.TypeMustBeSubclassOfOrEqual(entityType, typeof(EntityBase));
@@ -38,7 +38,7 @@ internal class GenericEventMapper(HandlerKind kind)
 
             if (constraintsTypes.Length == 1)
             {
-                return constraintsTypes.First();
+                return constraintsTypes[0];
             }
         }
 
@@ -55,7 +55,7 @@ internal class GenericEventMapper(HandlerKind kind)
             throw new InvalidOperationException("Event type must have only one generic argument");
         }
 
-        var genericParameter = eventType.GetGenericArguments().First();
+        var genericParameter = eventType.GetGenericArguments()[0];
         var genericType = NormalizarGerenicType(eventType, genericParameter);
         var handlerTypes = new List<Type>();
 

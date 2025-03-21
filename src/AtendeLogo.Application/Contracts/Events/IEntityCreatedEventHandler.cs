@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Application.Contracts.Events;
 
-public interface IEntityStateChangedEventHandler<TEvent> : IDomainEventHandler<TEvent>
+public interface IEntityStateChangedEventHandler<in TEvent> : IDomainEventHandler<TEvent>
     where TEvent : IEntityStateChangedEvent
 {
 }

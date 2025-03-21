@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using AtendeLogo.Application.Exceptions;
 
 namespace AtendeLogo.Application.Common;
 
@@ -55,7 +56,7 @@ public class SaveChangesResult
             DatabaseError databaseError => databaseError.Exception,
             OperationCanceledError operationError => operationError.Exception,
             DomainEventError domainEventError => new DomainEventException(domainEventError.Message ?? "Unknown error"),
-            _ => new Exception(Error!.Message ?? "Unknown error")
+            _ => new SaveChangesUnknownException(Error!.Message ?? "Unknown error")
         };
     }
 
@@ -95,8 +96,8 @@ public class SaveChangesResult
     }
 
     public static SaveChangesResult OperationCanceledError(
-        CancellationToken cancellationToken,
-        IDomainEventContext eventDomainContext)
+        IDomainEventContext eventDomainContext,
+        CancellationToken cancellationToken)
     {
         var exception = new OperationCanceledException(
             $"IsCancellationRequested {cancellationToken.IsCancellationRequested}",

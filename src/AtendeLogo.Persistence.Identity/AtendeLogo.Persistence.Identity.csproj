@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <PropertyGroup>
+    <AnalysisMode>all</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="AtendeLogo.Persistence.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
@@ -7,9 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    
+
   </ItemGroup>
-	
+
   <ItemGroup>
     <ProjectReference Include="..\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
   </ItemGroup>

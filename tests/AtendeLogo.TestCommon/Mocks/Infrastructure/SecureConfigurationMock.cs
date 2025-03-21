@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.TestCommon.Mocks.Infrastructure;
 
-internal class SecureConfigurationMock: ISecureConfiguration
+public sealed class SecureConfigurationMock: ISecureConfiguration
 {
     public string GetPasswordSalt()
     {

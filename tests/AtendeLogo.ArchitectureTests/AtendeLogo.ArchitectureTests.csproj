@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
  
   <ItemGroup>
@@ -29,7 +30,7 @@
     <ProjectReference Include="..\..\src\AtendeLogo.UseCases.Shared\AtendeLogo.UseCases.Shared.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
     <ProjectReference Include="..\AtendeLogo.Application.UnitTests\AtendeLogo.Application.UnitTests.csproj" />
-    <ProjectReference Include="..\AtendeLogo.FunctionalTests\AtendeLogo.IdentityApi.FunctionalTests.csproj" />
+    <ProjectReference Include="..\AtendeLogo.IdentityApi.FunctionalTests\AtendeLogo.IdentityApi.FunctionalTests.csproj" />
     <ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
     <ProjectReference Include="..\AtendeLogo.UseCases.UnitTests\AtendeLogo.UseCases.UnitTests.csproj" />
   </ItemGroup>

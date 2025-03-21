@@ -2,23 +2,24 @@
 using AtendeLogo.Domain.Helpers;
 using AtendeLogo.Persistence.Common.Enums;
 using AtendeLogo.Persistence.Common.Exceptions;
+using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Persistence.Common;
 
 public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     private readonly DbContext _dbContext;
-    protected readonly IUserSessionAccessor _userSessionAccessor;
-    protected readonly TrackingOption _trackingOption;
+    private readonly IUserSessionAccessor _userSessionAccessor;
+    private readonly TrackingOption _trackingOption;
 
     private readonly bool _isImplementDeletedInterface;
     private readonly bool _isImplementTenantOwnedInterface;
 
-    private bool _isIncludeDeleted = false;
+    private bool _isIncludeDeleted;
 
     protected virtual int DefaultMaxRecords { get; } = RepositoryConstants.DefaultMaxRecords;
 
-    public RepositoryBase(
+    protected RepositoryBase(
         DbContext dbContext,
         IUserSessionAccessor userSessionAccessor,
         TrackingOption trackingOption)
@@ -32,14 +33,14 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         _isImplementDeletedInterface = EntityReflectionHelper.IsImplementDeletedInterface<TEntity>();
         _isImplementTenantOwnedInterface = EntityReflectionHelper.IsImplementTenantOwnedInterface<TEntity>();
     }
- 
+
     #region Queries
     public async Task<TEntity?> GetByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default,
-        params Expression<Func<TEntity, object?>>[] includes)
+        params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
-        return await CreateQuery(includes)
+        return await CreateQuery(includeExpressions)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
@@ -75,15 +76,14 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     }
 
     public async Task<bool> AnyAsync(
-        Expression<Func<TEntity, bool>> predicate,
+        Expression<Func<TEntity, bool>> filterExpression,
         CancellationToken cancellationToken = default,
         params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate));
+        Guard.NotNull(filterExpression);
 
         return await CreateQuery(includeExpressions)
-            .AnyAsync(predicate, cancellationToken);
+            .AnyAsync(filterExpression, cancellationToken);
     }
 
     #endregion
@@ -95,10 +95,10 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         Guard.NotNull(entity);
 
         var refreshedEntity = await TryRefreshAsync(entity, cancellationToken);
-        if (refreshedEntity is null)
-            throw new EntityNotFoundException(typeof(TEntity), entity!.Id);
 
-        return refreshedEntity;
+        return refreshedEntity is not null
+            ? refreshedEntity
+            : throw new EntityNotFoundException(typeof(TEntity), entity!.Id);
     }
 
     public async Task<TEntity?> TryRefreshAsync(
@@ -107,8 +107,8 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     {
         Guard.NotNull(entity);
 
-        if (entity.Id == default)
-            throw new ArgumentException("Is not possible to refresh entity with new entit.");
+        if (entity.Id == Guid.Empty)
+            throw new ArgumentException("Is not possible to refresh entity with new entity.");
 
         var entry = _dbContext.Entry(entity);
 
@@ -143,7 +143,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     #region Filter
 
     protected virtual IQueryable<TEntity> CreateQuery(
-        Expression<Func<TEntity, object?>>[] includeExpressions)
+        Expression<Func<TEntity, object?>>[]? includeExpressions)
     {
         var query = _dbContext.Set<TEntity>()
               .ApplyTracking(_trackingOption)
@@ -154,16 +154,14 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
             query = includeExpressions.Aggregate(query, (current, include) => current.Include(include));
         }
 
-        if (_isImplementTenantOwnedInterface)
+        if (_isImplementTenantOwnedInterface &&
+            ShouldFilterTenantOwned())
         {
-            if (ShouldFilterTenantOwned())
-            {
-                var userSession = _userSessionAccessor.GetCurrentSession();
+            var userSession = _userSessionAccessor.GetCurrentSession();
 
-                query = query.Cast<ITenantOwned>()
-                   .Where(x => x.Tenant_Id == userSession.Tenant_Id)
-                   .Cast<TEntity>();
-            }
+            query = query.Cast<ITenantOwned>()
+               .Where(x => x.Tenant_Id == userSession.Tenant_Id)
+               .Cast<TEntity>();
         }
 
         if (_isImplementDeletedInterface && !_isIncludeDeleted)
@@ -183,6 +181,16 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
             throw new UnauthorizedAccessException("User not have permission to access this resource.");
         }
         return true;
+    }
+
+    protected IUserSession GetCurrentSession()
+    {
+        return _userSessionAccessor.GetCurrentSession();
+    }
+
+    protected IEndpointService? GetCurrentEndpointInstance()
+    {
+        return _userSessionAccessor.GetCurrentEndpointInstance();
     }
 
     #endregion

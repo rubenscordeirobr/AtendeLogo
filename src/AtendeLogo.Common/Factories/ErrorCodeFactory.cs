@@ -6,6 +6,8 @@ public static class ErrorCodeFactory
 {
     public static string CreateInvalidCodeFor(Type type, string propertyName)
     {
+        Guard.NotNull(type);
+
         return $"{type.Name}.{propertyName}Invalid";
     }
 

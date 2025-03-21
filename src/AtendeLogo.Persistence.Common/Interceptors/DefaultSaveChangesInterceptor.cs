@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using AtendeLogo.Application.Exceptions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace AtendeLogo.Persistence.Common.Interceptors;
@@ -10,12 +11,12 @@ public class DefaultSaveChangesInterceptor : SaveChangesInterceptor
         InterceptionResult<int> result)
     {
         // Add your logic before saving changes
-        throw new Exception("Use SaveChangesAsync instead");
+        throw new SyncSaveChangesNotAllowedException("Use SaveChangesAsync instead");
     }
 
     public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
     {
-        throw new Exception("Use SaveChangesAsync instead");
+        throw new SyncSaveChangesNotAllowedException("Use SaveChangesAsync instead");
     }
 
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -23,38 +24,36 @@ public class DefaultSaveChangesInterceptor : SaveChangesInterceptor
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(eventData);
+
         if (eventData.Context is not null)
         {
             var entries = eventData.Context.ChangeTracker.Entries<EntityBase>()
                 .Where(entry => entry.State == EntityState.Added ||
                            entry.State == EntityState.Modified);
-           
 
-            foreach (var entry in entries)
+
+            foreach (var entity in entries.Select(entry => entry.Entity))
             {
-                var entity = entry.Entity;
-                if (entity.CreatedSession_Id == default ||
-                   entity.LastUpdatedSession_Id == default)
+                if (entity.CreatedSession_Id == Guid.Empty ||
+                   entity.LastUpdatedSession_Id == Guid.Empty)
                 {
                     throw new InvalidOperationException("" +
                         "The SaveChanges method must be call into the UnitOfWork class");
                 }
 
-                if (!Debugger.IsAttached)
+                if (!Debugger.IsAttached && entity.LastUpdatedAt.AddSeconds(10) < DateTime.UtcNow)
                 {
-                    if (entity.LastUpdatedAt.AddSeconds(10) < DateTime.UtcNow)
-                    {
-                        var message = $"The entity {entity.GetType().Name} {entity.Id} " +
-                                      $" The last update must e less than 10 seconds";
+                    var message = $"The entity {entity.GetType().Name} {entity.Id} " +
+                                  $" The last update must e less than 10 seconds";
 
-                        throw new InvalidOperationException(message);
-                    }
+                    throw new InvalidOperationException(message);
                 }
             }
         }
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
-     
+
     public override ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData,
         int result,
@@ -63,7 +62,7 @@ public class DefaultSaveChangesInterceptor : SaveChangesInterceptor
         //logic after saving changes asynchronously
         return base.SavedChangesAsync(eventData, result, cancellationToken);
     }
-     
+
     public override Task SaveChangesFailedAsync(
         DbContextErrorEventData eventData,
         CancellationToken cancellationToken = default)

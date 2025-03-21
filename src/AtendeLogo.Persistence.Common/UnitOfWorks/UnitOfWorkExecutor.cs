@@ -7,7 +7,7 @@ internal class UnitOfWorkExecutor : UnitOfWorkExecutorBase
         IUserSessionAccessor userSessionAccessor,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
-        ILogger<IUnitOfWork> logger)
+        ILogger logger)
         : base(dbContext, userSessionAccessor, entityAuthorizationService, eventMediator, logger)
     {
     }

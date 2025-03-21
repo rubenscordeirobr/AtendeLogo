@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Text.Json;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Common.Utils;
 
@@ -9,6 +10,8 @@ public class CacheRepositoryMock : ICacheRepository
     private const string UserSessionPrefix = "user-session:";
 
     private readonly ConcurrentDictionary<string, string> _cache = new();
+    protected virtual JsonSerializerOptions JsonSerializationOptions { get; }
+        = new JsonSerializerOptions(JsonSerializerOptions.Web) { IncludeFields = true };
 
     private readonly IUserSessionAccessor? _userSessionAccessor;
 
@@ -20,7 +23,7 @@ public class CacheRepositoryMock : ICacheRepository
 
     public CacheRepositoryMock()
     {
-        
+
     }
 
     public Task<bool> KeyExistsAsync(string cacheKey)
@@ -30,10 +33,12 @@ public class CacheRepositoryMock : ICacheRepository
 
     public Task<string?> StringGetAsync(string cachedKey)
     {
+        Guard.NotNull(cachedKey);
+
         var userSession = TryGetCurrentSessionFromAccessor(cachedKey);
-        if(userSession is not null)
+        if (userSession is not null)
         {
-            var json = JsonUtils.Serialize(userSession);
+            var json = JsonUtils.Serialize(userSession, JsonUtils.CacheJsonSerializerOptions);
             return Task.FromResult(json)!;
         }
         return Task.FromResult(_cache.TryGetValue(cachedKey, out var value) ? value : null);
@@ -41,8 +46,9 @@ public class CacheRepositoryMock : ICacheRepository
 
     private IUserSession? TryGetCurrentSessionFromAccessor(string cachedKey)
     {
-  
-        if (_userSessionAccessor is null || !cachedKey.StartsWith(UserSessionPrefix))
+        Guard.NotNull(cachedKey);
+
+        if (_userSessionAccessor is null || !cachedKey.StartsWith(UserSessionPrefix, StringComparison.Ordinal))
             return null;
 
         var cacheIdText = cachedKey[UserSessionPrefix.Length..];

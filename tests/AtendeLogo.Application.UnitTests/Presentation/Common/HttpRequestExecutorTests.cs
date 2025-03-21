@@ -8,7 +8,7 @@ using AtendeLogo.Presentation.Common.Attributes;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
 
-public class HttpRequestHandlerTests
+public class HttpRequestExecutorTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
@@ -24,9 +24,9 @@ public class HttpRequestHandlerTests
 
     private IServiceProvider CreateServiceProvider(
         ApiEndpointBase? endpointInstance = null,
-        ILogger<HttpRequestHandler>? logger = null)
+        ILogger<HttpRequestExecutor>? logger = null)
     {
-        logger ??= Mock.Of<ILogger<HttpRequestHandler>>();
+        logger ??= Mock.Of<ILogger<HttpRequestExecutor>>();
         var serviceCollection = new ServiceCollection();
         serviceCollection
             .AddSingleton(logger);
@@ -48,7 +48,7 @@ public class HttpRequestHandlerTests
         var serviceProvider = CreateServiceProvider(endpointInstance);
         var context = CreateHttpContext(serviceProvider);
 
-        var handler = new HttpRequestHandler(context, typeof(TestValidEndpoint), descriptor);
+        var handler = new HttpRequestExecutor(context, typeof(TestValidEndpoint), descriptor);
 
         // Act
         await handler.HandleAsync();
@@ -67,7 +67,7 @@ public class HttpRequestHandlerTests
         var serviceProvider = CreateServiceProvider(endpointInstance);
         var context = CreateHttpContext(serviceProvider);
 
-        var handler = new HttpRequestHandler(context, typeof(TestValidEndpoint), descriptor);
+        var handler = new HttpRequestExecutor(context, typeof(TestValidEndpoint), descriptor);
 
         // Act
         await handler.HandleAsync();
@@ -77,7 +77,7 @@ public class HttpRequestHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_WhenRequestIsCancelled_ShouldReturnRequestAborted()
+    public async Task HandleAsync_WhenRequestIsCanceled_ShouldReturnRequestAborted()
     {
         // Arrange
         var method = typeof(TestValidEndpoint).GetMethod(nameof(TestValidEndpoint.LongRunningTask));
@@ -85,14 +85,15 @@ public class HttpRequestHandlerTests
         var endpointInstance = new TestValidEndpoint();
         var serviceProvider = CreateServiceProvider(endpointInstance);
         var context = CreateHttpContext(serviceProvider);
-        var cts = new CancellationTokenSource();
+
+        using var cts = new CancellationTokenSource();
         context.RequestAborted = cts.Token;
 
-        var handler = new HttpRequestHandler(context, typeof(TestValidEndpoint), descriptor);
+        var handler = new HttpRequestExecutor(context, typeof(TestValidEndpoint), descriptor);
 
         // Simulate request cancellation before execution
-        cts.Cancel();
-
+        await cts.CancelAsync();
+        
         // Act
         await handler.HandleAsync();
 
@@ -108,7 +109,7 @@ public class HttpRequestHandlerTests
         var descriptor = CreateDescriptor(method!);
         var context = CreateHttpContext(CreateServiceProvider(null));
 
-        var handler = new HttpRequestHandler(context, typeof(TestInvalidEndpoint), descriptor);
+        var handler = new HttpRequestExecutor(context, typeof(TestInvalidEndpoint), descriptor);
 
         // Act
         var response = await handler.GetResponseResultAsync();
@@ -116,7 +117,7 @@ public class HttpRequestHandlerTests
         // Assert
         response.StatusCode
             .Should().Be((int)HttpStatusCode.InternalServerError);
-        response.ErrorResponse!.Code.Should().Be("HttpRequestHandler.InvalidEndPointType");
+        response.ErrorResponse!.Code.Should().Be("HttpRequestExecutor.InvalidEndPointType");
     }
 
     [Fact]
@@ -128,14 +129,14 @@ public class HttpRequestHandlerTests
         var endpointInstance = new TestValidEndpoint();
         var serviceProvider = CreateServiceProvider(endpointInstance);
         var context = CreateHttpContext(serviceProvider);
-        var handler = new HttpRequestHandler(context, typeof(TestValidEndpoint), descriptor);
+        var handler = new HttpRequestExecutor(context, typeof(TestValidEndpoint), descriptor);
 
         // Act
         var response = await handler.GetResponseResultAsync();
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
-        response.ErrorResponse!.Code.Should().Be("HttpRequestHandler.ErrorInvokingMethod");
+        response.ErrorResponse!.Code.Should().Be("HttpRequestExecutor.ErrorInvokingMethod");
     }
   
 }

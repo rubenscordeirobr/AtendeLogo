@@ -2,7 +2,9 @@
 
 public enum ActivityType
 {
-    Created = 1,
+    [UndefinedValue]
+    Undefined = 0,
+    Created,
     Updated,
     Deleted,
     Read,
