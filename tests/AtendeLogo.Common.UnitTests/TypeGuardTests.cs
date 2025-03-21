@@ -40,7 +40,7 @@ public class TypeGuardTests
     [InlineData(typeof(DerivedClass), typeof(BaseClass))]
     public void TypeMustBeAssignableFrom_ShouldNotThrowException_WhenTypeIsAssignableFromOther(Type type, Type other)
     {
-        Action act = () => TypeGuard.TypeMustBeAssinableFrom(type, other);
+        Action act = () => TypeGuard.TypeMustBeAssignableFrom(type, other);
         act.Should().NotThrow();
     }
 
@@ -48,7 +48,7 @@ public class TypeGuardTests
     [InlineData(typeof(BaseClass), typeof(DerivedClass))]
     public void TypeMustBeAssignableFrom_ShouldThrowException_WhenTypeIsNotAssignableFromOther(Type type, Type other)
     {
-        Action act = () => TypeGuard.TypeMustBeAssinableFrom(type, other);
+        Action act = () => TypeGuard.TypeMustBeAssignableFrom(type, other);
         act.Should().Throw<InvalidOperationException>().WithMessage("*must be a subclass of*");
     }
 
@@ -57,7 +57,7 @@ public class TypeGuardTests
     [InlineData(typeof(BaseClass), typeof(BaseClass))]
     public void TypeMustubclassOfOrEquals_ShouldNotThrowException_WhenTypeIsSubclassOfOrEquals(Type type, Type other)
     {
-        Action act = () => TypeGuard.TypeMustubclassOfOrEquals(type, other);
+        Action act = () => TypeGuard.TypeMustBeSubclassOfOrEqual(type, other);
         act.Should().NotThrow();
     }
 
@@ -65,7 +65,7 @@ public class TypeGuardTests
     [InlineData(typeof(BaseClass), typeof(DerivedClass))]
     public void TypeMustubclassOfOrEquals_ShouldThrowException_WhenTypeIsNotSubclassOfOrEquals(Type type, Type other)
     {
-        Action act = () => TypeGuard.TypeMustubclassOfOrEquals(type, other);
+        Action act = () => TypeGuard.TypeMustBeSubclassOfOrEqual(type, other);
         act.Should().Throw<InvalidOperationException>().WithMessage("*must be a subclass of*");
     }
 

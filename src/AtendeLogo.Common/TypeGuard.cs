@@ -18,14 +18,14 @@ public class TypeGuard
             throw new InvalidOperationException($"{paramName}: Type{type.Name} must be a concrete type");
     }
 
-    public static void TypeMustBeAssinableFrom(Type type, Type other)
+    public static void TypeMustBeAssignableFrom(Type type, Type other)
     {
         if (!other.IsAssignableFrom(type))
             throw new InvalidOperationException($"{type.Name} must be a subclass of {other.Name}");
 
     }
 
-    public static void TypeMustubclassOfOrEquals(Type type, Type other)
+    public static void TypeMustBeSubclassOfOrEqual(Type type, Type other)
     {
         if (!type.IsSubclassOfOrEquals(other))
             throw new InvalidOperationException($"{type.Name} must be a subclass of {other.Name}");

@@ -18,7 +18,7 @@ internal class GenericEventMapper(HandlerKind kind)
         var genericEntityParameterType = genericArguments.First();
         var entityType = NormalizarGerenicType(eventType, genericEntityParameterType);
 
-        TypeGuard.TypeMustubclassOfOrEquals(entityType, typeof(EntityBase));
+        TypeGuard.TypeMustBeSubclassOfOrEqual(entityType, typeof(EntityBase));
 
         var mapper = _genericsHandlers
             .GetOrAdd(entityType, () => new(kind));
