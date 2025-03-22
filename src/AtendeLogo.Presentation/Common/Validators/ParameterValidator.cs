@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using AtendeLogo.Presentation.Common.Exceptions;
 
-namespace AtendeLogo.Presentation.Common;
+namespace AtendeLogo.Presentation.Common.Validators;
 
-internal class ParameterValidator
+internal static class ParameterValidator
 {
     private static readonly Type[] SupportedTypes = {
             typeof(bool),
@@ -28,11 +28,11 @@ internal class ParameterValidator
     internal static void Validate(HttpMethodDescriptor descriptor)
     {
         var parameters = descriptor.Parameters;
-        if (descriptor.IsBodyParameter ||
-            parameters.Length == 0)
+        if (parameters.Length == 0 || descriptor.IsBodyParameter)
         {
             return;
         }
+
 
         var routeParameters = descriptor.RouteParameters;
         var operatorParameters = descriptor.OperationParameters;
@@ -43,7 +43,7 @@ internal class ParameterValidator
             .ToList();
 
         var missingParameters = parameters.Where(p => !p.HasDefaultValue && !validParameters.Contains(p)).ToList();
-        if (missingParameters.Any())
+        if (missingParameters.Count > 0)
         {
             throw new HttpTemplateException(
                 $"Error binding HTTP templates in method '{method.Name}' of type '{method.DeclaringType?.Name}': " +
@@ -51,19 +51,29 @@ internal class ParameterValidator
                 "Please ensure that every non-CancellationToken parameter in the method signature is referenced in the route and/or query template.");
         }
 
-        if(operatorParameters.Length != descriptor.OperationParameterToKeyMap.Count)
+        if (operatorParameters.Length > 0 &&
+            descriptor.HttpVerb != HttpVerb.Get &&
+            descriptor.BodyContentType != BodyContentType.Form)
+        {
+            throw new HttpTemplateException(
+                $"Error binding HTTP templates in method '{method.Name}' of type '{method.DeclaringType?.Name}': " +
+                "the operation template is only supported for GET requests and form content types. " +
+                "Please ensure that the operation template is only used for GET requests and form content types.");
+        }
+
+        if (operatorParameters.Length != descriptor.OperationParameterToKeyMap.Count)
         {
             throw new HttpTemplateException(
                 $"Error binding HTTP templates in method '{method.Name}' of type '{method.DeclaringType?.Name}': " +
                 $"the number of parameters in the operation template does not match the number of keys in the                 $\"the number of parameters in the operation template does not match the number of keys in the query template. \" +\r\n template. " +
                 "Please ensure that each parameter is mapped to a key in the query template.");
         }
-        
+
         var parameterDuplicate = routeParameters
             .Intersect(operatorParameters)
             .ToList();
 
-        if (parameterDuplicate.Any())
+        if (parameterDuplicate.Count > 0)
         {
             throw new DuplicateHttpTemplateException(
                 $"Error binding HTTP templates in method '{method.Name}' of type '{method.DeclaringType?.Name}': " +
