@@ -17,6 +17,8 @@ public static class SharedUseCasesServiceConfiguration
        this IServiceCollection services,
        Assembly assembly)
     {
+        Guard.NotNull(assembly);
+
         var validationRegistrar = new CommandValidationRegistrar(services);
         validationRegistrar.RegisterFromAssembly(assembly);
         return services;

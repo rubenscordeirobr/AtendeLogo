@@ -4,6 +4,8 @@ public class AddressValidator : AbstractValidator<AddressDto>
 {
     public AddressValidator(IJsonStringLocalizer<ValidationMessages> localizer)
     {
+        Guard.NotNull(localizer);
+
         RuleFor(x => x.Street)
             .NotEmpty()
             .WithMessage(localizer["Address.StreetRequired", "Street is required."])
