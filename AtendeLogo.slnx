@@ -1,0 +1,53 @@
+<Solution>
+  <Folder Name="/aspire/">
+    <Project Path="src/AtendeLogo.ServiceDefaults/AtendeLogo.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/infra/" />
+  <Folder Name="/solution-items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/01-Common/" Id="1a81cfe0-9ef7-747b-16c1-63226edbcad8">
+    <Project Path="src/AtendeLogo.Common/AtendeLogo.Common.csproj" />
+  </Folder>
+  <Folder Name="/src/02-Core/" Id="575d36c4-fccc-3e0a-e8ab-1f4fea846db0">
+    <Project Path="src/AtendeLogo.Application/AtendeLogo.Application.csproj" />
+    <Project Path="src/AtendeLogo.Domain/AtendeLogo.Domain.csproj" />
+    <Project Path="src/AtendeLogo.SharedKernel/AtendeLogo.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/03-Infrastructure/" Id="1f87a12e-d750-680c-2313-99ae4bc9444d">
+    <Project Path="src/AtendeLogo.Infrastructure/AtendeLogo.Infrastructure.csproj" />
+    <Project Path="src/AtendeLogo.Persistence.Activity/AtendeLogo.Persistence.Activity.csproj" />
+    <Project Path="src/AtendeLogo.Persistence.Common/AtendeLogo.Persistence.Common.csproj" />
+    <Project Path="src/AtendeLogo.Persistence.Identity/AtendeLogo.Persistence.Identity.csproj" />
+  </Folder>
+  <Folder Name="/src/04-UseCases/" Id="bad4283d-b835-5bd4-5fb2-9f508aec391b">
+    <Project Path="src/AtendeLogo.UseCases.Shared/AtendeLogo.UseCases.Shared.csproj" />
+    <Project Path="src/AtendeLogo.UseCases/AtendeLogo.UseCases.csproj" />
+  </Folder>
+  <Folder Name="/src/05-Presetation/" Id="085fedbf-5139-27df-7baf-7384c1cf0025">
+    <Project Path="src/AtendeLogo.Presentation/AtendeLogo.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/src/06-Client/" Id="22dcb3f3-dbd6-7824-654e-ba8e20c7a15d">
+    <Project Path="src/AtendeLogo.ClientGateway/AtendeLogo.ClientGateway.csproj" />
+  </Folder>
+  <Folder Name="/src/07-Api/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
+    <Project Path="src/AtendeLogo.IdentityApi/AtendeLogo.IdentityApi.csproj" />
+  </Folder>
+  <Folder Name="/src/08-UI/" Id="717f1626-31b9-8664-f7bb-6f3cf30fa3ca">
+    <Project Path="src/AtendeLogo.TenantPortal/AtendeLogo.TenantPortal.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AtendeLogo.Application.UnitTests/AtendeLogo.Application.UnitTests.csproj" />
+    <Project Path="tests/AtendeLogo.ArchitectureTests/AtendeLogo.ArchitectureTests.csproj" />
+    <Project Path="tests/AtendeLogo.Common.UnitTests/AtendeLogo.Common.UnitTests.csproj" />
+    <Project Path="tests/AtendeLogo.IdentityApi.FunctionalTests/AtendeLogo.IdentityApi.FunctionalTests.csproj" Id="c749f277-7e74-4c30-b3d2-5933a059bfae" />
+    <Project Path="tests/AtendeLogo.TestCommon/AtendeLogo.TestCommon.csproj" Id="27ecd09a-f64d-4147-a4af-65b98ef873f8" />
+    <Project Path="tests/AtendeLogo.UseCases.UnitTests/AtendeLogo.UseCases.UnitTests.csproj" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="src/AtendeLogo.AppHost/AtendeLogo.AppHost.csproj" />
+</Solution>
