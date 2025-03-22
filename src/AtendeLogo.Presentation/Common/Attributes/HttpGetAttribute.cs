@@ -1,24 +1,21 @@
 ﻿using System.Net;
-using AtendeLogo.Presentation.Common.Enums;
 
 namespace AtendeLogo.Presentation.Common.Attributes;
 
-public class HttpGetAttribute : HttpMethodAttribute
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public sealed class HttpGetAttribute : HttpMethodAttribute
 {
     public override HttpVerb HttpVerb
         => HttpVerb.Get;
      
     public HttpGetAttribute(
         string routeTemplate = "",
-        string queryTemplate = "")
-        : this(HttpStatusCode.OK, routeTemplate, queryTemplate) { }
+        string operationTemplate = "")
+        : this(HttpStatusCode.OK, routeTemplate, operationTemplate) { }
 
     public HttpGetAttribute(
-        HttpStatusCode httpStatusCode,
-        string routeTemplate = "",
-        string queryTemplate = "")
-        : base(httpStatusCode, routeTemplate, queryTemplate)
-    {
-
-    }
+        HttpStatusCode successStatusCode,
+        string routeTemplate,
+        string operationTemplate)
+        : base(successStatusCode, routeTemplate, operationTemplate) { }
 }

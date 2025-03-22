@@ -1,15 +1,15 @@
 ﻿using System.Net;
-using AtendeLogo.Presentation.Common.Enums;
 
 namespace AtendeLogo.Presentation.Common.Attributes;
 
-public class HttpPutAttribute : HttpMethodAttribute
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public sealed class HttpPutAttribute : HttpMethodAttribute
 {
     public override HttpVerb HttpVerb
         => HttpVerb.Put;
 
     public HttpPutAttribute(string routeTemplate = "") : base(routeTemplate) { }
 
-    public HttpPutAttribute(HttpStatusCode httpStatusCode, string template = "")
-        : base(httpStatusCode, template) { }
+    public HttpPutAttribute(HttpStatusCode successStatusCode, string routeTemplate = "")
+        : base(successStatusCode, routeTemplate) { }
 }

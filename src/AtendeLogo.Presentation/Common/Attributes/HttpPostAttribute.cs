@@ -1,15 +1,17 @@
 ﻿using System.Net;
-using AtendeLogo.Presentation.Common.Enums;
 
 namespace AtendeLogo.Presentation.Common.Attributes;
 
-public class HttpPostAttribute : HttpMethodAttribute
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public sealed class HttpPostAttribute : HttpMethodAttribute
 {
     public override HttpVerb HttpVerb
         => HttpVerb.Post;
 
+
     public HttpPostAttribute(string routeTemplate = "") : base(routeTemplate) { }
 
-    public HttpPostAttribute(HttpStatusCode httpStatusCode, string template = "")
-        : base(httpStatusCode, template) { }
+    public HttpPostAttribute(HttpStatusCode successStatusCode, string routeTemplate = "")
+        : base(successStatusCode, routeTemplate) { }
+ 
 }

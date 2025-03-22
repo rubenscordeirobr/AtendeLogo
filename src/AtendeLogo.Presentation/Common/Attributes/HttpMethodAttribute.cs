@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using AtendeLogo.Presentation.Common.Enums;
 
 namespace AtendeLogo.Presentation.Common.Attributes;
 
@@ -14,7 +13,7 @@ public abstract class HttpMethodAttribute : Attribute
     public abstract HttpVerb HttpVerb { get; }
 
     public string[] HttpMethods
-        => [HttpVerb.ToString().ToUpper()];
+        => [HttpVerb.ToString().ToUpperInvariant()];
       
     protected HttpMethodAttribute(string routeTemplate)
         : this(HttpStatusCode.OK, routeTemplate)
@@ -23,12 +22,12 @@ public abstract class HttpMethodAttribute : Attribute
     }
 
     protected HttpMethodAttribute(
-        HttpStatusCode httpStatusCode,
+        HttpStatusCode successStatusCode,
         string routeTemplate,
         string operationTemplate = "")
     {
         RouteTemplate = routeTemplate;
-        SuccessStatusCode = httpStatusCode;
+        SuccessStatusCode = successStatusCode;
         OperationTemplate = operationTemplate;
     }
 }
