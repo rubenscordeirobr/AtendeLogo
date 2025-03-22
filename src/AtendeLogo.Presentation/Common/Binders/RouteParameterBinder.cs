@@ -1,16 +1,16 @@
 ﻿using System.Reflection;
+using AtendeLogo.Common.Converters;
 using Microsoft.AspNetCore.Http;
 
-namespace AtendeLogo.Presentation.Common;
+namespace AtendeLogo.Presentation.Common.Binders;
 
-public static class RouteParameterBinder
+internal static class RouteParameterBinder
 {
-    public static Result<object> BindParameter(
+    internal static Result<object> BindParameter(
         HttpMethodDescriptor descriptor,
         HttpContext context,
         ParameterInfo parameter)
     {
-        var parameterType = parameter.ParameterType;
         var parameterName = parameter.Name;
 
         if (string.IsNullOrWhiteSpace(parameterName))
@@ -26,7 +26,7 @@ public static class RouteParameterBinder
         {
             try
             {
-                var convertedValue = OperatorParameterConverter.Parse(routeValue?.ToString(), parameter.ParameterType);
+                var convertedValue = OperatorParameterConverter.Parse(routeValue?.ToString(), parameter);
                 return Result.Success(convertedValue!);
             }
             catch (Exception ex)

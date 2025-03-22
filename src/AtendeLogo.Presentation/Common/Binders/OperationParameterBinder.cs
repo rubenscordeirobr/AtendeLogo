@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
+using AtendeLogo.Common.Converters;
 using Microsoft.AspNetCore.Http;
 
-namespace AtendeLogo.Presentation.Common;
+namespace AtendeLogo.Presentation.Common.Binders;
 
-public static class OperationParameterBinder
+internal static class OperationParameterBinder
 {
-    public static Result<object> BindParameter(
+    internal static Result<object> BindParameter(
         HttpMethodDescriptor descriptor,
         HttpContext httpContext,
         ParameterInfo parameter,
@@ -30,7 +31,7 @@ public static class OperationParameterBinder
         {
             try
             {
-                var convertedValue = OperatorParameterConverter.Parse(parameterStringValue, parameter.ParameterType);
+                var convertedValue = OperatorParameterConverter.Parse(parameterStringValue, parameter);
                 return Result.Success(convertedValue!);
             }
             catch (Exception ex)

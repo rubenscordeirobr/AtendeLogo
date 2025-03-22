@@ -3,9 +3,9 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace AtendeLogo.Presentation.Common;
+namespace AtendeLogo.Presentation.Common.Binders;
 
-public static class BodyParameterBinder
+internal static class BodyParameterBinder
 {
     private static JsonSerializerOptions? JsonOptions
         => field ??= new JsonSerializerOptions
@@ -13,7 +13,7 @@ public static class BodyParameterBinder
             PropertyNameCaseInsensitive = true
         };
 
-    public static async Task<Result<object>> BindParameterAsync(
+    internal static async Task<Result<object>> BindParameterAsync(
         HttpMethodDescriptor descriptor,
         HttpContext httpContext,
         ParameterInfo parameter)
@@ -35,7 +35,7 @@ public static class BodyParameterBinder
             }
 
             return Result.Failure<object>(new BadRequestError(
-                "HttpRequestHandler.RequestBodyEmpty",
+                "HttpRequestExecutor.RequestBodyEmpty",
                 $"Error in endpoint '{endpointType}', method '{methodName}': Request body is empty " +
                 $"and cannot be bound to parameter '{parameter.Name}' of type '{parameterType.Name}'. " +
                 "Please ensure that a valid JSON body is provided."));
@@ -43,7 +43,7 @@ public static class BodyParameterBinder
 
         try
         {
-            var value = JsonSerializer.Deserialize(json, parameterType, JsonOptions);
+            var value = JsonUtils.Deserialize(json, parameterType, JsonOptions);
             if (value is null && parameter.HasDefaultValue)
             {
                 return Result.Success(parameter.DefaultValue!);
@@ -54,7 +54,7 @@ public static class BodyParameterBinder
         {
             return Result.Failure<object>(
                   new BadRequestError(
-                      "HttpRequestHandler.RequestBodyDeserializationFailed",
+                      "HttpRequestExecutor.RequestBodyDeserializationFailed",
                       $"Error in endpoint '{endpointType}', method '{methodName}': Failed to deserialize " +
                       $"the request body to type '{parameterType.Name}' for parameter '{parameter.Name}'. " +
                       $"Details: {ex.GetNestedMessage()}"));
