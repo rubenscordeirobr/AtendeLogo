@@ -1,21 +1,27 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Reflection;
-using AtendeLogo.Presentation.Common.Enums;
+using System.Text.Json;
+using AtendeLogo.Common.Enums;
+using AtendeLogo.Common.Mappers;
+using AtendeLogo.Presentation.Common.Binders;
 using AtendeLogo.Presentation.Constants;
 using AtendeLogo.Shared.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Presentation.Common;
 
-public class HttpRequestHandler
+internal sealed class HttpRequestExecutor
 {
     private readonly HttpContext _httpContext;
     private readonly Type _endpointType;
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger _looger;
+    private readonly ILogger _logger;
     private readonly HttpMethodDescriptor _descriptor;
+    private readonly ApiEndpointBase? _endpointInstance;
 
     private string EndpointName
         => _endpointType.Name;
@@ -26,105 +32,133 @@ public class HttpRequestHandler
     private bool IsCancellationRequested
         => CancellationToken.IsCancellationRequested;
 
-    public HttpRequestHandler(
-        HttpContext _httpContext,
+    internal HttpRequestExecutor(
+        HttpContext httpContext,
         Type endpointType,
         HttpMethodDescriptor descriptor)
     {
-        this._httpContext = _httpContext;
+        _httpContext = httpContext;
         _endpointType = endpointType;
-        _serviceProvider = _httpContext.RequestServices;
-        _looger = _serviceProvider.GetRequiredService<ILogger<HttpRequestHandler>>();
+        _serviceProvider = httpContext.RequestServices;
+        _logger = _serviceProvider.GetRequiredService<ILogger<HttpRequestExecutor>>();
         _descriptor = descriptor;
+        _endpointInstance = GetEndPointServiceInstance();
     }
 
     public async Task HandleAsync()
     {
-        CancellationToken cancellationToken = _httpContext.RequestAborted;
+        var cancellationToken = _httpContext.RequestAborted;
         var responseResult = await GetResponseResultAsync();
+
         _httpContext.Response.StatusCode = responseResult.StatusCode;
-        if (responseResult.IsSuccess)
+
+        var jsonOptions = GetJsonSerializerOptions();
+        var response = responseResult.IsSuccess
+            ? responseResult.Response
+            : responseResult.ErrorResponse;
+
+        await WriteResponseAsync(response, jsonOptions, cancellationToken);
+    }
+
+    private async Task WriteResponseAsync(
+        object? response,
+        JsonSerializerOptions jsonOptions,
+        CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested || response is null)
         {
-            await _httpContext.Response.WriteAsJsonAsync(responseResult.Response);
+            return;
         }
-        else
+        try
         {
-            await _httpContext.Response.WriteAsJsonAsync(responseResult.ErroResult);
+            await _httpContext.Response.WriteAsJsonAsync(response, response.GetType(), jsonOptions, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Log(logLevel: LogLevel.Warning,
+                "HttpRequestExecutor.WriteResponseAsync",
+                ex.GetNestedMessage());
         }
     }
 
     public async Task<ResponseResult> GetResponseResultAsync()
     {
-        var endpointInstance = GetEndPointServiceInstance();
-        if (endpointInstance is null)
+        if (_endpointInstance is null)
         {
-            _httpContext.Items.Add(HttpContextItensConstants.EndpointInstance, endpointInstance);
+            _httpContext.Items.Add(HttpContextItensConstants.EndpointInstance, _endpointInstance);
 
             return ResponseResult.Error(
                 HttpStatusCode.InternalServerError,
-                "HttpRequestHandler.InvalidEndPointType",
+                "HttpRequestExecutor.InvalidEndPointType",
                 $"Type {EndpointName} is not found");
         }
 
         try
         {
-            return await GetResponseAsync(endpointInstance);
+            return await GetResponseAsync();
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
-            // Request was aborted; avoid logging as an error
-            _looger.LogInformation($"Request to {EndpointName} was canceled by the client.");
-            return ResponseResult.Error(ExtendedHttpStatusCode.RequestAborted, "HttpRequestHandler.RequestCancelled", "Request was canceled");
+            Log(LogLevel.Information, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
+            return ResponseResult.Error(ExtendedHttpStatusCode.RequestAborted,
+                "HttpRequestExecutor.RequestCancelled",
+                "Request was canceled");
         }
         catch (Exception ex)
         {
             if (IsCancellationRequested)
             {
-                _looger.LogInformation($"Request to {EndpointName} was canceled");
-                return ResponseResult.Error(HttpStatusCode.BadRequest, "HttpRequestHandler.RequestCancelled", "Request was canceled");
+                Log(LogLevel.Information, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
+                return ResponseResult.Error(HttpStatusCode.BadRequest,
+                    "HttpRequestExecutor.RequestCancelled",
+                    "Request was canceled");
             }
-
-            _looger.LogError(ex, $"Error invoking method {_descriptor.Method.Name} on {EndpointName}");
-            var errorCode = "HttpRequestHandler.ErrorInvokingMethod";
-            return ResponseResult.Error(HttpStatusCode.InternalServerError, errorCode, ex.GetNestedMessage());
+            else
+            {
+                Log(LogLevel.Critical, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
+                var errorCode = "HttpRequestExecutor.ErrorInvokingMethod";
+                return ResponseResult.Error(HttpStatusCode.InternalServerError, errorCode, ex.GetNestedMessage());
+            }
         }
     }
-
     private ApiEndpointBase? GetEndPointServiceInstance()
     {
-        var endpointInstance = _serviceProvider.GetService(_endpointType);
-        if (endpointInstance == null)
-        {
-            try
-            {
-                endpointInstance = ActivatorUtilities.CreateInstance(_serviceProvider, _endpointType);
-            }
-            catch (Exception ex)
-            {
-                _looger.LogError(ex, $"Error creating instance of {EndpointName}");
-                return null;
-            }
-        }
-
-        if (endpointInstance is null)
-        {
-            _looger.LogError($"Type {EndpointName} is not found");
-            return null;
-        }
-
+        var endpointInstance = CreateEndpointServiceInstance();
         if (endpointInstance is not ApiEndpointBase endPoint)
         {
-            _looger.LogError($"Type {EndpointName} is not an EndPointBase");
+            _logger.LogCritical("Type {EndpointName} is not an EndPointBase", EndpointName);
             return null;
         }
         return endPoint;
     }
 
-    private async Task<ResponseResult> GetResponseAsync(ApiEndpointBase endpointInstance)
+    private object? CreateEndpointServiceInstance()
+    {
+        var endpointInstance = _serviceProvider.GetService(_endpointType);
+        if (endpointInstance is not null)
+        {
+            return endpointInstance;
+        }
+        try
+        {
+            return ActivatorUtilities.CreateInstance(_serviceProvider, _endpointType);
+        }
+        catch (Exception ex)
+        {
+            var message = $"Error creating instance of {EndpointName}. {ex.GetNestedMessage()}";
+            Log(LogLevel.Critical, "HttpRequestExecutor.ErrorCreatingInstance", message);
+            return null;
+        }
+    }
+
+    private async Task<ResponseResult> GetResponseAsync()
     {
         var parameterValuesResult = await GetParameterValuesAsync();
         if (parameterValuesResult.IsFailure)
         {
+#if DEBUG
+            Debugger.Break();
+#endif
             return ResponseResult.Error(parameterValuesResult.Error);
         }
 
@@ -132,12 +166,12 @@ public class HttpRequestHandler
         {
             return ResponseResult.Error(
                 ExtendedHttpStatusCode.RequestAborted,
-                "HttpRequestHandler.RequestCancelled",
+                "HttpRequestExecutor.RequestCancelled",
                 "Request was canceled");
         }
 
         var methodResult = _descriptor.Method.Invoke(
-            endpointInstance, 
+            _endpointInstance,
             parameterValuesResult.Value);
 
         if (methodResult is not Task task)
@@ -157,6 +191,9 @@ public class HttpRequestHandler
         {
             return GetSuccessResult(resultValue.Value);
         }
+
+        Log(resultValue.Error);
+
         return ResponseResult.Error(resultValue.Error);
     }
 
@@ -177,7 +214,7 @@ public class HttpRequestHandler
         {
             return Result.Success(Array.Empty<object?>());
         }
-         
+
         var parameterValuesResult = await GetParameterValuesAsync(parameters);
         if (parameterValuesResult.IsFailure)
         {
@@ -213,7 +250,7 @@ public class HttpRequestHandler
             {
                 var valueResult = await BodyParameterBinder.BindParameterAsync(
                     _descriptor,
-                    _httpContext, 
+                    _httpContext,
                     parameter);
 
                 if (valueResult.IsSuccess)
@@ -228,12 +265,12 @@ public class HttpRequestHandler
         for (var i = 0; i < parameters.Length; i++)
         {
             var parameter = parameters[i];
-            var paramterValueResult = GetParameterValue(parameter);
-            if (paramterValueResult.IsFailure)
+            var parameterValueResult = GetParameterValue(parameter);
+            if (parameterValueResult.IsFailure)
             {
-                return Result.Failure<object?[]>(paramterValueResult.Error);
+                return Result.Failure<object?[]>(parameterValueResult.Error);
             }
-            parameterValues[i] = paramterValueResult.Value;
+            parameterValues[i] = parameterValueResult.Value;
         }
         return Result.Success(parameterValues);
     }
@@ -268,5 +305,60 @@ public class HttpRequestHandler
                 "ParameterNotFound",
                 $"Error in method '{_descriptor.Method.Name}' of '{_descriptor.Method.DeclaringType?.Name}': " +
                 $"Missing required parameter '{parameter.Name}'."));
+    }
+
+    private JsonSerializerOptions GetJsonSerializerOptions()
+    {
+        var options = _endpointInstance?.GetJsonSerializerOptions()
+            ?? JsonSerializerOptions.Web;
+
+        JsonUtils.EnableIndentationInDevelopment(options);
+        return options;
+    }
+
+    private void Log(Error error)
+    {
+        var level = ErrorLogLevelMapper.MapErrorLevel(error);
+        Log(level, error.Code, error.Message);
+    }
+
+    private void Log(
+        LogLevel logLevel,
+        string errorCode,
+        string errorMessage)
+    {
+        Log(logLevel, null, errorCode, errorMessage);
+    }
+
+    private void Log(
+        LogLevel logLevel,
+        Exception? exception,
+        string errorCode,
+        string errorMessage)
+    {
+
+        Debugger.Break();
+
+        var requestUri = _httpContext.Request.GetDisplayUrl();
+        var methodName = _descriptor.Method.Name;
+        var httpVerb = _descriptor.HttpVerb;
+
+#if DEBUG
+        if (logLevel != LogLevel.Information)
+        {
+            Debugger.Break();
+        }
+#endif
+
+        _logger.Log(
+             logLevel,
+             exception,
+            "HTTP request. URI: {Uri}, Verb: {HttpVerb}, Endpoint {EndpointName}, Method: {MethodName}, ErrorCode: {ErrorCode}, ErrorMessage: {ErrorMessage}",
+             requestUri,
+             httpVerb,
+             EndpointName,
+             methodName,
+             errorCode,
+             errorMessage);
     }
 }
