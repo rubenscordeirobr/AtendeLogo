@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Enums;
-
-namespace AtendeLogo.Application.Events;
+﻿namespace AtendeLogo.Application.Events;
 
 public abstract record EntityChangeStateEvent<TEntity>: IEntityStateChangedEvent<TEntity>
     where TEntity : EntityBase

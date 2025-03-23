@@ -1,7 +1,4 @@
-﻿using AtendeLogo.Domain.Enums;
-using AtendeLogo.Domain.Extensions;
-
-namespace AtendeLogo.Application.Services;
+﻿namespace AtendeLogo.Application.Services;
 
 public class EntityAuthorizationService : IEntityAuthorizationService
 {

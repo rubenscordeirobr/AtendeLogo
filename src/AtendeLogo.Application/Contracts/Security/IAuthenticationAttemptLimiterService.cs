@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Application.Models.Security;
+
 namespace AtendeLogo.Application.Contracts.Security;
 
 public interface IAuthenticationAttemptLimiterService

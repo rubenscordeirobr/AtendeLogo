@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Enums;
-
-namespace AtendeLogo.Application.Contracts.Services;
+﻿namespace AtendeLogo.Application.Contracts.Services;
 
 public interface IEntityAuthorizationService : IApplicationService
 {

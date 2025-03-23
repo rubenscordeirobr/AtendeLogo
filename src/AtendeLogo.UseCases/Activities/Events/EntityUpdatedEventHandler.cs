@@ -1,6 +1,5 @@
 ﻿using System.Dynamic;
 using AtendeLogo.Application.Contracts.Persistence.Activities;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Utils;
 using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Domain.Primitives;

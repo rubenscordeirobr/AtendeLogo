@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Enums;
-
-namespace AtendeLogo.Application.Events;
+﻿namespace AtendeLogo.Application.Events;
 
 public sealed record EntityUpdatedEvent<TEntity> 
     : EntityChangeStateEvent<TEntity>, IEntityUpdatedEvent<TEntity>
