@@ -1,11 +1,13 @@
-﻿using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using AtendeLogo.Common.Enums;
+using AtendeLogo.Common.Exceptions;
 
 namespace AtendeLogo.Common.Mappers;
 
 public static class HttpErrorMapper
 {
-    public static HttpStatusCode MapHttpStatusCode(Error error)
+    public static HttpStatusCode MapErrorToHttpStatusCode(Error error)
     {
         return error switch
         {
@@ -20,7 +22,7 @@ public static class HttpErrorMapper
         };
     }
 
-    public static Error GetErrorFromStatus(
+    public static Error MapHttpStatusCodeToError(
         HttpStatusCode statusCode,
         string code,
         string message)
@@ -39,6 +41,28 @@ public static class HttpErrorMapper
                 => new DomainEventError(code, message),
             _ => ResolverExtendedStatus(statusCode, code, message)
         };
+    }
+
+    public static Error MapExceptionToError(
+        Exception exception,
+         string code)
+    {
+        Guard.NotNull(exception);
+
+        var message = exception.GetNestedMessage();
+        return exception switch
+        {
+            UnauthorizedSecurityException
+                => new UnauthorizedError(code, message),
+            TaskCanceledException
+                => new AbortedError(code, message),
+            OperationCanceledException operationCanceledException 
+                => new OperationCanceledError(operationCanceledException, code, message),
+            ValidationException 
+                => new ValidationError(code, message),
+            _ => new InternalServerError(exception, code, message)
+        };
+
     }
 
     private static Error ResolverExtendedStatus(

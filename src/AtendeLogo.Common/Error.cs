@@ -36,7 +36,7 @@ public abstract record Error
         => error?.ToString() ?? string.Empty;
 
     public virtual HttpStatusCode StatusCode
-        => HttpErrorMapper.MapHttpStatusCode(this);
+        => HttpErrorMapper.MapErrorToHttpStatusCode(this);
 }
 
 public record BadRequestError(string Code,

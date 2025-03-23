@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Application.Contracts.Security;
+using AtendeLogo.Common.Mappers;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
@@ -76,10 +77,8 @@ public sealed class CreateTenantCommandHandler
         {
             await _unitOfWork.RollbackAsync(ex, cancellationToken);
 
-            var error = new InternalServerError(ex,
-                "CreateTenantCommandHandler.HandleAsync",
-                "An error occurred while creating a tenant");
-
+            var error = HttpErrorMapper.MapExceptionToError(ex,
+                "CreateTenantCommandHandler.HandleAsync");
             return Result.Failure<CreateTenantResponse>(error);
         }
     }

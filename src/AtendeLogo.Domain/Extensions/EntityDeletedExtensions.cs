@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Exceptions;
-
-namespace AtendeLogo.Domain.Extensions;
+﻿namespace AtendeLogo.Domain.Extensions;
 
 public static class EntityDeletedExtensions
 {
@@ -13,7 +11,7 @@ public static class EntityDeletedExtensions
 
         if (userSession.IsAnonymous())
         {
-            throw new InvalidOperationException("Cannot delete entity with anonymous session");
+            throw new UnauthorizedSecurityException("Cannot delete entity with anonymous session");
         }
 
         if (userSession.IsTenantUser() &&
