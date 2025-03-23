@@ -8,6 +8,8 @@ public sealed record TimeZoneOffset : ValueObjectBase
 {
     public string Offset { get; private set; }
     public string Location { get; private set; }
+
+    [JsonIgnore]
     public TimeSpan OffsetTimeSpan
         => TimeSpan.Parse(Offset, CultureInfo.InvariantCulture);
 
@@ -54,6 +56,9 @@ public sealed record TimeZoneOffset : ValueObjectBase
 
     public static TimeZoneOffset Parse(string json)
     {
+        if (string.IsNullOrWhiteSpace(json))
+            return Default;
+
         return JsonUtils.Deserialize<TimeZoneOffset>(json)
             ?? Default;
     }

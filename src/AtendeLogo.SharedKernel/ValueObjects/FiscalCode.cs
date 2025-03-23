@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Common.Extensions;
+﻿using System.Text.Json.Serialization;
+using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Shared.ValueObjects;
@@ -7,6 +8,7 @@ public sealed record FiscalCode : ValueObjectBase
 {
     public string Value { get; }
 
+    [JsonConstructor]
     public FiscalCode(string value)
     {
         Value = value.GetOnlyNumbers();

@@ -1,20 +1,31 @@
-﻿using AtendeLogo.Common.Infos;
+﻿using System.Text.Json.Serialization;
+using AtendeLogo.Common.Infos;
 
 namespace AtendeLogo.Shared.ValueObjects;
 
 public record PhoneNumber : ValueObjectBase
 {
+
     private readonly PhoneNumberInfo _phoneNumberInfo;
 
+    [JsonIgnore]
     public Country CountryCode 
         => _phoneNumberInfo.CountryCode;
+
+    [JsonIgnore]
+
     public InternationalDialingCode InternationalDialingCode
         => _phoneNumberInfo.InternationalDialingCode;
+
+    [JsonIgnore]
+
     public string NationalNumber 
         => _phoneNumberInfo.NationalNumber;
+
+    [JsonIgnore]
     public string AreaCode 
         => _phoneNumberInfo.AreaCode;
-
+   
     public string Number
          => _phoneNumberInfo.FullNumber;
     
@@ -23,6 +34,7 @@ public record PhoneNumber : ValueObjectBase
         _phoneNumberInfo = PhoneNumberInfo.Unknown(string.Empty);
     }
 
+    [JsonConstructor]
     public PhoneNumber(string number)
     {
         _phoneNumberInfo = PhoneNumberInfoParser.Parse(number);
