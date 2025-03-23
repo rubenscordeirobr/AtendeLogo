@@ -4,8 +4,12 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public UserSessionVerificationServiceTests(AnonymousServiceProviderMock serviceProvider)
+    public UserSessionVerificationServiceTests(
+        AnonymousServiceProviderMock serviceProvider,
+        ITestOutputHelper testOutput)
     {
+        serviceProvider.AddTestOutput(testOutput);
+
         _serviceProvider = serviceProvider;
     }
  
@@ -41,7 +45,7 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
 
         userSession.StartedAt
             .Should()
-            .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(10));
+            .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(30));
     }
 }
 

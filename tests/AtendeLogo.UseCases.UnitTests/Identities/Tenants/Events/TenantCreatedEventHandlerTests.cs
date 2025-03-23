@@ -6,11 +6,15 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Events;
 public class TenantCreatedEventHandlerTests
      : IClassFixture<AnonymousServiceProviderMock>
 {
-    private Fixture _figure = new();
-    private IEventMediator _eventMediator;
+    private readonly Fixture _figure = new();
+    private readonly IEventMediator _eventMediator;
 
-    public TenantCreatedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
+    public TenantCreatedEventHandlerTests(
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
+        serviceProviderMock.AddTestOutput(testOutput);
+
         _eventMediator = serviceProviderMock.GetRequiredService<IEventMediator>();
     }
 

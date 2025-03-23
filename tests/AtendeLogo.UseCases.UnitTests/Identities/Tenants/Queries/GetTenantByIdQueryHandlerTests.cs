@@ -6,9 +6,13 @@ public class GetTenantByIdQueryHandlerTests : IClassFixture<AnonymousServiceProv
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetTenantByIdQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public GetTenantByIdQueryHandlerTests(
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

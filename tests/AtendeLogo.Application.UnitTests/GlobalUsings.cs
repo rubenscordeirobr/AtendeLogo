@@ -21,3 +21,5 @@ global using AtendeLogo.TestCommon.Mocks;
 global using AutoFixture;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
+global using Xunit;
+global using Xunit.Abstractions;

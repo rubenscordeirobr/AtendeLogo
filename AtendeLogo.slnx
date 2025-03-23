@@ -6,6 +6,9 @@
   <Folder Name="/solution-items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/01-Common/" Id="1a81cfe0-9ef7-747b-16c1-63226edbcad8">

@@ -17,3 +17,4 @@ global using AtendeLogo.Application.Contracts.Persistence.Activities;
 global using AtendeLogo.Application.Contracts.Security;
 global using AtendeLogo.Persistence.Identity;
 global using AtendeLogo.Shared.Contracts;
+global using Xunit.Abstractions;

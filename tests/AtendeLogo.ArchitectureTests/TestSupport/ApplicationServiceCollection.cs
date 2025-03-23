@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Application;
+﻿using System.Security.Cryptography;
+using AtendeLogo.Application;
 using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Contracts.Persistence;
 using AtendeLogo.Application.Contracts.Services;
@@ -53,12 +54,14 @@ public class ApplicationServiceCollection : ServiceCollection
     private void AddMockDependency(IConfigurationRoot fakeConfiguration)
     {
         this.AddScoped<IHttpContextAccessor, HttpContextAccessorMock>();
-        this.AddTransient(typeof(ILogger<>), typeof(LoggerServiceMock<>));
+        this.AddTransient(typeof(ILogger<>), typeof(TestOutputLogger<>));
         this.AddSingleton<IConfiguration>(fakeConfiguration);
 
         this.RemoveAll<IConnectionMultiplexer>();
         this.AddSingleton(new Mock<IConnectionMultiplexer>().Object);
         this.AddSingleton(new Mock<IHostEnvironment>().Object);
+
+        this.AddSingleton<ITestOutputHelper, TestOutputProxy>();
     }
 
     private IReadOnlyList<ServiceDescriptor> RetrieveApplicationServices()

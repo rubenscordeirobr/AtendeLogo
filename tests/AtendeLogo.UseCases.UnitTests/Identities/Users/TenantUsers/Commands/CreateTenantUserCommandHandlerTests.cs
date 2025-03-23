@@ -7,8 +7,12 @@ public class CreateTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
     private readonly IServiceProvider _serviceProvider;
     private readonly CreateTenantUserCommand _validCommand;
 
-    public CreateTenantUserCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
+    public CreateTenantUserCommandHandlerTests(
+        TenantOwnerUserServiceProviderMock serviceProvider,
+        ITestOutputHelper testOutput)
     {
+        serviceProvider.AddTestOutput(testOutput);
+
         _serviceProvider = serviceProvider;
 
         var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();

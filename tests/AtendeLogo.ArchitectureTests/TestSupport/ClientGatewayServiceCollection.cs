@@ -10,5 +10,7 @@ public class ClientGatewayServiceCollection : ServiceCollection
     {
         this.AddUserCasesSharedServices()
             .AddClientGatewayServices();
+
+        this.AddSingleton<ITestOutputHelper, TestOutputProxy>();
     }
 }

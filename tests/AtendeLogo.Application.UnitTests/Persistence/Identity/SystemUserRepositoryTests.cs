@@ -6,8 +6,12 @@ public class SystemUserRepositoryTests: IClassFixture<AnonymousServiceProviderMo
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public SystemUserRepositoryTests(AnonymousServiceProviderMock serviceProvider)
+    public SystemUserRepositoryTests(
+        AnonymousServiceProviderMock serviceProvider,
+        ITestOutputHelper testOutput)
     {
+        serviceProvider.AddTestOutput(testOutput);
+
         _serviceProvider = serviceProvider;
     }
 

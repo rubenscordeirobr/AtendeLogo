@@ -7,8 +7,11 @@ public class UpdateTenantCommandHandlerTests : IClassFixture<TenantOwnerUserServ
     private readonly IServiceProvider _serviceProvider;
     private readonly UpdateTenantCommand _validadeCommand;
 
-    public UpdateTenantCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
+    public UpdateTenantCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider,
+        ITestOutputHelper testOutput)
     {
+        serviceProvider.AddTestOutput(testOutput);
+
         _serviceProvider = serviceProvider;
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
         _validadeCommand = new UpdateTenantCommand

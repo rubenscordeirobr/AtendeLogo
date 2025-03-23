@@ -2,19 +2,17 @@
 
 namespace AtendeLogo.ArchitectureTests.TestSupport;
 
-public class ClientGatewayServiceProvider : IServiceProvider
+public class ClientGatewayServiceProvider : AbstractTestOutputServiceProvider
 {
     private readonly IServiceProvider _serviceProvider;
+    
     public IServiceCollection Services { get; }
+    protected override IServiceProvider ServiceProvider
+        => _serviceProvider;
 
     public ClientGatewayServiceProvider()
     {
         Services = new ClientGatewayServiceCollection();
         _serviceProvider = Services.BuildServiceProvider();
-    }
-
-    public object? GetService(Type serviceType)
-    {
-        return _serviceProvider.GetService(serviceType);
     }
 }

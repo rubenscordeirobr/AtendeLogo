@@ -6,9 +6,13 @@ public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantOwnerUserS
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetTenantUserByIdQueryHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
+    public GetTenantUserByIdQueryHandlerTests(
+        TenantOwnerUserServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]
@@ -30,7 +34,6 @@ public class GetTenantUserByIdQueryHandlerTests : IClassFixture<TenantOwnerUserS
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var guidAdminUserId = Guid.NewGuid();
 
         var adminUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
         var tenantUserTemp = await adminUserRepository.GetByEmailAsync(SystemTenantConstants.Email);

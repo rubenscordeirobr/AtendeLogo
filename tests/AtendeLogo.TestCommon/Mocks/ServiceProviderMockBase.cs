@@ -3,12 +3,14 @@ using AtendeLogo.TestCommon.Extensions;
 using AtendeLogo.UseCases;
 
 namespace AtendeLogo.TestCommon.Mocks;
-
-public abstract class AbstractServiceProviderMock : IServiceProvider
+public abstract class ServiceProviderMockBase : AbstractTestOutputServiceProvider
 {
     private readonly IServiceProvider _serviceProvider;
     protected abstract UserRole UserRole { get; }
-    protected AbstractServiceProviderMock()
+
+    protected override IServiceProvider ServiceProvider
+        => _serviceProvider;
+    protected ServiceProviderMockBase()
     {
         var services = new ServiceCollection()
               .AddApplicationServices()
@@ -18,27 +20,35 @@ public abstract class AbstractServiceProviderMock : IServiceProvider
               .AddPersistenceServicesMock()
               .AddUserCasesServices()
               .AddUserCasesSharedServices();
-         
+
+        services.AddSingleton<ITestOutputHelper, TestOutputProxy>();
+
         _serviceProvider = services.BuildServiceProvider();
     }
+}
 
-    public object? GetService(Type serviceType)
+public class TenantOwnerUserServiceProviderMock : ServiceProviderMockBase
+{
+    protected override UserRole UserRole => UserRole.Owner;
+    public TenantOwnerUserServiceProviderMock()
     {
-        return _serviceProvider.GetService(serviceType);
     }
 }
 
-public class TenantOwnerUserServiceProviderMock : AbstractServiceProviderMock
-{
-    protected override UserRole UserRole => UserRole.Owner;
-}
-
-public class AnonymousServiceProviderMock : AbstractServiceProviderMock
+public class AnonymousServiceProviderMock : ServiceProviderMockBase
 {
     protected override UserRole UserRole => UserRole.Anonymous;
+
+    public AnonymousServiceProviderMock()
+    {
+    }
 }
 
-public class SystemAdminUserServiceProviderMock : AbstractServiceProviderMock
+public class SystemAdminUserServiceProviderMock : ServiceProviderMockBase
 {
     protected override UserRole UserRole => UserRole.SystemAdmin;
+
+    public SystemAdminUserServiceProviderMock()
+    {
+    }
 }

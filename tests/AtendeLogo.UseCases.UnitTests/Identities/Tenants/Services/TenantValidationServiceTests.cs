@@ -6,13 +6,15 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Services;
 
 public class TenantValidationServiceTests
 {
+    private readonly ITestOutputHelper _output;
     private readonly Mock<ITenantRepository> _tenantRepositoryMock;
     private readonly Mock<ITenantUserRepository> _tenantUserRepositoryMock;
     private readonly TenantValidationService _validationService;
     private readonly CancellationToken _token = CancellationToken.None;
 
-    public TenantValidationServiceTests()
+    public TenantValidationServiceTests(ITestOutputHelper output)
     {
+        _output = output;
         _tenantRepositoryMock = new Mock<ITenantRepository>();
         _tenantUserRepositoryMock = new Mock<ITenantUserRepository>();
         _validationService = new TenantValidationService(
@@ -25,6 +27,7 @@ public class TenantValidationServiceTests
     {
         // Arrange
         var anonymousServiceProviderMock = new AnonymousServiceProviderMock();
+        anonymousServiceProviderMock.AddTestOutput(_output);
 
         // Act
         var service = anonymousServiceProviderMock.GetRequiredService<ITenantValidationService>();

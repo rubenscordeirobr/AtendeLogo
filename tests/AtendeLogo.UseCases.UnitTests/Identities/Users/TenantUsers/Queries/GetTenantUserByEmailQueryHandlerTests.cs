@@ -6,9 +6,13 @@ public class GetTenantUserByEmailQueryHandlerTests : IClassFixture<TenantOwnerUs
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetTenantUserByEmailQueryHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
+    public GetTenantUserByEmailQueryHandlerTests(
+        TenantOwnerUserServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

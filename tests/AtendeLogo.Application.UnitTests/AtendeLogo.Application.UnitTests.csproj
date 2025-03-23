@@ -32,13 +32,5 @@
 		<ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
 		<ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<Using Include="Xunit" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="UseCases\" />
-	</ItemGroup>
-
+ 
 </Project>

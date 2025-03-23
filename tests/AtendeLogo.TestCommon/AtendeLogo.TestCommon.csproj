@@ -8,10 +8,11 @@
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.AspNetCore.Http" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
 
     <PackageReference Include="Moq" />
     <PackageReference Include="StackExchange.Redis" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="xunit.abstractions" />
 
   </ItemGroup>
   <ItemGroup>

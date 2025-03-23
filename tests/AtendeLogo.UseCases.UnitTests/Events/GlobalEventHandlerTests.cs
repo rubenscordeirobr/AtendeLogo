@@ -6,11 +6,14 @@ namespace AtendeLogo.UseCases.UnitTests.Events;
 public class GlobalEventHandlerTests
      : IClassFixture<AnonymousServiceProviderMock>
 {
-    private Fixture _figure = new();
-    private IEventMediator _eventMediator;
+    private readonly Fixture _figure = new();
+    private readonly IEventMediator _eventMediator;
 
-    public GlobalEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
+    public GlobalEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
+        serviceProviderMock.AddTestOutput(testOutput);
+
         _eventMediator = serviceProviderMock.GetRequiredService<IEventMediator>();
     }
 

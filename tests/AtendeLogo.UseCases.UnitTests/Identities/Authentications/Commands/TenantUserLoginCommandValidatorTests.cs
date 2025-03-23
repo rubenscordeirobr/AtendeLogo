@@ -10,13 +10,16 @@ public class TenantUserLoginCommandValidatorTests : IClassFixture<AnonymousServi
 {
     private readonly IValidator<TenantUserLoginCommand> _validator;
     private readonly IServiceProvider _serviceProvider;
-    private TenantUserLoginCommand _validCommand;
+    private readonly TenantUserLoginCommand _validCommand;
 
-    public TenantUserLoginCommandValidatorTests(AnonymousServiceProviderMock serviceProvider)
+    public TenantUserLoginCommandValidatorTests(
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
+        serviceProviderMock.AddTestOutput(testOutput);
 
-        _serviceProvider = serviceProvider;
-        _validator = serviceProvider.GetRequiredService<IValidator<TenantUserLoginCommand>>();
+        _serviceProvider = serviceProviderMock;
+        _validator = serviceProviderMock.GetRequiredService<IValidator<TenantUserLoginCommand>>();
         _validCommand = new TenantUserLoginCommand
         {
             ClientRequestId = Guid.NewGuid(),
@@ -35,7 +38,7 @@ public class TenantUserLoginCommandValidatorTests : IClassFixture<AnonymousServi
     [Fact]
     public async Task ValidationResult_ShouldBeValid()
     {
-       // Act
+        // Act
         var result = await _validator.TestValidateAsync(_validCommand);
 
         // Assert

@@ -7,9 +7,13 @@ public class UpdateDefaultTenantAddressCommandHandlerTests : IClassFixture<Tenan
     private readonly IServiceProvider _serviceProvider;
     private readonly UpdateDefaultTenantAddressCommand _validadeCommand;
 
-    public UpdateDefaultTenantAddressCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvide)
+    public UpdateDefaultTenantAddressCommandHandlerTests(
+        TenantOwnerUserServiceProviderMock serviceProvider,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvide;
+        serviceProvider.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProvider;
         _validadeCommand = new UpdateDefaultTenantAddressCommand
         {
             ClientRequestId = Guid.NewGuid(),

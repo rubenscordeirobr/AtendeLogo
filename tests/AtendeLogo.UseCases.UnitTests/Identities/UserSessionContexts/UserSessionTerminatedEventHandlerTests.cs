@@ -8,11 +8,15 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.UserSessionContexts;
 public class UserSessionTerminatedEventHandlerTests
      : IClassFixture<AnonymousServiceProviderMock>
 {
-    private Fixture _fixture = new();
-    private IEventMediator _eventMediator;
+    private readonly Fixture _fixture = new();
+    private readonly IEventMediator _eventMediator;
 
-    public UserSessionTerminatedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
+    public UserSessionTerminatedEventHandlerTests(
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
+        serviceProviderMock.AddTestOutput(testOutput);
+
         _eventMediator = serviceProviderMock.GetRequiredService<IEventMediator>();
     }
 

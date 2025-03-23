@@ -7,11 +7,19 @@ namespace AtendeLogo.Application.UnitTests.Services;
 
 public class SessionCacheServiceTests
 {
+    private readonly ITestOutputHelper _testOutput;
+
+    public SessionCacheServiceTests(ITestOutputHelper testOutput)
+    {
+        _testOutput = testOutput;
+    }
+
+
     [Fact]
     public async Task ExistsAsync_ShouldReturnTrue_WhenClientSessionTokenExists()
     {
         // Arrange
-        var logger = new LoggerServiceMock<SessionCacheService>();
+        var logger = new TestOutputLogger<SessionCacheService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
 
@@ -31,7 +39,7 @@ public class SessionCacheServiceTests
     public async Task ExistsAsync_ShouldReturnFalse_WhenClientSessionTokenDoesNotExist()
     {
         // Arrange
-        var logger = new LoggerServiceMock<SessionCacheService>();
+        var logger = new TestOutputLogger<SessionCacheService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
         var clientSessionToken = "test-session-token";
@@ -47,7 +55,7 @@ public class SessionCacheServiceTests
     public async Task GetSessionAsync_ShouldReturnSession_WhenClientSessionTokenExists()
     {
         // Arrange
-        var logger = new LoggerServiceMock<SessionCacheService>();
+        var logger = new TestOutputLogger<SessionCacheService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
         var clientSessionToken = "test-session-token";
@@ -81,7 +89,7 @@ public class SessionCacheServiceTests
     public async Task GetSessionAsync_ShouldReturnNull_WhenClientSessionTokenDoesNotExist()
     {
         // Arrange
-        var logger = new LoggerServiceMock<SessionCacheService>();
+        var logger = new TestOutputLogger<SessionCacheService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
         var clientSessionToken = "test-session-token";
@@ -97,7 +105,7 @@ public class SessionCacheServiceTests
     public async Task AddSessionAsync_ShouldAddSessionToCache_WhenSessionIsValid()
     {
         // Arrange
-        var logger = new LoggerServiceMock<SessionCacheService>();
+        var logger = new TestOutputLogger<SessionCacheService>(_testOutput   );
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
         var session = new UserSession(
@@ -129,7 +137,7 @@ public class SessionCacheServiceTests
     public async Task AddSessionAsync_ShouldThrowInvalidOperationException_WhenSessionIdIsEmpty()
     {
         // Arrange
-        var logger = new LoggerServiceMock<SessionCacheService>();
+        var logger = new TestOutputLogger<SessionCacheService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
         var session = new UserSession(
@@ -158,7 +166,7 @@ public class SessionCacheServiceTests
     public async Task RemoveSessionAsync_ShouldRemoveSessionFromCache_WhenClientSessionTokenExists()
     {
         // Arrange
-        var logger = new LoggerServiceMock<SessionCacheService>();
+        var logger = new TestOutputLogger<SessionCacheService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new SessionCacheService(cacheRepository, logger);
         var clientSessionToken = "test-session-token";

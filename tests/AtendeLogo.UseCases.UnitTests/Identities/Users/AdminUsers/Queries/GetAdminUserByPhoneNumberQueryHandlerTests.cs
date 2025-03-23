@@ -6,9 +6,12 @@ public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<Anonymou
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetAdminUserByPhoneNumberQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public GetAdminUserByPhoneNumberQueryHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

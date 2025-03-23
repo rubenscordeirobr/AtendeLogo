@@ -6,9 +6,13 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<A
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetAdminUserByEmailOrPhoneNumberQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public GetAdminUserByEmailOrPhoneNumberQueryHandlerTests(
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        this._serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

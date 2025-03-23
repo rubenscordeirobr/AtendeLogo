@@ -5,10 +5,15 @@ public class EntityDeletedEventHandlerTests
 {
     private readonly Fixture _figure = new();
     private readonly IServiceProvider _serviceProvider;
+    private readonly ITestOutputHelper _testOutput;
 
-    public EntityDeletedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock)
+    public EntityDeletedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
+        serviceProviderMock.AddTestOutput(testOutput);
+
         _serviceProvider = serviceProviderMock;
+        _testOutput = testOutput;
     }
 
     [Fact]
@@ -37,7 +42,7 @@ public class EntityDeletedEventHandlerTests
         var deletedEvent = new EntityDeletedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
         var userSessionAccessorMock = new AnonymousUserSessionAccessorMock();
-        var logger = new LoggerServiceMock<EntityDeletedEventHandler<TenantUser>>();
+        var logger = new TestOutputLogger<EntityDeletedEventHandler<TenantUser>>(_testOutput);
 
         var handler = new EntityDeletedEventHandler<TenantUser>(
             activityRepository,

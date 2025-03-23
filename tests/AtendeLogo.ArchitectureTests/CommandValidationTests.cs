@@ -13,6 +13,8 @@ public class CommandValidationTests
         AnonymousServiceProviderMock serviceProviderMock,
         ITestOutputHelper output)
     {
+        serviceProviderMock.AddTestOutput(output);
+
         _validatorMappings = assemblyContext.CommandTypeToValidatorTypeMappings;
         _serviceProvider = serviceProviderMock;
         _output = output;
@@ -45,7 +47,7 @@ public class CommandValidationTests
         validatorsType.Should()
             .HaveCount(1, $"The command {commandType.Name} has more than one validator");
 
-        _output.WriteLine($"Command {commandType.Name} has validator {validatorsType!.First().Name}");
+        _output.WriteLine($"Command {commandType.Name} has validator {validatorsType![0].Name}");
     }
      
     [Theory]
@@ -75,8 +77,7 @@ public class CommandValidationTests
                 .Select(x => x.Validator);
 
             var maxLengthValidation = validators
-                .Where(x => x.GetType().ImplementsGenericInterfaceDefinition(typeof(MaximumLengthValidator<>)))
-                .FirstOrDefault();
+                .FirstOrDefault(validator => validator.GetType().ImplementsGenericInterfaceDefinition(typeof(MaximumLengthValidator<>)));
 
             maxLengthValidation.Should()
                 .NotBeNull($"The property {stringProperty.GetPropertyPath()} does not have a MaxLength validation");
@@ -88,8 +89,7 @@ public class CommandValidationTests
             }
 
             var notEmptyValidation = validators
-                .Where(x => x.GetType().ImplementsGenericInterfaceDefinition(typeof(NotEmptyValidator<,>)))
-                .FirstOrDefault();
+                .FirstOrDefault(x => x.GetType().ImplementsGenericInterfaceDefinition(typeof(NotEmptyValidator<,>)));
 
             notEmptyValidation.Should()
                 .NotBeNull($"The property {stringProperty.GetPropertyPath()} does not have a NotEmpty validation");

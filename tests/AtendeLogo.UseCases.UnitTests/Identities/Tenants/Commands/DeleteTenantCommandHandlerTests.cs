@@ -5,12 +5,18 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
 public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServiceProviderMock>
 {
+    private readonly ITestOutputHelper _testOutput;
     private readonly IRequestMediator _mediator;
     private readonly DeleteTenantCommand _validadeCommand;
 
-    public DeleteTenantCommandHandlerTests(SystemAdminUserServiceProviderMock serviceProvider)
+    public DeleteTenantCommandHandlerTests(
+        SystemAdminUserServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _mediator = serviceProvider.GetRequiredService<IRequestMediator>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _testOutput = testOutput;
+        _mediator = serviceProviderMock.GetRequiredService<IRequestMediator>();
         _validadeCommand = new DeleteTenantCommand(SystemTenantConstants.Tenant_Id);
     }
 
@@ -30,6 +36,8 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
     {
         //// Arrange
         var serviceProvideMock = new SystemAdminUserServiceProviderMock();
+        serviceProvideMock.AddTestOutput(_testOutput);
+
         var mediator = serviceProvideMock.GetRequiredService<IRequestMediator>();
 
         var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
@@ -86,6 +94,7 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
     {
         // Arrange
         var anonymousServiceProvider = new AnonymousServiceProviderMock();
+        anonymousServiceProvider.AddTestOutput(_testOutput);
         var mediator = anonymousServiceProvider.GetRequiredService<IRequestMediator>();
 
         // Act

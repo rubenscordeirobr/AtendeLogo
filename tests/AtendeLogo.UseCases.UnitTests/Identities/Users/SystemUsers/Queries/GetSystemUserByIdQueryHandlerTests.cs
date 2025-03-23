@@ -6,9 +6,12 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetSystemUserByIdQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public GetSystemUserByIdQueryHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

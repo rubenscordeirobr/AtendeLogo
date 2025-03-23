@@ -6,9 +6,12 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetAdminUserByIdQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public GetAdminUserByIdQueryHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        this._serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]
@@ -30,7 +33,6 @@ public class GetAdminUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceP
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var guidAdminUserId = Guid.NewGuid();
 
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
         var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);

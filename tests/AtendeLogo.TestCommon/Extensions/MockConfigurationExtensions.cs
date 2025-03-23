@@ -41,8 +41,8 @@ public static class MockConfigurationExtensions
     }
 
     public static IServiceCollection AddLoggerServiceMock(
-        this IServiceCollection services)
+        this IServiceCollection services )
     {
-        return services.AddTransient(typeof(ILogger<>), typeof(LoggerServiceMock<>));
+        return services.AddTransient(typeof(ILogger<>), typeof(TestOutputLogger<>));
     }
 }

@@ -15,9 +15,12 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<AnonymousServic
     private readonly IServiceProvider _serviceProvider;
     private readonly TenantUserLogoutCommand _command;
 
-    public TenantUserLogoutCommandHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public TenantUserLogoutCommandHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
         _command = new TenantUserLogoutCommand
         {
             ClientRequestId = Guid.NewGuid(),

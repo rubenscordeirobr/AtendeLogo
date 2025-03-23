@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Contracts.Security;
-using AtendeLogo.Common.Helpers;
 using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Authentications.Services;
 using Moq;
@@ -8,14 +7,17 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.Authentications.Services;
 
 public class TenantAuthenticationValidationServiceTests
 {
+
     private readonly Fixture _fixture = new();
+    private readonly ITestOutputHelper _testOutput;
     private readonly Mock<ITenantUserRepository> _tenantUserRepositoryMock;
     private readonly Mock<ISecureConfiguration> _secureConfigurationMock;
     private readonly TenantAuthenticationValidationService _validationService;
     private readonly CancellationToken _token = CancellationToken.None;
 
-    public TenantAuthenticationValidationServiceTests()
+    public TenantAuthenticationValidationServiceTests(ITestOutputHelper testOutput )
     {
+        _testOutput = testOutput;
         _tenantUserRepositoryMock = new Mock<ITenantUserRepository>();
         _secureConfigurationMock = new Mock<ISecureConfiguration>();
 
@@ -29,6 +31,7 @@ public class TenantAuthenticationValidationServiceTests
     {
         // Arrange
         var anonymousServiceProviderMock = new AnonymousServiceProviderMock();
+        anonymousServiceProviderMock.AddTestOutput(_testOutput);
         // Act
         var service = anonymousServiceProviderMock.GetRequiredService<ITenantAuthenticationValidationService>();
         // Assert
@@ -62,7 +65,6 @@ public class TenantAuthenticationValidationServiceTests
         
         _secureConfigurationMock.Setup(cfg => cfg.GetPasswordSalt()).Returns(salt);
         
-        var expectedHash = PasswordHelper.HashPassword(password, salt);
         var passwordInstance = Password.Create(password, salt).Value!;
         var tenantUser = CreateTenantUser(passwordInstance);
 
@@ -88,9 +90,7 @@ public class TenantAuthenticationValidationServiceTests
         var password = "wrongPassword";
         var salt = "mysalt";
         _secureConfigurationMock.Setup(cfg => cfg.GetPasswordSalt()).Returns(salt);
-        
-        var expectedHash = PasswordHelper.HashPassword("password", salt);
-       
+      
         var passwordInstance = Password.Create("password", salt).Value!;
         var tenantUser = CreateTenantUser(passwordInstance);
 

@@ -8,8 +8,11 @@ public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<AnonymousServ
     private readonly IServiceProvider _serviceProvider;
 
     public EntityUpdatedPreProcessorHandlerTests(
-        AnonymousServiceProviderMock serviceProviderMock)
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
+        serviceProviderMock.AddTestOutput(testOutput);
+
         _serviceProvider = serviceProviderMock;
     }
 

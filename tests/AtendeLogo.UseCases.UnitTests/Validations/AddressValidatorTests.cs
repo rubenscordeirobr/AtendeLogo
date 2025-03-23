@@ -5,8 +5,12 @@ public class AddressValidatorTests : IClassFixture<AnonymousServiceProviderMock>
     private readonly IValidator<AddressDto> _validator;
     private readonly AddressDto _validAddress;
 
-    public AddressValidatorTests(AnonymousServiceProviderMock serviceProviderMock)
+    public AddressValidatorTests(
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
+        serviceProviderMock.AddTestOutput(testOutput);
+
         _validator = serviceProviderMock.GetRequiredService<IValidator<AddressDto>>();
 
         _validAddress = new AddressDto

@@ -6,9 +6,13 @@ public class GetAdminUserByEmailQueryHandlerTests : IClassFixture<AnonymousServi
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetAdminUserByEmailQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public GetAdminUserByEmailQueryHandlerTests(
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

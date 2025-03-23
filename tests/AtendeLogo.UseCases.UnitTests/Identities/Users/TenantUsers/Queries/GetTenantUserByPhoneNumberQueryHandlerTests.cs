@@ -6,9 +6,13 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantO
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetTenantUserByPhoneNumberQueryHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider)
+    public GetTenantUserByPhoneNumberQueryHandlerTests(
+        TenantOwnerUserServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+            _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

@@ -7,9 +7,12 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
     private readonly IServiceProvider _serviceProvider;
     private readonly TenantUserLoginCommand _validCommand;
 
-    public TenantUserLoginCommandHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public TenantUserLoginCommandHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
         _validCommand = new TenantUserLoginCommand
         {
             ClientRequestId = Guid.NewGuid(),

@@ -4,11 +4,19 @@ namespace AtendeLogo.Application.UnitTests.Services;
 
 public class CommandTrackingServiceTests
 {
+    private readonly ITestOutputHelper _testOutput;
+
+    public CommandTrackingServiceTests(ITestOutputHelper testOutput)
+    {
+        _testOutput = testOutput;
+    }
+
     [Fact]
     public async Task ExistsAsync_ShouldReturnTrue_WhenClientRequestIdExists()
     {
         // Arrange
-        var logger = new LoggerServiceMock<CommandTrackingService>();
+        var logger = new TestOutputLogger<CommandTrackingService>(_testOutput);
+
         var cacheRepository = new CacheRepositoryMock();
         var service = new CommandTrackingService(cacheRepository, logger);
         var clientRequestId = Guid.NewGuid();
@@ -25,7 +33,7 @@ public class CommandTrackingServiceTests
     public async Task ExistsAsync_ShouldReturnFalse_WhenClientRequestIdDoesNotExist()
     {
         // Arrange
-        var logger = new LoggerServiceMock<CommandTrackingService>();
+        var logger = new TestOutputLogger<CommandTrackingService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new CommandTrackingService(cacheRepository, logger);
         var clientRequestId = Guid.NewGuid();
@@ -41,7 +49,7 @@ public class CommandTrackingServiceTests
     public async Task TryGetResultAsync_ShouldReturnResult_WhenClientRequestIdExists()
     {
         // Arrange
-        var logger = new LoggerServiceMock<CommandTrackingService>();
+        var logger = new TestOutputLogger<CommandTrackingService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new CommandTrackingService(cacheRepository, logger);
        
@@ -62,7 +70,7 @@ public class CommandTrackingServiceTests
     public async Task TryGetResultAsync_ShouldReturnNull_WhenClientRequestIdDoesNotExist()
     {
         // Arrange
-        var logger = new LoggerServiceMock<CommandTrackingService>();
+        var logger = new TestOutputLogger<CommandTrackingService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new CommandTrackingService(cacheRepository, logger);
         var clientRequestId = Guid.NewGuid();
@@ -78,7 +86,7 @@ public class CommandTrackingServiceTests
     public async Task TrackAsync_ShouldAddResultToCache_WhenResultIsSuccess()
     {
         // Arrange
-        var logger = new LoggerServiceMock<CommandTrackingService>();
+        var logger = new TestOutputLogger<CommandTrackingService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new CommandTrackingService(cacheRepository, logger);
         var clientRequestId = Guid.NewGuid();
@@ -96,7 +104,7 @@ public class CommandTrackingServiceTests
     public async Task TrackAsync_ShouldThrowInvalidOperationException_WhenResultIsFailure()
     {
         // Arrange
-        var logger = new LoggerServiceMock<CommandTrackingService>();
+        var logger = new TestOutputLogger<CommandTrackingService>(_testOutput);
         var cacheRepository = new CacheRepositoryMock();
         var service = new CommandTrackingService(cacheRepository, logger);
         var clientRequestId = Guid.NewGuid();

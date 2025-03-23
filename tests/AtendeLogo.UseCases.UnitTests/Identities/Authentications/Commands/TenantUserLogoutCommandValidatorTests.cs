@@ -7,9 +7,12 @@ public class TenantUserLogoutCommandValidatorTests : IClassFixture<AnonymousServ
     private readonly IValidator<TenantUserLogoutCommand> _validator;
     private readonly TenantUserLogoutCommand _validCommand;
 
-    public TenantUserLogoutCommandValidatorTests(AnonymousServiceProviderMock serviceProvider)
+    public TenantUserLogoutCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _validator = serviceProvider.GetRequiredService<IValidator<TenantUserLogoutCommand>>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _validator = serviceProviderMock.GetRequiredService<IValidator<TenantUserLogoutCommand>>();
         _validCommand = new TenantUserLogoutCommand
         {
             ClientRequestId = Guid.NewGuid(),

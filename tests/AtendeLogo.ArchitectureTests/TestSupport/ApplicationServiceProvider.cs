@@ -4,10 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.ArchitectureTests.TestSupport;
 
-public class ApplicationServiceProvider : IServiceProvider
+public class ApplicationServiceProvider : AbstractTestOutputServiceProvider
 {
     private readonly IServiceProvider _serviceProvider;
     public IServiceCollection Services { get; }
+    protected override IServiceProvider ServiceProvider
+        => _serviceProvider;
 
     public ApplicationServiceProvider()
     {
@@ -15,13 +17,7 @@ public class ApplicationServiceProvider : IServiceProvider
         _serviceProvider = Services.BuildServiceProvider();
     }
 
-    public object? GetService(Type serviceType)
-    {
-        serviceType = NormalizeServiceType(serviceType);
-        return _serviceProvider.GetService(serviceType);
-    }
-
-    private Type NormalizeServiceType(Type serviceType)
+    protected override Type NormalizeServiceType(Type serviceType)
     {
         if (serviceType.IsGenericType && serviceType.ContainsGenericParameters)
         {
@@ -47,4 +43,6 @@ public class ApplicationServiceProvider : IServiceProvider
         }
         return serviceType;
     }
+
+  
 }

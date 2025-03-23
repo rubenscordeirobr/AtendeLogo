@@ -7,9 +7,12 @@ public class UpdateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
     private readonly IValidator<UpdateTenantCommand> _validator;
     private readonly UpdateTenantCommand _validCommand;
 
-    public UpdateTenantCommandValidatorTests(AnonymousServiceProviderMock serviceProvider)
+    public UpdateTenantCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _validator = serviceProvider.GetRequiredService<IValidator<UpdateTenantCommand>>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _validator = serviceProviderMock.GetRequiredService<IValidator<UpdateTenantCommand>>();
         _validCommand = new UpdateTenantCommand
         {
             ClientRequestId = Guid.NewGuid(),

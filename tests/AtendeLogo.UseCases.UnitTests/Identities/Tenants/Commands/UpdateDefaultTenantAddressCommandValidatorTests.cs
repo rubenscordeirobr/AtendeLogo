@@ -8,9 +8,12 @@ public class UpdateDefaultTenantAddressCommandValidatorTests : IClassFixture<Ano
     private readonly UpdateDefaultTenantAddressCommand _validadeCommand;
 
     public UpdateDefaultTenantAddressCommandValidatorTests(
-        AnonymousServiceProviderMock serviceProvider)
+        AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _validator = serviceProvider.GetRequiredService<IValidator<UpdateDefaultTenantAddressCommand>>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _validator = serviceProviderMock.GetRequiredService<IValidator<UpdateDefaultTenantAddressCommand>>();
         _validadeCommand = new UpdateDefaultTenantAddressCommand
         {
             ClientRequestId = Guid.NewGuid(),

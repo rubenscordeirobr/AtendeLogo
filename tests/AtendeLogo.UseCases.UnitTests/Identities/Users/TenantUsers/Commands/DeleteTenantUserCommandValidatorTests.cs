@@ -6,9 +6,12 @@ public class DeleteTenantUserCommandValidatorTests : IClassFixture<AnonymousServ
 {
     private readonly IValidator<DeleteTenantUserCommand> _validator;
 
-    public DeleteTenantUserCommandValidatorTests(AnonymousServiceProviderMock serviceProvider)
+    public DeleteTenantUserCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _validator = serviceProvider.GetRequiredService<IValidator<DeleteTenantUserCommand>>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _validator = serviceProviderMock.GetRequiredService<IValidator<DeleteTenantUserCommand>>();
     }
 
     [Fact]

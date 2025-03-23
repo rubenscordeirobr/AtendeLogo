@@ -12,10 +12,13 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
     private readonly IValidator<CreateTenantCommand> _validator;
     private readonly CreateTenantCommand _validadCommand;
 
-    public CreateTenantCommandValidatorTests(AnonymousServiceProviderMock serviceProvider)
+    public CreateTenantCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
-        _validator = serviceProvider.GetRequiredService<IValidator<CreateTenantCommand>>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
+        _validator = serviceProviderMock.GetRequiredService<IValidator<CreateTenantCommand>>();
 
         _validadCommand = new CreateTenantCommand
         {

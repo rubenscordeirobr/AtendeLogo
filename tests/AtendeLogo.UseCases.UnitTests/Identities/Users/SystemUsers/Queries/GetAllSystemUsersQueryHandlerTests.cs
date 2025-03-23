@@ -6,9 +6,12 @@ public class GetAllSystemUsersQueryHandlerTests : IClassFixture<AnonymousService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetAllSystemUsersQueryHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public GetAllSystemUsersQueryHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
     }
 
     [Fact]

@@ -9,16 +9,19 @@ public class RequestValidationTests
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IReadOnlyDictionary<Type, Type> _requestTypeToHandlerTypeMap;
-    private readonly ITestOutputHelper _output;
+    private readonly ITestOutputHelper _testOutput;
 
     public RequestValidationTests(
         ApplicationAssemblyContext assemblyContext,
-        AnonymousServiceProviderMock serviceProvider,
+        AnonymousServiceProviderMock serviceProviderMock,
         ITestOutputHelper output)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(output);
+
+        _serviceProvider = serviceProviderMock;
+
         _requestTypeToHandlerTypeMap = assemblyContext.RequestTypeToHandlerTypeMap;
-        _output = output;
+        _testOutput = output;
     }
 
     public static IEnumerable<object[]> RequestTypes
@@ -52,7 +55,7 @@ public class RequestValidationTests
             .Should()
             .NotBeNull($"RequestHandler {handlerType!.Name} should be registered.");
 
-        _output.WriteLine($"Request {type.Name} has a registered RequestHandler {handlerType.Name}.");
+        _testOutput.WriteLine($"Request {type.Name} has a registered RequestHandler {handlerType.Name}.");
     }
 }
 

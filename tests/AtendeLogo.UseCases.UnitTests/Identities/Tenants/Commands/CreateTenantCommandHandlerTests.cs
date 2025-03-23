@@ -7,9 +7,12 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
     private readonly IServiceProvider _serviceProvider;
     private readonly CreateTenantCommand _validadeCommand;
 
-    public CreateTenantCommandHandlerTests(AnonymousServiceProviderMock serviceProvider)
+    public CreateTenantCommandHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        _serviceProvider = serviceProvider;
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        _serviceProvider = serviceProviderMock;
 
         var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
         var fakeEmail = FakeUtils.GenerateFakeEmail();

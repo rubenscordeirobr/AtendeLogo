@@ -6,18 +6,21 @@ public class RegisteredServiceValidationTests
       IClassFixture<UnitTestTypeNamesCollection>
 {
     private readonly ApplicationServiceProvider _serviceProvider;
-    private readonly ClientGatewayServiceProvider _clientGatewayServiceProvider;
+    private readonly ClientGatewayServiceProvider _clientServiceProvider;
     private readonly UnitTestTypeNamesCollection _unitTestsTypes;
     private readonly ITestOutputHelper _output;
 
     public RegisteredServiceValidationTests(
         ApplicationServiceProvider serviceProvider,
-        ClientGatewayServiceProvider clientGatewayServiceProvider,
+        ClientGatewayServiceProvider clientServiceProvider,
         UnitTestTypeNamesCollection unitTestsTypes,
         ITestOutputHelper output)
     {
+        serviceProvider.AddTestOutput(output);
+        clientServiceProvider.AddTestOutput(output);
+
         _serviceProvider = serviceProvider;
-        _clientGatewayServiceProvider = clientGatewayServiceProvider;
+        _clientServiceProvider = clientServiceProvider;
         _unitTestsTypes = unitTestsTypes;
         _output = output;
     }
@@ -53,11 +56,11 @@ public class RegisteredServiceValidationTests
     public void VerifyRegisteredService_ShouldHavePublicConstructorWithAllDependencies(Type serviceType)
     {
         ////Arrange
-        var contructores = serviceType.GetConstructors()
+        var constructors = serviceType.GetConstructors()
             .Where(ctor => ctor.IsPublic);
 
         //Act
-        var parameters = contructores.SelectMany(ctor => ctor.GetParameters());
+        var parameters = constructors.SelectMany(ctor => ctor.GetParameters());
 
         var parametersWithoutService = parameters.Where(parameter =>
         {
@@ -66,7 +69,7 @@ public class RegisteredServiceValidationTests
         });
 
         //Assert
-        contructores.Should().HaveCount(1);
+        constructors.Should().HaveCount(1);
 
         parametersWithoutService.Should()
             .BeEmpty($"The Service {serviceType.Name} has parameters without service registered. \r\b" +
@@ -91,11 +94,13 @@ public class RegisteredServiceValidationTests
     {
         //Arrange
         var services = _serviceProvider.Services;
-        var clientServices = _clientGatewayServiceProvider.Services;
+        var clientServices = _clientServiceProvider.Services;
 
         //Act
-        var serviceDescriptor = services.Where(x => x.ServiceType == serviceType || x.ImplementationType == serviceType).FirstOrDefault()
-            ?? clientServices.Where(x => x.ServiceType == serviceType || x.ImplementationType == serviceType).FirstOrDefault();
+        var serviceDescriptor = services
+                .FirstOrDefault(x => x.ServiceType == serviceType || x.ImplementationType == serviceType)
+            ?? clientServices
+                .FirstOrDefault(x => x.ServiceType == serviceType || x.ImplementationType == serviceType);
 
         //Assert
         serviceDescriptor.Should()
