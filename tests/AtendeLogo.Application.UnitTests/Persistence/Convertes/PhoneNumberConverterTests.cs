@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Persistence.Tests.Converters;
+﻿namespace AtendeLogo.Application.UnitTests.Persistence.Convertes;
 
 public class PhoneNumberConverterTests
 {
@@ -12,7 +12,7 @@ public class PhoneNumberConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile(); 
 
         // Act
-        string result = convertToProvider(phoneNumber);
+        var result = convertToProvider(phoneNumber);
 
         // Assert
         result.Should().Be(phoneNumberValue);

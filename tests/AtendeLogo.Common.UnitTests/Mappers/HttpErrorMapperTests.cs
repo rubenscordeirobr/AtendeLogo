@@ -10,7 +10,7 @@ public class HttpErrorMapperTests
     public void GetHttpStatusCode_Should_Return_ExpectedStatus(Error error, HttpStatusCode expectedStatus)
     {
         // Act
-        var status = HttpErrorMapper.MapHttpStatusCode(error);
+        var status = HttpErrorMapper.MapErrorToHttpStatusCode(error);
         // Assert
         status.Should().Be(expectedStatus);
     }
@@ -40,7 +40,7 @@ public class HttpErrorMapperTests
         string expectedTypeName)
     {
         // Act
-        var error = HttpErrorMapper.GetErrorFromStatus(statusCode, code, message);
+        var error = HttpErrorMapper.MapHttpStatusCodeToError(statusCode, code, message);
         // Assert
         error.GetType().Name.Should().Be(expectedTypeName);
         error.Code.Should().Be(code);
@@ -55,7 +55,7 @@ public class HttpErrorMapperTests
         var code = "AB001";
         var message = "Request aborted";
         // Act
-        var error = HttpErrorMapper.GetErrorFromStatus(statusCode, code, message);
+        var error = HttpErrorMapper.MapHttpStatusCodeToError(statusCode, code, message);
         // Assert
         error.Should().BeOfType<AbortedError>();
         error.Code.Should().Be(code);
@@ -71,7 +71,7 @@ public class HttpErrorMapperTests
         var code = "NI001";
         var message = "Not implemented extended";
         // Act
-        var error = HttpErrorMapper.GetErrorFromStatus(statusCode, code, message);
+        var error = HttpErrorMapper.MapHttpStatusCodeToError(statusCode, code, message);
         // Assert
         error.Should().BeOfType<NotImplementedError>();
         error.Code.Should().StartWith("HttpStatusCode.NotImplemented.");

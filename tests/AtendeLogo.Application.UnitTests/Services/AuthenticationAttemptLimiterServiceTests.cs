@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using AtendeLogo.Application.Models.Security;
 using AtendeLogo.Application.Services;
-using AtendeLogo.Common.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
 

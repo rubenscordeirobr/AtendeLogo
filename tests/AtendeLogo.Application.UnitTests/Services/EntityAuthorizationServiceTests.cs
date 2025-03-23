@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Application.Services;
+using AtendeLogo.Common.Exceptions;
 using AtendeLogo.Domain.Enums;
 using AtendeLogo.Persistence.Identity.Extensions;
 

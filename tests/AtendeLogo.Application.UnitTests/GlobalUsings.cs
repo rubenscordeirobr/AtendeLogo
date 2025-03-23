@@ -3,6 +3,7 @@ global using AtendeLogo.Application.Contracts.Services;
 global using AtendeLogo.Application.Events;
 global using AtendeLogo.Common;
 global using AtendeLogo.Common.Enums;
+global using AtendeLogo.Common.Utils;
 global using AtendeLogo.Domain.Entities.Identities;
 global using AtendeLogo.Domain.Exceptions;
 global using AtendeLogo.Domain.Extensions;

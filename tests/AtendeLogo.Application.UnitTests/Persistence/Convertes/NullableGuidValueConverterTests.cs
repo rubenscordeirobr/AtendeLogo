@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Persistence.Tests.Converters;
+﻿namespace AtendeLogo.Application.UnitTests.Persistence.Convertes;
 
 public class NullableGuidValueConverterTests
 {
@@ -11,7 +11,7 @@ public class NullableGuidValueConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        Guid? result = convertToProvider(validGuid);
+        var result = convertToProvider(validGuid);
 
         // Assert
         result.Should().Be(validGuid);
@@ -25,7 +25,7 @@ public class NullableGuidValueConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        Guid? result = convertToProvider(Guid.Empty);
+        var result = convertToProvider(Guid.Empty);
 
         // Assert
         result.Should().BeNull();
@@ -39,7 +39,7 @@ public class NullableGuidValueConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        Guid? result = convertToProvider(null);
+        var result = convertToProvider(null);
 
         // Assert
         result.Should().BeNull();
@@ -54,7 +54,7 @@ public class NullableGuidValueConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        Guid? result = convertFromProvider(validGuid);
+        var result = convertFromProvider(validGuid);
 
         // Assert
         result.Should().Be(validGuid);
@@ -68,7 +68,7 @@ public class NullableGuidValueConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        Guid? result = convertFromProvider(Guid.Empty);
+        var result = convertFromProvider(Guid.Empty);
 
         // Assert
         result.Should().BeNull();
@@ -82,7 +82,7 @@ public class NullableGuidValueConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        Guid? result = convertFromProvider(null);
+        var result = convertFromProvider(null);
 
         // Assert
         result.Should().BeNull();

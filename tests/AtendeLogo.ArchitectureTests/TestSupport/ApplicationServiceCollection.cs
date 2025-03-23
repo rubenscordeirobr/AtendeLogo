@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using AtendeLogo.Application;
+﻿using AtendeLogo.Application;
 using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Contracts.Persistence;
 using AtendeLogo.Application.Contracts.Services;
@@ -8,7 +7,6 @@ using AtendeLogo.Persistence.Activity;
 using AtendeLogo.Persistence.Identity;
 using AtendeLogo.Presentation;
 using AtendeLogo.UseCases;
-using AtendeLogo.UseCases.Common.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

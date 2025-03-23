@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Persistence.Tests.Converters;
+﻿namespace AtendeLogo.Application.UnitTests.Persistence.Convertes;
 
 public class UtcDateTimeConverterTests
 {
@@ -11,7 +11,7 @@ public class UtcDateTimeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        DateTime result = convertToProvider(defaultDateTime);
+        var result = convertToProvider(defaultDateTime);
 
         // Assert
         result.Should().Be(DateTime.SpecifyKind(default, DateTimeKind.Utc));
@@ -26,7 +26,7 @@ public class UtcDateTimeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        DateTime result = convertToProvider(unspecifiedDate);
+        var result = convertToProvider(unspecifiedDate);
 
         // Assert
         result.Kind.Should().Be(DateTimeKind.Utc);
@@ -42,7 +42,7 @@ public class UtcDateTimeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        DateTime result = convertToProvider(utcDate);
+        var result = convertToProvider(utcDate);
 
         // Assert
         result.Kind.Should().Be(DateTimeKind.Utc);
@@ -58,7 +58,7 @@ public class UtcDateTimeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        DateTime result = convertFromProvider(defaultDateTime);
+        var result = convertFromProvider(defaultDateTime);
 
         // Assert
         result.Should().Be(DateTime.SpecifyKind(default, DateTimeKind.Utc));
@@ -73,7 +73,7 @@ public class UtcDateTimeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        DateTime result = convertFromProvider(unspecifiedDate);
+        var result = convertFromProvider(unspecifiedDate);
 
         // Assert
         result.Kind.Should().Be(DateTimeKind.Utc);
@@ -89,7 +89,7 @@ public class UtcDateTimeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        DateTime result = convertFromProvider(utcDate);
+        var result = convertFromProvider(utcDate);
 
         // Assert
         result.Kind.Should().Be(DateTimeKind.Utc);

@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Application.Services;
 using AtendeLogo.Common.Helpers;
-using AtendeLogo.Common.Utils;
 using AtendeLogo.Persistence.Identity.Extensions;
 
 namespace AtendeLogo.Application.UnitTests.Services;

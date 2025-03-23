@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Persistence.Tests.Converters;
+﻿namespace AtendeLogo.Application.UnitTests.Persistence.Convertes;
 
 public class NullableUtcDateTimeConverterTests
 {
@@ -10,7 +10,7 @@ public class NullableUtcDateTimeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertToProvider(null);
+        var result = convertToProvider(null);
 
         // Assert
         result.Should().BeNull();
@@ -25,7 +25,7 @@ public class NullableUtcDateTimeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertToProvider(defaultDateTime);
+        var result = convertToProvider(defaultDateTime);
 
         // Assert
         result.Should().BeNull();
@@ -40,7 +40,7 @@ public class NullableUtcDateTimeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertToProvider(unspecifiedDate);
+        var result = convertToProvider(unspecifiedDate);
 
         // Assert
         result.Should()
@@ -60,7 +60,7 @@ public class NullableUtcDateTimeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertToProvider(utcDate);
+        var result = convertToProvider(utcDate);
 
         // Assert
         result.Should().NotBeNull();
@@ -76,7 +76,7 @@ public class NullableUtcDateTimeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertFromProvider(null);
+        var result = convertFromProvider(null);
 
         // Assert
         result.Should().BeNull();
@@ -91,7 +91,7 @@ public class NullableUtcDateTimeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertFromProvider(defaultDateTime);
+        var result = convertFromProvider(defaultDateTime);
 
         // Assert
         result.Should().BeNull();
@@ -106,7 +106,7 @@ public class NullableUtcDateTimeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertFromProvider(unspecifiedDate);
+        var result = convertFromProvider(unspecifiedDate);
 
         // Assert
         result.Should().NotBeNull();
@@ -123,7 +123,7 @@ public class NullableUtcDateTimeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        DateTime? result = convertFromProvider(utcDate);
+        var result = convertFromProvider(utcDate);
 
         // Assert
         result.Should().NotBeNull();

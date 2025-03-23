@@ -3,7 +3,6 @@ using AtendeLogo.Application.Contracts.Persistence;
 using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Shared.ValueObjects;
-using AtendeLogo.UseCases.Common.Services;
 
 namespace AtendeLogo.ArchitectureTests.TestSupport;
 

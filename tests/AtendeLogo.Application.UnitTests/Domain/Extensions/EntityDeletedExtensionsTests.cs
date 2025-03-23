@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using AtendeLogo.Common.Exceptions;
+using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Domain.Extensions;
 
@@ -44,7 +45,7 @@ public class EntityDeletedExtensionsTests
         Action act = () => entityMock.Object.MarkAsDeleted(userSession);
 
         // Assert
-        act.Should().Throw<InvalidOperationException>();
+        act.Should().Throw<UnauthorizedSecurityException>();
     }
 
     [Fact]

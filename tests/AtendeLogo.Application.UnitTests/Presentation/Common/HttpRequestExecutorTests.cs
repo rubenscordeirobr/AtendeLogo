@@ -51,7 +51,7 @@ public class HttpRequestExecutorTests
         var handler = new HttpRequestExecutor(context, typeof(TestValidEndpoint), descriptor);
 
         // Act
-        await handler.HandleAsync();
+        await handler.ProcessRequestAsync();
 
         // Assert
         context.Response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -70,7 +70,7 @@ public class HttpRequestExecutorTests
         var handler = new HttpRequestExecutor(context, typeof(TestValidEndpoint), descriptor);
 
         // Act
-        await handler.HandleAsync();
+        await handler.ProcessRequestAsync();
 
         // Assert
         context.Response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
@@ -95,7 +95,7 @@ public class HttpRequestExecutorTests
         await cts.CancelAsync();
         
         // Act
-        await handler.HandleAsync();
+        await handler.ProcessRequestAsync();
 
         // Assert
         context.Response.StatusCode.Should().Be((int)ExtendedHttpStatusCode.RequestAborted);
@@ -136,7 +136,7 @@ public class HttpRequestExecutorTests
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
-        response.ErrorResponse!.Code.Should().Be("HttpRequestExecutor.ErrorInvokingMethod");
+        response.ErrorResponse!.Code.Should().Be("HttpRequestExecutor.ProcessRequestAsync");
     }
   
 }

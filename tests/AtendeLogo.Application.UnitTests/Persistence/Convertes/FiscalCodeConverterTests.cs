@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Persistence.Tests.Converters;
+﻿namespace AtendeLogo.Application.UnitTests.Persistence.Convertes;
 
 public class FiscalCodeConverterTests
 {
@@ -12,7 +12,7 @@ public class FiscalCodeConverterTests
         var convertToProvider = converter.ConvertToProviderExpression.Compile();
 
         // Act
-        string result = convertToProvider(fiscalCode);
+        var result = convertToProvider(fiscalCode);
 
         // Assert
         result.Should().Be(fiscalCodeValue);
@@ -27,7 +27,7 @@ public class FiscalCodeConverterTests
         var convertFromProvider = converter.ConvertFromProviderExpression.Compile();
 
         // Act
-        FiscalCode result = convertFromProvider(fiscalCodeValue);
+        var result = convertFromProvider(fiscalCodeValue);
 
         // Assert
         result.Should().NotBeNull();
