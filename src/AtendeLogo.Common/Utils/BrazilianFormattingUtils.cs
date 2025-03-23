@@ -4,7 +4,19 @@ namespace AtendeLogo.Common.Utils;
 
 public static class BrazilianFormattingUtils
 {
-    private static readonly CultureInfo _brazilianCultureInfo = new("pt-BR");
+    public static string FormatFiscalCode(string fiscalCode)
+    {
+        var numbers = fiscalCode.GetOnlyNumbers();
+        if (numbers.Length == 11)
+        {
+            return FormatCpf(numbers);
+        }
+        else if (numbers.Length == 14)
+        {
+            return FormatCnpj(numbers);
+        }
+        return fiscalCode;
+    }
 
     public static string FormatCpf(string cpf)
     {
@@ -36,23 +48,57 @@ public static class BrazilianFormattingUtils
         return $"{numbers[..5]}-{numbers[5..]}";
     }
 
-    public static string FormatPhone(string phone)
+    public static string FormatPhone(
+        string phone,
+        bool internationalFormat)
     {
+        if (string.IsNullOrWhiteSpace(phone))
+        {
+            return phone;
+        }
+
         var numbers = phone.GetOnlyNumbers();
-        if (numbers.Length == 10)
+        if (numbers.StartsWith("+55"))
         {
-            return $"({numbers[..2]}) {numbers[2..6]}-{numbers[6..]}";
+            numbers = numbers[3..];
         }
-        if (numbers.Length == 11)
+        else if (numbers.StartsWith("55"))
         {
-            return $"({numbers[..2]}) {numbers[2..7]}-{numbers[7..]}";
+            numbers = numbers[2..];
         }
-        return phone;
+        else if (phone.StartsWith('0'))
+        {
+            numbers = phone[1..];
+        }
+
+        if (numbers.Length < 10 || numbers.Length > 11)
+            return phone;
+
+        var formatted = numbers.Length == 10
+            ? $"({numbers[..2]}) {numbers[2..6]}-{numbers[6..]}"
+            : $"({numbers[..2]}) {numbers[2..7]}-{numbers[7..]}";
+
+        return internationalFormat
+            ? $"+55 {formatted}"
+            : formatted;
     }
 
     public static string FormatMoney(decimal value)
     {
-        return value.ToString("C", _brazilianCultureInfo);
+        var isNegative = value < 0;
+        value = Math.Abs(value);
+
+        var intPart = (int)value;
+        var decimalPart = (int)((value - intPart) * 100);
+
+        var intPartFormatted = string.Format(CultureInfo.InvariantCulture, "{0:N0}", intPart)
+             .Replace(",", ".");
+
+        var decimalFormatted = decimalPart.ToString("D2");
+
+        //\u00A0 no break space
+        var formatted = $"R$\u00A0{intPartFormatted},{decimalFormatted}";
+        return isNegative ? $"-{formatted}" : formatted;
     }
 }
 
