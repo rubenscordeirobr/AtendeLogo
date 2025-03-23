@@ -1,11 +1,11 @@
 ﻿namespace AtendeLogo.TestCommon.Mocks;
 
-public abstract class AbstractTestOutputServiceProvider : IServiceProvider
+public abstract class AbstractTestOutputServiceProvider  : IServiceProvider
 {
     private ITestOutputHelper _currentTestOutput;
 
     protected abstract IServiceProvider ServiceProvider { get; }
-        
+
     public object? GetService(Type serviceType)
     {
         if (_currentTestOutput is null)
@@ -33,3 +33,4 @@ public abstract class AbstractTestOutputServiceProvider : IServiceProvider
         return serviceType;
     }
 }
+

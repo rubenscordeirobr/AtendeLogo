@@ -3,20 +3,21 @@ using AtendeLogo.TestCommon.Extensions;
 using AtendeLogo.UseCases;
 
 namespace AtendeLogo.TestCommon.Mocks;
-public abstract class ServiceProviderMockBase : AbstractTestOutputServiceProvider
+public abstract class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvider
+     where TRoleProvider : IRoleProvider, new()
 {
     private readonly IServiceProvider _serviceProvider;
-    protected abstract UserRole UserRole { get; }
+    protected UserRole UserRole { get; }
 
     protected override IServiceProvider ServiceProvider
         => _serviceProvider;
-    protected ServiceProviderMockBase()
+    protected ServiceProviderMock()
     {
         var services = new ServiceCollection()
               .AddApplicationServices()
               .AddLoggerServiceMock()
               .AddInMemoryIdentityDbContext()
-              .AddMockInfrastructureServices(UserRole)
+              .AddMockInfrastructureServices<TRoleProvider>()
               .AddPersistenceServicesMock()
               .AddUserCasesServices()
               .AddUserCasesSharedServices();
@@ -27,27 +28,23 @@ public abstract class ServiceProviderMockBase : AbstractTestOutputServiceProvide
     }
 }
 
-public class TenantOwnerUserServiceProviderMock : ServiceProviderMockBase
+public class TenantOwnerUserServiceProviderMock : ServiceProviderMock<TenantOwnerRole>
 {
-    protected override UserRole UserRole => UserRole.Owner;
     public TenantOwnerUserServiceProviderMock()
     {
     }
 }
 
-public class AnonymousServiceProviderMock : ServiceProviderMockBase
+public class AnonymousServiceProviderMock : ServiceProviderMock<AnonymousRole>
 {
-    protected override UserRole UserRole => UserRole.Anonymous;
 
     public AnonymousServiceProviderMock()
     {
     }
 }
 
-public class SystemAdminUserServiceProviderMock : ServiceProviderMockBase
+public class SystemAdminUserServiceProviderMock : ServiceProviderMock<SystemAdminRole>
 {
-    protected override UserRole UserRole => UserRole.SystemAdmin;
-
     public SystemAdminUserServiceProviderMock()
     {
     }
