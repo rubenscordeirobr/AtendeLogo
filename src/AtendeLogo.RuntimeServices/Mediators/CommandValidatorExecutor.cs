@@ -4,16 +4,16 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Mediators;
+namespace AtendeLogo.RuntimeServices.Mediators;
 
-internal class CommandValidatorExecutor<TResponse>
+public class CommandValidatorExecutor<TResponse>
     where TResponse : IResponse
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ICommandRequest<TResponse> _command;
     private readonly ILogger _logger;
 
-    internal CommandValidatorExecutor(
+    public CommandValidatorExecutor(
         IServiceProvider serviceProvider,
         ILogger logger,
         ICommandRequest<TResponse> request )

@@ -1,7 +1,6 @@
 ﻿using AtendeLogo.Application.Events;
-using AtendeLogo.Domain.Primitives.Contracts;
 
-namespace AtendeLogo.Application.Mediators;
+namespace AtendeLogo.RuntimeServices.Mediators;
 
 internal static class DomainEventDataFactory
 {

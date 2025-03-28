@@ -1,35 +1,32 @@
 ﻿using AtendeLogo.Application.Contracts.Persistence.Identities;
+using AtendeLogo.Application.Extensions;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
-using AtendeLogo.Shared.Models.Identities;
 
-namespace AtendeLogo.Application.Services;
+
+namespace AtendeLogo.RuntimeServices.Services;
 
 public class UserSessionVerificationService : IUserSessionVerificationService, IUserSessionVerificationServiceTest, IAsyncDisposable
 {
-    private readonly ISessionCacheService _sessionCacheService;
     private readonly IIdentityUnitOfWork _unitWork;
-    private readonly IUserSessionAccessor _userSessionAccessor;
-
-    private IUserSessionRepository UserSessionRepository
-        => _unitWork.UserSessions;
+    private readonly IHttpContextSessionAccessor _httpContextSessionAccessor;
+    private readonly IUserSessionManager _userSessionManger;
 
     public UserSessionVerificationService(
-        ISessionCacheService cacheSessionService,
-        IUserSessionAccessor userSessionAccessor,
+        IUserSessionManager userSessionManger,
+        IHttpContextSessionAccessor httpContextSessionAccessor,
         IIdentityUnitOfWork unitWork)
     {
-        _sessionCacheService = cacheSessionService;
-        _userSessionAccessor = userSessionAccessor;
+        _userSessionManger = userSessionManger;
+        _httpContextSessionAccessor = httpContextSessionAccessor;
         _unitWork = unitWork;
     }
 
     public async Task<IUserSession> VerifyAsync()
     {
-        var session = await GetValidUserSessionAsync();
-        _userSessionAccessor.AddClientSessionCookie(session.ClientSessionToken);
-        return session;
-
+        var userSession = await GetValidUserSessionAsync();
+        _httpContextSessionAccessor.UserSession = userSession;
+        return userSession;
     }
 
     private async Task<IUserSession> GetValidUserSessionAsync()
@@ -38,7 +35,6 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         if (userSession is not null)
         {
             await ValidateSessionAsync(userSession);
-
             if (userSession.IsActive)
             {
                 return userSession;
@@ -49,28 +45,19 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     private async Task<IUserSession?> GetUserSessionAsync()
     {
-        var clientSessionToken = _userSessionAccessor.GetClientSessionToken();
-        if (string.IsNullOrWhiteSpace(clientSessionToken))
+        var userSession = await _userSessionManger.GetSessionAsync();
+        if (userSession is not null)
+        {
+            return userSession;
+        }
+
+        var session_Id = _userSessionManger.UserSession_Id;
+        if (session_Id is null)
             return null;
 
-        var cachedSession = await GetSessionFromCacheAsync(clientSessionToken);
-        if (cachedSession is not null)
-        {
-            return cachedSession;
-        }
-        return await UserSessionRepository.GetByClientTokenAsync(
-            clientSessionToken);
+        return await _unitWork.UserSessions.GetByIdAsync(session_Id.Value);
     }
 
-    private async Task<IUserSession?> GetSessionFromCacheAsync(string clientSessionToken)
-    {
-        var cachedSession = await _sessionCacheService.GetSessionAsync(clientSessionToken);
-        if (cachedSession?.IsUpdatePending() == true)
-        {
-            return await UserSessionRepository.TryRefreshAsync(cachedSession);
-        }
-        return cachedSession;
-    }
 
     private async Task ValidateSessionAsync(IUserSession userSession)
     {
@@ -79,26 +66,22 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
             return;
         }
 
-        if (userSession is AnonymousUserSession)
+        if (userSession.IsAnonymous())
         {
             return;
         }
 
-        if (userSession is not UserSession userSessionEntity)
-        {
-            throw new InvalidOperationException("Invalid session type.");
-        }
-
-        await ValidateSessionEntityAsync(userSessionEntity);
+        await ValidateSessionEntityAsync(userSession);
     }
 
-    private async Task ValidateSessionEntityAsync(UserSession userSession)
+    private async Task ValidateSessionEntityAsync(IUserSession userSession)
     {
-        var headerInfo = _userSessionAccessor.GetClientRequestHeaderInfo();
+        var headerInfo = _httpContextSessionAccessor.RequestHeaderInfo;
         var terminationReason = GetSessionTerminationReason(userSession, headerInfo);
         if (terminationReason.HasValue)
         {
-            await TerminateSessionAsync(userSession, terminationReason.Value);
+            var userSessionEntity = await GetUserSessionEntity(userSession);
+            await TerminateSessionAsync(userSessionEntity, terminationReason.Value);
             return;
         }
 
@@ -106,12 +89,21 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         {
             return;
         }
-
         await ProcessSessionUpdateAsync(userSession);
     }
 
+    private async Task<UserSession?> GetUserSessionEntity(IUserSession userSession)
+    {
+        if (userSession is UserSession entity)
+        {
+            return entity;
+        }
+
+        return await _unitWork.UserSessions.GetByIdAsync(userSession.Id);
+    }
+
     private SessionTerminationReason? GetSessionTerminationReason(
-        UserSession userSession,
+        IUserSession userSession,
         ClientRequestHeaderInfo headerInfo)
     {
         if (userSession.IsExpired())
@@ -132,58 +124,64 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     }
 
     private async Task TerminateSessionAsync(
-        UserSession userSession,
+        UserSession? userSession,
         SessionTerminationReason reason)
     {
-        if (!userSession.IsActive)
+        if (userSession is null || !userSession.IsActive)
+            return;
+
+        userSession.TerminateSession(reason);
+        await _unitWork.SaveChangesAsync();
+        await _userSessionManger.RemoveSessionAsync();
+    }
+
+    private async Task ProcessSessionUpdateAsync(IUserSession userSession)
+    {
+        var userSessionEntity = await GetUserSessionEntity(userSession);
+        if (userSessionEntity is null || !userSessionEntity.IsActive)
         {
             return;
         }
 
-        userSession.TerminateSession(reason);
-        await _unitWork.SaveChangesAsync();
-        await _sessionCacheService.RemoveSessionAsync(userSession.ClientSessionToken);
-    }
+        userSessionEntity.UpdateLastActivity();
 
-    private async Task ProcessSessionUpdateAsync(UserSession userSession)
-    {
-        userSession.UpdateLastActivity();
-
-        _unitWork.Update(userSession);
+        _unitWork.Update(userSessionEntity);
 
         var result = await _unitWork.SaveChangesAsync(silent: true);
-        if (!result.IsSuccess)
+        if (result.IsFailure)
         {
             var terminationReason = result.Error is DomainEventError
                 ? SessionTerminationReason.DomainEventError
                 : throw result.Exception;
 
-            await TerminateSessionAsync(userSession, terminationReason);
+            await TerminateSessionAsync(userSessionEntity, terminationReason);
             return;
         }
 
-        await _sessionCacheService.AddSessionAsync(userSession);
+        await _userSessionManger.AddSessionAsync(userSessionEntity);
     }
 
     private async Task<UserSession> CreateAnonymousSessionAsync()
     {
-        var headerInfo = _userSessionAccessor.GetClientRequestHeaderInfo();
-        var anonymousUser = AnonymousIdentityConstants.AnonymousUser;
+        var headerInfo = _httpContextSessionAccessor.RequestHeaderInfo;
+        var anonymousUser = AnonymousUserConstants.AnonymousUser;
+
         var userSession = UserSessionFactory.Create(
               user: anonymousUser,
               clientHeaderInfo: headerInfo,
               authenticationType: AuthenticationType.Anonymous,
-              rememberMe: true,
+              keepSession: true,
               tenant_id: null);
 
         _unitWork.Add(userSession);
 
         var result = await _unitWork.SaveChangesAsync();
-        if (!result.IsSuccess)
+        if (result.IsFailure)
         {
             throw new InvalidOperationException("Error while creating anonymous session.", result.Exception);
         }
-        await _sessionCacheService.AddSessionAsync(userSession);
+
+        await _userSessionManger.AddSessionAsync(userSession);
         return userSession;
     }
 
@@ -192,7 +190,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         GC.SuppressFinalize(this);
         return _unitWork.DisposeAsync();
     }
- 
+
     #region IUserSessionVerificationServiceTest
 
     Task<UserSession> IUserSessionVerificationServiceTest.CreateAnonymousSessionAsync()

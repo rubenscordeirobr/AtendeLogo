@@ -1,10 +1,8 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using AtendeLogo.Application.Common.JsonConverters;
 using AtendeLogo.Common.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Services;
+namespace AtendeLogo.RuntimeServices.Services;
 
 public abstract class CacheServiceBase
 {
@@ -15,8 +13,7 @@ public abstract class CacheServiceBase
 
     protected virtual JsonSerializerOptions JsonOptions { get; }
         = JsonUtils.CacheJsonSerializerOptions;
-
-
+     
     protected CacheServiceBase(
         ICacheRepository _repository,
         ILogger logger,
@@ -33,19 +30,19 @@ public abstract class CacheServiceBase
         return await _repository.KeyExistsAsync(cacheKey);
     }
 
-    protected async Task<bool> ExistsInCacheAsync(string key)
+    protected async Task<bool> ExistsInCacheAsync(string key, CancellationToken cancellationToken)
     {
         var cacheKey = BuildCacheKey(key);
         return await _repository.KeyExistsAsync(cacheKey);
     }
 
-    protected async Task<T?> GetFromCacheAsync<T>(Guid key, CancellationToken cancellationToken = default)
+    protected async Task<T?> GetFromCacheAsync<T>(Guid key, CancellationToken cancellationToken)
     {
         var cacheKey = BuildCacheKey(key);
         return await GetAsyncInternal<T>(cacheKey, cancellationToken);
     }
 
-    protected async Task<T?> GetFromCacheAsync<T>(string key, CancellationToken cancellationToken = default)
+    protected async Task<T?> GetFromCacheAsync<T>(string key, CancellationToken cancellationToken)
     {
         var cacheKey = BuildCacheKey(key);
         return await GetAsyncInternal<T>(cacheKey, cancellationToken);
@@ -118,15 +115,9 @@ public abstract class CacheServiceBase
     {
         if (typeof(T).IsSubclassOf(typeof(EntityBase)))
         {
-            var converterType = typeof(EntityJsonConverter<>).MakeGenericType(typeof(T));
-            var converterInstance = Activator.CreateInstance(converterType) as JsonConverter<T>;
-
-            Guard.NotNull(converterInstance);
-
-            return new JsonSerializerOptions(JsonOptions)
-            {
-                Converters = { converterInstance }
-            };
+            throw new InvalidOperationException(
+                $"Caching is not supported for entity type   {typeof(T).Name} is a Entity." +
+                $"Create a corresponding  Cached{typeof(T).Name} class for Entity representation.");
         }
         return JsonOptions;
     }

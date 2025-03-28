@@ -2,23 +2,25 @@
 using AtendeLogo.Application.Models.Security;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Services;
+namespace AtendeLogo.RuntimeServices.Services;
 
 public class AuthenticationAttemptLimiterService : CacheServiceBase, IAuthenticationAttemptLimiterService
 {
     protected override string PrefixCacheName
-        => "authentication-attempt-limiter";
+       => "authentication-attempt-limiter";
 
     public AuthenticationAttemptLimiterService(
-       ICacheRepository cacheRepository,
-       ILogger<AuthenticationAttemptLimiterService> logger)
-       : base(cacheRepository, logger, TimeSpan.FromHours(1))
+        ICacheRepository cacheRepository,
+        ILogger<AuthenticationAttemptLimiterService> logger)
+        : base(cacheRepository, logger, TimeSpan.FromHours(1))
     {
     }
 
-    public async Task<MaxAuthenticationResult> MaxAuthenticationReachedAsync(string ipAddress)
+    public async Task<MaxAuthenticationResult> MaxAuthenticationReachedAsync(
+        string ipAddress,
+        CancellationToken cancellationToken = default)
     {
-        var record = await GetFromCacheAsync<AuthenticationAttemptRecord>(ipAddress);
+        var record = await GetFromCacheAsync<AuthenticationAttemptRecord>(ipAddress, cancellationToken);
         if (record is not null && record.FailedAttempts >= 5)
         {
             var timeSinceLastAttempt = DateTime.UtcNow - record.LastFailedAttempt;
@@ -31,9 +33,11 @@ public class AuthenticationAttemptLimiterService : CacheServiceBase, IAuthentica
         return MaxAuthenticationResult.Success;
     }
 
-    public async Task IncrementFailedAttemptsAsync(string ipAddress)
+    public async Task IncrementFailedAttemptsAsync(
+        string ipAddress,
+        CancellationToken cancellationToken = default)
     {
-        var record = await GetFromCacheAsync<AuthenticationAttemptRecord>(ipAddress);
+        var record = await GetFromCacheAsync<AuthenticationAttemptRecord>(ipAddress, cancellationToken);
         if (record is null)
         {
             record = new AuthenticationAttemptRecord(1, DateTime.UtcNow);

@@ -2,16 +2,19 @@
 using AtendeLogo.Application.Contracts.Registrars;
 using AtendeLogo.Application.Events;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Domain.Primitives.Contracts;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Mediators;
+namespace AtendeLogo.RuntimeServices.Mediators;
 
-internal partial class EventMediator : IEventMediator
+public sealed class EventMediator : IEventMediator, IEventMediatorTest, IDisposable
 {
     private readonly IEventHandlerRegistryService _eventHandlerRegistryService;
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<EventMediator> _logger;
+
+    private readonly List<IDomainEvent> _capturedEvents = new();
+    private readonly List<ExecutedDomainEventResult> _executedPreProcessors = [];
+    private readonly List<ExecutedDomainEventResult> _executedDomainEvents = [];
 
     public EventMediator(
         IServiceProvider serviceProvider,
@@ -27,6 +30,8 @@ internal partial class EventMediator : IEventMediator
         IDomainEventContext eventContext,
         CancellationToken cancellationToken = default)
     {
+        Guard.NotNull(eventContext);
+
         foreach (var domainEvent in eventContext.Events)
         {
             var handlerTypes = _eventHandlerRegistryService.GetDomainEventPreProcessorHandlers(domainEvent.GetType());
@@ -48,8 +53,10 @@ internal partial class EventMediator : IEventMediator
                     }
                 }
                 eventContext.AddExecutedEventResults(domainEvent, results);
+                _executedPreProcessors.AddRange(results);
             }
         }
+        _capturedEvents.AddRange(eventContext.Events);
     }
 
     private object? CreateEventData(IDomainEventContext eventContext, IDomainEvent domainEvent, List<ExecutedDomainEventResult> results)
@@ -77,6 +84,8 @@ internal partial class EventMediator : IEventMediator
 
     public async Task DispatchAsync(IDomainEventContext eventContext)
     {
+        Guard.NotNull(eventContext);
+
         if (eventContext.IsCanceled)
         {
             throw new DomainEventContextCancelledException();
@@ -93,7 +102,9 @@ internal partial class EventMediator : IEventMediator
                 results.Add(result);
             }
             eventContext.AddExecutedEventResults(domainEvent, results);
+            _executedDomainEvents.AddRange(results);
         }
+  
     }
 
     private IApplicationHandler GetHandler(IDomainEvent domainEvent, Type handlerType)
@@ -165,5 +176,28 @@ internal partial class EventMediator : IEventMediator
         return handlerType;
 
     }
+
+
+    public void Dispose()
+    {
+        _executedDomainEvents.Clear();
+        _executedPreProcessors.Clear();
+        _capturedEvents.Clear();
+        GC.SuppressFinalize(this);
+    }
+
+
+    #region IEventMediatorTest
+    IReadOnlyList<IDomainEvent> IEventMediatorTest.CapturedEvents
+        => _capturedEvents;
+
+    IReadOnlyList<ExecutedDomainEventResult> IEventMediatorTest.ExecutedPreProcessors
+        => _executedPreProcessors;
+
+    IReadOnlyList<ExecutedDomainEventResult> IEventMediatorTest.ExecutedDomainEvents
+        => _executedDomainEvents;
+
+    
+    #endregion
 }
 

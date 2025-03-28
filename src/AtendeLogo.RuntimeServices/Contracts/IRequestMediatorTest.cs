@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
 
-namespace AtendeLogo.Application.Contracts.Mediators;
+namespace AtendeLogo.RuntimeServices.Contracts;
 
 internal interface IRequestMediatorTest
 {

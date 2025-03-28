@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.Application.Services;
+﻿using AtendeLogo.Application.Extensions;
+
+namespace AtendeLogo.RuntimeServices.Services;
 
 public class EntityAuthorizationService : IEntityAuthorizationService
 {
@@ -45,6 +47,12 @@ public class EntityAuthorizationService : IEntityAuthorizationService
             {
                 return entityTenant.Tenant_Id == userSession.Tenant_Id;
             }
+
+            if (entity.Equals(userSession))
+            {
+                return true;
+            }
+
             return false;
         }
         return userSession.IsSystemAdminUser();

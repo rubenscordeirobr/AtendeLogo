@@ -2,9 +2,9 @@
 using AtendeLogo.Application.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace AtendeLogo.Application.Mediators;
+namespace AtendeLogo.RuntimeServices.Mediators;
 
-internal partial class RequestMediator : IRequestMediator , IRequestMediatorTest
+public sealed class RequestMediator : IRequestMediator , IRequestMediatorTest
 
 {
     private readonly IServiceProvider _serviceProvider;
@@ -28,6 +28,8 @@ internal partial class RequestMediator : IRequestMediator , IRequestMediatorTest
          CancellationToken cancellationToken = default)
          where TResponse : IResponse
     {
+        Guard.NotNull(command);
+
         return RunCommandAsync(command, cancellationToken);
     }
 
@@ -87,6 +89,8 @@ internal partial class RequestMediator : IRequestMediator , IRequestMediatorTest
         CancellationToken cancellationToken = default)
         where TResponse : IResponse
     {
+        Guard.NotNull(query);
+
         var handler = GetRequestHandler<IGetQueryResultHandler<TResponse>, TResponse>(query);
         return handler.GetAsync(query, cancellationToken);
     }
@@ -96,6 +100,8 @@ internal partial class RequestMediator : IRequestMediator , IRequestMediatorTest
         CancellationToken cancellationToken = default)
             where TResponse : IResponse
     {
+        Guard.NotNull(query);
+
         var handler = GetRequestHandler<IGetManyQueryHandler<TResponse>, TResponse>(query);
         return handler.GetManyAsync(query, cancellationToken);
     }
