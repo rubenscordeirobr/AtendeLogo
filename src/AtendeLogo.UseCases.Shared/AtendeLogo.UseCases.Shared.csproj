@@ -18,5 +18,8 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\Services\" />
+  </ItemGroup>
 
 </Project>

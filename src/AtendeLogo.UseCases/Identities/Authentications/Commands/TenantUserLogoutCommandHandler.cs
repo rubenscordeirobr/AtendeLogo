@@ -1,48 +1,70 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
 
-public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCommand, TenantUserLogoutResponse>
+public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCommand, OperationResponse>
 {
     private readonly IIdentityUnitOfWork _unitOfWork;
-    private readonly IUserSessionAccessor _userSessionAccessor;
-    private readonly ISessionCacheService _sessionCacheService;
+    private readonly IUserSessionManager _userSessionManager;
 
     public TenantUserLogoutCommandHandler(
         IIdentityUnitOfWork unitOfWork,
-        IUserSessionAccessor userSessionAccessor,
-        ISessionCacheService sessionCacheService)
+        IUserSessionManager userSessionManager)
     {
         _unitOfWork = unitOfWork;
-        _userSessionAccessor = userSessionAccessor;
-        _sessionCacheService = sessionCacheService;
+        _userSessionManager = userSessionManager;
     }
 
-    protected override async Task<Result<TenantUserLogoutResponse>> HandleAsync(
+    protected override async Task<Result<OperationResponse>> HandleAsync(
         TenantUserLogoutCommand command,
         CancellationToken cancellationToken)
     {
         Guard.NotNull(command);
 
-        var clientSessionToken = command.ClientSessionToken;
-        var userSession = await _unitOfWork.UserSessions.GetByClientTokenAsync(
-            command.ClientSessionToken, cancellationToken);
+        var session_Id = command.Session_Id;
+
+        if (_userSessionManager.UserSession_Id != session_Id)
+        {
+            return Result.Failure<OperationResponse>(
+                    new ForbiddenError(
+                        "UserSession.InvalidSessionId",
+                        "The provided session ID does not match the current active session."));
+
+        }
+
+        var userSession = await _unitOfWork.UserSessions
+            .GetByIdWithUserAsync(
+                command.Session_Id,
+                cancellationToken);
 
         if (userSession is null)
         {
-            return Result.NotFoundFailure<TenantUserLogoutResponse>(
+            return Result.NotFoundFailure<OperationResponse>(
                 "UserSession.NotFound",
-                $"UserSession with token {clientSessionToken} not found.");
+                $"UserSession with token {session_Id} not found.");
+        }
+
+        if (userSession.User is not TenantUser _)
+        {
+            return Result.Failure<OperationResponse>(
+                new InvalidOperationError(
+                    "UserSession.InvalidUserType",
+                    "User is not a tenant user."));
         }
 
         if (userSession.IsActive)
         {
             userSession.TerminateSession(SessionTerminationReason.UserLogout);
             _unitOfWork.Update(userSession);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            var result = await _unitOfWork.SaveChangesAsync(silent: true, cancellationToken);
+            if (result.IsFailure)
+            {
+                return Result.Failure<OperationResponse>(result.Error);
+            }
         }
 
-        _userSessionAccessor.RemoveClientSessionCookie(clientSessionToken);
-        await _sessionCacheService.RemoveSessionAsync(clientSessionToken, cancellationToken);
-        return Result.Success(new TenantUserLogoutResponse());
+        await _userSessionManager.RemoveSessionAsync();
+
+        return Result.Success(new OperationResponse());
     }
 }
 

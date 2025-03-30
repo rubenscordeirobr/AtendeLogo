@@ -1,7 +1,11 @@
-﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿
+
+using AtendeLogo.UseCases.Mappers.Identities;
+
+namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public class GetAdminUserByEmailOrPhoneNumberQueryHandler
-    : IGetQueryResultHandler<GetAdminUserByEmailOrPhoneNumberQuery, AdminUserResponse>
+    : IGetQueryResultHandler<GetAdminUserByEmailOrPhoneNumberQuery, UserResponse>
 {
     private readonly IAdminUserRepository _adminUserRepository;
     public GetAdminUserByEmailOrPhoneNumberQueryHandler(
@@ -9,33 +13,21 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandler
     {
         _adminUserRepository = adminUserRepository;
     }
-    public async Task<Result<AdminUserResponse>> HandleAsync(
+    public async Task<Result<UserResponse>> HandleAsync(
         GetAdminUserByEmailOrPhoneNumberQuery query,
         CancellationToken cancellationToken = default)
     {
         Guard.NotNull(query);
 
-        var user = await _adminUserRepository.GetByEmailOrPhoneNumberAsync(query.EmailOrPhonenumber, cancellationToken);
+        var user = await _adminUserRepository.GetByEmailOrPhoneNumberAsync(query.EmailOrPhoneNumber, cancellationToken);
         if (user is null)
         {
-            return Result.NotFoundFailure<AdminUserResponse>(
+            return Result.NotFoundFailure<UserResponse>(
                 "SystemUser.NotFound",
-                $"SystemUser with email or phone number  {query.EmailOrPhonenumber}  not found.");
+                $"SystemUser with email or phone number  {query.EmailOrPhoneNumber}  not found.");
         }
-        return Result.Success(new AdminUserResponse
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            ProfilePictureUrl = user.ProfilePictureUrl,
-            PhoneNumber = user.PhoneNumber,
-            Language = user.Language,
-            UserState = user.UserState,
-            UserStatus = user.UserStatus,
-            UserType = user.UserType,
-            EmailVerificationState = user.EmailVerificationState,
-            PhoneNumberVerificationState = user.PhoneNumberVerificationState,
-            Role = user.Role
-        });
+
+        var userResponse = UserMapper.ToResponse(user);
+        return Result.Success(userResponse);
     }
 }

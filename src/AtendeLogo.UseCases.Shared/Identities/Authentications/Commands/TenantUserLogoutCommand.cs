@@ -1,7 +1,6 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
 
-public record TenantUserLogoutCommand: CommandRequest<TenantUserLogoutResponse>
-{
-    public required string ClientSessionToken { get; init; }
+public record TenantUserLogoutCommand(
+    Guid Session_Id)
+    : CommandRequest<OperationResponse>;
 
-}

@@ -2,4 +2,4 @@
 
 public record GetAdminUserByEmailQuery(
     string Email)
-    : QueryRequest<AdminUserResponse>;
+    : QueryRequest<UserResponse>;

@@ -11,7 +11,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
 
     public TransactionUnitOfWorkExecutor(
         DbContext dbContext,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger logger,

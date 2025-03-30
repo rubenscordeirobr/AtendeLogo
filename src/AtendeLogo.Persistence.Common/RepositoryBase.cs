@@ -9,19 +9,26 @@ namespace AtendeLogo.Persistence.Common;
 public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     private readonly DbContext _dbContext;
-    private readonly IUserSessionAccessor _userSessionAccessor;
-    private readonly TrackingOption _trackingOption;
+    private readonly IHttpContextSessionAccessor _userSessionAccessor;
+    private TrackingOption _trackingOption;
 
     private readonly bool _isImplementDeletedInterface;
     private readonly bool _isImplementTenantOwnedInterface;
 
     private bool _isIncludeDeleted;
 
-    protected virtual int DefaultMaxRecords { get; } = RepositoryConstants.DefaultMaxRecords;
+    protected virtual int DefaultMaxRecords
+        => RepositoryConstants.DefaultMaxRecords;
+     
+    protected IUserSession UserSession
+        => _userSessionAccessor.GetRequiredUserSession();
+
+    protected IEndpointService? EndpointInstance
+        => _userSessionAccessor.EndpointInstance;
 
     protected RepositoryBase(
         DbContext dbContext,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         TrackingOption trackingOption)
     {
         Guard.NotNull(dbContext);
@@ -74,20 +81,9 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         return await CreateQuery(includeExpressions)
             .ToListAsync(cancellationToken);
     }
-
-    public async Task<bool> AnyAsync(
-        Expression<Func<TEntity, bool>> filterExpression,
-        CancellationToken cancellationToken = default,
-        params Expression<Func<TEntity, object?>>[] includeExpressions)
-    {
-        Guard.NotNull(filterExpression);
-
-        return await CreateQuery(includeExpressions)
-            .AnyAsync(filterExpression, cancellationToken);
-    }
-
+     
     #endregion
-
+     
     public async Task<TEntity> RefreshAsync(
         TEntity entity,
         CancellationToken cancellationToken = default)
@@ -124,6 +120,26 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     }
 
+    #region validations
+
+    public async Task<bool> ExistsAsync(
+         Guid id,
+         CancellationToken cancellationToken = default)
+    {
+        return await AnyAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<bool> AnyAsync(
+       Expression<Func<TEntity, bool>> filterExpression,
+       CancellationToken cancellationToken = default)
+    {
+        Guard.NotNull(filterExpression);
+
+        return await CreateQuery(null)
+            .AnyAsync(filterExpression, cancellationToken);
+    }
+    #endregion
+
     private void RemoveAnyEntityTracked(TEntity entity)
     {
         var entry = _dbContext.ChangeTracker.Entries<TEntity>()
@@ -157,10 +173,9 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         if (_isImplementTenantOwnedInterface &&
             ShouldFilterTenantOwned())
         {
-            var userSession = _userSessionAccessor.GetCurrentSession();
 
             query = query.Cast<ITenantOwned>()
-               .Where(x => x.Tenant_Id == userSession.Tenant_Id)
+               .Where(x => x.Tenant_Id == UserSession.Tenant_Id)
                .Cast<TEntity>();
         }
 
@@ -175,23 +190,25 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     protected virtual bool ShouldFilterTenantOwned()
     {
-        var userSession = _userSessionAccessor.GetCurrentSession();
-        if (!userSession.IsTenantUser() && !userSession.IsSystemAdminUser())
+        if (!UserSession.IsTenantUser() && !UserSession.IsSystemAdminUser())
         {
             throw new UnauthorizedAccessException("User not have permission to access this resource.");
         }
         return true;
     }
 
-    protected IUserSession GetCurrentSession()
+    public IRepositoryBase<TEntity> NoTracking()
     {
-        return _userSessionAccessor.GetCurrentSession();
+        _trackingOption = TrackingOption.NoTracking;
+        return this;
     }
 
-    protected IEndpointService? GetCurrentEndpointInstance()
+    public IRepositoryBase<TEntity> Tracking()
     {
-        return _userSessionAccessor.GetCurrentEndpointInstance();
+        _trackingOption = TrackingOption.Tracking;
+        return this;
     }
+
 
     #endregion
 }

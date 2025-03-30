@@ -17,7 +17,7 @@ internal class IdentityUnitOfWork : UnitOfWork<IdentityDbContext>, IIdentityUnit
      
     public IdentityUnitOfWork(
         IdentityDbContext dbContext,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger<IdentityUnitOfWork> logger,
@@ -54,12 +54,12 @@ internal class IdentityUnitOfWork : UnitOfWork<IdentityDbContext>, IIdentityUnit
 
     public override async ValueTask DisposeAsync()
     {
-        await base.DisposeAsync();
-
         _adminUserRepository = null;
         _systemUserRepository = null;
         _tenantUserTenantRepository = null;
         _tenantRepository = null;
         _userSessionRepository = null;
+
+        await base.DisposeAsync();
     }
 }

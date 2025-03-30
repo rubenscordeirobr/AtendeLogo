@@ -1,10 +1,11 @@
 ﻿
 using AtendeLogo.Application.Extensions;
+using AtendeLogo.UseCases.Mappers.Identities;
 
 namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
 internal sealed partial class GetAllSystemUsersQueryHandler
-    : IGetManyQueryHandler<GetAllSystemUsersQuery, SystemUserResponse>
+    : IGetManyQueryHandler<GetAllSystemUsersQuery, UserResponse>
 {
     private readonly ISystemUserRepository _systemUserRepository;
     public GetAllSystemUsersQueryHandler(
@@ -13,28 +14,12 @@ internal sealed partial class GetAllSystemUsersQueryHandler
         _systemUserRepository = systemUserRepository;
     }
 
-    public async Task<Result<IReadOnlyList<SystemUserResponse>>> HandleAsync(
+    public async Task<Result<IReadOnlyList<UserResponse>>> HandleAsync(
         GetAllSystemUsersQuery request,
         CancellationToken cancellationToken = default)
     {
         var users = await _systemUserRepository.GetAllAsync(cancellationToken);
-
-        var userResponses = users.Select(user => new SystemUserResponse
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            ProfilePictureUrl = user.ProfilePictureUrl,
-            Role = user.Role,
-            Language = user.Language,
-            PhoneNumber = user.PhoneNumber,
-            UserState = user.UserState,
-            UserStatus = user.UserStatus,
-            UserType = user.UserType,
-            EmailVerificationState = user.EmailVerificationState,
-            PhoneNumberVerificationState = user.PhoneNumberVerificationState
-        }).ToList();
-
+        var userResponses = users.Select(UserMapper.ToResponse).ToList();
         return this.Success(userResponses);
     }
 }

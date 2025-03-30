@@ -1,15 +1,13 @@
 ﻿using AtendeLogo.Application.Contracts.Security;
-using AtendeLogo.Common.Helpers;
-using AtendeLogo.UseCases.Contracts.Identities;
 
 namespace AtendeLogo.UseCases.Identities.Authentications.Services;
 
-internal class TenantAuthenticationValidationService : ITenantAuthenticationValidationService
+internal class TenantUserAuthenticationValidationService : ITenantUserAuthenticationValidationService
 {
     private readonly ITenantUserRepository _tenantUserRepository;
     private readonly ISecureConfiguration _secureConfiguration;
      
-    public TenantAuthenticationValidationService(
+    public TenantUserAuthenticationValidationService(
         ITenantUserRepository tenantRepository,
         ISecureConfiguration secureConfiguration)
     {
@@ -22,6 +20,8 @@ internal class TenantAuthenticationValidationService : ITenantAuthenticationVali
         string password, 
         CancellationToken cancellationToken = default)
     {
+        emailOrPhoneNumber = SanitizeUtils.SanitizeEmailOrPhoneNumber(emailOrPhoneNumber);
+       
         var tenantUser = await _tenantUserRepository.GetByEmailOrPhoneNumberAsync(emailOrPhoneNumber, cancellationToken);
         if (tenantUser == null)
         {
@@ -29,6 +29,7 @@ internal class TenantAuthenticationValidationService : ITenantAuthenticationVali
         }
 
         var salt = _secureConfiguration.GetPasswordSalt();
+
         return PasswordHelper.VerifyPassword(
             password,
             tenantUser.Password.HashValue,
@@ -39,7 +40,9 @@ internal class TenantAuthenticationValidationService : ITenantAuthenticationVali
         string emailOrPhoneNumber,
         CancellationToken cancellationToken = default)
     {
-        return _tenantUserRepository.EmailOrPhoneNumberExits(emailOrPhoneNumber, cancellationToken);
+        emailOrPhoneNumber = SanitizeUtils.SanitizeEmailOrPhoneNumber(emailOrPhoneNumber);
+
+        return _tenantUserRepository.EmailOrPhoneNumberExistsAsync(emailOrPhoneNumber, cancellationToken);
     }
      
 }

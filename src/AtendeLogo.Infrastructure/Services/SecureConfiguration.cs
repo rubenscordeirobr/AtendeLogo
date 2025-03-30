@@ -1,5 +1,8 @@
 ﻿using AtendeLogo.Application.Contracts.Security;
 using AtendeLogo.Common.Exceptions;
+using AtendeLogo.Common.Helpers;
+using AtendeLogo.Common.Utils;
+using AtendeLogo.Infrastructure.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -19,22 +22,30 @@ public class SecureConfiguration : ISecureConfiguration
     }
 
     public string GetPasswordSalt()
-    {
-        if (_hostEnvironment.IsDevelopment())
-        {
-            return "dev-salt";
-        }
+        => GetConfigurationValue(SecureConfigKeysProvider.PasswordSalt);
 
-        var salt = _configuration["AppSettings:PasswordSalt"];  
-        if (string.IsNullOrEmpty(salt))
+    public string GetAuthenticationKey()
+        => GetConfigurationValue(SecureConfigKeysProvider.JwtAuthentication);
+
+
+    public string GetJwtAudience()
+        => GetConfigurationValue(SecureConfigKeysProvider.JwtAudience);
+
+
+    public string GetJwtIssuer()
+       => GetConfigurationValue(SecureConfigKeysProvider.JwtIssuer);
+
+    private string GetConfigurationValue(SecureConfigKeyPair secureConfigKeyPair)
+    {
+        if (_hostEnvironment.IsDevelopment() || EnvironmentHelper.IsXUnitTesting())
         {
-            salt = Environment.GetEnvironmentVariable("APP_PASSWORD_SALT");
+            return "dev-" + CaseConventionUtils.ToSnakeCase(secureConfigKeyPair.EnvironmentKey);
         }
- 
-        if (string.IsNullOrEmpty(salt))
-        {
-            throw new MissingConfigurationException("Salt key is not configured properly.");
-        }
-        return salt;
+         
+        return _configuration[secureConfigKeyPair.AppSettingsKey] ??
+               Environment.GetEnvironmentVariable(secureConfigKeyPair.EnvironmentKey) ??
+               throw new MissingConfigurationException("Authentication key is not configured properly.");
     }
+
+  
 }

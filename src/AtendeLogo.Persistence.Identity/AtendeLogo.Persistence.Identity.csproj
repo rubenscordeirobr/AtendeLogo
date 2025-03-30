@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
   </ItemGroup>
 

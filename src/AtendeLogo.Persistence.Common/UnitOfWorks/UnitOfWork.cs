@@ -1,10 +1,12 @@
-﻿namespace AtendeLogo.Persistence.Common.UnitOfWorks;
+﻿using AtendeLogo.Common.Helpers;
+
+namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
 public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork
     where TDbContext : DbContext
 {
     protected TDbContext DbContext { get; }
-    protected IUserSessionAccessor UserSessionAccessor { get; }
+    protected IHttpContextSessionAccessor UserSessionAccessor { get; }
 
     private readonly IEntityAuthorizationService _entityAuthorizationService;
     private readonly IEventMediator _eventMediator;
@@ -15,7 +17,7 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork
 
     protected UnitOfWork(
         TDbContext dbContext,
-        IUserSessionAccessor userSessionService,
+        IHttpContextSessionAccessor userSessionService,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger logger)
@@ -42,7 +44,8 @@ public abstract partial class UnitOfWork<TDbContext> : IUnitOfWork
     {
         Guard.NotNull(entity);
 
-        if (entity.Id != Guid.Empty)
+        if (entity.Id != Guid.Empty &&
+            !entity.Id.IsZeroPrefixedGuid())
         {
             throw new InvalidOperationException("Entity already has an id.");
         }

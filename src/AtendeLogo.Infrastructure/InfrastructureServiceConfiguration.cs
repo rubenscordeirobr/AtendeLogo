@@ -14,17 +14,17 @@ public static class InfrastructureServiceConfiguration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSingleton(typeof(IJsonStringLocalizer<>), typeof(JsonStringLocalizer<>));
-        
-        services.AddSingleton<ISecureConfiguration, SecureConfiguration>();
-         
+        services.AddSingleton(typeof(IJsonStringLocalizer<>), typeof(JsonStringLocalizer<>))
+            .AddSingleton<ISecureConfiguration, SecureConfiguration>()
+            .AddSingleton<ICacheRepository, CacheRepository>();
+
         services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
             var redisConnection = configuration.GetConnectionString("CacheRedis");
             return ConnectionMultiplexer.Connect(redisConnection!);
         });
 
-        services.AddSingleton<ICacheRepository, CacheRepository>();
+        
         services.AddTransient<IEmailSender, EmailSender>();
          
         return services;

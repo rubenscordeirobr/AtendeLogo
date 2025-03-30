@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Application.Contracts.Registrars;
 
-internal interface IEventHandlerRegistryService
+public interface IEventHandlerRegistryService
 {
     void MapperDomainEventHandler(
         Type domainEventType,

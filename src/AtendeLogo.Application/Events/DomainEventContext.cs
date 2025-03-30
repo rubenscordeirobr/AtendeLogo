@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.Events;
 

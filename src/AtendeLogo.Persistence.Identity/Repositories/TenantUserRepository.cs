@@ -4,41 +4,13 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
 {
     public TenantUserRepository(
         IdentityDbContext dbContext,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         TrackingOption trackingOption = TrackingOption.NoTracking)
         : base(dbContext, userSessionAccessor, trackingOption)
     {
     }
 
-    public Task<bool> EmailExistsAsync(
-        Guid currentTenantUser_Id,
-        string email,
-        CancellationToken cancellationToken = default)
-    {
-        return AnyAsync(x => x.Email == email && x.Id != currentTenantUser_Id, cancellationToken);
-    }
-
-    public Task<bool> EmailOrPhoneNumberExits(
-        string emailOrPhoneNumber,
-        CancellationToken cancellationToken = default)
-    {
-        return AnyAsync(x => x.Email == emailOrPhoneNumber || x.PhoneNumber.Number == emailOrPhoneNumber, cancellationToken);
-    }
-
-    public Task<bool> PhoneNumberExitsAsync(
-        string phoneNumber,
-        CancellationToken cancellationToken = default)
-    {
-        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber, cancellationToken);
-    }
-
-    public Task<bool> PhoneNumberExitsAsync(
-        Guid currentTenantUser_Id,
-        string phoneNumber,
-        CancellationToken cancellationToken = default)
-    {
-        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != currentTenantUser_Id, cancellationToken);
-    }
+    
 
     #region Overrides
     protected override IQueryable<TenantUser> CreateQuery(
@@ -46,8 +18,7 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
     {
         var query = base.CreateQuery(includeExpressions);
 
-        var userSession = GetCurrentSession();
-        if (!userSession.IsTenantUser() && !userSession.IsSystemAdminUser())
+        if (!UserSession.IsTenantUser() && !UserSession.IsSystemAdminUser())
         {
             return query.Take(1);
         }
@@ -56,8 +27,7 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
 
     protected override bool ShouldFilterTenantOwned()
     {
-        var endpointInstance = GetCurrentEndpointInstance();
-        if (endpointInstance?.ServiceRole == ServiceRole.UserAuthentication)
+        if (EndpointInstance?.ServiceRole is ServiceRole.Authentication or ServiceRole.Validation )
         {
             return false;
         }

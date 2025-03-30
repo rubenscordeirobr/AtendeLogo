@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Persistence.Common.Interceptors;
+﻿using AtendeLogo.Application.Contracts.Security;
+using AtendeLogo.Persistence.Common.Interceptors;
 using AtendeLogo.Persistence.Identity.Repositories;
 using AtendeLogo.Persistence.Identity.Seed;
 using Microsoft.AspNetCore.Builder;
@@ -61,8 +62,9 @@ public static class IdentityPersistenceServiceConfiguration
 
         var services = scope.ServiceProvider;
         var dbContext = services.GetRequiredService<IdentityDbContext>();
+        var secureConfiguration = services.GetRequiredService<ISecureConfiguration>();
 
         await dbContext.Database.MigrateAsync();
-        await dbContext.SeedAsync();
+        await dbContext.SeedAsync(secureConfiguration);
     }
 }

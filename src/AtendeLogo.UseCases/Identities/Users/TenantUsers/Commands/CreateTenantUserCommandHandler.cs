@@ -52,7 +52,6 @@ public class CreateTenantUserCommandHandler : CommandHandler<CreateTenantUserCom
         {
             return Result.Failure<CreateTenantUserResponse>(result.Error);
         }
-
         Guard.NotEmpty(tenantUser.Id);
         return Result.Success(new CreateTenantUserResponse(tenantUser.Id));
     }

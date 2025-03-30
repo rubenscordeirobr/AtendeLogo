@@ -1,7 +1,9 @@
-﻿namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
+﻿using AtendeLogo.UseCases.Mappers.Identities;
+
+namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
 public class GetTenantUserByIdQueryHandler
-    : IGetQueryResultHandler<GetTenantUserByIdQuery, TenantUserResponse>
+    : IGetQueryResultHandler<GetTenantUserByIdQuery, UserResponse>
 {
     private readonly ITenantUserRepository _tenantUserRepository;
     public GetTenantUserByIdQueryHandler(
@@ -10,7 +12,7 @@ public class GetTenantUserByIdQueryHandler
         _tenantUserRepository = tenantUserRepository;
     }
 
-    public async Task<Result<TenantUserResponse>> HandleAsync(
+    public async Task<Result<UserResponse>> HandleAsync(
         GetTenantUserByIdQuery query,
         CancellationToken cancellationToken = default)
     {
@@ -19,26 +21,13 @@ public class GetTenantUserByIdQueryHandler
         var user = await _tenantUserRepository.GetByIdAsync(query.Id, cancellationToken);
         if (user is null)
         {
-            return Result.NotFoundFailure<TenantUserResponse>(
+            return Result.NotFoundFailure<UserResponse>(
                 "TenantUser.NotFound",
                 $"TenantUser with id {query.Id} not found.");
         }
 
-        return Result.Success(new TenantUserResponse
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            ProfilePictureUrl = user.ProfilePictureUrl,
-            Language = user.Language,
-            PhoneNumber = user.PhoneNumber,
-            UserState = user.UserState,
-            UserStatus = user.UserStatus,
-            UserType = user.UserType,
-            EmailVerificationState = user.EmailVerificationState,
-            PhoneNumberVerificationState = user.PhoneNumberVerificationState,
-            Role = user.Role
-        });
+        var userResponse = UserMapper.ToResponse(user);
+        return Result.Success(userResponse);
     }
 }
 

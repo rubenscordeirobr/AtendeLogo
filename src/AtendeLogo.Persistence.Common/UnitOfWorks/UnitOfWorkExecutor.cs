@@ -4,7 +4,7 @@ internal class UnitOfWorkExecutor : UnitOfWorkExecutorBase
 {
     public UnitOfWorkExecutor(
         DbContext dbContext,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger logger)

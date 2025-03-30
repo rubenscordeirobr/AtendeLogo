@@ -2,7 +2,7 @@
 
 public interface IEntityAuthorizationService : IApplicationService
 {
-    /// <exception cref="UnauthorizedSecurityException"></exception>
+    /// <exception cref="ForbiddenSecurityException"></exception>
     void ValidateEntityChange(
          EntityBase entity,
          IUserSession userSession,

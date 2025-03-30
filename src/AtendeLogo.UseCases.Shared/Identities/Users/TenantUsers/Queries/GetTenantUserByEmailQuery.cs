@@ -2,4 +2,4 @@
 
 public record GetTenantUserByEmailQuery(
     string Email) 
-    : QueryRequest<TenantUserResponse>;
+    : QueryRequest<UserResponse>;

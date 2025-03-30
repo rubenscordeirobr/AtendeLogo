@@ -17,7 +17,7 @@ public class UpdateTenantCommandHandler
         Guard.NotNull(command);
 
         var tenant = await _unitOfWork.Tenants.GetByIdAsync(command.Tenant_Id, cancellationToken);
-        if(tenant is null)
+        if (tenant is null)
         {
             return Result.NotFoundFailure<OperationResponse>(
                 "Tenant.NotFound",
@@ -36,11 +36,11 @@ public class UpdateTenantCommandHandler
         _unitOfWork.Update(tenant);
 
         var result = await _unitOfWork.SaveChangesAsync(silent: true, cancellationToken);
-        if (result.IsSuccess)
+        if (result.IsFailure)
         {
-            return Result.Success(new OperationResponse());
+            return Result.Failure<OperationResponse>(result.Error);
         }
-        return Result.Failure<OperationResponse>(result.Error);
+        return Result.Success(new OperationResponse());
     }
 }
 

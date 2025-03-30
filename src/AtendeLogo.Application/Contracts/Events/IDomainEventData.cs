@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Primitives.Contracts;
-
-namespace AtendeLogo.Application.Contracts.Events;
+﻿namespace AtendeLogo.Application.Contracts.Events;
 
 public interface IDomainEventData<out TEvent>
     where TEvent : IDomainEvent

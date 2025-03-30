@@ -16,6 +16,7 @@ internal class UtcDateTimeConverter : ValueConverter<DateTime, DateTime>
         {
             return DateTime.SpecifyKind(default, DateTimeKind.Utc);
         }
+
         return dateTime.Kind == DateTimeKind.Utc 
             ? dateTime 
             : DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);

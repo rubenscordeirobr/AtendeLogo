@@ -4,8 +4,7 @@ namespace AtendeLogo.UseCases.Mappers;
 
 public static class AddressMapper
 {
-    internal static AddressDto? MapAddressToAddressDto(
-        TenantAddress? defaultAddress)
+    internal static AddressDto? ToDto(TenantAddress? defaultAddress)
     {
         if (defaultAddress is null)
         {

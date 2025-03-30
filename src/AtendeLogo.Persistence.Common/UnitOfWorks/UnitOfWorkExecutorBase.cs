@@ -5,7 +5,7 @@ namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 internal abstract class UnitOfWorkExecutorBase
 {
     private readonly DbContext _dbContext;
-    private readonly IUserSessionAccessor _userSessionAccessor;
+    private readonly IHttpContextSessionAccessor _userSessionAccessor;
     private readonly IEntityAuthorizationService _entityAuthorizationService;
 
     protected ILogger Logger { get; }
@@ -13,7 +13,7 @@ internal abstract class UnitOfWorkExecutorBase
 
     protected UnitOfWorkExecutorBase(
         DbContext dbContext,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         IEntityAuthorizationService entityAuthorizationService,
         IEventMediator eventMediator,
         ILogger logger)
@@ -35,7 +35,7 @@ internal abstract class UnitOfWorkExecutorBase
               .Where(x => x.HasChanges())
               .ToList();
 
-        var userSession = _userSessionAccessor.GetCurrentSession();
+        var userSession = _userSessionAccessor.GetRequiredUserSession();
         var domainEventContext = DomainEventContextFactory.Create(userSession, entries);
 
         try
@@ -74,7 +74,7 @@ internal abstract class UnitOfWorkExecutorBase
             return SaveChangesResult.Success(domainEventContext, rowAffects);
 
         }
-        catch (UnauthorizedSecurityException ex)
+        catch (ForbiddenSecurityException ex)
         {
             Logger.LogError(ex,
                 "Unauthorized security exception during save changes.");
@@ -84,7 +84,7 @@ internal abstract class UnitOfWorkExecutorBase
                 throw;
             }
 
-            var unauthorizedError = new UnauthorizedError("UnitOfWork.SaveChanges", ex.Message);
+            var unauthorizedError = new ForbiddenError("UnitOfWork.SaveChanges", ex.Message);
             return SaveChangesResult.UnauthorizedError(
                 domainEventContext, unauthorizedError);
         }

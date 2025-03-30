@@ -1,7 +1,9 @@
-﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿using AtendeLogo.UseCases.Mappers.Identities;
+
+namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public class GetAdminUserByPhoneNumberQueryHandler
-    : IGetQueryResultHandler<GetAdminUserByPhoneNumberQuery, AdminUserResponse>
+    : IGetQueryResultHandler<GetAdminUserByPhoneNumberQuery, UserResponse>
 {
     private readonly IAdminUserRepository _adminUserRepository;
     public GetAdminUserByPhoneNumberQueryHandler(
@@ -10,7 +12,7 @@ public class GetAdminUserByPhoneNumberQueryHandler
         _adminUserRepository = adminUserRepository;
     }
 
-    public async Task<Result<AdminUserResponse>> HandleAsync(
+    public async Task<Result<UserResponse>> HandleAsync(
         GetAdminUserByPhoneNumberQuery query,
         CancellationToken cancellationToken = default)
     {
@@ -19,24 +21,12 @@ public class GetAdminUserByPhoneNumberQueryHandler
         var user = await _adminUserRepository.GetByPhoneNumberAsync(query.PhoneNumber, cancellationToken);
         if (user is null)
         {
-            return Result.NotFoundFailure<AdminUserResponse>(
+            return Result.NotFoundFailure<UserResponse>(
                 "SystemUser.NotFound",
                 $"SystemUser with phone number {query.PhoneNumber} not found.");
         }
-        return Result.Success(new AdminUserResponse
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            ProfilePictureUrl = user.ProfilePictureUrl,
-            Language = user.Language,
-            UserState = user.UserState,
-            UserStatus = user.UserStatus,
-            UserType = user.UserType,
-            EmailVerificationState = user.EmailVerificationState,
-            PhoneNumberVerificationState = user.PhoneNumberVerificationState,
-            Role = user.Role,
-            PhoneNumber = user.PhoneNumber,
-        });
+
+        var userResponse = UserMapper.ToResponse(user);
+        return Result.Success(userResponse);
     }
 }

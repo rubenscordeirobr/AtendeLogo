@@ -1,7 +1,9 @@
-﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿using AtendeLogo.UseCases.Mappers.Identities;
+
+namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public class GetAdminUserByEmailQueryHandler
-    : IGetQueryResultHandler<GetAdminUserByEmailQuery, AdminUserResponse>
+    : IGetQueryResultHandler<GetAdminUserByEmailQuery, UserResponse>
 {
     private readonly IAdminUserRepository _adminUserRepository;
 
@@ -11,7 +13,7 @@ public class GetAdminUserByEmailQueryHandler
         _adminUserRepository = adminUserRepository;
     }
 
-    public async Task<Result<AdminUserResponse>> HandleAsync(
+    public async Task<Result<UserResponse>> HandleAsync(
         GetAdminUserByEmailQuery query,
         CancellationToken cancellationToken = default)
     {
@@ -20,25 +22,12 @@ public class GetAdminUserByEmailQueryHandler
         var user = await _adminUserRepository.GetByEmailAsync(query.Email, cancellationToken);
         if (user is null)
         {
-            return Result.NotFoundFailure<AdminUserResponse>(
+            return Result.NotFoundFailure<UserResponse>(
                 "SystemUser.NotFound",
                 $"SystemUser with email {query.Email} not found.");
         }
 
-        return Result.Success(new AdminUserResponse
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            ProfilePictureUrl = user.ProfilePictureUrl,
-            PhoneNumber = user.PhoneNumber,
-            Language = user.Language,
-            UserState = user.UserState,
-            UserStatus = user.UserStatus,
-            UserType = user.UserType,
-            EmailVerificationState = user.EmailVerificationState,
-            PhoneNumberVerificationState = user.PhoneNumberVerificationState,
-            Role = user.Role
-        });
+        var userResponse = UserMapper.ToResponse(user);
+        return Result.Success(userResponse);
     }
 }

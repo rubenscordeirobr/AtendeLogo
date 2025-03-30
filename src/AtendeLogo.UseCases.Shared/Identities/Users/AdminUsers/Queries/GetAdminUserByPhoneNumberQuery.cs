@@ -2,4 +2,4 @@
 
 public record GetAdminUserByPhoneNumberQuery(
     string PhoneNumber)
-    : QueryRequest<AdminUserResponse>;
+    : QueryRequest<UserResponse>;

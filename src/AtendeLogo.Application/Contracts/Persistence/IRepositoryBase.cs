@@ -5,7 +5,7 @@ public interface IRepositoryBase<TEntity> where TEntity : EntityBase
 {
     //queries
     Task<TEntity?> GetByIdAsync(
-        Guid id, 
+        Guid id,
         CancellationToken cancellationToken = default,
         params Expression<Func<TEntity, object?>>[] includeExpressions);
 
@@ -22,17 +22,25 @@ public interface IRepositoryBase<TEntity> where TEntity : EntityBase
     Task<IEnumerable<TEntity>> GetAllAsync(
         CancellationToken cancellationToken = default,
         params Expression<Func<TEntity, object?>>[] includeExpressions);
-
-    Task<bool> AnyAsync(
-        Expression<Func<TEntity, bool>> filterExpression,
-        CancellationToken cancellationToken = default,
-        params Expression<Func<TEntity, object?>>[] includeExpressions);
-
+     
     Task<TEntity> RefreshAsync(
         TEntity entity,
         CancellationToken cancellationToken = default);
 
     Task<TEntity?> TryRefreshAsync(
-        TEntity entity, 
+        TEntity entity,
         CancellationToken cancellationToken = default);
+
+    //validations
+    Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> AnyAsync(
+        Expression<Func<TEntity, bool>> filterExpression,
+        CancellationToken cancellationToken = default);
+
+    IRepositoryBase<TEntity> NoTracking();
+
+    IRepositoryBase<TEntity> Tracking();
 }

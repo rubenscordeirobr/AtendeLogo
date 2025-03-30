@@ -30,10 +30,10 @@ public sealed class DeleteTenantUserCommandHandler
         _unitOfWork.Delete(tenantUser);
 
         var result = await _unitOfWork.SaveChangesAsync(silent: true, cancellationToken);
-        if (result.IsSuccess)
+        if (result.IsFailure)
         {
-            return Result.Success(new OperationResponse());
+            return Result.Failure<OperationResponse>(result.Error);
         }
-        return Result.Failure<OperationResponse>(result.Error);
+        return Result.Success(new OperationResponse());
     }
 }

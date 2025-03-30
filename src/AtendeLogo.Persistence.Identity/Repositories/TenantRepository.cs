@@ -4,7 +4,7 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
 {
     public TenantRepository(
         IdentityDbContext dbContext,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         TrackingOption trackingOption = TrackingOption.NoTracking)
         : base(dbContext, userSessionAccessor, trackingOption)
     {
@@ -28,8 +28,9 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
     }
 
     public Task<bool> EmailExistsAsync(
-        Guid currentTenant_Id,
-        string email, CancellationToken token)
+        string email, 
+        Guid currentTenant_Id, 
+        CancellationToken token)
     {
         return AnyAsync(x => x.Email == email && x.Id != currentTenant_Id, token);
     }
@@ -42,8 +43,9 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
     }
 
     public Task<bool> FiscalCodeExistsAsync(
+        string fiscalCode, 
         Guid currentTenant_Id,
-        string fiscalCode, CancellationToken token)
+        CancellationToken token)
     {
         return AnyAsync(x => x.FiscalCode.Value == fiscalCode && x.Id != currentTenant_Id, token);
     }
@@ -56,8 +58,8 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
     }
 
     public Task<bool> PhoneNumberExitsAsync(
-        Guid currentTenant_Id, 
-        string phoneNumber, 
+        string phoneNumber,
+        Guid currentTenant_Id,
         CancellationToken token)
     {
         return AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != currentTenant_Id, token);

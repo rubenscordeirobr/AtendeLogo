@@ -3,7 +3,7 @@
 public interface IGetQueryResultHandler<TResponse> : IRequestHandler<TResponse>
     where TResponse : IResponse
 {
-    internal Task<Result<TResponse>> GetAsync(
+    public Task<Result<TResponse>> GetAsync(
          IQueryRequest<TResponse> query,
          CancellationToken cancellationToken = default);
 

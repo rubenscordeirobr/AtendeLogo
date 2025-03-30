@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Primitives.Contracts;
-
-namespace AtendeLogo.Application.Events;
+﻿namespace AtendeLogo.Application.Events;
 
 public sealed class DomainEventData<TEvent> :IDomainEventData<TEvent>
     where TEvent : IDomainEvent

@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
-using AtendeLogo.Domain.Primitives.Contracts;
 
 namespace AtendeLogo.Application.Contracts.Events;
 

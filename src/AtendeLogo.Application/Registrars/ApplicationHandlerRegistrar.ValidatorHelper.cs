@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Domain.Primitives.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.Application.Registrars;

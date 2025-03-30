@@ -9,6 +9,11 @@ public class SaveChangesResult
     [MemberNotNullWhen(false, nameof(Exception))]
     public bool IsSuccess { get; }
 
+    [MemberNotNullWhen(true, nameof(Error))]
+    [MemberNotNullWhen(true, nameof(Exception))]
+    public bool IsFailure
+        => !IsSuccess;
+
     public int AffectedRows { get; }
 
     public IDomainEventContext DomainEventContext { get; }
@@ -90,7 +95,7 @@ public class SaveChangesResult
 
     public static SaveChangesResult UnauthorizedError(
         IDomainEventContext domainEventContext,
-        UnauthorizedError error)
+        ForbiddenError error)
     {
         return new SaveChangesResult(domainEventContext, error);
     }

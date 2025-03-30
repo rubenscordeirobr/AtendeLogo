@@ -2,4 +2,4 @@
 
 public record GetTenantUserByPhoneNumberQuery(
     string PhoneNumber)
-    : QueryRequest<TenantUserResponse>;
+    : QueryRequest<UserResponse>;

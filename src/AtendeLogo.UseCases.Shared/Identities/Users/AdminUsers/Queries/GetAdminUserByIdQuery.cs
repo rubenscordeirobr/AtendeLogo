@@ -1,4 +1,4 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 public record GetAdminUserByIdQuery(Guid Id) 
-    : GetEntityByIdQuery<AdminUserResponse>(Id);
+    : GetEntityByIdQuery<UserResponse>(Id);

@@ -43,11 +43,11 @@ public sealed class UpdateDefaultTenantAddressCommandHandler
         tenant.SetDefaultAddress(newAddress);
 
         var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
-        if (result.IsSuccess)
+        if (result.IsFailure)
         {
-            return Result.Success(new OperationResponse());
+            return Result.Failure<OperationResponse>(result.Error);
         }
-        return Result.Failure<OperationResponse>(result.Error);
+        return Result.Success(new OperationResponse());
     }
 }
 

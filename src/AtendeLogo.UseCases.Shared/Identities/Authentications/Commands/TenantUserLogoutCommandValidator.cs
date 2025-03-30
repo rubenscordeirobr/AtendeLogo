@@ -8,11 +8,8 @@ public class TenantUserLogoutCommandValidator : CommandValidator<TenantUserLogou
     {
         Guard.NotNull(localizer);
 
-        RuleFor(x => x.ClientSessionToken)
-            .NotEmpty()
-                .WithMessage(localizer["TenantUserLogout.AuthTokenRequired", "Auth token is required."])
-            .MaximumLength(ValidationConstants.AuthTokenMaxLength)
-                .WithMessage(localizer["TenantUserLogout.AuthTokenMaxLength", "Auth token must have a maximum length of {MaxLength}."]);
-
+        RuleFor(x => x.Session_Id)
+            .NotEmptyGuid()
+            .WithMessage(localizer["TenantUserLogout.Session_IdRequired", "Session Id is required."]);
     }
 }

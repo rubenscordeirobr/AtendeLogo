@@ -13,9 +13,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(ValidationConstants.NameMaxLength);
 
-        builder.Property(x => x.ProfilePictureUrl)
-            .HasMaxLength(ValidationConstants.UrlMaxLength);
-
         builder.Property(x => x.Email)
             .IsRequired()
             .HasMaxLength(ValidationConstants.EmailMaxLength);
