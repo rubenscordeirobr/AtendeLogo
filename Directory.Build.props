@@ -21,16 +21,17 @@
 
         <AnalysisMode>none</AnalysisMode>
         <AnalysisLevel>none</AnalysisLevel>
+        <SonarQubeExclude>true</SonarQubeExclude>
 
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
         <AnalysisMode>none</AnalysisMode>
         <AnalysisLevel>none</AnalysisLevel>
         <SonarQubeExclude>true</SonarQubeExclude>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj' and '$(IsTestProject)' != 'true'">
+    <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj' and '$(IsTestProject)' != 'true' and '$(MSBuildProjectName' != 'AtendeLogo.CodeAnalysis'">
 
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
             <PrivateAssets>all</PrivateAssets>

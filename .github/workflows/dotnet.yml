@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: Restore dependencies
-      run: dotnet restore AtendeLogo.sln
+      run: dotnet restore AtendeLogo.slnx
     - name: Build
-      run: dotnet build AtendeLogo.sln --no-restore
+      run: dotnet build AtendeLogo.slnx --no-restore
     - name: Test
-      run: dotnet test AtendeLogo.sln --no-build --verbosity normal
+      run: dotnet test AtendeLogo.slnx --no-build --verbosity normal
