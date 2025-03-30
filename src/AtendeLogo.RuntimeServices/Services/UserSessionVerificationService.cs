@@ -2,6 +2,7 @@
 using AtendeLogo.Application.Extensions;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
+using AtendeLogo.Shared.Configuration;
 
 
 namespace AtendeLogo.RuntimeServices.Services;
@@ -155,10 +156,28 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
                 : throw result.Exception;
 
             await TerminateSessionAsync(userSessionEntity, terminationReason);
-            return;
         }
 
-        await _userSessionManger.AddSessionAsync(userSessionEntity);
+        var needsRefreshToken = NeedsRefreshSession(userSessionEntity);
+        if (needsRefreshToken)
+        {
+            var user = await _unitWork.GetUserAsync(userSessionEntity.User_Id, userSessionEntity.UserType);
+            if(user is null)
+            {
+                throw new CriticalNotFoundException("User not found.");
+            }
+            await _userSessionManger.SetSessionAsync(userSessionEntity, user);
+        }
+    }
+
+    private bool NeedsRefreshSession(UserSession session)
+    {
+        var expiration = _httpContextSessionAccessor.UserSessionClaims?.Expiration;
+        if (expiration is null)
+        {
+            throw new InvalidOperationException("Expiration is null");
+        }
+        return UserSessionConfig.NeedsRefreshSession(expiration.Value, session.KeepSession);
     }
 
     private async Task<UserSession> CreateAnonymousSessionAsync()
@@ -181,7 +200,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
             throw new InvalidOperationException("Error while creating anonymous session.", result.Exception);
         }
 
-        await _userSessionManger.AddSessionAsync(userSession);
+        await _userSessionManger.SetSessionAsync(userSession, anonymousUser);
         return userSession;
     }
 

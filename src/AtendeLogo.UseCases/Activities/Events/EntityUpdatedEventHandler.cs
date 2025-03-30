@@ -1,6 +1,6 @@
 ﻿using System.Dynamic;
 using AtendeLogo.Application.Contracts.Persistence.Activities;
-using AtendeLogo.Common.Utils;
+using AtendeLogo.Application.Extensions;
 using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Domain.Primitives;
 
@@ -10,12 +10,12 @@ public sealed class EntityUpdatedEventHandler<TEntity> : IEntityUpdatedEventHand
     where TEntity : EntityBase
 {
     private readonly IActivityRepository _activityRepository;
-    private readonly IUserSessionAccessor _userSessionAccessor;
+    private readonly IHttpContextSessionAccessor _userSessionAccessor;
     private readonly ILogger<EntityUpdatedEventHandler<TEntity>> _logger;
 
     public EntityUpdatedEventHandler(
         IActivityRepository activityRepository,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         ILogger<EntityUpdatedEventHandler<TEntity>> logger)
     {
         _activityRepository = activityRepository;
@@ -28,8 +28,7 @@ public sealed class EntityUpdatedEventHandler<TEntity> : IEntityUpdatedEventHand
     {
         Guard.NotNull(domainEvent);
 
-        var userSession = _userSessionAccessor.GetCurrentSession();
-       
+        var userSession = _userSessionAccessor.GetRequiredUserSession();
         var entity = domainEvent.Entity;
         var properties = domainEvent.ChangedProperties
             .Select(propertyChanged => $"{propertyChanged.PropertyName}: {propertyChanged.PreviousValue} -> {propertyChanged.Value}")

@@ -1,6 +1,6 @@
 ﻿using System.Dynamic;
 using AtendeLogo.Application.Contracts.Persistence.Activities;
-using AtendeLogo.Common.Utils;
+using AtendeLogo.Application.Extensions;
 using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Domain.Primitives;
 
@@ -10,12 +10,12 @@ public sealed class EntityCreatedEventHandler<TEntity> : IEntityCreatedEventHand
     where TEntity : EntityBase
 {
     private readonly IActivityRepository _activityRepository;
-    private readonly IUserSessionAccessor _userSessionAccessor;
+    private readonly IHttpContextSessionAccessor _userSessionAccessor;
     private readonly ILogger<EntityCreatedEventHandler<TEntity>> _logger;
 
     public EntityCreatedEventHandler(
         IActivityRepository activityRepository,
-        IUserSessionAccessor userSessionAccessor,
+        IHttpContextSessionAccessor userSessionAccessor,
         ILogger<EntityCreatedEventHandler<TEntity>> logger)
     {
         _activityRepository = activityRepository;
@@ -27,7 +27,7 @@ public sealed class EntityCreatedEventHandler<TEntity> : IEntityCreatedEventHand
     {
         Guard.NotNull(domainEvent);
 
-        var userSession = _userSessionAccessor.GetCurrentSession();
+        var userSession = _userSessionAccessor.GetRequiredUserSession();
         var entity = domainEvent.Entity;
        
         var properties = domainEvent.PropertyValues

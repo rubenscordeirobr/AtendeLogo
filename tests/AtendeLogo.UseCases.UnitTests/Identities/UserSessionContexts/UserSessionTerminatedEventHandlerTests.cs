@@ -6,13 +6,13 @@ using AtendeLogo.UseCases.Identities.UserSessions.Events;
 namespace AtendeLogo.UseCases.UnitTests.Identities.UserSessionContexts;
 
 public class UserSessionTerminatedEventHandlerTests
-     : IClassFixture<AnonymousServiceProviderMock>
+     : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Fixture _fixture = new();
     private readonly IEventMediator _eventMediator;
 
     public UserSessionTerminatedEventHandlerTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -24,12 +24,13 @@ public class UserSessionTerminatedEventHandlerTests
     public async Task EventMediator_ShouldDispatchForUserSessionTerminatedEvent()
     {
         // Arrange
-        var user = _fixture.Create<TenantUser>();
+        var user = SystemTenantConstants.OwnerUser; ;
+        
         var userSession = UserSessionFactory.Create(
             user: user,
             clientHeaderInfo: ClientRequestHeaderInfo.System,
             authenticationType: AuthenticationType.System,
-            rememberMe: false,
+            keepSession: false,
             tenant_id: null);
 
         var createdEvent = new UserSessionTerminatedEvent(userSession, SessionTerminationReason.SessionExpired);

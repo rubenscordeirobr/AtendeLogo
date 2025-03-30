@@ -3,7 +3,14 @@
 public sealed class SecureConfigurationMock: ISecureConfiguration
 {
     public string GetPasswordSalt()
-    {
-        return "SYSTEM";
-    }
+        => "test-salt";
+
+    public string GetAuthenticationKey()
+        => "test-key";
+     
+    public string GetJwtAudience()
+        => "test-audience";
+
+    public string GetJwtIssuer()
+        => "test-issuer";
 }

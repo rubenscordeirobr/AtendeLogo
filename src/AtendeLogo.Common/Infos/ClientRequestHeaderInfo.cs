@@ -2,17 +2,20 @@
 public partial record ClientRequestHeaderInfo(
     string IpAddress,
     string UserAgent,
-    string ApplicationName);
+    string ApplicationName,
+    string? AuthorizationToken);
 
 public partial record ClientRequestHeaderInfo
 {
     public static ClientRequestHeaderInfo Unknown
         => new(IpAddress: "Unknown",
                UserAgent: "Unknown",
-               ApplicationName: "Unknown");
+               ApplicationName: "Unknown",
+               null);
 
     public static ClientRequestHeaderInfo System
         => new(IpAddress: "System",
                UserAgent: "System",
-               ApplicationName: "System");
+               ApplicationName: "System",
+               null);
 }

@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common.Exceptions;
-using Moq;
+﻿using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Domain.Extensions;
 
@@ -38,14 +37,14 @@ public class EntityDeletedExtensionsTests
         var entityMock = new Mock<ISoftDeletableEntity>();
         var userSessionMock = new Mock<IUserSession>();
 
-        userSessionMock.Setup(s => s.User_Id).Returns(AnonymousIdentityConstants.User_Id);
+        userSessionMock.Setup(s => s.User_Id).Returns(AnonymousUserConstants.User_Id);
         var userSession = userSessionMock.Object;
 
         // Act
         Action act = () => entityMock.Object.MarkAsDeleted(userSession);
 
         // Assert
-        act.Should().Throw<UnauthorizedSecurityException>();
+        act.Should().Throw<ForbiddenSecurityException>();
     }
 
     [Fact]
@@ -86,7 +85,7 @@ public class EntityDeletedExtensionsTests
         Action act = () => entityMock.Object.MarkAsDeleted(userSessionMock.Object);
 
         // Assert
-        act.Should().Throw<UnauthorizedSecurityException>();
+        act.Should().Throw<ForbiddenSecurityException>();
     }
      
     [Fact]

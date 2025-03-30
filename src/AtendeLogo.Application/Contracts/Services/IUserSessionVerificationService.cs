@@ -6,8 +6,3 @@ public interface IUserSessionVerificationService: IApplicationService
     Task<IUserSession> VerifyAsync();
 }
 
-internal interface IUserSessionVerificationServiceTest
-{
-    Task<UserSession> CreateAnonymousSessionAsync();
-}
- 
