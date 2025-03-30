@@ -3,10 +3,10 @@ public interface IUserSession
 {
     Guid Id { get; }
     string ApplicationName { get; }
-    string ClientSessionToken { get; }
     string IpAddress { get; }
     string UserAgent { get; }
     bool IsActive { get; }
+    bool KeepSession { get; }
     DateTime StartedAt { get; }
     DateTime? TerminatedAt { get; }
     DateTime LastActivity { get; }
@@ -18,5 +18,4 @@ public interface IUserSession
     GeoLocation? GeoLocation { get; }
     Guid? Tenant_Id { get; }
     Guid User_Id { get; }
-    IUser? User { get; }
 }

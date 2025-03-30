@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common.Helpers;
-using AtendeLogo.Common.Infos;
+﻿using AtendeLogo.Common.Infos;
 
 namespace AtendeLogo.Domain.Entities.Identities.Factories;
 
@@ -9,29 +8,30 @@ public static class UserSessionFactory
         IUser user,
         ClientRequestHeaderInfo clientHeaderInfo,
         AuthenticationType authenticationType,
-        bool rememberMe,
-        Guid? tenant_id )
+        bool keepSession,
+        Guid? tenant_id)
     {
         Guard.NotNull(user);
         Guard.NotNull(clientHeaderInfo);
+        Guard.NotEmpty(user.Id);
 
-        var clientSessionToken = HashHelper.CreateSha256Hash(Guid.NewGuid());
-        var expirationTime = rememberMe
-            ? TimeSpan.FromDays(365)
-            : TimeSpan.FromMinutes(30);
+        Guard.EnumNotDefined(user.UserType);
+        Guard.EnumNotDefined(user.Role);
 
-        return new UserSession(
+        var newSession = new UserSession(
              applicationName: clientHeaderInfo.ApplicationName,
-             clientSessionToken: clientSessionToken,
              ipAddress: clientHeaderInfo.IpAddress,
              userAgent: clientHeaderInfo.UserAgent,
+             isActive: true,
+             keepSession: keepSession,
              authenticationType: authenticationType,
+             language: user.Language,
              userRole: user.Role,
              userType: user.UserType,
-             language: user.Language,
-             expirationTime: expirationTime,
              user_Id: user.Id,
              tenant_Id: tenant_id
         );
+        newSession.AddSessionStartedEvents(user);
+        return newSession;
     }
 }

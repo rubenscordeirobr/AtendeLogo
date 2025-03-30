@@ -6,6 +6,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="AtendeLogo.Persistence.Common" />
+        
 		<InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
 		<InternalsVisibleTo Include="AtendeLogo.ArchitectureTests" />
 		<InternalsVisibleTo Include="AtendeLogo.UseCases.UnitTests" />

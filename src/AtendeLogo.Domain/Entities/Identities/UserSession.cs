@@ -1,23 +1,17 @@
-﻿using System.Text.Json.Serialization;
-
-namespace AtendeLogo.Domain.Entities.Identities;
+﻿namespace AtendeLogo.Domain.Entities.Identities;
 
 
 public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 {
-    private const int UpdateCheckIntervalMinutes = 5;
-
     private readonly List<IDomainEvent> _events = new();
-    public string ClientSessionToken { get; private set; }
     public string ApplicationName { get; private set; }
     public string IpAddress { get; private set; }
-    public string? AuthToken { get; private set; }
     public string UserAgent { get; private set; }
     public bool IsActive { get; private set; }
+    public bool KeepSession { get; private set; }
     public DateTime LastActivity { get; private set; }
     public DateTime StartedAt { get; private set; }
     public DateTime? TerminatedAt { get; private set; }
-    public TimeSpan? ExpirationTime { get; private set; }
     public Language Language { get; private set; }
     public AuthenticationType AuthenticationType { get; private set; }
     public SessionTerminationReason? TerminationReason { get; private set; }
@@ -28,55 +22,47 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public Guid? Tenant_Id { get; private set; }
     public Tenant? Tenant { get; private set; }
     public GeoLocation GeoLocation { get; private set; } = GeoLocation.Empty;
-     
-    [JsonConstructor]
+
+    // EF Core
     internal UserSession(
         string applicationName,
-        string clientSessionToken,
         string ipAddress,
         string userAgent,
+        bool isActive,
+        bool keepSession,
         AuthenticationType authenticationType,
         Language language,
         UserRole userRole,
         UserType userType,
-        TimeSpan? expirationTime,
         Guid user_Id,
         Guid? tenant_Id)
     {
         ApplicationName = applicationName;
-        ClientSessionToken = clientSessionToken;
         IpAddress = ipAddress;
         UserAgent = userAgent;
+        KeepSession = keepSession;
         AuthenticationType = authenticationType;
         Language = language;
         UserRole = userRole;
         UserType = userType;
-        ExpirationTime = expirationTime;
         User_Id = user_Id;
         Tenant_Id = tenant_Id;
-        IsActive = true;
-    }
-
-    public bool IsUpdatePending()
-    {
-        return IsActive
-            && LastActivity.IsExpired(TimeSpan.FromMinutes(UpdateCheckIntervalMinutes))
-            && Id != AnonymousIdentityConstants.Session_Id;
+        IsActive = isActive;
     }
       
-
-    public bool IsExpired()
+    internal void AddSessionStartedEvents(IUser user)
     {
-        if (IsActive && ExpirationTime.HasValue)
-        {
-            return DateTime.Now > LastActivity.Add(ExpirationTime.Value);
-        }
-        return false;
-    }
+        _events.Add(new UserSessionStartedEvent(this));
 
+        if (user.UserType == UserType.TenantUser)
+        {
+            _events.Add(new TenantUserSessionStartedEvent(this));
+        }
+    }
+     
     public void TerminateSession(SessionTerminationReason reason)
     {
-        if (Id == AnonymousIdentityConstants.Session_Id)
+        if (Id == AnonymousUserConstants.Session_Id)
         {
             throw new InvalidOperationException("Anonymous system session cannot be terminated.");
         }
@@ -86,10 +72,16 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
             throw new InvalidOperationException("Session is already terminated.");
         }
 
-        this.IsActive = false;
-        this.TerminatedAt = DateTime.Now;
-        this.TerminationReason = reason;
-        this._events.Add(new UserSessionTerminatedEvent(this, reason));
+        IsActive = false;
+        TerminatedAt = DateTime.UtcNow;
+        TerminationReason = reason;
+
+        _events.Add(new UserSessionTerminatedEvent(this, reason));
+
+        if (UserType == UserType.TenantUser)
+        {
+            _events.Add(new TenantUserSessionTerminatedEvent(this));
+        }
     }
 
     public void UpdateLastActivity()
@@ -97,9 +89,8 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         this.LastUpdatedAt = DateTime.UtcNow;
     }
 
+  
     #region IUser, IDomainEventAggregate
-
-    IUser? IUserSession.User => User;
 
     public IReadOnlyList<IDomainEvent> DomainEvents => _events;
 

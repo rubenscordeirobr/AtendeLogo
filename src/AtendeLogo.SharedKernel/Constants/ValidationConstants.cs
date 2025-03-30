@@ -32,7 +32,6 @@ public static class ValidationConstants
     public const int AddressNameMaxLength = 50;
 
     public const int IpAddressMaxLength = 45;
-    public const int AuthTokenMaxLength = 1000;
     public const int UserAgentMaxLength = 1000;
 }
 

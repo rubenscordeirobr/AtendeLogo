@@ -7,6 +7,4 @@ public interface IEntityBase
     DateTime LastUpdatedAt { get; }
     Guid CreatedSession_Id { get; }
     Guid LastUpdatedSession_Id { get; }
-    void SetCreateDate(Guid sessionId);
-    void UpdateLastUpdateDate(Guid sessionId);
 }

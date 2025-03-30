@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Domain.Exceptions;
-
-namespace AtendeLogo.Domain.Entities.Identities;
+﻿namespace AtendeLogo.Domain.Entities.Identities;
 
 public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscendingSortable, IEventAggregate
 {
@@ -8,7 +6,6 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     private readonly List<UserSession> _sessions = new();
     public string Name { get; protected set; }
     public string Email { get; protected set; }
-    public string? ProfilePictureUrl { get; protected set; }
     public UserRole Role { get; protected set; }
     public Language Language { get; protected set; }
     public UserState UserState { get; protected set; }
@@ -24,7 +21,6 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     protected User(
         string name,
         string email,
-        string? profilePictureUrl,
         Language language,
         UserRole role,
         UserState userState,
@@ -37,11 +33,11 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
         Guard.NotNullOrWhiteSpace(name);
         Guard.NotNullOrWhiteSpace(email);
         Guard.NotNull(phoneNumber);
-
+         
         Name = name;
         Email = email;
-        ProfilePictureUrl = profilePictureUrl;
         Language = language;
+        Role = role;
         UserState = userState;
         UserStatus = userStatus;
         EmailVerificationState = emailVerificationState;

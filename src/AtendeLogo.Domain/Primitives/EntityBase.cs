@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.Domain.Primitives;
+﻿using AtendeLogo.Common.Helpers;
+
+namespace AtendeLogo.Domain.Primitives;
 public abstract class EntityBase
 {
     public Guid Id { get; protected set; }
@@ -7,20 +9,20 @@ public abstract class EntityBase
     public Guid CreatedSession_Id { get; protected set; }
     public Guid LastUpdatedSession_Id { get; protected set; }
 
-    public virtual void SetCreateSession(Guid session_Id)
+    internal virtual void SetCreateSession(Guid session_Id)
     {
-        if (Id != Guid.Empty && !Id.IsZeroPrefixedGuid())
+        if ((Id != Guid.Empty && !Id.IsZeroPrefixedGuid()) ||
+            (CreatedAt != default && !Id.IsZeroPrefixedGuid()))
         {
             throw new InvalidOperationException("Cannot set create date for existing entity");
         }
-
-        CreatedAt = default;
+ 
         LastUpdatedAt = CreatedAt;
         CreatedSession_Id = session_Id;
         LastUpdatedSession_Id = session_Id;
     }
 
-    public void SetUpdateSession(Guid sessionId)
+    internal void SetUpdateSession(Guid sessionId)
     {
         LastUpdatedAt = DateTime.UtcNow;
         LastUpdatedSession_Id = sessionId;

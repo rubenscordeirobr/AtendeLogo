@@ -4,10 +4,10 @@ public sealed class AdminUser : User
 {
     public override UserType UserType { get; } = UserType.AdminUser;
 
+    // EF Core constructor
     private AdminUser(
         string name,
         string email,
-        string? profilePictureUrl,
         Language language,
         UserRole role,
         UserState userState,
@@ -15,7 +15,7 @@ public sealed class AdminUser : User
         VerificationState emailVerificationState,
         VerificationState phoneNumberVerificationState,
         PhoneNumber phoneNumber)
-        : base(name, email, profilePictureUrl, language, role, userState, userStatus,
+        : base(name, email,  language, role, userState, userStatus,
               emailVerificationState, phoneNumberVerificationState, phoneNumber, Password.Empty)
     {
     }
@@ -29,7 +29,7 @@ public sealed class AdminUser : User
         UserStatus userStatus,
         PhoneNumber phoneNumber,
         Password password)
-        : base(name, email, null, language, role, userState, userStatus,
+        : base(name, email, language, role, userState, userStatus,
                VerificationState.NotVerified, VerificationState.NotVerified, phoneNumber, password)
     {
     }

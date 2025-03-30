@@ -11,7 +11,6 @@ public sealed class TenantUser : User, ITenantOwned
     private TenantUser(
        string name,
        string email,
-       string? profilePictureUrl,
        Language language,
        UserRole role,
        UserState userState,
@@ -19,7 +18,7 @@ public sealed class TenantUser : User, ITenantOwned
        VerificationState emailVerificationState,
        VerificationState phoneNumberVerificationState,
        PhoneNumber phoneNumber)
-       : base(name, email, profilePictureUrl, language, role, userState, userStatus,
+       : base(name, email, language, role, userState, userStatus,
               emailVerificationState, phoneNumberVerificationState, phoneNumber, Password.Empty)
     {
     }
@@ -34,7 +33,7 @@ public sealed class TenantUser : User, ITenantOwned
         UserStatus userStatus,
         PhoneNumber phoneNumber,
         Password password)
-        : base(name, email, null, language, role, userState, userStatus, 
+        : base(name, email, language, role, userState, userStatus, 
                VerificationState.NotVerified, VerificationState.NotVerified, phoneNumber, password)
     {
         Guard.NotNull(tenant);

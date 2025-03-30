@@ -1,15 +1,8 @@
 ﻿namespace AtendeLogo.Domain.Entities.Identities.Events;
-public class UserSessionTerminatedEvent : IDomainEvent
-{
-    public UserSession UserSession { get; }
 
-    public SessionTerminationReason Reason { get; }
+public sealed record UserSessionStartedEvent(
+        UserSession UserSession) : IDomainEvent;
 
-    public UserSessionTerminatedEvent(
-        UserSession userSession,
-        SessionTerminationReason reason)
-    {
-        UserSession = userSession;
-        Reason = reason;
-    }
-}
+public sealed record UserSessionTerminatedEvent(
+        UserSession UserSession,
+        SessionTerminationReason Reason) : IDomainEvent;

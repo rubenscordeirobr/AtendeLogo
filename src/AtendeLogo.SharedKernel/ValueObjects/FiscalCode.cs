@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Shared.ValueObjects;

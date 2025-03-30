@@ -6,7 +6,6 @@ public sealed class SystemUser : User
     private SystemUser(
        string name,
        string email,
-       string? profilePictureUrl,
        Language language,
        UserRole role,
        UserState userState,
@@ -14,7 +13,7 @@ public sealed class SystemUser : User
        VerificationState emailVerificationState,
        VerificationState phoneNumberVerificationState,
        PhoneNumber phoneNumber)
-       : base(name, email, profilePictureUrl, language, role, userState, userStatus,
+       : base(name, email, language, role, userState, userStatus,
               emailVerificationState, phoneNumberVerificationState, phoneNumber, Password.Empty)
     {
     }
@@ -28,13 +27,13 @@ public sealed class SystemUser : User
         UserStatus userStatus,
         PhoneNumber phoneNumber,
         Password password)
-        : base(name, email, null, language, role, userState, userStatus,
+        : base(name, email, language, role, userState, userStatus,
                VerificationState.NotVerified, VerificationState.NotVerified, phoneNumber, password)
     {
     }
 
     public override UserType UserType
-        => Id == AnonymousIdentityConstants.User_Id
+        => Id == AnonymousUserConstants.User_Id
             ? UserType.Anonymous
             : UserType.SystemUser;
 }
