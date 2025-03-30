@@ -1,14 +1,12 @@
-﻿using AtendeLogo.Application.Services;
-using AtendeLogo.Common.Exceptions;
-using AtendeLogo.Domain.Enums;
-using AtendeLogo.Persistence.Identity.Extensions;
+﻿using AtendeLogo.Persistence.Identity.Extensions;
 
-namespace AtendeLogo.Application.UnitTests.Services;
- 
+
+namespace AtendeLogo.Application.UnitTests.RuntimeServices;
+
 public class EntityAuthorizationServiceTests
 {
     private readonly Fixture _figure = new();
-    
+
     [Fact]
     public void ValidateEntityChange_ShouldNotThrow_WhenAuthorizedAsAnonymous_ForCreateOnAllowedEntity()
     {
@@ -48,7 +46,7 @@ public class EntityAuthorizationServiceTests
         Action act = () => service.ValidateEntityChange(fakeEntity, userSession, EntityChangeState.Updated);
 
         // Assert
-        act.Should().Throw<UnauthorizedSecurityException>()
+        act.Should().Throw<ForbiddenSecurityException>()
             .WithMessage("*Access Denied*");
     }
 
@@ -75,8 +73,8 @@ public class EntityAuthorizationServiceTests
         Action act = () => service.ValidateEntityChange(fakeTenant, userSession, EntityChangeState.Updated);
 
         // Assert
-        act.Should().Throw<UnauthorizedSecurityException>();
-            
+        act.Should().Throw<ForbiddenSecurityException>();
+
     }
 
     [Fact]
@@ -100,7 +98,7 @@ public class EntityAuthorizationServiceTests
         // Assert
         act.Should().NotThrow();
     }
-     
+
     // Fake types to test anonymous permission
     // These types are allowed for anonymous creation
     public class FakeTenantEntity : EntityBase { }
@@ -116,6 +114,7 @@ public class EntityAuthorizationServiceTests
         public string IpAddress { get; set; } = string.Empty;
         public string UserAgent { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+        public bool KeepSession { get; set; }
         public DateTime StartedAt { get; set; }
         public DateTime? TerminatedAt { get; set; }
         public DateTime LastActivity { get; set; }
@@ -134,7 +133,7 @@ public class EntityAuthorizationServiceTests
         public bool IsTenantUser() => Tenant_Id.HasValue;
     }
     public class FakeEntity : EntityBase { }
-     
+
     public class FakeTenant : EntityBase, ITenantOwned
     {
         public Guid Tenant_Id { get; set; }

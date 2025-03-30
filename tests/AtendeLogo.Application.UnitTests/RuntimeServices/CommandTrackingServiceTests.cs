@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Services;
-
-namespace AtendeLogo.Application.UnitTests.Services;
+﻿namespace AtendeLogo.Application.UnitTests.RuntimeServices;
 
 public class CommandTrackingServiceTests
 {

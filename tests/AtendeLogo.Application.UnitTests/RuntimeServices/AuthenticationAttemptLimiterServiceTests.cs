@@ -1,10 +1,9 @@
 ﻿using System.Text.Json;
 using AtendeLogo.Application.Models.Security;
-using AtendeLogo.Application.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace AtendeLogo.Application.UnitTests.Services;
+namespace AtendeLogo.Application.UnitTests.RuntimeServices;
 
 public class AuthenticationAttemptLimiterServiceTests
 {
@@ -23,7 +22,7 @@ public class AuthenticationAttemptLimiterServiceTests
     public async Task MaxAuthenticationReachedAsync_ShouldReturnSuccess_WhenNoRecordExists()
     {
         // Arrange
-        string ipAddress = "1.2.3.4";
+        var ipAddress = "1.2.3.4";
         // Simulate cache miss
         _cacheRepositoryMock
             .Setup(x => x.StringGetAsync(It.IsAny<string>()))
@@ -40,14 +39,14 @@ public class AuthenticationAttemptLimiterServiceTests
     public async Task MaxAuthenticationReachedAsync_ShouldReturnBlockedResult_WhenThresholdExceededAndWithinTimeWindow()
     {
         // Arrange
-        string ipAddress = "1.2.3.4";
-        int failedAttempts = 5;
+        var ipAddress = "1.2.3.4";
+        var failedAttempts = 5;
         // Set last failed attempt to 1 minute ago
         var lastFailed = DateTime.UtcNow.AddMinutes(-1);
         // Create a DTO and then serialize to JSON
         var recordDto = new AuthenticationAttemptRecord(failedAttempts, lastFailed);
         
-        string jsonRecord = JsonUtils.Serialize(recordDto, options: JsonSerializerOptions.Web);
+        var jsonRecord = JsonUtils.Serialize(recordDto, options: JsonSerializerOptions.Web);
         _cacheRepositoryMock
             .Setup(x => x.StringGetAsync(It.IsAny<string>()))
             .ReturnsAsync(jsonRecord);
@@ -67,7 +66,7 @@ public class AuthenticationAttemptLimiterServiceTests
     public async Task IncrementFailedAttemptsAsync_Should_AddNewRecord_WhenNoneExists_And_IncrementRecord_WhenItExists()
     {
         // Arrange
-        string ipAddress = "1.2.3.4";
+        var ipAddress = "1.2.3.4";
       
         var authenticationAttemptRecordSerializado = JsonUtils.Serialize(new AuthenticationAttemptRecord(1, DateTime.UtcNow.AddSeconds(-10)));
         

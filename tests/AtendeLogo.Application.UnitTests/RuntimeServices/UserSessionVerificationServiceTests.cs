@@ -1,11 +1,11 @@
-﻿namespace AtendeLogo.Application.UnitTests.Services;
+﻿namespace AtendeLogo.Application.UnitTests.RuntimeServices;
 
-public class UserSessionVerificationServiceTests :IClassFixture<AnonymousServiceProviderMock>
+public class UserSessionVerificationServiceTests :IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
     public UserSessionVerificationServiceTests(
-        AnonymousServiceProviderMock serviceProvider,
+        ServiceProviderMock<AnonymousRole> serviceProvider,
         ITestOutputHelper testOutput)
     {
         serviceProvider.AddTestOutput(testOutput);
@@ -13,7 +13,7 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
         _serviceProvider = serviceProvider;
     }
  
-        [Fact]
+    [Fact]
     public async Task Verify_ShouldNotThrowException()
     {
         // Arrange
@@ -39,9 +39,9 @@ public class UserSessionVerificationServiceTests :IClassFixture<AnonymousService
         userSession.Should().NotBeNull();
         userSession.Should().BeOfType<UserSession>();
 
-        userSession.ClientSessionToken
+        userSession.Id
             .Should()
-            .NotBeNullOrWhiteSpace();
+            .NotBeEmpty();
 
         userSession.StartedAt
             .Should()
