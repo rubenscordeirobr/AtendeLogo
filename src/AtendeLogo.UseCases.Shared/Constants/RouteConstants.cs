@@ -3,5 +3,6 @@
 public static class RouteConstants
 {
     public const string RouteId = "{id}";
-    public const string ApiBase = "api";
+    public const string Api = "api";
+    public const string Version = "Version";
 }
