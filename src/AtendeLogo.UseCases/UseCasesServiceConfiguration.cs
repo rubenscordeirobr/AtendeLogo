@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using AtendeLogo.Application;
-using AtendeLogo.UseCases.Contracts.Identities;
 using AtendeLogo.UseCases.Identities.Authentications.Services;
 using AtendeLogo.UseCases.Identities.Tenants.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +15,8 @@ public static class UseCasesServiceConfiguration
 
         services.AddScoped<ITenantValidationService, TenantValidationService>();
         services.AddScoped<ITenantUserValidationService, TenantUserValidationService>();
-        services.AddScoped<ITenantAuthenticationValidationService, TenantAuthenticationValidationService>();
+        services.AddScoped<ITenantUserAuthenticationValidationService, TenantUserAuthenticationValidationService>();
+        services.AddScoped<IAdminUserAuthenticationValidationService, AdminUserAuthenticationValidationService>();
 
         return services;
     }
