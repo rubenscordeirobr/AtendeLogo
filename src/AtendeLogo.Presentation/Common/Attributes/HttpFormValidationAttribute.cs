@@ -3,10 +3,11 @@
 namespace AtendeLogo.Presentation.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class HttpPostFormAttribute : HttpMethodAttribute
+public sealed class HttpFormValidationAttribute : HttpMethodAttribute
 {
     public override HttpVerb HttpVerb
         => HttpVerb.Post;
-    public HttpPostFormAttribute(string operationTemplate = "")
+
+    public HttpFormValidationAttribute(string operationTemplate = "")
         : base(HttpStatusCode.OK, "", operationTemplate) { }
 }

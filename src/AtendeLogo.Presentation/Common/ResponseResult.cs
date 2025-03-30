@@ -1,34 +1,42 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using AtendeLogo.Presentation.Common.Enums;
+using AtendeLogo.Common.Enums;
 
 namespace AtendeLogo.Presentation.Common;
 
-public record ResponseResult
+internal sealed record ResponseResult
 {
-    [MemberNotNullWhen(false, nameof(ErroResult))]
+    [MemberNotNullWhen(false, nameof(ErrorResponse))]
     public bool IsSuccess { get; }
     public int StatusCode { get; }
-    public object? Response { get; }
+    public object? Value { get; }
 
-    public ErroResult? ErroResult { get; }
+    public ErrorResponse? ErrorResponse { get; }
 
-    private ResponseResult(HttpStatusCode statusCode, object response)
+    private ResponseResult(HttpStatusCode statusCode, object value)
     {
-        Response = response;
+        Value = value;
         StatusCode = (int)statusCode;
         IsSuccess = true;
     }
 
     private ResponseResult(HttpStatusCode statusCode, string errorCode, string errorMessage)
     {
-        ErroResult = new ErroResult(errorCode, errorMessage);
+        ErrorResponse = new ErrorResponse(errorCode, errorMessage);
         StatusCode = (int)statusCode;
         IsSuccess = false;
     }
+
+    private ResponseResult(HttpStatusCode statusCode, ErrorResponse errorResponse)
+    {
+        ErrorResponse = errorResponse;
+        StatusCode = (int)statusCode;
+        IsSuccess = false;
+    }
+
     private ResponseResult(ExtendedHttpStatusCode statusCode, string errorCode, string errorMessage)
     {
-        ErroResult = new ErroResult(errorCode, errorMessage);
+        ErrorResponse = new ErrorResponse(errorCode, errorMessage);
         StatusCode = (int)statusCode;
         IsSuccess = false;
     }
@@ -53,9 +61,7 @@ public record ResponseResult
         => new ResponseResult(statusCode, errorCode, errorMessage);
 
     public static ResponseResult Error(Error error)
-        => new ResponseResult(error.StatusCode, error.Code, error.Message);
+        => new ResponseResult(error.StatusCode, error.CreateErrorResponse());
 }
 
-public record ErroResult(
-    string Code,
-    string Message);
+

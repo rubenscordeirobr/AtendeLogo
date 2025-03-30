@@ -1,24 +1,31 @@
 ﻿using System.Net;
 using System.Reflection;
-using AtendeLogo.Presentation.Common.Enums;
+using AtendeLogo.Common.Helpers;
 using AtendeLogo.Presentation.Common.Exceptions;
+using AtendeLogo.Presentation.Common.Validators;
 using AtendeLogo.Shared.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AtendeLogo.Presentation.Common;
 
-public class HttpMethodDescriptor
+internal sealed class HttpMethodDescriptor
 {
     public MethodInfo Method { get; }
     public HttpMethodAttribute Attribute { get; }
-    public ParameterInfo[] Parameters { get; }
-    public ParameterInfo[] RouteParameters { get; }
-    public ParameterInfo[] OperationParameters { get; }
     public bool HasCancellationToken { get; }
+    public bool IsAllowAnonymous { get; }
+    public bool IsBodyParameter { get; }
     public string RouteTemplate { get; }
     public string OperationTemplate { get; }
-    public bool IsBodyParameter { get; }
     public Type ResponseType { get; }
+    public ParameterInfo[] Parameters { get; }
+    public ParameterInfo[] ParametersWithoutRoute { get; }
+    public ParameterInfo[] RouteParameters { get; }
+    public ParameterInfo[] OperationParameters { get; }
+
     public IReadOnlyDictionary<ParameterInfo, string> OperationParameterToKeyMap { get; }
+    public BodyContentType BodyContentType { get; }
+    public OperationParameterLocation OperationParameterLocation { get; }
 
     public HttpStatusCode SuccessStatusCode
         => Attribute.SuccessStatusCode;
@@ -31,9 +38,8 @@ public class HttpMethodDescriptor
             ? Parameters.FirstOrDefault()?.ParameterType
             : null;
 
-    public OperationParameterLocation OperationParameterLocation { get; }
 
-    public HttpMethodDescriptor( MethodInfo method)
+    internal HttpMethodDescriptor(MethodInfo method)
     {
         var parameters = method.GetParameters();
         var lastParameter = parameters.LastOrDefault();
@@ -45,45 +51,74 @@ public class HttpMethodDescriptor
         HasCancellationToken = lastParameter is not null
             && lastParameter.ParameterType == typeof(CancellationToken);
 
+        IsAllowAnonymous = HasAllowAnonymousAttribute();
+
         Parameters = HasCancellationToken
             ? parameters[..^1]
             : parameters;
 
-        IsBodyParameter = IsBodyParameterPresent();
-        RouteTemplate = Attribute.RouteTemplate;
+        RouteTemplate = GetRouteTemplate();
         RouteParameters = GetRouteParameters();
-        OperationParameters = Parameters.Except(RouteParameters).ToArray();
+        ParametersWithoutRoute = [.. Parameters.Except(RouteParameters)];
 
-        OperationTemplate = AdjustOperationTemplate(Attribute.OperationTemplate);
+        IsBodyParameter = IsBodyParameterPresent();
+        OperationParameters = GetOperationParameters();
+        OperationTemplate = GetOperationTemplate();
         OperationParameterToKeyMap = MapOperationParametersToKeys();
         ResponseType = ResolveResponseType(Method.ReturnType);
-        
+        BodyContentType = ResolveBodyContentType();
+
+        OperationParameterLocation = BodyContentType == BodyContentType.Form
+            ? OperationParameterLocation.BodyForm
+            : OperationParameterLocation.Query;
+
         ParameterValidator.Validate(this);
+    }
+
+    private bool HasAllowAnonymousAttribute()
+    {
+        return Method.GetCustomAttribute<AllowAnonymousAttribute>() is not null ||
+            Method.DeclaringType?.GetCustomAttribute<AllowAnonymousAttribute>() is not null;
     }
 
     private bool IsBodyParameterPresent()
     {
-        return Parameters.Length == 1 &&
-               Parameters[0].
-               ParameterType.ImplementsGenericInterfaceDefinition(typeof(IRequest<>));
+        if (ParametersWithoutRoute.Length == 1)
+        {
+            var parameterType = ParametersWithoutRoute[0].ParameterType;
+            return parameterType.ImplementsGenericInterfaceDefinition(typeof(IRequest<>));
+        }
+        return false;
     }
 
-    private string AdjustOperationTemplate(string queryTemplate)
+    private string GetRouteTemplate()
     {
-        var needsCreateOperatorTemplate = string.IsNullOrEmpty(queryTemplate) &&
+        if (string.IsNullOrWhiteSpace(Attribute.RouteTemplate) &&
+            Attribute is HttpFormValidationAttribute _)
+        {
+            return RouteHelper.CreateValidationRoute(Method.Name);
+        }
+        return Attribute.RouteTemplate;
+    }
+
+    private string GetOperationTemplate()
+    {
+        var operationTemplate = Attribute.OperationTemplate;
+        var needsCreateOperatorTemplate = string.IsNullOrEmpty(operationTemplate) &&
             Parameters.Length > 0 &&
             !IsBodyParameter;
 
         if (needsCreateOperatorTemplate)
             return CreateOperatorTemplate();
 
-        return queryTemplate;
+        return operationTemplate;
     }
 
     private string CreateOperatorTemplate()
     {
         var queryParameters = OperationParameters
-            .Select(x => $"{x.Name}={{{x.Name}}}");
+            .Select(p => OperationParameterUtils.NormalizeKey(p.Name))
+            .Select(key => $"{key}={{{key}}}");
 
         return string.Join("&", queryParameters);
     }
@@ -98,7 +133,8 @@ public class HttpMethodDescriptor
 
         foreach (var routePart in routeParts)
         {
-            if (routePart.Contains("{") && routePart.Contains("}"))
+            if (routePart.Contains('{', StringComparison.Ordinal) &&
+                routePart.Contains('}', StringComparison.Ordinal))
             {
                 var parameterName = ExtractParameterName(routePart);
                 var parameter = Parameters.FirstOrDefault(x => x.Name == parameterName);
@@ -117,8 +153,8 @@ public class HttpMethodDescriptor
 
     private string? ExtractParameterName(string routePart)
     {
-        var start = routePart.IndexOf("{");
-        var end = routePart.IndexOf("}");
+        var start = routePart.IndexOf('{', StringComparison.Ordinal);
+        var end = routePart.IndexOf('}', StringComparison.Ordinal);
         if (end > start)
         {
             return routePart.Substring(start + 1, end - start - 1);
@@ -130,7 +166,16 @@ public class HttpMethodDescriptor
             "Please review the route template syntax.");
     }
 
-    protected IReadOnlyDictionary<ParameterInfo, string> MapOperationParametersToKeys()
+    private ParameterInfo[] GetOperationParameters()
+    {
+        if (IsBodyParameter)
+        {
+            return [];
+        }
+        return ParametersWithoutRoute;
+    }
+
+    private Dictionary<ParameterInfo, string> MapOperationParametersToKeys()
     {
         if (Parameters.Length == 0)
         {
@@ -153,7 +198,7 @@ public class HttpMethodDescriptor
 
             var queryKey = keyValue[0];
             var value = keyValue[1];
-            if (value.StartsWith("{") && value.EndsWith("}"))
+            if (value.StartsWith('{') && value.EndsWith('}'))
             {
                 var parameterName = value.Substring(1, value.Length - 2);
                 var parameter = OperationParameters.FirstOrDefault(x => x.Name == parameterName);
@@ -186,11 +231,24 @@ public class HttpMethodDescriptor
         }
         return currentType;
     }
-}
 
-public enum OperationParameterLocation
-{
-    Route,
-    Query,
-    BodyForm,
+    private BodyContentType ResolveBodyContentType()
+    {
+        if (HttpVerb == HttpVerb.Get || ParametersWithoutRoute.Length == 0)
+        {
+            return BodyContentType.None;
+        }
+
+        if (IsBodyParameter)
+        {
+            return BodyContentType.Json;
+        }
+
+        if (OperationParameters.Length > 0)
+        {
+            return BodyContentType.Form;
+        }
+
+        throw new HttpTemplateException("Failed to resolve the body content type.");
+    }
 }

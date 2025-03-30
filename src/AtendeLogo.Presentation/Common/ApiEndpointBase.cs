@@ -1,18 +1,33 @@
-﻿using AtendeLogo.Shared.Enums;
+﻿using System.Reflection;
+using System.Text.Json;
+using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Presentation.Common;
 
-public abstract class ApiEndpointBase
+public abstract class ApiEndpointBase : IEndpointService
 {
+    private readonly ServiceRole _serviceRole;
+
+    public virtual ServiceRole ServiceRole
+        => _serviceRole;
+
+    public virtual string ServiceName
+         => this.GetType().Name;
+
+    protected ApiEndpointBase()
+    {
+        _serviceRole = GetSessionRole();
+    }
+     
     internal virtual async Task<ResponseResult> ProcessAsync(
-        HttpMethodDescriptor descriptor, 
+        HttpMethodDescriptor descriptor,
         object?[]? parameterValues)
     {
         var method = descriptor.Method;
         var methodResult = method.Invoke(
            this,
            parameterValues);
-           
+
         var successStatusCode = descriptor.SuccessStatusCode;
         if (methodResult is not Task task)
         {
@@ -34,15 +49,15 @@ public abstract class ApiEndpointBase
         return ResponseResult.Error(resultValue.Error);
     }
 
-    #region IEndpointService
-    public virtual ServiceRole ServiceRole
-        => ServiceRole.General;
-    public virtual string ServiceName
-        => this.GetType().Name;
+    public virtual JsonSerializerOptions? GetJsonSerializerOptions()
+    {
+        return null;
+    }
 
-    public virtual bool IsAllowAnonymous
-        => false;
-
-    #endregion
+    private ServiceRole GetSessionRole()
+    {
+        var attribute = GetType().GetCustomAttribute<ServiceRoleAttribute>();
+        return attribute?.ServiceRole ?? ServiceRole.Default;
+    }
 }
 

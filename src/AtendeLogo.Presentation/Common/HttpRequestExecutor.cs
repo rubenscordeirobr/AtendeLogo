@@ -5,7 +5,7 @@ using System.Text.Json;
 using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Mappers;
 using AtendeLogo.Presentation.Common.Binders;
-using AtendeLogo.Presentation.Constants;
+using AtendeLogo.Application.Extensions;
 using AtendeLogo.Shared.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -18,10 +18,10 @@ internal sealed class HttpRequestExecutor
 {
     private readonly HttpContext _httpContext;
     private readonly Type _endpointType;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger _logger;
     private readonly HttpMethodDescriptor _descriptor;
     private readonly ApiEndpointBase? _endpointInstance;
+    private readonly IHttpContextSessionAccessor _httpContextSessionAccessor;
 
     private string EndpointName
         => _endpointType.Name;
@@ -39,58 +39,96 @@ internal sealed class HttpRequestExecutor
     {
         _httpContext = httpContext;
         _endpointType = endpointType;
-        _serviceProvider = httpContext.RequestServices;
-        _logger = _serviceProvider.GetRequiredService<ILogger<HttpRequestExecutor>>();
         _descriptor = descriptor;
-        _endpointInstance = GetEndPointServiceInstance();
+
+        var serviceProvider = httpContext.RequestServices;
+        _logger = serviceProvider.GetRequiredService<ILogger<HttpRequestExecutor>>();
+        _httpContextSessionAccessor = serviceProvider.GetRequiredService<IHttpContextSessionAccessor>();
+        _endpointInstance = GetEndPointServiceInstance(serviceProvider);
     }
 
-    public async Task HandleAsync()
+    public async Task ProcessRequestAsync()
     {
         var cancellationToken = _httpContext.RequestAborted;
         var responseResult = await GetResponseResultAsync();
+        
+        if (cancellationToken.IsCancellationRequested)
+        {
+            _httpContext.Response.StatusCode = (int)ExtendedHttpStatusCode.RequestAborted;
+            return;
+        }
 
-        _httpContext.Response.StatusCode = responseResult.StatusCode;
-
-        var jsonOptions = GetJsonSerializerOptions();
-        var response = responseResult.IsSuccess
-            ? responseResult.Response
-            : responseResult.ErrorResponse;
-
-        await WriteResponseAsync(response, jsonOptions, cancellationToken);
+        await WriteResponseAsync(responseResult, cancellationToken);
     }
 
     private async Task WriteResponseAsync(
-        object? response,
-        JsonSerializerOptions jsonOptions,
+        ResponseResult responseResult,
         CancellationToken cancellationToken)
     {
-        if (cancellationToken.IsCancellationRequested || response is null)
-        {
-            return;
-        }
+
+
         try
         {
-            await _httpContext.Response.WriteAsJsonAsync(response, response.GetType(), jsonOptions, cancellationToken);
+            var response = _httpContext.Response;
+            var authorizationHeader = JwtUtils.FormatAsAuthorizationHeader(
+               _httpContextSessionAccessor.AuthorizationToken);
+
+            response.StatusCode = responseResult.StatusCode;
+            response.Headers.Authorization = authorizationHeader;
+
+            var responseValue = responseResult.IsSuccess
+                ? responseResult.Value
+                : responseResult.ErrorResponse;
+
+            if (responseValue is null)
+            {
+                response.StatusCode = (int)HttpStatusCode.NoContent;
+
+                Log(LogLevel.Error,
+                    null,
+                    "HttpRequestExecutor.WriteResponseAsync",
+                    "ResponseValue is null");
+
+                return;
+            }
+
+            var jsonOptions = GetJsonSerializerOptions();
+
+            await _httpContext.Response.WriteAsJsonAsync(
+                responseValue,
+                responseValue.GetType(), jsonOptions,
+                cancellationToken);
         }
         catch (Exception ex)
         {
             Log(logLevel: LogLevel.Warning,
-                "HttpRequestExecutor.WriteResponseAsync",
-                ex.GetNestedMessage());
+                exception: ex,
+                errorCode: "HttpRequestExecutor.WriteResponseAsync",
+                errorMessage: ex.GetNestedMessage());
         }
     }
-
+     
     public async Task<ResponseResult> GetResponseResultAsync()
     {
         if (_endpointInstance is null)
         {
-            _httpContext.Items.Add(HttpContextItensConstants.EndpointInstance, _endpointInstance);
-
             return ResponseResult.Error(
                 HttpStatusCode.InternalServerError,
                 "HttpRequestExecutor.InvalidEndPointType",
                 $"Type {EndpointName} is not found");
+        }
+
+        _httpContextSessionAccessor.EndpointInstance = _endpointInstance;
+
+        if (_httpContextSessionAccessor.GetRequiredUserSession().IsAnonymous() &&
+            !_descriptor.IsAllowAnonymous)
+        {
+            Log(LogLevel.Warning, null, "Anonymous user is not allowed to access the endpoint {EndpointName}", EndpointName);
+
+            return ResponseResult.Error(
+                HttpStatusCode.Unauthorized,
+                "HttpRequestExecutor.AnonymousAccessDenied",
+                $"Anonymous user is not allowed to access the endpoint {EndpointName}");
         }
 
         try
@@ -99,7 +137,7 @@ internal sealed class HttpRequestExecutor
         }
         catch (OperationCanceledException ex)
         {
-            Log(LogLevel.Information, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
+            Log(LogLevel.Information, ex, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
             return ResponseResult.Error(ExtendedHttpStatusCode.RequestAborted,
                 "HttpRequestExecutor.RequestCancelled",
                 "Request was canceled");
@@ -108,22 +146,25 @@ internal sealed class HttpRequestExecutor
         {
             if (IsCancellationRequested)
             {
-                Log(LogLevel.Information, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
-                return ResponseResult.Error(HttpStatusCode.BadRequest,
+                Log(LogLevel.Information, ex, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
+
+                return ResponseResult.Error(ExtendedHttpStatusCode.RequestAborted,
                     "HttpRequestExecutor.RequestCancelled",
                     "Request was canceled");
             }
-            else
-            {
-                Log(LogLevel.Critical, "HttpRequestExecutor.RequestCancelled", ex.GetNestedMessage());
-                var errorCode = "HttpRequestExecutor.ErrorInvokingMethod";
-                return ResponseResult.Error(HttpStatusCode.InternalServerError, errorCode, ex.GetNestedMessage());
-            }
+
+            var error = HttpErrorMapper.MapExceptionToError(ex,
+                "HttpRequestExecutor.ProcessRequestAsync");
+
+            Log(error, ex);
+
+            return ResponseResult.Error(error);
+
         }
     }
-    private ApiEndpointBase? GetEndPointServiceInstance()
+    private ApiEndpointBase? GetEndPointServiceInstance(IServiceProvider serviceProvider)
     {
-        var endpointInstance = CreateEndpointServiceInstance();
+        var endpointInstance = CreateEndpointServiceInstance(serviceProvider);
         if (endpointInstance is not ApiEndpointBase endPoint)
         {
             _logger.LogCritical("Type {EndpointName} is not an EndPointBase", EndpointName);
@@ -132,21 +173,21 @@ internal sealed class HttpRequestExecutor
         return endPoint;
     }
 
-    private object? CreateEndpointServiceInstance()
+    private object? CreateEndpointServiceInstance(IServiceProvider serviceProvider)
     {
-        var endpointInstance = _serviceProvider.GetService(_endpointType);
+        var endpointInstance = serviceProvider.GetService(_endpointType);
         if (endpointInstance is not null)
         {
             return endpointInstance;
         }
         try
         {
-            return ActivatorUtilities.CreateInstance(_serviceProvider, _endpointType);
+            return ActivatorUtilities.CreateInstance(serviceProvider, _endpointType);
         }
         catch (Exception ex)
         {
             var message = $"Error creating instance of {EndpointName}. {ex.GetNestedMessage()}";
-            Log(LogLevel.Critical, "HttpRequestExecutor.ErrorCreatingInstance", message);
+            Log(LogLevel.Critical, ex, "HttpRequestExecutor.ErrorCreatingInstance", message);
             return null;
         }
     }
@@ -159,6 +200,7 @@ internal sealed class HttpRequestExecutor
 #if DEBUG
             Debugger.Break();
 #endif
+            Log(parameterValuesResult.Error, null);
             return ResponseResult.Error(parameterValuesResult.Error);
         }
 
@@ -192,7 +234,7 @@ internal sealed class HttpRequestExecutor
             return GetSuccessResult(resultValue.Value);
         }
 
-        Log(resultValue.Error);
+        Log(resultValue.Error, null);
 
         return ResponseResult.Error(resultValue.Error);
     }
@@ -316,18 +358,10 @@ internal sealed class HttpRequestExecutor
         return options;
     }
 
-    private void Log(Error error)
+    private void Log(Error error, Exception? exception)
     {
         var level = ErrorLogLevelMapper.MapErrorLevel(error);
-        Log(level, error.Code, error.Message);
-    }
-
-    private void Log(
-        LogLevel logLevel,
-        string errorCode,
-        string errorMessage)
-    {
-        Log(logLevel, null, errorCode, errorMessage);
+        Log(level, exception, error.Code, error.Message);
     }
 
     private void Log(
@@ -336,8 +370,6 @@ internal sealed class HttpRequestExecutor
         string errorCode,
         string errorMessage)
     {
-
-        Debugger.Break();
 
         var requestUri = _httpContext.Request.GetDisplayUrl();
         var methodName = _descriptor.Method.Name;

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace AtendeLogo.Presentation.Common;
 
-public static class HttpGetDescriptorSelector
+internal static class HttpGetDescriptorSelector
 {
-    public static HttpMethodDescriptor Select(
+    internal static HttpMethodDescriptor Select(
         HttpContext httpContext,
         HttpMethodDescriptor[] descriptors)
     {
@@ -18,8 +18,7 @@ public static class HttpGetDescriptorSelector
 
         var requestQueryTemplate = CreateQueryTemplate(httpContext);
         var queryDescriptor = descriptors
-            .Where(d => d.OperationTemplate.Equals(requestQueryTemplate, StringComparison.OrdinalIgnoreCase))
-            .FirstOrDefault();
+            .FirstOrDefault(d => d.OperationTemplate.Equals(requestQueryTemplate, StringComparison.OrdinalIgnoreCase));
 
         if(queryDescriptor != null)
         {
@@ -32,7 +31,7 @@ public static class HttpGetDescriptorSelector
     public static string CreateQueryTemplate(HttpContext httpContext)
     {
         var query = httpContext.Request.Query;
-        if (query == null || !query.Any())
+        if (query is null || query.Count == 0)
         {
             return string.Empty;
         }

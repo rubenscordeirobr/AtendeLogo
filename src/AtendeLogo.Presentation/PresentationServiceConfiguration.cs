@@ -8,7 +8,7 @@ public static class PresentationServiceConfiguration
     public static IServiceCollection AddPresentationServices(
         this IServiceCollection services)
     {
-        services.AddScoped<IUserSessionAccessor, UserSessionAccessor>();
+        services.AddScoped<IHttpContextSessionAccessor, HttpContextSessionAccessor>();
         return services;
     }
 }

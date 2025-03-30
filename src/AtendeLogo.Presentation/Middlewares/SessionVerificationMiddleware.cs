@@ -1,11 +1,10 @@
-﻿using AtendeLogo.Presentation.Constants;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Presentation.Middlewares;
 
-public class SessionVerificationMiddleware
+public sealed class SessionVerificationMiddleware
 {
     private readonly RequestDelegate _next;
 
@@ -16,24 +15,28 @@ public class SessionVerificationMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        await using (var scope = context.RequestServices.CreateAsyncScope())
+        Guard.NotNull(context);
+
+        var serviceProvider = context.RequestServices;
+        var logger = serviceProvider.GetRequiredService<ILogger<SessionVerificationMiddleware>>();
+        try
         {
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<SessionVerificationMiddleware>>();
-            try
+            var sessionVerification = serviceProvider.GetService<IUserSessionVerificationService>();
+            if (sessionVerification == null)
             {
-                var sessionVerification = scope.ServiceProvider.GetService<IUserSessionVerificationService>();
-                if (sessionVerification == null)
-                {
-                    logger.LogError("UserSessionVerificationService not registered.");
-                    return;
-                }
-                var userSession = await sessionVerification.VerifyAsync();
-                context.Items.Add(HttpContextItensConstants.UserSession, userSession);
+                logger.LogError("UserSessionVerificationService not registered.");
+                return;
             }
-            catch (Exception ex)
+            var userSession = await sessionVerification.VerifyAsync();
+            if (userSession is null)
             {
-                logger.LogError(ex, "Error retrieving UserSessionVerificationService.");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
             }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error retrieving UserSessionVerificationService.");
         }
         await _next(context);
     }

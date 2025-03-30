@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Presentation.Common.Exceptions;
+using AtendeLogo.Shared.Contracts;
 
 namespace AtendeLogo.Presentation.Common.Validators;
 
@@ -15,6 +16,8 @@ internal static class HttpMethodDescriptorValidator
         {
             return;
         }
+
+        ValidateEndpointType(endpointType);
  
         ValidateOperationTemplate(endpointType, descriptors);
 
@@ -26,7 +29,17 @@ internal static class HttpMethodDescriptorValidator
 
         ValidateStatusSucessCode(endpointType, descriptors);
     }
-     
+
+    private static void ValidateEndpointType(Type endpointType)
+    {
+        if (!endpointType.IsAssignableTo<IEndpointService>())
+        {
+            throw new InvalidEndpointException(
+                $" The type '{endpointType.Name}' has a HttpEndpoint attribute and must implement the interface '{nameof(IEndpointService)}'."
+             );
+        }
+    }
+
     private static void ValidateOperationTemplate(
         Type endpointType,
         HttpMethodDescriptor[] descriptors)

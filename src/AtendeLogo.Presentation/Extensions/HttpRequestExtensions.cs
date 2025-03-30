@@ -2,21 +2,29 @@
 
 namespace AtendeLogo.Presentation.Extensions;
 
-public static class HttpRequestExtensions
+internal static class HttpRequestExtensions
 {
-    public static List<string> GetOperationKeys(this HttpRequest request)
+    internal static List<string> GetOperationKeys(this HttpRequest request)
     {
         var query = request.Query;
-        if (query?.Any() == true)
+        if (query?.Count > 0)
         {
-            return query.Keys.ToList();
+            return [.. query.Keys];
         }
 
-        if(request.HasFormContentType)
+        if (request.HasFormContentType)
         {
-            return request.Form.Keys.ToList();
+            return [.. request.Form.Keys];
         }
-        return new List<string>();
+        return [];
+    }
+
+    internal static string GetPathAndQueryString(
+        this HttpRequest httpRequest)
+    {
+        var path = httpRequest.Path.Value;
+        var queryString = httpRequest.QueryString.Value;
+        return $"{path}{queryString}";
     }
 }
 

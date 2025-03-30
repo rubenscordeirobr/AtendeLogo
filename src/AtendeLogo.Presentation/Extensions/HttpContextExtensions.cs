@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AtendeLogo.Shared.Constants;
+using Microsoft.AspNetCore.Http;
 
 namespace AtendeLogo.Presentation.Extensions;
 
@@ -10,14 +11,18 @@ public static class HttpContextExtensions
         Guard.NotNull(context);
 
         var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
-        var userAgent = context.Request.Headers["User-Agent"].ToString() ?? "Unknown";
-        var applicationName = context.Request.Headers["Application-Name"].ToString() ?? "Unknown";
-
+        var userAgent = context.Request.Headers[HttpHeaderConstants.UserAgent].ToString() ?? "Unknown";
+        var applicationName = context.Request.Headers[HttpHeaderConstants.ApplicationName].ToString() ?? "Unknown";
+        var authorizationHeader = context.Request.Headers.Authorization.ToString();
+        var authorizationToken = JwtUtils.GetTokenFromAuthorizationHeader(authorizationHeader);
+         
         return new ClientRequestHeaderInfo
         (
             IpAddress : ipAddress,
             UserAgent : userAgent,
-            ApplicationName :applicationName
+            ApplicationName :applicationName,
+            AuthorizationToken : authorizationToken
         );
     }
 }
+

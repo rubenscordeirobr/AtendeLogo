@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
-using AtendeLogo.Common.Utils;
-using AtendeLogo.Presentation.Common;
+using AtendeLogo.Common.Helpers;
 using AtendeLogo.Presentation.Common.Exceptions;
-using AtendeLogo.Presentation.Constants;
+using AtendeLogo.Presentation.Common.Validators;
+using AtendeLogo.Presentation.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.OpenApi.Models;
 
 namespace AtendeLogo.Presentation.Extensions;
 
@@ -23,6 +21,8 @@ public static class EndpointBuilderExtensions
         this IEndpointRouteBuilder endpointBuilder,
         Assembly assembly)
     {
+        Guard.NotNull(assembly);
+
         var endpointTypes = assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(ApiEndpointBase)))
             .Where(t => !t.IsAbstract && t.GetCustomAttribute<EndPointAttribute>() != null);
@@ -37,7 +37,10 @@ public static class EndpointBuilderExtensions
         this IEndpointRouteBuilder endpointBuilder,
         Type endpointType)
     {
+        Guard.NotNull(endpointType);
+
         var endpointAttr = endpointType.GetCustomAttribute<EndPointAttribute>();
+
         if (endpointAttr is null)
         {
             throw new EndpointAttributeException(
@@ -58,136 +61,56 @@ public static class EndpointBuilderExtensions
 
         foreach (var routeGroup in routeGroups)
         {
-            var (routeTemplate, httpVerb) = routeGroup.Key;
-
             var descriptors = routeGroup.ToArray();
 
-            ValidateDescriptors(endpointType, descriptors);
+            HttpMethodDescriptorValidator.ValidateDescriptors(endpointType, descriptors);
 
-            string[] httpMethods = [httpVerb.ToString().ToUpper()];
+            var firstDescriptor = descriptors[0];
+            var (routeTemplate, httpVerb) = routeGroup.Key;
 
-            var route = string.IsNullOrWhiteSpace(routeTemplate)
-                ? routePrefix
-                : $"{routePrefix}/{routeTemplate.TrimStart('/')}";
+            string[] httpMethods = [httpVerb.ToString().ToUpperInvariant()];
 
-            var responseType = descriptors.First().ResponseType;
-            var statusCode = (int)descriptors.First().SuccessStatusCode;
+            var route = RouteHelper.Combine(routePrefix, routeTemplate);
+
+            var responseType = firstDescriptor.ResponseType;
+            var statusCode = (int)firstDescriptor.SuccessStatusCode;
 
             RequestDelegate requestDelegate = async (httpContext) =>
             {
-                httpContext.Items.Add(HttpContextItensConstants.EndpointType, endpointType);
-
                 var descriptor = HttpGetDescriptorSelector.Select(httpContext, descriptors);
-                var requestHandler = new HttpRequestHandler(
+                var requestHandler = new HttpRequestExecutor(
                     httpContext,
                     endpointType,
                     descriptor);
 
-                await requestHandler.HandleAsync();
+                await requestHandler.ProcessRequestAsync();
             };
 
-            var mapBuilder = endpointBuilder.MapMethods(route, httpMethods, requestDelegate)
+            var endpointName = MetadataHelpers.FormatEndpointName(routePrefix);
+            var acceptsMetadata = MetadataHelpers.GetAcceptsMetadata(firstDescriptor);
+
+            endpointBuilder.MapMethods(route, httpMethods, requestDelegate)
+                .WithTags(endpointName)
                 .WithMetadata(requestDelegate.Method)
-                //.WithGroupName(endpointType.Name)
-                .WithMetadata(new EndpointNameMetadata(route))
+                .WithMetadata(new EndpointNameMetadata($"{route}/{httpVerb.ToString().ToUpperInvariant()}"))
                 .WithMetadata(new HttpMethodMetadata(httpMethods))
-                .WithMetadata(new ProducesResponseTypeMetadata(statusCode, responseType));
-
-            if (descriptors.Count() == 1 &&
-                descriptors[0].IsBodyParameter)
-            {
-                mapBuilder.WithMetadata(new AcceptsMetadata(["application/json"], descriptors[0].BodyType));
-            }
-
-            var operationParameters = descriptors
-                .SelectMany(d => d.OperationParameters)
-                .GroupBy(p => p.Name);
-
-            mapBuilder.WithOpenApi(operation =>
-            {
-                operation.Parameters ??= [];
-
-                foreach (var queryParameter in operationParameters)
-                {
-                    var schemaType = JsonSchemaUtils.GetJsonSchemaType(queryParameter.First().ParameterType);
-                    var operameterLocation = descriptors[0].OperationParameterLocation;
-
-                    operation.Parameters.Add(new OpenApiParameter
-                    {
-                        Name = queryParameter.Key,
-                        In = ParameterLocation.Query,
-                        Required = queryParameter.Count() == descriptors.Count(),
-                        Schema = new OpenApiSchema
-                        {
-                            Type = schemaType
-                        }
-                    });
-                }
-                return operation;
-            });
+                .WithMetadata(new ProducesResponseTypeMetadata(statusCode, responseType))
+                .WithMetadata(acceptsMetadata)
+                .WithOpenApi(operation =>
+                 {
+                     MetadataHelpers.SetOperationMetadata(operation, descriptors);
+                     return operation;
+                 });
         }
     }
 
-    private static void ValidateDescriptors(Type endpointType, HttpMethodDescriptor[] descriptors)
+    public static void MapFallback(this IEndpointRouteBuilder endpoints)
     {
-        if (descriptors.Length == 1)
+        endpoints.MapFallback(async context =>
         {
-            return;
-        }
-
-        //if (descriptors.Any(x => x.HttpVerb != Common.Enums.HttpVerb.Get))
-        //{
-        //    var methodNames = string.Join(", ", descriptors.Select(d => d.Method.Name));
-        //    throw new HttpTemplateException(
-        //        $"The endpoint {endpointType.Name}." +
-        //        $"Multiple endpoint methods sharing the same route template '{descriptors.First().RouteTemplate}' " +
-        //        $"are only allowed for GET requests. The following methods use a non-GET verb: {methodNames}.");
-        //}
-
-        var distinctQueryTemplateCount = descriptors
-            .Select(d => d.OperationTemplate)
-            .Distinct()
-            .Count();
-
-        if (distinctQueryTemplateCount != descriptors.Length)
-        {
-            throw new DuplicateEndpointException(
-                $"The endpoint '{endpointType.Name}' has multiple methods sharing the same route template '{descriptors.First().RouteTemplate}' " +
-                $"and operation template '{descriptors.First().OperationTemplate}'. " +
-               $"Each method must have a unique query template.");
-        }
-
-        var distinctResponseType = descriptors
-            .Select(d => d.ResponseType)
-            .Distinct();
-
-        if (distinctResponseType.Count() > 1)
-        {
-            var methodNames = string.Join(", ", descriptors.Select(d => d.Method.Name));
-            var responseTypeNames = string.Join(", ", distinctResponseType.Select(t => t.Name));
-            var queries = string.Join(", ", descriptors.Select(d => d.OperationTemplate));
-
-            throw new HttpTemplateException(
-                $"The endpoint '{endpointType.Name}' has multiple methods sharing the same route template '{descriptors.First().RouteTemplate}' " +
-                $"and operation templates '{queries}', but they must return the same response type. " +
-                $"However, the following methods have inconsistent response types: {methodNames} ({responseTypeNames}).");
-        }
-
-        //check if has parameter with the same name and different ParameterType
-
-        var distinctParameters = descriptors
-            .GroupBy(p => String.Join(",", p.OperationParameters.OrderBy(x => x.Name)))
-            .Where(g => g.Count() > 1);
-
-        if (distinctParameters.Any())
-        {
-            var methodNames = string.Join(", ", descriptors.Select(d => d.Method.Name));
-            var parameterNames = string.Join(", ", distinctParameters);
-
-            throw new HttpTemplateException(
-                $"The endpoint '{endpointType.Name}' has multiple methods sharing the same route template '{descriptors.First().RouteTemplate}' " +
-                $"and operation template '{descriptors.First().OperationTemplate}', but they must have the same parameters. " +
-                $"The following parameters are duplicated: {parameterNames} in methods {methodNames}.");
-        }
+            var executor = new HttpRequestExecutorFallback(context);
+            await executor.ProcessRequestAsync();
+       
+        });
     }
 }

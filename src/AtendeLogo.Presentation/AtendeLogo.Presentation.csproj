@@ -1,20 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
+    <AnalysisMode>all</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
+    <InternalsVisibleTo Include="AtendeLogo.UseCases.UnitTests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
   </ItemGroup>
+ 
 
 </Project>
