@@ -11,9 +11,7 @@
   <Folder Name="/src/01-UI/" Id="717f1626-31b9-8664-f7bb-6f3cf30fa3ca">
     <Project Path="src/AtendeLogo.IdentityApi/AtendeLogo.IdentityApi.csproj" />
   </Folder>
-  <Folder Name="/src/02-API/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
-    <Project Path="src/AtendeLogo.TenantPortal/AtendeLogo.TenantPortal.csproj" />
-  </Folder>
+  <Folder Name="/src/02-API/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8" />
   <Folder Name="/src/03-Presentation/" Id="22dcb3f3-dbd6-7824-654e-ba8e20c7a15d">
     <Project Path="src/AtendeLogo.ClientGateway/AtendeLogo.ClientGateway.csproj" />
     <Project Path="src/AtendeLogo.Presentation/AtendeLogo.Presentation.csproj" />

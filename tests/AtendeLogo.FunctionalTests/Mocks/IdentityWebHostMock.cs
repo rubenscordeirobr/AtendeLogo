@@ -30,9 +30,6 @@ public class IdentityWebHostMock<TRoleProvider>
                 .AddPersistenceServicesMock()
                 .AddInMemoryIdentityDbContext();
 
-            //services.Remove<IUserSessionAccessor>();
-            //services.Remove<IUserSessionVerificationService>();
-            //services.AddSingleton<IUserSessionVerificationService, UserSessionVerificationServiceMock>();
             services.AddSingleton<ITestOutputHelper, TestOutputProxy>();
         });
     }
@@ -50,19 +47,3 @@ public class IdentityWebHostMock<TRoleProvider>
     #endregion
 
 }
-
-//private async Task SaveUserSessionAsync()
-//{
-//    await using (var scope = Services.CreateAsyncScope())
-//    {
-//        var userSessionAccessor = scope.ServiceProvider.GetRequiredService<IUserSessionAccessor>();
-//        var unitOfWork = scope.ServiceProvider.GetRequiredService<IIdentityUnitOfWork>();
-//        var userSession = userSessionAccessor.GetCurrentSession();
-
-//        var exists = await unitOfWork.UserSessions.ExistsAsync(userSession.Id);
-//        if (!exists)
-//        {
-//            //await unitOfWork.SaveChangesAsync(silent: false);
-//        }
-//    }
-//}

@@ -36,12 +36,15 @@ public static class WebApplicationBuilderExtensions
     public static IHostApplicationBuilder AddEssentialServices(
          this IHostApplicationBuilder builder)
     {
-        builder.AddServiceDefaults();
 
+#pragma warning disable S125 
+        /* builder.AddServiceDefaults(); */
+#pragma warning restore S125 
         builder.Services
           .AddHttpContextAccessor()
           .AddOpenApi()
           .AddSwaggerGen();
+
 
 
         builder.Services.AddControllers(options =>

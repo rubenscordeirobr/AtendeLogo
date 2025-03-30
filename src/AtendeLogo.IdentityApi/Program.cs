@@ -15,7 +15,7 @@ if (!env.IsTest())
         .AddIdentityPersistenceServices(configuration)
         .AddActivityPersistenceServices(configuration);
 }
- 
+
 builder.Services.AddApplicationServices()
     .AddRuntimeServices()
     .AddUserCasesSharedServices()
@@ -24,7 +24,10 @@ builder.Services.AddApplicationServices()
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
+#pragma warning disable S125
+/* builder.AddServiceDefaults(); */
+#pragma warning restore S125
+
 app.UseHttpsRedirection()
    .UseAuthorization();
 

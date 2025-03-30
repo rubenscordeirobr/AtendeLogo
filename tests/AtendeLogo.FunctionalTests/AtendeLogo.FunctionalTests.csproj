@@ -10,8 +10,11 @@
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.TestPlatform" />
+    
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +25,7 @@
     <ProjectReference Include="..\..\src\AtendeLogo.IdentityApi\AtendeLogo.IdentityApi.csproj" />
       
     <ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
-
+ 
   </ItemGroup>
  
 
