@@ -43,12 +43,12 @@ public class TenantUserValidationService : ITenantUserValidationService
 
     public Task<bool> IsPhoneNumberUniqueAsync(
         Guid currentUser_Id,
-        string number,
+        string phoneNumber,
         CancellationToken cancellationToken = default)
     {
         return _mediator.IsValidAsync(
-            [nameof(currentUser_Id), nameof(number)],
-            [currentUser_Id, number],
+            [nameof(currentUser_Id), nameof(phoneNumber)],
+            [currentUser_Id, phoneNumber],
             cancellationToken);
     }
 }

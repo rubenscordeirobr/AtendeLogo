@@ -83,14 +83,19 @@ public class UserSessionTokenHandlerTests
 
         // Assert
         result.Should().BeNull();
+
+#pragma warning disable CS8620, CS8600, CS8604
+
         _loggerMock.Verify(
             l => l.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
                 It.IsAny<It.IsAnyType>(),
                 It.IsAny<Exception>(),
-                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+                (Func<It.IsAnyType, Exception?, string>)It.IsAny<object?>()),
             Times.Once);
+
+#pragma warning restore CS8604, CS8600, CS8620
     }
 
     [Fact]
@@ -118,13 +123,17 @@ public class UserSessionTokenHandlerTests
         // Assert
         result.Should().BeNull();
 
+#pragma warning disable CS8620, CS8600, CS8604
+
         _loggerMock.Verify(
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
                 It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("Error reading user session token")),
                 null,
-                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+                (Func<It.IsAnyType, Exception?, string>)It.IsAny<object?>()),
             Times.Once);
+
+#pragma warning restore CS8604, CS8600, CS8620
     }
 }

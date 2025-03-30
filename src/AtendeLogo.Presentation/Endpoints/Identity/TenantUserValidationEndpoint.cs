@@ -43,10 +43,10 @@ public class TenantUserValidationEndpoint : ApiEndpointBase, ITenantUserValidati
     [HttpFormValidation]
     public Task<bool> IsPhoneNumberUniqueAsync(
         Guid currentUser_Id,
-        string number,
+        string phoneNumber,
         CancellationToken cancellationToken = default)
     {
-        return _validationService.IsPhoneNumberUniqueAsync(currentUser_Id, number, cancellationToken);
+        return _validationService.IsPhoneNumberUniqueAsync(currentUser_Id, phoneNumber, cancellationToken);
     }
 
     #region IEndpointService
