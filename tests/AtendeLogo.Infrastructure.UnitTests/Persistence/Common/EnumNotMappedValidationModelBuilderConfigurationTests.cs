@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace AtendeLogo.Application.UnitTests.Persistence.Common;
+namespace AtendeLogo.Infrastructure.UnitTests.Persistence.Common;
 
 public class EnumNotMappedValidationModelBuilderConfigurationTests
 {

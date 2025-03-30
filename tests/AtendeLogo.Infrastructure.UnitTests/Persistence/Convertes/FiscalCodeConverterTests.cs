@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Application.UnitTests.Persistence.Convertes;
+﻿namespace AtendeLogo.Infrastructure.UnitTests.Persistence.Convertes;
 
 public class FiscalCodeConverterTests
 {

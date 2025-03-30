@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AtendeLogo.Application.UnitTests.Persistence.Common;
+namespace AtendeLogo.Infrastructure.UnitTests.Persistence.Common;
 
 public class ModelBuilderConfigurationTests
 {

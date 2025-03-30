@@ -1,13 +1,13 @@
 ﻿using AtendeLogo.Application.Contracts.Persistence.Identities;
 
-namespace AtendeLogo.Application.UnitTests.Persistence.Identity;
+namespace AtendeLogo.Infrastructure.UnitTests.Persistence.Identity;
 
-public class SystemUserRepositoryTests: IClassFixture<AnonymousServiceProviderMock>
+public class SystemUserRepositoryTests: IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
     public SystemUserRepositoryTests(
-        AnonymousServiceProviderMock serviceProvider,
+        ServiceProviderMock<AnonymousRole> serviceProvider,
         ITestOutputHelper testOutput)
     {
         serviceProvider.AddTestOutput(testOutput);
@@ -39,7 +39,7 @@ public class SystemUserRepositoryTests: IClassFixture<AnonymousServiceProviderMo
     {
         // Arrange
         var systemUserRepository = _serviceProvider.GetRequiredService<ISystemUserRepository>();
-        var anonymousId = AnonymousIdentityConstants.User_Id;
+        var anonymousId = AnonymousUserConstants.User_Id;
       
         // Act
         var anonymousUser = await systemUserRepository.GetByIdAsync(anonymousId);

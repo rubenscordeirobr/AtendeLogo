@@ -1,7 +1,7 @@
 ﻿using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Persistence.Activity.Documents;
 
-namespace AtendeLogo.Application.UnitTests.Persistence.Activity;
+namespace AtendeLogo.Infrastructure.UnitTests.Persistence.Activity;
 
 public class ActivityDocumentMapperTests
 {
