@@ -1,11 +1,9 @@
-﻿using AtendeLogo.Application.Contracts.Mediators;
-using AtendeLogo.Presentation.Common;
-using AtendeLogo.UseCases.Contracts.Identities;
+﻿using AtendeLogo.UseCases.Identities.Users.TenantUsers.Commands;
 using AtendeLogo.UseCases.Identities.Users.TenantUsers.Queries;
 
 namespace AtendeLogo.Presentation.Endpoints.Identity;
 
-[EndPoint("api/tenant-users")]
+[EndPoint(IdentityRouteConstants.TenantUsersRoute)]
 public class TenantUsersEndpoint : ApiEndpointBase, ITenantUserService
 {
     private readonly IRequestMediator _mediator;
@@ -15,36 +13,60 @@ public class TenantUsersEndpoint : ApiEndpointBase, ITenantUserService
         _mediator = mediator;
     }
 
-    [HttpGet("{id}")]
-    public Task<Result<TenantUserResponse>> GetTenantUserByIdAsync(
+    #region Queries
+
+    [HttpGet(RouteConstants.RouteId)]
+    public Task<Result<UserResponse>> GetTenantUserByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default)
     {
-        return _mediator.GetSingleAsync(new GetTenantUserByIdQuery(id), cancellationToken);
+        return _mediator.GetAsync(new GetTenantUserByIdQuery(id), cancellationToken);
     }
 
-    [HttpGet("/", "email={email}")]
-    public Task<Result<TenantUserResponse>> GetTenantUserByEmailAsync(
+    [HttpGet]
+    public Task<Result<UserResponse>> GetTenantUserByEmailAsync(
         string email,
         CancellationToken cancellationToken = default)
     {
-        return _mediator.GetSingleAsync(new GetTenantUserByEmailQuery(email), cancellationToken);
+        return _mediator.GetAsync(new GetTenantUserByEmailQuery(email), cancellationToken);
     }
 
-    [HttpGet("/", "phone-number={phoneNumber}")]
-    public Task<Result<TenantUserResponse>> GetTenantUserByPhoneNumberAsync(
+    [HttpGet]
+    public Task<Result<UserResponse>> GetTenantUserByPhoneNumberAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default)
     {
-        return _mediator.GetSingleAsync(new GetTenantUserByPhoneNumberQuery(phoneNumber), cancellationToken);
+        return _mediator.GetAsync(new GetTenantUserByPhoneNumberQuery(phoneNumber), cancellationToken);
     }
       
-    [HttpGet("/", "emailOrPhoneNumber={emailOrPhoneNumber}")]
-    public Task<Result<TenantUserResponse>> GetTenantUserByEmailOrPhoneNumberAsync(
+    [HttpGet]
+    public Task<Result<UserResponse>> GetTenantUserByEmailOrPhoneNumberAsync(
        string emailOrPhoneNumber,
        CancellationToken cancellationToken = default)
     {
-        return _mediator.GetSingleAsync(new GetTenantUserByEmailOrPhoneNumberQuery(emailOrPhoneNumber), cancellationToken);
+        return _mediator.GetAsync(new GetTenantUserByEmailOrPhoneNumberQuery(emailOrPhoneNumber), cancellationToken);
     }
+
+    #endregion
+
+    #region Commands
+
+    [HttpPost]
+    public Task<Result<CreateTenantUserResponse>> CreateTenantUserAsync(
+        CreateTenantUserCommand command,
+        CancellationToken cancellationToken = default)
+    { 
+        return _mediator.RunAsync(command, cancellationToken);
+    }
+ 
+    [HttpDelete]
+    public Task<Result<OperationResponse>> DeleteTenantUserAsync(
+        DeleteTenantUserCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        return _mediator.RunAsync(command, cancellationToken);
+    }
+
+    #endregion
 }
 
