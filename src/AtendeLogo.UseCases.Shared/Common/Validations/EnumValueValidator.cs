@@ -1,6 +1,5 @@
-﻿using System.Reflection;
-using AtendeLogo.Common.Attributes;
-using AtendeLogo.Common.Exceptions;
+﻿using AtendeLogo.Common.Exceptions;
+using AtendeLogo.Common.Utils;
 using FluentValidation.Validators;
 
 namespace AtendeLogo.UseCases.Common.Validations;
@@ -8,22 +7,25 @@ namespace AtendeLogo.UseCases.Common.Validations;
 public static partial class DefaultValidationsExtensions
 {
     [Obsolete("Use IsInEnumValue instead.")]
-    public static IRuleBuilderOptions<T, TProperty> IsInEnum<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+    public static IRuleBuilderOptions<T, TProperty> IsInEnum<T, TProperty>(
+        this IRuleBuilder<T, TProperty> ruleBuilder)
     {
         throw new DeprecatedException("Use IsInEnumValue instead.");
     }
 
-    public static IRuleBuilderOptions<T, TProperty> IsInEnumValue<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+    public static IRuleBuilderOptions<T, TProperty> IsInEnumValue<T, TProperty>(
+        this IRuleBuilder<T, TProperty> ruleBuilder)
+        where TProperty : struct, Enum
     {
         Guard.NotNull(ruleBuilder);
 
         return ruleBuilder
             .SetValidator(new EnumValueValidator<T, TProperty>());
-
     }
 }
 
 public class EnumValueValidator<T, TProperty> : EnumValidator<T, TProperty>
+    where TProperty : struct, Enum
 {
     public override string Name
         => "EnumValueValidator";
@@ -34,13 +36,7 @@ public class EnumValueValidator<T, TProperty> : EnumValidator<T, TProperty>
         {
             return false;
         }
+        return EnumUtils.IsDefined(value);
 
-        var member = EnumType.GetMember(value!.ToString()!)
-            .FirstOrDefault();
-
-        if (member is null)
-            return false;
-
-        return member.GetCustomAttribute<UndefinedValueAttribute>() == null;
     }
 }
