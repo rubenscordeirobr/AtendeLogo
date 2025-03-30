@@ -2,11 +2,11 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.SystemUsers.Queries;
 
-public class GetAllSystemUsersQueryHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class GetAllSystemUsersQueryHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetAllSystemUsersQueryHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public GetAllSystemUsersQueryHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -43,7 +43,7 @@ public class GetAllSystemUsersQueryHandlerTests : IClassFixture<AnonymousService
         result.Value.Should().NotBeEmpty();
 
         result.Value.Should()
-            .AllBeOfType<SystemUserResponse>();
+            .AllBeOfType<UserResponse>();
 
     }
 }

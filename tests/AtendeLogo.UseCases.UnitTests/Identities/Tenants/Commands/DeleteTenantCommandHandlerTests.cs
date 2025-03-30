@@ -3,14 +3,14 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServiceProviderMock>
+public class DeleteTenantCommandHandlerTests : IClassFixture<ServiceProviderMock<AdminUserRole>>
 {
     private readonly ITestOutputHelper _testOutput;
     private readonly IRequestMediator _mediator;
     private readonly DeleteTenantCommand _validadeCommand;
 
     public DeleteTenantCommandHandlerTests(
-        SystemAdminUserServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AdminUserRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -35,7 +35,7 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
     public async Task HandleAsync_ReturnSuccess()
     {
         //// Arrange
-        var serviceProvideMock = new SystemAdminUserServiceProviderMock();
+        var serviceProvideMock = new ServiceProviderMock<AdminUserRole>();
         serviceProvideMock.AddTestOutput(_testOutput);
 
         var mediator = serviceProvideMock.GetRequiredService<IRequestMediator>();
@@ -45,7 +45,6 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
         var createCommand = new CreateTenantCommand
         {
-            ClientRequestId = Guid.NewGuid(),
             Name = "Tenant name",
             FiscalCode = new FiscalCode(fakeCpf),
             TenantName = "Tenant name",
@@ -93,7 +92,7 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
     public async Task HandleAsync_ReturnNotUnauthorizedFailure()
     {
         // Arrange
-        var anonymousServiceProvider = new AnonymousServiceProviderMock();
+        var anonymousServiceProvider = new ServiceProviderMock<AnonymousRole>();
         anonymousServiceProvider.AddTestOutput(_testOutput);
         var mediator = anonymousServiceProvider.GetRequiredService<IRequestMediator>();
 
@@ -101,7 +100,7 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<SystemAdminUserServ
         var result = await mediator.RunAsync(_validadeCommand, CancellationToken.None);
 
         // Assert
-        result.ShouldBeFailure<UnauthorizedError>();
+        result.ShouldBeFailure<ForbiddenError>();
     }
 }
  

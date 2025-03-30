@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Queries;
 
-public class GetTenantByIdQueryHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class GetTenantByIdQueryHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
     public GetTenantByIdQueryHandlerTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -33,10 +33,14 @@ public class GetTenantByIdQueryHandlerTests : IClassFixture<AnonymousServiceProv
     public async Task HandleAsync_ReturnSuccess()
     {
         // Arrange
-        var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var tenantRepository = _serviceProvider.GetRequiredService<ITenantRepository>();
+        
+        await using var scope = _serviceProvider.CreateAsyncScope();
 
-        var systemTenant = await tenantRepository.GetByNameAsync(SystemTenantConstants.Name, CancellationToken.None);
+        var mediator = scope.ServiceProvider.GetRequiredService<IRequestMediator>();
+        var tenantRepository = scope.ServiceProvider.GetRequiredService<ITenantRepository>();
+
+        var systemTenant = await tenantRepository.GetByNameAsync(
+            SystemTenantConstants.Name, CancellationToken.None);
        
         systemTenant.Should()
             .NotBeNull("because the tenant with name 'SystemTenant' should exist in the test data.");

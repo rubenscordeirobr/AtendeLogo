@@ -18,13 +18,15 @@ public class HttpErrorMapperTests
     public static IEnumerable<object[]> GetHttpStatusCodeTestData()
     {
         yield return new object[] { new BadRequestError("BR001", "Bad request"), HttpStatusCode.BadRequest };
-        yield return new object[] { new UnauthorizedError("UA001", "Unauthorized"), HttpStatusCode.Unauthorized };
+        yield return new object[] { new ForbiddenError("UA001", "Forbidden"), HttpStatusCode.Forbidden };
         yield return new object[] { new ValidationError("VE001", "Validation failed"), HttpStatusCode.UnprocessableContent };
         yield return new object[] { new NotFoundError("NF001", "Not found"), HttpStatusCode.NotFound };
         yield return new object[] { new DomainEventError("DE001", "Domain event conflict"), HttpStatusCode.Conflict };
         yield return new object[] { new NotImplementedError("NI001", "Not implemented"), HttpStatusCode.NotImplemented };
         yield return new object[] { new AbortedError("AB001", "Request aborted"), (HttpStatusCode)499 };
         yield return new object[] { new InternalServerError(new Exception("dummy"), "ISE001", "Internal server error"), HttpStatusCode.InternalServerError };
+        yield return new object[] { new AuthenticationError("AU001", "Authentication error"), HttpStatusCode.Unauthorized };
+        yield return new object[] { new TooManyRequestsError("TM001", "Too many requests"), HttpStatusCode.TooManyRequests };
     }
 
     [Theory]
@@ -33,6 +35,9 @@ public class HttpErrorMapperTests
     [InlineData(HttpStatusCode.NotFound, "NF001", "Not found", "NotFoundError")]
     [InlineData(HttpStatusCode.UnprocessableContent, "VE001", "Validation failed", "ValidationError")]
     [InlineData(HttpStatusCode.Conflict, "DE001", "Domain event conflict", "DomainEventError")]
+    [InlineData(HttpStatusCode.Unauthorized, "AU001", "Authentication error", "AuthenticationError")]
+    [InlineData(HttpStatusCode.Forbidden, "UA001", "Forbidden", "ForbiddenError")]
+    [InlineData(HttpStatusCode.TooManyRequests, "TM001", "Too many requests", "TooManyRequestsError")]
     public void GetErrorFromStatus_Should_Return_CorrectError_Type(
         HttpStatusCode statusCode, 
         string code, 

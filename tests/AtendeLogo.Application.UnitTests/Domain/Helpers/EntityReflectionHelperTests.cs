@@ -1,5 +1,7 @@
 ﻿using AtendeLogo.Domain.Helpers;
- 
+
+namespace AtendeLogo.Application.UnitTests.Domain.Helpers;
+
 public class EntityReflectionHelperTests
 {
     [Fact]

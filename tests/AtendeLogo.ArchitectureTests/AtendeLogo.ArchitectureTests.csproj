@@ -26,11 +26,13 @@
     <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
+    <ProjectReference Include="..\..\src\AtendeLogo.RuntimeServices\AtendeLogo.RuntimeServices.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.UseCases.Shared\AtendeLogo.UseCases.Shared.csproj" />
     <ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
     <ProjectReference Include="..\AtendeLogo.Application.UnitTests\AtendeLogo.Application.UnitTests.csproj" />
-    <ProjectReference Include="..\AtendeLogo.IdentityApi.FunctionalTests\AtendeLogo.IdentityApi.FunctionalTests.csproj" />
+    <ProjectReference Include="..\AtendeLogo.FunctionalTests\AtendeLogo.FunctionalTests.csproj" />
+    <ProjectReference Include="..\AtendeLogo.Infrastructure.UnitTests\AtendeLogo.Infrastructure.UnitTests.csproj" />
     <ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
     <ProjectReference Include="..\AtendeLogo.UseCases.UnitTests\AtendeLogo.UseCases.UnitTests.csproj" />
   </ItemGroup>

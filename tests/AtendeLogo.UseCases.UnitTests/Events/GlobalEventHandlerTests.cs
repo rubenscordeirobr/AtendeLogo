@@ -4,12 +4,12 @@ using AtendeLogo.UseCases.Events;
 namespace AtendeLogo.UseCases.UnitTests.Events;
 
 public class GlobalEventHandlerTests
-     : IClassFixture<AnonymousServiceProviderMock>
+     : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Fixture _figure = new();
     private readonly IEventMediator _eventMediator;
 
-    public GlobalEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public GlobalEventHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);

@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class CreateTenantCommandHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly CreateTenantCommand _validadeCommand;
 
-    public CreateTenantCommandHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public CreateTenantCommandHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -20,7 +20,6 @@ public class CreateTenantCommandHandlerTests : IClassFixture<AnonymousServicePro
 
         _validadeCommand = new CreateTenantCommand
         {
-            ClientRequestId = Guid.NewGuid(),
             Name = "Tenant name",
             FiscalCode = new FiscalCode(fakeCpf),
             TenantName = "Tenant name",

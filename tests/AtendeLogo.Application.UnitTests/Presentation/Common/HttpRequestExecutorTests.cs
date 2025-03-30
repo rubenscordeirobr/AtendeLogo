@@ -2,14 +2,23 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Moq;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Attributes;
+using AtendeLogo.TestCommon.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using AtendeLogo.Application.Contracts.Security;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
 
 public class HttpRequestExecutorTests
 {
+    private readonly ITestOutputHelper _testOutput;
+
+    public HttpRequestExecutorTests(ITestOutputHelper testOutput)
+    {
+        _testOutput = testOutput;
+    }
+
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
         return new HttpMethodDescriptor(method);
@@ -23,21 +32,24 @@ public class HttpRequestExecutorTests
     }
 
     private IServiceProvider CreateServiceProvider(
-        ApiEndpointBase? endpointInstance = null,
-        ILogger<HttpRequestExecutor>? logger = null)
+        ApiEndpointBase? endpointInstance = null)
     {
-        logger ??= Mock.Of<ILogger<HttpRequestExecutor>>();
         var serviceCollection = new ServiceCollection();
-        serviceCollection
-            .AddSingleton(logger);
 
+        serviceCollection
+            .AddSingleton(_testOutput)
+            .AddTransient(typeof(ILogger<>), typeof(TestOutputLogger<>))
+            .AddSingleton<ISecureConfiguration, SecureConfigurationMock>()
+            .AddSingleton<IUserSessionTokenHandler, UserSessionTokenHandler>()
+            .AddUserSessionAccessorMock<AnonymousRole>();
+        
         if (endpointInstance != null)
         {
             serviceCollection.AddSingleton(endpointInstance.GetType(), endpointInstance);
         }
         return serviceCollection.BuildServiceProvider();
     }
-     
+
     [Fact]
     public async Task HandleAsync_WhenMethodExecutesSuccessfully_ShouldReturnOk()
     {
@@ -93,14 +105,14 @@ public class HttpRequestExecutorTests
 
         // Simulate request cancellation before execution
         await cts.CancelAsync();
-        
+
         // Act
         await handler.ProcessRequestAsync();
 
         // Assert
         context.Response.StatusCode.Should().Be((int)ExtendedHttpStatusCode.RequestAborted);
     }
-     
+
     [Fact]
     public async Task GetResponseResultAsync_WhenInvalidEndpoint_ShouldReturnError()
     {
@@ -116,7 +128,9 @@ public class HttpRequestExecutorTests
 
         // Assert
         response.StatusCode
-            .Should().Be((int)HttpStatusCode.InternalServerError);
+            .Should()
+            .Be((int)HttpStatusCode.InternalServerError);
+
         response.ErrorResponse!.Code.Should().Be("HttpRequestExecutor.InvalidEndPointType");
     }
 
@@ -138,10 +152,37 @@ public class HttpRequestExecutorTests
         response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
         response.ErrorResponse!.Code.Should().Be("HttpRequestExecutor.ProcessRequestAsync");
     }
-  
+
+    [Fact]
+    public async Task HandleAsync_WhenNonAnonymousEndpoint_ShouldReturnUnauthorized()
+    {
+        // Arrange
+        var method = typeof(TestNonAnonymousEndpoint).GetMethod(nameof(TestNonAnonymousEndpoint.GetItem));
+      
+        var descriptor = CreateDescriptor(method!);
+        var endpointInstance = new TestNonAnonymousEndpoint();
+        var serviceProvider = CreateServiceProvider(endpointInstance);
+        var context = CreateHttpContext(serviceProvider);
+
+        var handler = new HttpRequestExecutor(context, typeof(TestNonAnonymousEndpoint), descriptor);
+        // Act
+        var response = await handler.GetResponseResultAsync();
+        
+        // Assert
+        response.StatusCode
+            .Should()
+            .Be((int)HttpStatusCode.Unauthorized);
+       
+        response.ErrorResponse!.Code
+            .Should()
+            .Be("HttpRequestExecutor.AnonymousAccessDenied");
+    }
+
 }
- 
+
 // Mock Test Endpoint
+[AllowAnonymous]
+[EndPoint("test")]
 public class TestValidEndpoint : ApiEndpointBase
 {
     [HttpGet("items/{id}")]
@@ -158,7 +199,15 @@ public class TestValidEndpoint : ApiEndpointBase
     }
 }
 
-public class TestInvalidEndpoint 
+[EndPoint("test")]
+public class TestNonAnonymousEndpoint : ApiEndpointBase
+{
+    [HttpGet("items/{id}")]
+    public int GetItem(int id = 10) => id;
+
+}
+
+public class TestInvalidEndpoint
 {
     [HttpGet("test")]
     public int Test() => 1;

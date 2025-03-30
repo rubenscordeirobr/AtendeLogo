@@ -1,13 +1,13 @@
 ﻿namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
 public class EntityDeletedEventHandlerTests
-    : IClassFixture<AnonymousServiceProviderMock>
+    : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Fixture _figure = new();
     private readonly IServiceProvider _serviceProvider;
     private readonly ITestOutputHelper _testOutput;
 
-    public EntityDeletedEventHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public EntityDeletedEventHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -41,7 +41,7 @@ public class EntityDeletedEventHandlerTests
         var entity = _figure.Create<TenantUser>();
         var deletedEvent = new EntityDeletedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
-        var userSessionAccessorMock = new AnonymousUserSessionAccessorMock();
+        var userSessionAccessorMock = AnonymousUserSessionAccessorMock.CreateMock(_testOutput);
         var logger = new TestOutputLogger<EntityDeletedEventHandler<TenantUser>>(_testOutput);
 
         var handler = new EntityDeletedEventHandler<TenantUser>(

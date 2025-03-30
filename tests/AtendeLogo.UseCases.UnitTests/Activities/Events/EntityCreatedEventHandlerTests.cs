@@ -1,14 +1,14 @@
 ﻿namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
 public class EntityCreatedEventHandlerTests
-    : IClassFixture<AnonymousServiceProviderMock>
+    : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Fixture _figure = new();
     private readonly IServiceProvider _serviceProvider;
     private readonly ITestOutputHelper _testOutput;
 
     public EntityCreatedEventHandlerTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -45,8 +45,8 @@ public class EntityCreatedEventHandlerTests
         var entity = _figure.Create<TenantUser>();
         var createdEvent = new EntityCreatedEvent<TenantUser>(entity, []);
         var activityRepository = new ActivityRepositoryMock();
-        var userSessionAccessorMock = new AnonymousUserSessionAccessorMock();
         var logger = new TestOutputLogger<EntityCreatedEventHandler<TenantUser>>(_testOutput);
+        var userSessionAccessorMock = AnonymousUserSessionAccessorMock.CreateMock(_testOutput);
 
         var handler = new EntityCreatedEventHandler<TenantUser>(
             activityRepository,

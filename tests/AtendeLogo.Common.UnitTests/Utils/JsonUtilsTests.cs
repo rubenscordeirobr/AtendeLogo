@@ -1,9 +1,18 @@
 ﻿using System.Text.Json;
+using AtendeLogo.Common.Helpers;
+using Xunit.Abstractions;
 
 namespace AtendeLogo.Common.UnitTests.Utils;
 
 public class JsonUtilsTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+    private static readonly object _lock = new();
+    public JsonUtilsTests(ITestOutputHelper testOutput)
+    {
+        _testOutputHelper = testOutput;
+    }
+
     [Fact]
     public void Serialize_ShouldReturnJsonString_WhenObjectIsValid()
     {
@@ -89,77 +98,104 @@ public class JsonUtilsTests
     }
 
     [Fact]
-    public static void EnableIndentationInDevelopment_ShouldEnableIndentation_WhenEnvironmentIsDevelopment_AndWriteIndentedIsFalse()
+    public void EnableIndentationInDevelopment_ShouldEnableIndentation_WhenEnvironmentIsDevelopment_AndWriteIndentedIsFalse()
     {
-        // Arrange
-        var originalEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        try
+        lock (_lock)
         {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
-            var options = new JsonSerializerOptions
+            // Arrange
+            var originalEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            try
             {
-                WriteIndented = false
-            };
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
-            // Act
-            JsonUtils.EnableIndentationInDevelopment(options);
+                _testOutputHelper.WriteLine($"Original Environment: {originalEnvironment}." +
+                        $" Current {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}" +
+                        $" {EnvironmentHelper.IsDevelopment()}");
 
-            // Assert
-            options.WriteIndented.Should().BeTrue();
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", originalEnvironment);
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = false
+                };
+
+                _testOutputHelper.WriteLine($"Original Environment: {EnvironmentHelper.IsDevelopment()}");
+                EnvironmentHelper.Reset();
+                // Act
+                JsonUtils.EnableIndentationInDevelopment(options);
+
+                // Assert
+                options.WriteIndented
+                    .Should()
+                    .BeTrue();
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", originalEnvironment);
+                EnvironmentHelper.Reset();
+            }
         }
     }
 
     [Fact]
     public static void EnableIndentationInDevelopment_ShouldNotChangeIndentation_WhenWriteIndentedIsAlreadyTrue()
     {
-        // Arrange
-        var originalEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        try
+        lock (_lock)
         {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
-            var options = new JsonSerializerOptions
+      
+            // Arrange
+            var originalEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            try
             {
-                WriteIndented = true
-            };
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+                Environment.SetEnvironmentVariable("XUNIT_ENVIRONMENT", null);
 
-            // Act
-            JsonUtils.EnableIndentationInDevelopment(options);
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                };
+                EnvironmentHelper.Reset();
+                // Act
+                JsonUtils.EnableIndentationInDevelopment(options);
 
-            // Assert
-            options.WriteIndented.Should().BeTrue();
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", originalEnvironment);
+                // Assert
+                options.WriteIndented.Should().BeTrue();
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", originalEnvironment);
+                Environment.SetEnvironmentVariable("XUNIT_ENVIRONMENT", "TEST");
+                EnvironmentHelper.Reset();
+            }
         }
     }
 
     [Fact]
     public static void EnableIndentationInDevelopment_ShouldNotEnableIndentation_WhenEnvironmentIsNotDevelopment()
     {
-        // Arrange
-        var originalEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        try
+        lock (_lock)
         {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
-            var options = new JsonSerializerOptions
+            EnvironmentHelper.Reset();
+            // Arrange
+            var originalEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            try
             {
-                WriteIndented = false
-            };
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Production");
+                Environment.SetEnvironmentVariable("XUNIT_ENVIRONMENT", null);
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = false
+                };
 
-            // Act
-            JsonUtils.EnableIndentationInDevelopment(options);
+                // Act
+                JsonUtils.EnableIndentationInDevelopment(options);
 
-            // Assert
-            options.WriteIndented.Should().BeFalse();
-        }
-        finally
-        {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", originalEnvironment);
+                // Assert
+                options.WriteIndented.Should().BeFalse();
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", originalEnvironment);
+                Environment.SetEnvironmentVariable("XUNIT_ENVIRONMENT", "TEST");
+            }
         }
     }
 

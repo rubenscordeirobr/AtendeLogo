@@ -3,21 +3,21 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers.Commands;
 
-public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
+public class DeleteTenantUserCommandHandlerTests : IClassFixture<ServiceProviderMock<TenantOwnerRole>>
 {
     private readonly ITestOutputHelper _testOutput;
     private readonly IRequestMediator _mediator;
     private readonly DeleteTenantUserCommand _validCommand;
 
     public DeleteTenantUserCommandHandlerTests(
-        TenantOwnerUserServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<TenantOwnerRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
 
         _testOutput = testOutput;
         _mediator = serviceProviderMock.GetRequiredService<IRequestMediator>();
-        _validCommand = new DeleteTenantUserCommand(SystemTenantConstants.OwnerUser_Id);
+        _validCommand = new DeleteTenantUserCommand(SystemTenantConstants.User_Id);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
     public async Task HandleAsync_ReturnSuccess()
     {
         //// Arrange
-        var serviceProvideMock = new TenantOwnerUserServiceProviderMock();
+        var serviceProvideMock = new ServiceProviderMock<TenantOwnerRole>();
         serviceProvideMock.AddTestOutput(_testOutput);
 
         var mediator = serviceProvideMock.GetRequiredService<IRequestMediator>();
@@ -88,7 +88,7 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
     public async Task HandleAsync_ReturnNotUnauthorizedFailure()
     {
         // Arrange
-        var anonymousServiceProvider = new AnonymousServiceProviderMock();
+        var anonymousServiceProvider = new ServiceProviderMock<AnonymousRole>();
         anonymousServiceProvider.AddTestOutput(_testOutput);
         var mediator = anonymousServiceProvider.GetRequiredService<IRequestMediator>();
 
@@ -96,6 +96,6 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<TenantOwnerUser
         var result = await mediator.RunAsync(_validCommand, CancellationToken.None);
 
         // Assert
-        result.ShouldBeFailure<UnauthorizedError>();
+        result.ShouldBeFailure<ForbiddenError>();
     }
 }

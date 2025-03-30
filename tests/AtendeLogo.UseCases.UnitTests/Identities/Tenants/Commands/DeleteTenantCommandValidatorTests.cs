@@ -1,11 +1,11 @@
 ﻿using AtendeLogo.UseCases.Identities.Tenants.Commands;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
-public class DeleteTenantCommandValidatorTests : IClassFixture<AnonymousServiceProviderMock>
+public class DeleteTenantCommandValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IValidator<DeleteTenantCommand> _validator;
 
-    public DeleteTenantCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+    public DeleteTenantCommandValidatorTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);

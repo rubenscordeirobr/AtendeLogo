@@ -17,7 +17,7 @@ public static class InMemoryIdentityDbContextBuilderExtensions
                 optionsBuilder =>
                 {
                     optionsBuilder.UseInMemoryDatabase(
-                        databaseName: "ShouldReturnSystemUser",
+                        databaseName: "IdentityDbMemory_" + services.GetHashCode(),
                         optionsBuilder =>
                         {
                             optionsBuilder.ConfigureEnumMappings<IdentityDbContext>(isInMemory: true);
@@ -33,8 +33,10 @@ public static class InMemoryIdentityDbContextBuilderExtensions
             using (var scope = serviceProvider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+                var secureConfiguration = scope.ServiceProvider.GetRequiredService<ISecureConfiguration>();
+            
                 context.Database.EnsureCreated();
-                context.SeedAsync().Wait();
+                context.SeedAsync(secureConfiguration).Wait();
             }
         }
 

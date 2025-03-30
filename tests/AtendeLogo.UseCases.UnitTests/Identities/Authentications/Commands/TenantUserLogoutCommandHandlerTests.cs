@@ -1,36 +1,37 @@
 ﻿using AtendeLogo.Application.Common;
 using AtendeLogo.Application.Contracts.Services;
+using AtendeLogo.Domain.Entities.Identities.Events;
+using AtendeLogo.Shared.Models.Identities;
 using AtendeLogo.UseCases.Identities.Authentications.Commands;
 using Moq;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Authentications.Commands;
 
-public class TenantUserLogoutCommandHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Mock<IIdentityUnitOfWork> _unitOfWorkMock;
-    private readonly Mock<IUserSessionAccessor> _userSessionAccessorMock;
-    private readonly Mock<ISessionCacheService> _sessionCacheServiceMock;
+    private readonly Mock<IUserSessionManager> _userSessionManagerMock;
     private readonly Mock<IUserSessionRepository> _userSessionRepositoryMock;
 
     private readonly IServiceProvider _serviceProvider;
     private readonly TenantUserLogoutCommand _command;
 
-    public TenantUserLogoutCommandHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public TenantUserLogoutCommandHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
 
         _serviceProvider = serviceProviderMock;
-        _command = new TenantUserLogoutCommand
-        {
-            ClientRequestId = Guid.NewGuid(),
-            ClientSessionToken = "test-token"
-        };
+        _command = new TenantUserLogoutCommand(Guid.NewGuid());
+
 
         _unitOfWorkMock = new Mock<IIdentityUnitOfWork>();
-        _userSessionAccessorMock = new Mock<IUserSessionAccessor>();
-        _sessionCacheServiceMock = new Mock<ISessionCacheService>();
+        _userSessionManagerMock = new Mock<IUserSessionManager>();
         _userSessionRepositoryMock = new Mock<IUserSessionRepository>();
+
+        _userSessionManagerMock
+            .Setup(repo => repo.UserSession_Id)
+            .Returns(_command.Session_Id);
 
         _unitOfWorkMock.Setup(u => u.UserSessions).Returns(_userSessionRepositoryMock.Object);
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
@@ -51,19 +52,110 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<AnonymousServic
     }
 
     [Fact]
-    public async Task HandleAsync_ShouldReturnNotFoundFailure_WhenUserSessionNotFound()
+    public async Task HandleAsync_ShouldBeSuccess()
+    {
+        //Arrange
+
+        var clientSessionToken = await InitiateUserSessionAsync();
+        
+        await using (var scope = _serviceProvider.CreateAsyncScope())
+        {
+            var mediator = scope.ServiceProvider.GetRequiredService<IRequestMediator>();
+            var eventMediator = (IEventMediatorTest)scope.ServiceProvider.GetRequiredService<IEventMediator>();
+            var cacheSessionService = scope.ServiceProvider.GetRequiredService<IUserSessionCacheService>();
+
+            var userSession = await cacheSessionService.GetSessionAsync(clientSessionToken);
+
+            userSession
+                .Should()
+                .BeOfType<CachedUserSession>();
+
+            eventMediator.CapturedEvents.Should()
+                .BeEmpty();
+
+            var logoutCommand = new TenantUserLogoutCommand(clientSessionToken);
+
+            // Act
+            var result = await mediator.RunAsync(logoutCommand);
+
+            // Assert
+            result.ShouldBeSuccessful();
+
+            eventMediator.CapturedEvents
+                .Should().NotBeEmpty()
+                .And.Contain(@event => @event is UserSessionTerminatedEvent)
+                .And.Contain(@event => @event is TenantUserSessionTerminatedEvent);
+
+            var terminatedUserSession = eventMediator.CapturedEvents
+                .OfType<UserSessionTerminatedEvent>()
+                .First()
+                .UserSession;
+
+            terminatedUserSession.Should()
+                .BeOfType<UserSession>();
+
+            terminatedUserSession.TerminatedAt
+                .Should()
+                .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(30));
+
+            terminatedUserSession.TerminationReason
+                .Should()
+                .Be(SessionTerminationReason.UserLogout);
+
+            var userSessionRetrieved = await cacheSessionService.GetSessionAsync(clientSessionToken);
+
+            userSessionRetrieved
+                .Should()
+                .BeNull();
+        }
+    }
+
+    private async Task<Guid> InitiateUserSessionAsync()
+    {
+        await using (var scope = _serviceProvider.CreateAsyncScope())
+        {
+            // Arrange
+            var mediator = scope.ServiceProvider.GetRequiredService<IRequestMediator>();
+            var eventMediator = (IEventMediatorTest)scope.ServiceProvider.GetRequiredService<IEventMediator>();
+            
+            var loginCommand = new TenantUserLoginCommand
+            {
+                EmailOrPhoneNumber = SystemTenantConstants.Email,
+                Password = SystemTenantConstants.TestPassword,
+                KeepSession = true
+            };
+
+            var loginResult = await mediator.RunAsync(loginCommand);
+
+            loginResult.ShouldBeSuccessful();
+
+            var userSession = eventMediator.CapturedEvents
+                .OfType<TenantUserSessionStartedEvent>()
+                .Single()
+                .UserSession;
+
+            userSession.Should()
+                .BeOfType<UserSession>();
+
+            return userSession.Id;
+
+        }
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldBeFailure_WhenUserSessionNotFound()
     {
         // Arrange
         _userSessionRepositoryMock
-            .Setup(repo => repo.GetByClientTokenAsync(_command.ClientSessionToken, It.IsAny<CancellationToken>()))
+            .Setup(repo => repo.GetByIdWithUserAsync(_command.Session_Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync((UserSession)null!);
-
+         
+              
         var handler = new TenantUserLogoutCommandHandler(
             _unitOfWorkMock.Object,
-            _userSessionAccessorMock.Object,
-            _sessionCacheServiceMock.Object);
+            _userSessionManagerMock.Object );
 
-       
+
         // Act
         var result = await handler.RunAsync(_command, CancellationToken.None);
 

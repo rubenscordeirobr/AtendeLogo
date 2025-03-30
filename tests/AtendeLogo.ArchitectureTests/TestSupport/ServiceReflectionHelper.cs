@@ -6,7 +6,7 @@ using AtendeLogo.Shared.ValueObjects;
 
 namespace AtendeLogo.ArchitectureTests.TestSupport;
 
-public class ServiceReflectionHelper
+public static class ServiceReflectionHelper
 {
     private static readonly Type[] ServiceContractInterfaceTypes = [
         typeof(IRepositoryBase<>),

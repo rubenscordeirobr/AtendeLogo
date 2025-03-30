@@ -2,11 +2,11 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.AdminUsers.Queries;
 
-public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetAdminUserByPhoneNumberQueryHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public GetAdminUserByPhoneNumberQueryHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -34,7 +34,7 @@ public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<Anonymou
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
-        var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);
+        var superAdminUser = await adminUserRepository.GetByEmailAsync(DefaultAdminUserConstants.Email);
 
         Guard.NotNull(superAdminUser);
 
@@ -49,7 +49,7 @@ public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<Anonymou
 
         var adminUser = result.Value
             .Should()
-            .BeOfType<AdminUserResponse>()
+            .BeOfType<UserResponse>()
             .Subject;
 
         adminUser.PhoneNumber.Should().Be(superAdminUser.PhoneNumber);

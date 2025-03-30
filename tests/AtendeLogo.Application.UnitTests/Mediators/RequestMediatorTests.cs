@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Application.Commands;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Application.Mediators;
 using AtendeLogo.Shared.Contracts;
 using AtendeLogo.UseCases;
 using FluentValidation;

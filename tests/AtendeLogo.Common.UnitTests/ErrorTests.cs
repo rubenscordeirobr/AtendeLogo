@@ -42,10 +42,13 @@ public class ErrorTests
 
     [Theory]
     [InlineData(typeof(BadRequestError), HttpStatusCode.BadRequest)]
-    [InlineData(typeof(UnauthorizedError), HttpStatusCode.Unauthorized)]
+    [InlineData(typeof(AuthenticationError), HttpStatusCode.Unauthorized)]
+    [InlineData(typeof(ForbiddenError), HttpStatusCode.Forbidden)]
     [InlineData(typeof(ValidationError), HttpStatusCode.UnprocessableContent)]
     [InlineData(typeof(NotFoundError), HttpStatusCode.NotFound)]
     [InlineData(typeof(DomainEventError), HttpStatusCode.Conflict)]
+    [InlineData(typeof(TooManyRequestsError), HttpStatusCode.TooManyRequests)]
+    [InlineData(typeof(AbortedError), (HttpStatusCode)499)]
     public void StatusCode_ShouldMatchErrorType(Type errorType, HttpStatusCode expectedStatus)
     {
         // Arrange

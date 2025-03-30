@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.AdminUsers.Queries;
 
-public class GetAdminUserByEmailQueryHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class GetAdminUserByEmailQueryHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
     public GetAdminUserByEmailQueryHandlerTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -35,7 +35,7 @@ public class GetAdminUserByEmailQueryHandlerTests : IClassFixture<AnonymousServi
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
-        var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);
+        var superAdminUser = await adminUserRepository.GetByEmailAsync(DefaultAdminUserConstants.Email);
 
         Guard.NotNull(superAdminUser);
 
@@ -50,7 +50,7 @@ public class GetAdminUserByEmailQueryHandlerTests : IClassFixture<AnonymousServi
 
         var adminUser = result.Value
             .Should()
-            .BeOfType<AdminUserResponse>()
+            .BeOfType<UserResponse>()
             .Subject;
 
         adminUser.Email.Should().Be(superAdminUser.Email);

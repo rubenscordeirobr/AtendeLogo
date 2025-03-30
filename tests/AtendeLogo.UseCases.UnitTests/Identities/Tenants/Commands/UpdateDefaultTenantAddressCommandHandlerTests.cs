@@ -2,13 +2,13 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class UpdateDefaultTenantAddressCommandHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
+public class UpdateDefaultTenantAddressCommandHandlerTests : IClassFixture<ServiceProviderMock<TenantOwnerRole>>
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly UpdateDefaultTenantAddressCommand _validadeCommand;
 
     public UpdateDefaultTenantAddressCommandHandlerTests(
-        TenantOwnerUserServiceProviderMock serviceProvider,
+        ServiceProviderMock<TenantOwnerRole> serviceProvider,
         ITestOutputHelper testOutput)
     {
         serviceProvider.AddTestOutput(testOutput);
@@ -16,7 +16,6 @@ public class UpdateDefaultTenantAddressCommandHandlerTests : IClassFixture<Tenan
         _serviceProvider = serviceProvider;
         _validadeCommand = new UpdateDefaultTenantAddressCommand
         {
-            ClientRequestId = Guid.NewGuid(),
             Tenant_Id = Guid.NewGuid(),
             AddressName = "Address name",
             Address = new AddressDto

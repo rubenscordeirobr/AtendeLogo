@@ -6,13 +6,13 @@ using Moq;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceProviderMock>
+public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IValidator<CreateTenantCommand> _validator;
     private readonly CreateTenantCommand _validadCommand;
 
-    public CreateTenantCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+    public CreateTenantCommandValidatorTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -22,7 +22,6 @@ public class CreateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
 
         _validadCommand = new CreateTenantCommand
         {
-            ClientRequestId = Guid.NewGuid(),
             Name = "Tenant name",
             FiscalCode = new FiscalCode("04866748940"),
             TenantName = "Tenant name",

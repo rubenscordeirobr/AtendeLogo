@@ -10,8 +10,6 @@ public static class ResultTestExtensions
     {
         Guard.NotNull(result);
 
-        result.ShouldBeSuccessful();
-
         result.Error.Should()
             .BeNull();
 

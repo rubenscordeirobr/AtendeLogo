@@ -1,12 +1,12 @@
 ﻿namespace AtendeLogo.UseCases.UnitTests.Validations;
 
-public class AddressValidatorTests : IClassFixture<AnonymousServiceProviderMock>
+public class AddressValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IValidator<AddressDto> _validator;
     private readonly AddressDto _validAddress;
 
     public AddressValidatorTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);

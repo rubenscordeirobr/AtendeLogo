@@ -5,23 +5,23 @@ using Moq;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Authentications.Services;
 
-public class TenantAuthenticationValidationServiceTests
+public class TenantUserAuthenticationValidationServiceTests
 {
 
     private readonly Fixture _fixture = new();
     private readonly ITestOutputHelper _testOutput;
     private readonly Mock<ITenantUserRepository> _tenantUserRepositoryMock;
     private readonly Mock<ISecureConfiguration> _secureConfigurationMock;
-    private readonly TenantAuthenticationValidationService _validationService;
+    private readonly TenantUserAuthenticationValidationService _validationService;
     private readonly CancellationToken _token = CancellationToken.None;
 
-    public TenantAuthenticationValidationServiceTests(ITestOutputHelper testOutput )
+    public TenantUserAuthenticationValidationServiceTests(ITestOutputHelper testOutput )
     {
         _testOutput = testOutput;
         _tenantUserRepositoryMock = new Mock<ITenantUserRepository>();
         _secureConfigurationMock = new Mock<ISecureConfiguration>();
 
-        _validationService = new TenantAuthenticationValidationService(
+        _validationService = new TenantUserAuthenticationValidationService(
             _tenantUserRepositoryMock.Object,
             _secureConfigurationMock.Object);
     }
@@ -30,12 +30,12 @@ public class TenantAuthenticationValidationServiceTests
     public void Service_ShouldBeRegistered()
     {
         // Arrange
-        var anonymousServiceProviderMock = new AnonymousServiceProviderMock();
-        anonymousServiceProviderMock.AddTestOutput(_testOutput);
+        var serviceProviderMock = new ServiceProviderMock<AnonymousRole>();
+        serviceProviderMock.AddTestOutput(_testOutput);
         // Act
-        var service = anonymousServiceProviderMock.GetRequiredService<ITenantAuthenticationValidationService>();
+        var service = serviceProviderMock.GetRequiredService<ITenantUserAuthenticationValidationService>();
         // Assert
-        service.Should().BeOfType<TenantAuthenticationValidationService>();
+        service.Should().BeOfType<TenantUserAuthenticationValidationService>();
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class TenantAuthenticationValidationServiceTests
         // Arrange
         var emailOrPhone = "test@example.com";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.EmailOrPhoneNumberExits(emailOrPhone, _token))
+            .Setup(repo => repo.EmailOrPhoneNumberExistsAsync(emailOrPhone, _token))
             .ReturnsAsync(true);
 
         // Act
@@ -127,7 +127,7 @@ public class TenantAuthenticationValidationServiceTests
         // Arrange
         var emailOrPhone = "test@example.com";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.EmailOrPhoneNumberExits(emailOrPhone, _token))
+            .Setup(repo => repo.EmailOrPhoneNumberExistsAsync(emailOrPhone, _token))
             .ReturnsAsync(false);
 
         // Act

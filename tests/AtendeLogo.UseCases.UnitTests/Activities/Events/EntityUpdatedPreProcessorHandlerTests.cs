@@ -1,14 +1,12 @@
-﻿using AtendeLogo.Application.Mediators;
+﻿namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
-namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
-
-public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Fixture _figure = new();
     private readonly IServiceProvider _serviceProvider;
 
     public EntityUpdatedPreProcessorHandlerTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);

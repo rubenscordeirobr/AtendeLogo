@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers.Queries;
 
-public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
+public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<ServiceProviderMock<TenantOwnerRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
     public GetTenantUserByPhoneNumberQueryHandlerTests(
-        TenantOwnerUserServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<TenantOwnerRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -51,7 +51,7 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<TenantO
 
         var tenantUserResponse = result.Value
             .Should()
-            .BeOfType<TenantUserResponse>()
+            .BeOfType<UserResponse>()
             .Subject;
 
         tenantUserResponse.PhoneNumber.Should().Be(tenantUser.PhoneNumber);

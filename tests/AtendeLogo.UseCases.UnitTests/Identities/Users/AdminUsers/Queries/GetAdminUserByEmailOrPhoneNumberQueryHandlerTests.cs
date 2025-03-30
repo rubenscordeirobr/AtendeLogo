@@ -1,13 +1,14 @@
-﻿using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿
+using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.AdminUsers.Queries;
 
-public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
     public GetAdminUserByEmailOrPhoneNumberQueryHandlerTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -35,7 +36,7 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<A
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
         var adminUserRepository = _serviceProvider.GetRequiredService<IAdminUserRepository>();
-        var superAdminUser = await adminUserRepository.GetByEmailAsync(SuperAdminUserConstants.Email);
+        var superAdminUser = await adminUserRepository.GetByEmailAsync(DefaultAdminUserConstants.Email);
 
         Guard.NotNull(superAdminUser);
 
@@ -51,7 +52,7 @@ public class GetAdminUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<A
 
         var adminUser = result.Value
             .Should()
-            .BeOfType<AdminUserResponse>()
+            .BeOfType<UserResponse>()
             .Subject;
 
         adminUser.Email.Should().Be(superAdminUser.Email);

@@ -5,7 +5,7 @@ namespace AtendeLogo.ArchitectureTests;
 
 public class RequestValidationTests
     : IClassFixture<ApplicationAssemblyContext>,
-    IClassFixture<AnonymousServiceProviderMock>
+    IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IReadOnlyDictionary<Type, Type> _requestTypeToHandlerTypeMap;
@@ -13,7 +13,7 @@ public class RequestValidationTests
 
     public RequestValidationTests(
         ApplicationAssemblyContext assemblyContext,
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper output)
     {
         serviceProviderMock.AddTestOutput(output);

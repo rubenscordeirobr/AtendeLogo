@@ -2,22 +2,18 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Authentications.Commands;
 
-public class TenantUserLogoutCommandValidatorTests : IClassFixture<AnonymousServiceProviderMock>
+public class TenantUserLogoutCommandValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IValidator<TenantUserLogoutCommand> _validator;
     private readonly TenantUserLogoutCommand _validCommand;
 
-    public TenantUserLogoutCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+    public TenantUserLogoutCommandValidatorTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
 
         _validator = serviceProviderMock.GetRequiredService<IValidator<TenantUserLogoutCommand>>();
-        _validCommand = new TenantUserLogoutCommand
-        {
-            ClientRequestId = Guid.NewGuid(),
-            ClientSessionToken = "ValidAuthToken"
-        };
+        _validCommand = new TenantUserLogoutCommand(Guid.NewGuid());
     }
 
     [Fact]
@@ -40,27 +36,14 @@ public class TenantUserLogoutCommandValidatorTests : IClassFixture<AnonymousServ
     public async Task ValidationResult_ShouldHaveError_When_ClientSessionToken_IsEmpty()
     {
         // Arrange
-        var command = _validCommand with { ClientSessionToken = string.Empty };
+        var command = _validCommand with { Session_Id = Guid.Empty };
 
         // Act
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.ClientSessionToken);
+        result.ShouldHaveValidationErrorFor(x => x.Session_Id);
     }
-
-    [Fact]
-    public async Task ValidationResult_ShouldHaveError_When_ClientSessionToken_ExceedsMaxLength()
-    {
-        // Arrange
-        var tooLongToken = new string('A', ValidationConstants.AuthTokenMaxLength + 1);
-        var command = _validCommand with { ClientSessionToken = tooLongToken };
-
-        // Act
-        var result = await _validator.TestValidateAsync(command);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(x => x.ClientSessionToken);
-    }
+ 
 }
 

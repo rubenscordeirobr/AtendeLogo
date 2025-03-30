@@ -1,13 +1,15 @@
-﻿using AtendeLogo.UseCases.Identities.Authentications.Commands;
+﻿using AtendeLogo.Application.Contracts.Services;
+using AtendeLogo.Domain.Entities.Identities.Events;
+using AtendeLogo.UseCases.Identities.Authentications.Commands;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Authentications.Commands;
 
-public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class TenantUserLoginCommandHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly TenantUserLoginCommand _validCommand;
 
-    public TenantUserLoginCommandHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public TenantUserLoginCommandHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -15,10 +17,9 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
         _serviceProvider = serviceProviderMock;
         _validCommand = new TenantUserLoginCommand
         {
-            ClientRequestId = Guid.NewGuid(),
             EmailOrPhoneNumber = SystemTenantConstants.Email,
-            Password = "TenantAdmin@Teste%#",
-            RememberMe = true
+            Password = SystemTenantConstants.TestPassword,
+            KeepSession = true
         };
     }
 
@@ -34,9 +35,61 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
         // Assert
         handlerType.Should().BeOfType<TenantUserLoginCommandHandler>();
     }
-     
+
     [Fact]
-    public async Task HandleAsync_ReturnsFailure_WhenUserNotFound()
+    public async Task HandleAsync_ShouldBeSuccessful_WhenUserNotFound()
+    {
+
+        await using (var scope = _serviceProvider.CreateAsyncScope())
+        {
+            // Arrange
+            var mediator = scope.ServiceProvider.GetRequiredService<IRequestMediator>();
+            var eventMediator = (IEventMediatorTest)scope.ServiceProvider.GetRequiredService<IEventMediator>();
+            var cacheSessionService = scope.ServiceProvider.GetRequiredService<IUserSessionCacheService>();
+
+
+            eventMediator.CapturedEvents
+                .Should()
+                .BeEmpty();
+
+            // Act
+            var result = await mediator.RunAsync(_validCommand);
+
+            // Assert
+            result.ShouldBeSuccessful();
+
+            // Check if the events were captured
+            eventMediator.CapturedEvents
+                .Should().NotBeEmpty()
+                .And.Contain(@event => @event is TenantUserSessionStartedEvent)
+                .And.Contain(@event => @event is UserSessionStartedEvent);
+
+            var userSession = eventMediator.CapturedEvents
+                .OfType<TenantUserSessionStartedEvent>()
+                .First()
+                .UserSession;
+
+            userSession.CreatedAt
+                .Should()
+                .BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(30));
+
+            var response = result.Value!;
+
+            // Check if the session was cached
+            var cachedUseSession = await cacheSessionService.GetSessionAsync(response.UserSession.Id);
+            cachedUseSession
+                .Should()
+                .NotBeNull();
+
+            // Check if the session is the same as the one created
+            cachedUseSession!.Id
+                .Should().Be(userSession.Id);
+
+        }
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldBeFailure_WhenUserNotFound()
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
@@ -55,7 +108,7 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
     }
 
     [Fact]
-    public async Task HandleAsync_ReturnsFailure_WhenPasswordInvalid()
+    public async Task HandleAsync_ShouldBeFailure_WhenPasswordInvalid()
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
@@ -70,7 +123,7 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
     }
 
     [Fact]
-    public async Task HandleAsync_ReturnsFailure_WhenPasswordIsInvalid()
+    public async Task HandleAsync_ShouldBeFailure_WhenPasswordIsInvalid()
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
@@ -81,7 +134,7 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<AnonymousService
 
         // Assert
         result.ShouldBeFailure();
-        result.Error!.Message.Should().Contain("Invalid credentials");
+        result.Error!.Message.Should().Contain("Invalid password");
     }
 }
 

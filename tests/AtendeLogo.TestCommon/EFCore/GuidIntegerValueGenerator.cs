@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Common.Extensions;
+﻿using AtendeLogo.Common.Helpers;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
@@ -15,7 +15,7 @@ public class GuidIntegerValueGenerator : ValueGenerator<Guid>
         {
             return entity.Id;
         }
-        return GuidExtensions.NewGuidZeroPrefixed();
+        return GuidHelper.NewGuidZeroPrefixed();
     }
 
     public override bool GeneratesTemporaryValues

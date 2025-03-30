@@ -2,8 +2,6 @@
 global using AtendeLogo.Application.Events;
 global using AtendeLogo.TestCommon.Mocks.Infrastructure;
 global using AtendeLogo.TestCommon.Mocks.Repositories;
-global using AtendeLogo.Common.Enums;
-global using AtendeLogo.Domain.Entities.Identities;
 global using AtendeLogo.Domain.Primitives;
 global using AtendeLogo.Shared.Enums;
 global using FluentAssertions;
@@ -17,4 +15,5 @@ global using AtendeLogo.Application.Contracts.Persistence.Activities;
 global using AtendeLogo.Application.Contracts.Security;
 global using AtendeLogo.Persistence.Identity;
 global using AtendeLogo.Shared.Contracts;
+
 global using Xunit.Abstractions;

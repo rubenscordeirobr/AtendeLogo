@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class UpdateTenantCommandHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
+public class UpdateTenantCommandHandlerTests : IClassFixture<ServiceProviderMock<TenantOwnerRole>>
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly UpdateTenantCommand _validadeCommand;
 
-    public UpdateTenantCommandHandlerTests(TenantOwnerUserServiceProviderMock serviceProvider,
+    public UpdateTenantCommandHandlerTests(ServiceProviderMock<TenantOwnerRole> serviceProvider,
         ITestOutputHelper testOutput)
     {
         serviceProvider.AddTestOutput(testOutput);

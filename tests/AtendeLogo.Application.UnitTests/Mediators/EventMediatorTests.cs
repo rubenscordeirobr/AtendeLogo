@@ -1,7 +1,6 @@
 ﻿using AtendeLogo.Application.Contracts.Events;
 using AtendeLogo.Application.Contracts.Registrars;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Application.Mediators;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -94,10 +93,10 @@ public class EventMediatorTests
     }
 
     [Fact]
-    public async Task EventMediator_ShouldHandleCancelledPreProcessor()
+    public async Task EventMediator_ShouldHandleCanceledPreProcessor()
     {
         // Arrange
-        var types = new Type[] { typeof(MockDomainEventPreProcessorCancelledHandler) };
+        var types = new Type[] { typeof(MockDomainEventPreProcessorCanceledHandler) };
         var eventMediator = CreateEventMediator(types);
         var domainEvent = new MockDomainEvent();
         var domainEventContext = new DomainEventContext([domainEvent]);
@@ -126,10 +125,10 @@ public class EventMediatorTests
     }
 
     [Fact]
-    public async Task EventMediator_ShouldTrowDomainEventCancelledExcpetionWhenHandleCancelledPreProcessor()
+    public async Task EventMediator_ShouldTrowDomainEventCanceledExcpetionWhenHandleCancelledPreProcessor()
     {
         // Arrange
-        var types = new Type[] { typeof(MockDomainEventPreProcessorCancelledHandler) };
+        var types = new Type[] { typeof(MockDomainEventPreProcessorCanceledHandler) };
         var eventMediator = CreateEventMediator(types);
         var domainEvent = new MockDomainEvent();
     
@@ -190,7 +189,7 @@ public class EventMediatorTests
         }
     }
 
-    public class MockDomainEventPreProcessorCancelledHandler : IPreProcessorHandler<MockDomainEvent>
+    public class MockDomainEventPreProcessorCanceledHandler : IPreProcessorHandler<MockDomainEvent>
     {
         public Task PreProcessAsync(
             IDomainEventData<MockDomainEvent> eventData,

@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class UpdateTenantCommandValidatorTests : IClassFixture<AnonymousServiceProviderMock>
+public class UpdateTenantCommandValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IValidator<UpdateTenantCommand> _validator;
     private readonly UpdateTenantCommand _validCommand;
 
-    public UpdateTenantCommandValidatorTests(AnonymousServiceProviderMock serviceProviderMock,
+    public UpdateTenantCommandValidatorTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -15,7 +15,6 @@ public class UpdateTenantCommandValidatorTests : IClassFixture<AnonymousServiceP
         _validator = serviceProviderMock.GetRequiredService<IValidator<UpdateTenantCommand>>();
         _validCommand = new UpdateTenantCommand
         {
-            ClientRequestId = Guid.NewGuid(),
             Tenant_Id = SystemTenantConstants.Tenant_Id,
             Name = "John Doe",
             FiscalCode = new FiscalCode("76776292027"),

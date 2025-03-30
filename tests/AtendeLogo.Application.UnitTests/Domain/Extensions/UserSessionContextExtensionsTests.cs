@@ -9,7 +9,7 @@ public class UserSessionContextExtensionsTests
     {
         // Arrange
         var userSession = new Mock<IUserSession>();
-        userSession.Setup(us => us.User_Id).Returns(AnonymousIdentityConstants.User_Id);
+        userSession.Setup(us => us.User_Id).Returns(AnonymousUserConstants.User_Id);
         userSession.Setup(us => us.AuthenticationType)
             .Returns(AuthenticationType.Anonymous);
 

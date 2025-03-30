@@ -1,51 +1,38 @@
 ﻿using AtendeLogo.Application;
-using AtendeLogo.TestCommon.Extensions;
+using AtendeLogo.RuntimeServices;
 using AtendeLogo.UseCases;
+using AtendeLogo.TestCommon.Extensions;
 
 namespace AtendeLogo.TestCommon.Mocks;
-public abstract class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvider
+public class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvider
      where TRoleProvider : IRoleProvider, new()
 {
     private readonly IServiceProvider _serviceProvider;
+
     protected UserRole UserRole { get; }
 
     protected override IServiceProvider ServiceProvider
         => _serviceProvider;
-    protected ServiceProviderMock()
+     
+
+    public ServiceProviderMock()
     {
-        var services = new ServiceCollection()
-              .AddApplicationServices()
-              .AddLoggerServiceMock()
-              .AddInMemoryIdentityDbContext()
-              .AddMockInfrastructureServices<TRoleProvider>()
-              .AddPersistenceServicesMock()
-              .AddUserCasesServices()
-              .AddUserCasesSharedServices();
-
-        services.AddSingleton<ITestOutputHelper, TestOutputProxy>();
-
-        _serviceProvider = services.BuildServiceProvider();
+        _serviceProvider = BuildServiceProvider();
     }
-}
 
-public class TenantOwnerUserServiceProviderMock : ServiceProviderMock<TenantOwnerRole>
-{
-    public TenantOwnerUserServiceProviderMock()
+    private IServiceProvider BuildServiceProvider()
     {
-    }
-}
-
-public class AnonymousServiceProviderMock : ServiceProviderMock<AnonymousRole>
-{
-
-    public AnonymousServiceProviderMock()
-    {
-    }
-}
-
-public class SystemAdminUserServiceProviderMock : ServiceProviderMock<SystemAdminRole>
-{
-    public SystemAdminUserServiceProviderMock()
-    {
+        return new ServiceCollection()
+            .AddApplicationServices()
+            .AddLoggerServiceMock()
+            .AddRuntimeServices()
+            .AddMockInfrastructureServices()
+            .AddInMemoryIdentityDbContext()
+            .AddUserSessionAccessorMock<TRoleProvider>()
+            .AddPersistenceServicesMock()
+            .AddUserCasesServices()
+            .AddUserCasesSharedServices()
+            .AddSingleton<ITestOutputHelper, TestOutputProxy>()
+            .BuildServiceProvider();
     }
 }

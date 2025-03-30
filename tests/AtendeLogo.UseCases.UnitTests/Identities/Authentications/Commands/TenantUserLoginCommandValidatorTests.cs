@@ -6,14 +6,14 @@ using Moq;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Authentications.Commands;
 
-public class TenantUserLoginCommandValidatorTests : IClassFixture<AnonymousServiceProviderMock>
+public class TenantUserLoginCommandValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IValidator<TenantUserLoginCommand> _validator;
     private readonly IServiceProvider _serviceProvider;
     private readonly TenantUserLoginCommand _validCommand;
 
     public TenantUserLoginCommandValidatorTests(
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -22,10 +22,9 @@ public class TenantUserLoginCommandValidatorTests : IClassFixture<AnonymousServi
         _validator = serviceProviderMock.GetRequiredService<IValidator<TenantUserLoginCommand>>();
         _validCommand = new TenantUserLoginCommand
         {
-            ClientRequestId = Guid.NewGuid(),
             EmailOrPhoneNumber = SystemTenantConstants.Email,
             Password = "TenantAdmin@Teste%#",
-            RememberMe = true
+            KeepSession = true
         };
     }
 
@@ -88,7 +87,7 @@ public class TenantUserLoginCommandValidatorTests : IClassFixture<AnonymousServi
     {
         // Arrange
         var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
-        var tenantValidationSetup = new Mock<ITenantAuthenticationValidationService>();
+        var tenantValidationSetup = new Mock<ITenantUserAuthenticationValidationService>();
 
         tenantValidationSetup
             .Setup(x => x.EmailOrPhoneNumberExitsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -101,29 +100,5 @@ public class TenantUserLoginCommandValidatorTests : IClassFixture<AnonymousServi
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.EmailOrPhoneNumber);
-    }
-
-    [Fact]
-    public async Task ValidationResult_ShouldHaveError_When_InvalidCredentials()
-    {
-        // Arrange
-        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
-        var tenantValidationSetup = new Mock<ITenantAuthenticationValidationService>();
-
-        tenantValidationSetup
-             .Setup(x => x.EmailOrPhoneNumberExitsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-             .ReturnsAsync(true);
-
-        tenantValidationSetup
-            .Setup(x => x.VerifyTenantUserCredentialsAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
-
-        var validator = new TenantUserLoginCommandValidator(tenantValidationSetup.Object, localizer);
-
-        // Act
-        var result = await validator.TestValidateAsync(_validCommand);
-
-        // Assert
-        result.Errors.Any(e => e.ErrorMessage.Contains("credentials")).Should().BeTrue();
     }
 }

@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers.Queries;
 
-public class GetTenantUserByEmailQueryHandlerTests : IClassFixture<TenantOwnerUserServiceProviderMock>
+public class GetTenantUserByEmailQueryHandlerTests : IClassFixture<ServiceProviderMock<TenantOwnerRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
     public GetTenantUserByEmailQueryHandlerTests(
-        TenantOwnerUserServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<TenantOwnerRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -50,7 +50,7 @@ public class GetTenantUserByEmailQueryHandlerTests : IClassFixture<TenantOwnerUs
 
         var tenantUserResponse = result.Value
             .Should()
-            .BeOfType<TenantUserResponse>()
+            .BeOfType<UserResponse>()
             .Subject;
 
         tenantUserResponse.Email.Should().Be(tenantUser.Email);

@@ -13,12 +13,15 @@ public class ApplicationAssemblyContext
     public Assembly SharedKernelAssembly { get; }
     public Assembly ApplicationAssembly { get; }
     public Assembly UseCasesAssembly { get; }
+    public Assembly UseCasesSharedAssembly { get; }
+    public Assembly RuntimeServicesAssembly { get; }
     public Assembly PresentationAssembly { get; }
+    public Assembly ClientGatewayAssembly { get; }
+
     public Assembly InfrastructureAssembly { get; }
     public Assembly IdentityPersistenceAssembly { get; }
     public Assembly ActivityPersistenceAssembly { get; }
-    public Assembly UseCasesSharedAssembly { get; }
-    public Assembly ClientGatewayAssembly { get; }
+     
     public Assembly[] InfrastructuresAssemblies { get; }
     public Assembly[] AllAssemblies { get; }
     public string[] InfrastructuresAssemblyNames { get; }
@@ -115,21 +118,24 @@ public class ApplicationAssemblyContext
     public ApplicationAssemblyContext()
 #pragma warning restore CS9264
     {
-        CommonAssembly = typeof(Common.Guard).Assembly;
-        DomainAssembly = typeof(Domain.Primitives.EntityBase).Assembly;
+        CommonAssembly = typeof(Guard).Assembly;
+        DomainAssembly = typeof(EntityBase).Assembly;
 
         ApplicationAssembly = typeof(Application.ApplicationServiceConfiguration).Assembly;
 
         UseCasesAssembly = typeof(UseCases.UseCasesServiceConfiguration).Assembly;
+        SharedKernelAssembly = typeof(Shared.ValueObjects.ValueObjectBase).Assembly;
+        UseCasesSharedAssembly = typeof(UseCases.Common.Validations.ValidationMessages).Assembly;
+
+        RuntimeServicesAssembly = typeof(RuntimeServices.RuntimeServicesConfiguration).Assembly;
+
         PresentationAssembly = typeof(Presentation.PresentationServiceConfiguration).Assembly;
+        ClientGatewayAssembly = typeof(ClientGateway.Common.Contracts.IHttpClientExecutor).Assembly;
 
         InfrastructureAssembly = typeof(Infrastructure.InfrastructureServiceConfiguration).Assembly;
         IdentityPersistenceAssembly = typeof(Persistence.Identity.IdentityPersistenceServiceConfiguration).Assembly;
         ActivityPersistenceAssembly = typeof(Persistence.Activity.ActivitiyPersistenceServiceConfiguration).Assembly;
 
-        SharedKernelAssembly = typeof(Shared.ValueObjects.ValueObjectBase).Assembly;
-        UseCasesSharedAssembly = typeof(UseCases.Common.Validations.ValidationMessages).Assembly;
-        ClientGatewayAssembly = typeof(ClientGateway.Common.Contracts.IHttpClientExecutor).Assembly;
 
         InfrastructuresAssemblies = [
             InfrastructureAssembly,
@@ -148,6 +154,7 @@ public class ApplicationAssemblyContext
             DomainAssembly,
             ApplicationAssembly,
             UseCasesAssembly,
+            RuntimeServicesAssembly,
             PresentationAssembly,
             InfrastructureAssembly,
             IdentityPersistenceAssembly,
@@ -170,7 +177,7 @@ public class ApplicationAssemblyContext
 
     private IReadOnlyList<Type> GetServiceTypes()
     {
-        return [.. Types.Where(t => ServiceReflectionHelper.IsImplementService(t))];
+        return [.. Types.Where(ServiceReflectionHelper.IsImplementService)];
     }
      
     private IReadOnlyList<Type> GetImplementServiceTypes()
@@ -197,12 +204,12 @@ public class ApplicationAssemblyContext
             var commandType = validatorType.GetInterfaces()
                 .Where(x => x.IsGenericType)
                 .Where(x => x.GetGenericTypeDefinition() == typeof(IValidator<>))
-                .Select(x => x.GetGenericArguments().First())
+                .Select(x => x.GetGenericArguments()[0])
                 .First();
 
             if (!dictionary.ContainsKey(commandType))
             {
-                dictionary[commandType] = new();
+                dictionary[commandType] = [];
             }
             dictionary[commandType].Add(validatorType);
         }
@@ -218,7 +225,7 @@ public class ApplicationAssemblyContext
     {
         return CommandTypeToValidatorTypeMappings.ToDictionary(
             kvp => kvp.Key,
-            kvp => kvp.Value.First())
+            kvp => kvp.Value[0])
             .AsReadOnly();
     }
 
@@ -240,12 +247,13 @@ public class ApplicationAssemblyContext
     {
         var dictionary = new Dictionary<Type, Type>();
         var entityConfigurationTypes = EntityConfigurationTypes;
-        foreach (var configurationEntityType in EntityConfigurationTypes)
+
+        foreach (var configurationEntityType in entityConfigurationTypes)
         {
             var entityType = configurationEntityType.GetInterfaces()
                 .Where(x => x.IsGenericType)
                 .Where(x => x.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>))
-                .Select(x => x.GetGenericArguments().First())
+                .Select(x => x.GetGenericArguments()[0])
                 .First();
             dictionary[entityType] = configurationEntityType;
         }
@@ -272,7 +280,7 @@ public class ApplicationAssemblyContext
             var requestType = handlerType.GetInterfaces()
                 .Where(x => x.IsGenericType)
                 .Where(x => x.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))
-                .Select(x => x.GetGenericArguments().First())
+                .Select(x => x.GetGenericArguments()[0])
                 .First();
 
             dictionary[requestType] = handlerType;

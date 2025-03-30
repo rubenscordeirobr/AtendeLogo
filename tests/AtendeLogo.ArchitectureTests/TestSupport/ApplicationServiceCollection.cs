@@ -3,9 +3,11 @@ using AtendeLogo.Application.Contracts.Handlers;
 using AtendeLogo.Application.Contracts.Persistence;
 using AtendeLogo.Application.Contracts.Services;
 using AtendeLogo.Infrastructure;
+using AtendeLogo.Infrastructure.Helpers;
 using AtendeLogo.Persistence.Activity;
 using AtendeLogo.Persistence.Identity;
 using AtendeLogo.Presentation;
+using AtendeLogo.RuntimeServices;
 using AtendeLogo.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +30,11 @@ public class ApplicationServiceCollection : ServiceCollection
         var configurations = new Dictionary<string, string> {
             { "ConnectionStrings:IdentityPostgresql", "Host=postgress;Port=5432;Database=atende_logo;Username=atende_logo_user;Password=Temp@Teste123%$;Include Error Detail=true" },
             { "ConnectionStrings:ActivityMongoDb", "mongodb://atende_logo_user:Temp%40Teste123%25%24@localhost:27017/?authSource=admin&readPreference=primary&ssl=false&directConnection=true" },
-            { "ConnectionStrings:CacheRedis", "redis:6379,password=Temp@Teste123%$" }
+            { "ConnectionStrings:CacheRedis", "redis:6379,password=Temp@Teste123%$" },
+            { SecureConfigKeysProvider.PasswordSalt.AppSettingsKey, "fake-salt" },
+            { SecureConfigKeysProvider.JwtAuthentication.AppSettingsKey, "fake-jwt-auth-key" },
+            { SecureConfigKeysProvider.JwtAudience.AppSettingsKey, "fake-jwt-audience" },
+            { SecureConfigKeysProvider.JwtIssuer.AppSettingsKey, "fake-jwt-issuer" }
         };
 
         var fakeConfiguration = new ConfigurationBuilder()
@@ -36,6 +42,7 @@ public class ApplicationServiceCollection : ServiceCollection
             .Build();
 
         this.AddApplicationServices()
+            .AddRuntimeServices()
             .AddUserCasesServices()
             .AddUserCasesSharedServices()
             .AddPresentationServices()

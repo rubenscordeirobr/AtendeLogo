@@ -2,11 +2,9 @@
 
 	<PropertyGroup>
 		<IsPackable>false</IsPackable>
-		<RunSettingsFilePath>$(MSBuildProjectDirectory)\test.runsettings</RunSettingsFilePath>
 		<IsTestProject>true</IsTestProject>
-        <AnalysisMode>none</AnalysisMode>
-        <AnalysisLevel>none</AnalysisLevel>
         <SonarQubeExclude>true</SonarQubeExclude>
+		<RunSettingsFilePath>$(MSBuildProjectDirectory)\test.runsettings</RunSettingsFilePath>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,8 +23,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\AtendeLogo.Application\AtendeLogo.Application.csproj" />
-		<ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
-		<ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
 		<ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
 		<ProjectReference Include="..\..\src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
 		<ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />

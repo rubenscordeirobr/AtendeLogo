@@ -2,7 +2,7 @@
 
 public class CommandValidationTests
     : IClassFixture<ApplicationAssemblyContext>, 
-    IClassFixture<AnonymousServiceProviderMock>
+    IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IReadOnlyDictionary<Type, IReadOnlyList<Type>> _validatorMappings;
     private readonly IServiceProvider _serviceProvider;
@@ -10,7 +10,7 @@ public class CommandValidationTests
 
     public CommandValidationTests(
         ApplicationAssemblyContext assemblyContext,
-        AnonymousServiceProviderMock serviceProviderMock,
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper output)
     {
         serviceProviderMock.AddTestOutput(output);

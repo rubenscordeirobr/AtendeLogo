@@ -2,11 +2,11 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.SystemUsers.Queries;
 
-public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousServiceProviderMock>
+public class GetSystemUserByIdQueryHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public GetSystemUserByIdQueryHandlerTests(AnonymousServiceProviderMock serviceProviderMock,
+    public GetSystemUserByIdQueryHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -33,7 +33,7 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
     {
         // Arrange
         var mediator = _serviceProvider.GetRequiredService<IRequestMediator>();
-        var query = new GetSystemUserByIdQuery(AnonymousIdentityConstants.User_Id);
+        var query = new GetSystemUserByIdQuery(AnonymousUserConstants.User_Id);
 
         // Act
         var result = await mediator.GetAsync(query, CancellationToken.None);
@@ -44,10 +44,10 @@ public class GetSystemUserByIdQueryHandlerTests : IClassFixture<AnonymousService
 
         var systemUser = result.Value
             .Should()
-            .BeOfType<SystemUserResponse>()
+            .BeOfType<UserResponse>()
             .Subject;
 
-        systemUser.Id.Should().Be(AnonymousIdentityConstants.User_Id);
+        systemUser.Id.Should().Be(AnonymousUserConstants.User_Id);
     }
 
     [Fact]

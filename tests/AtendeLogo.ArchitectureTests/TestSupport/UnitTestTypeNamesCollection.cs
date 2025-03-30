@@ -8,16 +8,17 @@ public class UnitTestTypeNamesCollection
     {
         var applicationTestsAssembly = typeof(Application.UnitTests.Domain.Extensions.EntityDeletedExtensionsTests).Assembly;
         var useCaseTestsAssembly = typeof(UseCases.UnitTests.Activities.Events.EntityCreatedEventHandlerTests).Assembly;
-        var identityFunctionalTestsAssembly = typeof(IdentityApi.FunctionalTests.HttpClientTests).Assembly;
+        var infrastructureTestsAssembly = typeof(Infrastructure.UnitTests.EmailSenderTests).Assembly;
+        var identityFunctionalTestsAssembly = typeof(FunctionalTests.HttpClientTests).Assembly;
        
         var allTypes = applicationTestsAssembly.GetTypes()
+            .Concat(infrastructureTestsAssembly.GetTypes())
             .Concat(useCaseTestsAssembly.GetTypes())
             .Concat(identityFunctionalTestsAssembly.GetTypes());
 
-        _unitTestTypes = allTypes
+        _unitTestTypes = [.. allTypes
             .Where(type => type.Name.EndsWith("Tests"))
-            .Select(type => type.Name)
-            .ToHashSet();
+            .Select(type => type.Name)];
     }
 
     public int Count

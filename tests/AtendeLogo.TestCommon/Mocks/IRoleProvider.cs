@@ -9,9 +9,9 @@ public class AnonymousRole : IRoleProvider
     public UserRole UserRole => UserRole.Anonymous;
 }
 
-public class SystemAdminRole : IRoleProvider
+public class AdminUserRole : IRoleProvider
 {
-    public UserRole UserRole => UserRole.SystemAdmin;
+    public UserRole UserRole => UserRole.Admin;
 }
 
 public class TenantOwnerRole : IRoleProvider
