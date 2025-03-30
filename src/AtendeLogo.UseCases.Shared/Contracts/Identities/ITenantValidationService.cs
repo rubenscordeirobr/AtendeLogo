@@ -1,22 +1,33 @@
 ﻿namespace AtendeLogo.UseCases.Contracts.Identities;
+
 public interface ITenantValidationService: IValidationService
 {
     Task<bool> IsEmailUniqueAsync(
         string email, 
-        CancellationToken token);
+        CancellationToken cancellationToken = default);
    
     Task<bool> IsEmailUniqueAsync(
         Guid currentTenant_Id,
         Guid currentTenantOwner_Id,
         string email, 
-        CancellationToken token);
+        CancellationToken cancellationToken = default);
 
     Task<bool> IsFiscalCodeUniqueAsync(
         string fiscalCode, 
-        CancellationToken token);
+        CancellationToken cancellationToken = default);
   
     Task<bool> IsFiscalCodeUniqueAsync(
         Guid currentTenant_Id,
-        string fiscalCodel,
-        CancellationToken token);
+        string fiscalCode,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> IsPhoneNumberUniqueAsync(
+        string phoneNumber, 
+        CancellationToken cancellationToken = default);
+   
+    Task<bool> IsPhoneNumberUniqueAsync(
+        Guid currentTenant_Id,
+        Guid currentTenantOwner_Id,
+        string phoneNumber,
+        CancellationToken cancellationToken = default);
 }

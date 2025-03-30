@@ -54,7 +54,7 @@ public class TenantUserValidationServiceTests
         var userId = Guid.NewGuid();
         var email = "test@example.com";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.EmailExistsAsync(userId, email, _token))
+            .Setup(repo => repo.EmailExistsAsync(email, userId, _token))
             .ReturnsAsync(false);
 
         // Act
@@ -71,7 +71,7 @@ public class TenantUserValidationServiceTests
         var userId = Guid.NewGuid();
         var email = "test@example.com";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.EmailExistsAsync(userId, email, _token))
+            .Setup(repo => repo.EmailExistsAsync(email, userId, _token))
             .ReturnsAsync(true);
 
         // Act
@@ -87,7 +87,7 @@ public class TenantUserValidationServiceTests
         // Arrange
         var phoneNumber = "1234567890";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.PhoneNumberExitsAsync(phoneNumber, _token))
+            .Setup(repo => repo.PhoneNumberExistsAsync(phoneNumber, _token))
             .ReturnsAsync(false);
 
         // Act
@@ -103,7 +103,7 @@ public class TenantUserValidationServiceTests
         // Arrange
         var phoneNumber = "1234567890";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.PhoneNumberExitsAsync(phoneNumber, _token))
+            .Setup(repo => repo.PhoneNumberExistsAsync(phoneNumber, _token))
             .ReturnsAsync(true);
 
         // Act
@@ -120,9 +120,9 @@ public class TenantUserValidationServiceTests
         var userId = Guid.NewGuid();
         var phoneNumber = "1234567890";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.PhoneNumberExitsAsync(userId, phoneNumber, _token))
+            .Setup(repo => repo.PhoneNumberExistsAsync(phoneNumber, userId, _token))
             .ReturnsAsync(false);
-
+        
         // Act
         var result = await _validationService.IsPhoneNumberUniqueAsync(userId, phoneNumber, _token);
 
@@ -137,7 +137,7 @@ public class TenantUserValidationServiceTests
         var userId = Guid.NewGuid();
         var phoneNumber = "1234567890";
         _tenantUserRepositoryMock
-            .Setup(repo => repo.PhoneNumberExitsAsync(userId, phoneNumber, _token))
+            .Setup(repo => repo.PhoneNumberExistsAsync(phoneNumber, userId, _token))
             .ReturnsAsync(true);
 
         // Act

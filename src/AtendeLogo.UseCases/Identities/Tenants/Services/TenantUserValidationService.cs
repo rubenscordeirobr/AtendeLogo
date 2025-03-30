@@ -1,4 +1,4 @@
-﻿using AtendeLogo.UseCases.Contracts.Identities;
+﻿using AtendeLogo.Shared.ValueObjects;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Services;
 
@@ -13,32 +13,40 @@ internal class TenantUserValidationService : ITenantUserValidationService
     }
 
     public async Task<bool> IsEmailUniqueAsync(
-        string email, 
+        string email,
         CancellationToken cancellationToken = default)
     {
+        email = SanitizeUtils.SanitizeEmail(email);
+
         return !await _tenantUserRepository.EmailExistsAsync(email, cancellationToken);
     }
 
     public async Task<bool> IsEmailUniqueAsync(
-        Guid currentUser_Id, 
+        Guid currentUser_Id,
         string email,
         CancellationToken cancellationToken = default)
     {
-        return !await _tenantUserRepository.EmailExistsAsync(currentUser_Id, email, cancellationToken);
+        email = SanitizeUtils.SanitizeEmail(email);
+
+        return !await _tenantUserRepository.EmailExistsAsync(email, currentUser_Id, cancellationToken);
     }
 
     public async Task<bool> IsPhoneNumberUniqueAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default)
     {
-        return !await _tenantUserRepository.PhoneNumberExitsAsync(phoneNumber, cancellationToken);
+        phoneNumber = SanitizeUtils.SanitizePhoneNumber(phoneNumber);
+
+        return !await _tenantUserRepository.PhoneNumberExistsAsync(phoneNumber, cancellationToken);
     }
 
     public async Task<bool> IsPhoneNumberUniqueAsync(
-        Guid currentUser_Id, 
-        string number, 
+        Guid currentUser_Id,
+        string phoneNumber,
         CancellationToken cancellationToken = default)
     {
-        return !await _tenantUserRepository.PhoneNumberExitsAsync(currentUser_Id, number, cancellationToken);
+        phoneNumber = SanitizeUtils.SanitizePhoneNumber(phoneNumber);
+
+        return !await _tenantUserRepository.PhoneNumberExistsAsync(phoneNumber, currentUser_Id, cancellationToken);
     }
 }

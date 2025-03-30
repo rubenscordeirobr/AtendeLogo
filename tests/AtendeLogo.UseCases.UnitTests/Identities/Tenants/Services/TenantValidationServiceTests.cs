@@ -6,7 +6,7 @@ namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Services;
 
 public class TenantValidationServiceTests
 {
-    private readonly ITestOutputHelper _output;
+    private readonly ITestOutputHelper _testOutput;
     private readonly Mock<ITenantRepository> _tenantRepositoryMock;
     private readonly Mock<ITenantUserRepository> _tenantUserRepositoryMock;
     private readonly TenantValidationService _validationService;
@@ -14,7 +14,7 @@ public class TenantValidationServiceTests
 
     public TenantValidationServiceTests(ITestOutputHelper output)
     {
-        _output = output;
+        _testOutput = output;
         _tenantRepositoryMock = new Mock<ITenantRepository>();
         _tenantUserRepositoryMock = new Mock<ITenantUserRepository>();
         _validationService = new TenantValidationService(
@@ -26,11 +26,11 @@ public class TenantValidationServiceTests
     public void Service_ShouldBeRegistered()
     {
         // Arrange
-        var anonymousServiceProviderMock = new AnonymousServiceProviderMock();
-        anonymousServiceProviderMock.AddTestOutput(_output);
+        var serviceProviderMock = new ServiceProviderMock<AnonymousRole>();
+        serviceProviderMock.AddTestOutput(_testOutput);
 
         // Act
-        var service = anonymousServiceProviderMock.GetRequiredService<ITenantValidationService>();
+        var service = serviceProviderMock.GetRequiredService<ITenantValidationService>();
 
         // Assert
         service.Should().BeOfType<TenantValidationService>();
@@ -77,7 +77,7 @@ public class TenantValidationServiceTests
         var email = "test@example.com";
 
         _tenantRepositoryMock
-            .Setup(repo => repo.EmailExistsAsync(tenantId, email, _token))
+            .Setup(repo => repo.EmailExistsAsync(email, tenantId, _token))
             .ReturnsAsync(false);
 
         // Act
@@ -95,7 +95,7 @@ public class TenantValidationServiceTests
         var ownerId = Guid.NewGuid();
         var email = "test@example.com";
         _tenantRepositoryMock
-            .Setup(repo => repo.EmailExistsAsync(tenantId, email, _token))
+            .Setup(repo => repo.EmailExistsAsync(email, tenantId, _token))
             .ReturnsAsync(true);
 
         // Act
@@ -144,7 +144,7 @@ public class TenantValidationServiceTests
         var tenantId = Guid.NewGuid();
         var fiscalCode = "123456789";
         _tenantRepositoryMock
-            .Setup(repo => repo.FiscalCodeExistsAsync(tenantId, fiscalCode, _token))
+            .Setup(repo => repo.FiscalCodeExistsAsync(fiscalCode, tenantId, _token))
             .ReturnsAsync(false);
 
         // Act
@@ -162,7 +162,7 @@ public class TenantValidationServiceTests
         var fiscalCode = "123456789";
        
         _tenantRepositoryMock
-            .Setup(repo => repo.FiscalCodeExistsAsync(tenantId, fiscalCode, _token))
+            .Setup(repo => repo.FiscalCodeExistsAsync(fiscalCode, tenantId, _token))
             .ReturnsAsync(true);
 
         // Act

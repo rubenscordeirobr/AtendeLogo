@@ -1,4 +1,4 @@
-﻿using AtendeLogo.UseCases.Contracts.Identities;
+﻿using AtendeLogo.Application.Models.Communication;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Services;
 
@@ -16,11 +16,13 @@ internal class TenantValidationService : ITenantValidationService
     }
 
     public async Task<bool> IsEmailUniqueAsync(
-        string email, 
+        string email,
         CancellationToken cancellationToken = default)
     {
+        email = SanitizeUtils.SanitizeEmail(email);
+
         return !await _tenantRepository.EmailExistsAsync(email, cancellationToken) &&
-!await _tenantUserRepository.EmailExistsAsync(email, cancellationToken);
+            !await _tenantUserRepository.EmailExistsAsync(email, cancellationToken);
     }
 
     public async Task<bool> IsEmailUniqueAsync(
@@ -29,14 +31,17 @@ internal class TenantValidationService : ITenantValidationService
         string email,
         CancellationToken cancellationToken = default)
     {
-        return !await _tenantRepository.EmailExistsAsync(currentTenant_Id, email, cancellationToken)
-            && !await _tenantUserRepository.EmailExistsAsync(currentTenantOwner_Id, email, cancellationToken);
+        email = SanitizeUtils.SanitizeEmail(email);
+
+        return !await _tenantRepository.EmailExistsAsync(email, currentTenant_Id, cancellationToken)
+            && !await _tenantUserRepository.EmailExistsAsync(email, currentTenantOwner_Id, cancellationToken);
     }
 
     public async Task<bool> IsFiscalCodeUniqueAsync(
         string fiscalCode,
         CancellationToken cancellationToken = default)
     {
+        fiscalCode = SanitizeUtils.SanitizeFiscalCode(fiscalCode);
         return !await _tenantRepository
             .FiscalCodeExistsAsync(fiscalCode, cancellationToken);
     }
@@ -46,16 +51,21 @@ internal class TenantValidationService : ITenantValidationService
         string fiscalCode,
         CancellationToken cancellationToken = default)
     {
+        fiscalCode = SanitizeUtils.SanitizeFiscalCode(fiscalCode);
+
         return !await _tenantRepository
-            .FiscalCodeExistsAsync(currentTenant_Id, fiscalCode, cancellationToken);
+            .FiscalCodeExistsAsync(fiscalCode, currentTenant_Id, cancellationToken);
     }
 
     public async Task<bool> IsPhoneNumberUniqueAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default)
     {
+        phoneNumber = SanitizeUtils.SanitizePhoneNumber(phoneNumber);
+
+
         return !await _tenantRepository.PhoneNumberExitsAsync(phoneNumber, cancellationToken) &&
-            !await _tenantUserRepository.PhoneNumberExitsAsync(phoneNumber, cancellationToken);
+            !await _tenantUserRepository.PhoneNumberExistsAsync(phoneNumber, cancellationToken);
     }
 
     public async Task<bool> IsPhoneNumberUniqueAsync(
@@ -64,7 +74,9 @@ internal class TenantValidationService : ITenantValidationService
         string phoneNumber,
         CancellationToken cancellationToken = default)
     {
-        return !await _tenantRepository.PhoneNumberExitsAsync(currentTenant_Id, phoneNumber, cancellationToken)
-            && !await _tenantUserRepository.PhoneNumberExitsAsync(currentTenantOwner_Id, phoneNumber, cancellationToken);
+        phoneNumber = SanitizeUtils.SanitizePhoneNumber(phoneNumber);
+
+        return !await _tenantRepository.PhoneNumberExitsAsync(phoneNumber, currentTenant_Id, cancellationToken)
+            && !await _tenantUserRepository.PhoneNumberExistsAsync(phoneNumber, currentTenantOwner_Id, cancellationToken);
     }
 }
