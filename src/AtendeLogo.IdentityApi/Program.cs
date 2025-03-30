@@ -1,51 +1,30 @@
 ﻿
 var builder = WebApplication.CreateBuilder(args);
-var configuration = builder.Configuration;
- 
-var environment = builder.Environment;
+var env = builder.Environment;
 
-builder.Services
-    .AddInfrastructureServices(configuration)
-    .AddIdentityPersistenceServices(configuration)
-    .AddActivityPersistenceServices(configuration)
-    .AddApplicationServices()
+builder.InitializeEnvironmentSettings()
+    .ConfigureCors()
+    .AddEssentialServices();
+
+var configuration = builder.Configuration;
+
+if (!env.IsTest())
+{
+    builder.Services
+        .AddInfrastructureServices(configuration)
+        .AddIdentityPersistenceServices(configuration)
+        .AddActivityPersistenceServices(configuration);
+}
+ 
+builder.Services.AddApplicationServices()
+    .AddRuntimeServices()
     .AddUserCasesSharedServices()
     .AddUserCasesServices()
     .AddPresentationServices();
 
-builder.Services.AddCors(OptionsBuilderConfigurationExtensions =>
-{
-    OptionsBuilderConfigurationExtensions.AddPolicy("all", policy =>
-    {
-        policy.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
-
-builder.Services
-    .AddHttpContextAccessor() 
-    .AddOpenApi()
-    .AddSwaggerGen();
-  
-builder.Services.AddControllers(options =>
-{
-    options.Conventions.Add(new RouteTokenTransformerConvention(new KebabCaseTransformer()));
-});
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger()
-       .UseSwaggerUI();
-
-    app.MapOpenApi();
-
-    await app.ApplyMigrationsAsync();
-}
-
+app.MapDefaultEndpoints();
 app.UseHttpsRedirection()
    .UseAuthorization();
 
@@ -53,5 +32,15 @@ app.MapControllers();
 
 app.UsePresentationServices();
 app.MapPresentationEndPoints();
- 
-app.Run();
+app.MapFallback();
+
+if (env.IsDevelopment() && !env.IsTest())
+{
+    app.MapOpenApi();
+
+    app.UseSwagger()
+       .UseSwaggerUI();
+
+    await app.ApplyMigrationsAsync();
+}
+await app.RunAsync();

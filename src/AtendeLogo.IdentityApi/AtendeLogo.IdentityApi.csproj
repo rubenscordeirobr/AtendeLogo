@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <AnalysisMode>none</AnalysisMode>
+    <AnalysisLevel>none</AnalysisLevel>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+	<PropertyGroup>
+		<RootNamespace>AtendeLogo.IdentityApi</RootNamespace>
+    <UserSecretsId>2ea28a46-5c98-4621-bef9-15878d8929ed</UserSecretsId>
+		<EnableMinimalApis>true</EnableMinimalApis>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Remove="Web.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Web.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+     
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
+	  <ProjectReference Include="..\AtendeLogo.RuntimeServices\AtendeLogo.RuntimeServices.csproj" />
+	  <ProjectReference Include="..\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
+	  <ProjectReference Include="..\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
+	  <ProjectReference Include="..\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
+	  <ProjectReference Include="..\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
+	  <ProjectReference Include="..\AtendeLogo.RuntimeServices\AtendeLogo.RuntimeServices.csproj" />
+	</ItemGroup>
+ 
+
+</Project>

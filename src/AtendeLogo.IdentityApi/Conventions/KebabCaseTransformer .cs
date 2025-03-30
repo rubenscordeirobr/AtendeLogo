@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Utils;
-
-namespace AtendeLogo.WebService.Conventions;
+﻿namespace AtendeLogo.IdentityApi.Conventions;
 
 public partial class KebabCaseTransformer : IOutboundParameterTransformer
 {
@@ -10,6 +8,6 @@ public partial class KebabCaseTransformer : IOutboundParameterTransformer
         if (string.IsNullOrEmpty(result))
             return null;
 
-        return CaseUtils.ToKebabCase(result);
+        return CaseConventionUtils.ToKebabCase(result);
     }
 }
