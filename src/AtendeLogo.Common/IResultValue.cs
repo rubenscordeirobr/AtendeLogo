@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AtendeLogo.Common;
 
@@ -9,6 +10,7 @@ public interface IResultValue
     bool IsSuccess { get; }
     Error? Error { get; }
 
+    [DebuggerDisplay("Type = {Value?.GetType().Name}, Value = {Value}")]
     [MemberNotNullWhen(true, nameof(IsSuccess))]
     object? Value { get; }
 

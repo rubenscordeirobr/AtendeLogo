@@ -23,7 +23,7 @@ public static class ValidationUtils
         return _emailRegex.IsMatch(value);
 
     }
-
+     
     public static bool IsFullPhoneNumberValid(string? phoneNumber)
     {
         return PhoneNumberUtils.IsFullPhoneNumberValid(phoneNumber);

@@ -1,15 +1,15 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using AtendeLogo.Common.Mappers;
 
 namespace AtendeLogo.Common;
 
+[DebuggerDisplay("Type = {GetType().Name}, Code = {Code}, Message = {Message}")]
 public abstract record Error
 {
     public string Code { get; }
     public string Message { get; }
     public Exception? Exception { get; }
-    public ErrorResponse ErrorResponse
-        => new ErrorResponse(Code, Message);
 
     protected Error(string code, string message)
     {
@@ -29,14 +29,18 @@ public abstract record Error
         Exception = exception;
     }
 
+    public virtual HttpStatusCode StatusCode
+        => HttpErrorMapper.MapErrorToHttpStatusCode(this);
+
+    public ErrorResponse CreateErrorResponse()
+     => new ErrorResponse(Code, Message);
+
     public sealed override string ToString()
         => $"{Code}: {Message}";
 
     public static implicit operator string(Error error)
         => error?.ToString() ?? string.Empty;
 
-    public virtual HttpStatusCode StatusCode
-        => HttpErrorMapper.MapErrorToHttpStatusCode(this);
 }
 
 public record BadRequestError(string Code,
@@ -59,12 +63,17 @@ public record NotFoundError(
     string message)
     : Error(code, message);
 
+public record CriticalNotFoundError(
+    string code,
+    string message)
+    : Error(code, message);
+
 public record InvalidOperationError(
     string Code,
     string Message)
     : Error(Code, Message);
 
-public record UnauthorizedError(
+public record ForbiddenError(
     string Code,
     string Message)
     : Error(Code, Message);
@@ -93,7 +102,7 @@ public record OperationCanceledError(
     : Error(Exception, Code, Message);
 
 public record UnknownError(
-    Exception Exception,
+    Exception? Exception,
     string Code,
     string Message)
     : Error(Exception, Code, Message);
@@ -153,3 +162,26 @@ public record TaskTimeoutError(
     string Code,
     string Message)
     : Error(Exception, Code, Message);
+
+public record TooManyRequestsError(
+    string Code,
+    string Message)
+    : Error(Code, Message);
+
+public record AuthenticationError(
+    string Code,
+    string Message)
+    : Error(Code, Message);
+
+public record ParserError(
+    Exception? Exception,
+    string Code,
+    string Message)
+    : Error(Exception, Code, Message);
+
+
+public record NoContentError(
+    string Code,
+    string Message)
+    : Error(Code, 
+            Message + " For responses with no content, please use OperationResponse.");

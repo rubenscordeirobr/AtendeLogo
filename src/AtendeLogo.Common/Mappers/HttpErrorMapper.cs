@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Authentication;
 using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Exceptions;
 
@@ -11,14 +12,18 @@ public static class HttpErrorMapper
     {
         return error switch
         {
-            BadRequestError => HttpStatusCode.BadRequest,
-            UnauthorizedError => HttpStatusCode.Unauthorized,
-            ValidationError => HttpStatusCode.UnprocessableContent,
-            NotFoundError => HttpStatusCode.NotFound,
-            DomainEventError => HttpStatusCode.Conflict,
-            NotImplementedError => HttpStatusCode.NotImplemented,
+            NoContentError => HttpStatusCode.NoContent, //204
+            BadRequestError => HttpStatusCode.BadRequest, //400
+            AuthenticationError => HttpStatusCode.Unauthorized, //401
+            ForbiddenError => HttpStatusCode.Forbidden, //403
+            NotFoundError => HttpStatusCode.NotFound, //404
+            CriticalNotFoundError => HttpStatusCode.InternalServerError, //404
+            DomainEventError => HttpStatusCode.Conflict, // 409
+            ValidationError => HttpStatusCode.UnprocessableContent, //422
+            TooManyRequestsError => HttpStatusCode.TooManyRequests, //429
             AbortedError => (HttpStatusCode)499,
-            _ => HttpStatusCode.InternalServerError
+            NotImplementedError => HttpStatusCode.NotImplemented, //501
+            _ => HttpStatusCode.InternalServerError //500
         };
     }
 
@@ -29,17 +34,35 @@ public static class HttpErrorMapper
     {
         return statusCode switch
         {
-            HttpStatusCode.InternalServerError
-                => new InternalServerError(null!, code, message),
+            HttpStatusCode.NoContent
+                => new NoContentError(code, message), //204
+
             HttpStatusCode.BadRequest
-                => new BadRequestError(code, message),
+                => new BadRequestError(code, message), //400
+
+            HttpStatusCode.Unauthorized
+                   => new AuthenticationError(code, message), //401
+
+            HttpStatusCode.Forbidden
+                 => new ForbiddenError(code, message), //403
+
             HttpStatusCode.NotFound
-                => new NotFoundError(code, message),
-            HttpStatusCode.UnprocessableContent
-                => new ValidationError(code, message),
+                => new NotFoundError(code, message), //404
+
             HttpStatusCode.Conflict
-                => new DomainEventError(code, message),
-            _ => ResolverExtendedStatus(statusCode, code, message)
+                => new DomainEventError(code, message), //409
+
+            HttpStatusCode.UnprocessableContent
+                => new ValidationError(code, message), //422
+
+
+            HttpStatusCode.TooManyRequests
+                => new TooManyRequestsError(code, message), //429 
+
+            HttpStatusCode.InternalServerError //500
+                => new InternalServerError(null!, code, message),
+
+            _ => TryMapExtendedStatus(statusCode, code, message)
         };
     }
 
@@ -52,20 +75,28 @@ public static class HttpErrorMapper
         var message = exception.GetNestedMessage();
         return exception switch
         {
-            UnauthorizedSecurityException
-                => new UnauthorizedError(code, message),
+            AuthenticationException
+                => new AuthenticationError(code, message), //401
+
+            ForbiddenSecurityException
+                => new ForbiddenError(code, message), //403
+
+            CriticalNotFoundException
+                => new CriticalNotFoundError(code, message), //500
+
+            ValidationException
+                => new ValidationError(code, message), //422
             TaskCanceledException
-                => new AbortedError(code, message),
-            OperationCanceledException operationCanceledException 
+                => new AbortedError(code, message), //499
+
+            OperationCanceledException operationCanceledException
                 => new OperationCanceledError(operationCanceledException, code, message),
-            ValidationException 
-                => new ValidationError(code, message),
+
             _ => new InternalServerError(exception, code, message)
         };
-
     }
 
-    private static Error ResolverExtendedStatus(
+    private static Error TryMapExtendedStatus(
         HttpStatusCode statusCode,
         string code,
         string message)
@@ -81,6 +112,7 @@ public static class HttpErrorMapper
         }
 
         return new NotImplementedError($"HttpStatusCode.NotImplemented.{code}", message);
+
     }
 }
 

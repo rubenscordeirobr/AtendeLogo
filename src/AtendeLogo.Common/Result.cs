@@ -1,7 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AtendeLogo.Common;
 
+[DebuggerDisplay("Type = {typeof(T).Name}, Value = {Value}")]
 public class Result<T> : IResultValue where T : notnull
 {
     [MemberNotNullWhen(true, nameof(Value))]
@@ -15,6 +17,7 @@ public class Result<T> : IResultValue where T : notnull
 
     public Error? Error { get; }
 
+    [DebuggerDisplay("Type = {Value?.GetType().Name}, Value = {Value}")]
     [MemberNotNullWhen(true, nameof(IsSuccess))]
     [MemberNotNullWhen(false, nameof(IsFailure))]
     public T? Value { get; }

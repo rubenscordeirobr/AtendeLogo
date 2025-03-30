@@ -71,4 +71,16 @@ public static class Guard
         if (!EqualityComparer<T>.Default.Equals(value, default))
             throw new ArgumentException($"{paramName} must be empty.", paramName);
     }
+     
+    public static void EnumNotDefined<TEnum>(TEnum value,
+        [CallerArgumentExpression("value")] string paramName = "")
+        where TEnum : struct, Enum
+    {
+        if (!EnumUtils.IsDefined(value))
+        {
+            throw new ArgumentException(
+                $"Parameter '{paramName}' with value '{value}' is not defined into enum '{typeof(TEnum).Name}'. Please provide a valid enum value.",
+                paramName);
+        }
+    }
 }

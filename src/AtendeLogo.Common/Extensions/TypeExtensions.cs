@@ -18,7 +18,7 @@ public static class TypeExtensions
 
         return type.IsSubclassOf(typeof(T));
     }
-
+     
     public static bool IsSubclassOfOrEquals<T>(this Type type)
     {
         return type.IsSubclassOfOrEquals(typeof(T));
@@ -195,14 +195,21 @@ public static class TypeExtensions
         return type.Name;
     }
 
+    public static bool IsAssignableTo<T>(this Type? type)
+    {
+        if (type is null)
+            return false;
+
+        return type.IsAssignableTo(typeof(T));
+    }
+
     public static bool IsAssignableTo(
         this Type? type,
         IEnumerable<Type> types)
     {
-        if (type == null)
-        {
+        if (type is null)
             return false;
-        }
+        
         return types.Any(type.IsAssignableTo);
     }
 

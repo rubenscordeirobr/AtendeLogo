@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text.Json;
+using AtendeLogo.Common.Helpers;
 
 namespace AtendeLogo.Common.Utils;
 
@@ -31,13 +32,16 @@ public static class JsonUtils
     {
         Guard.NotNull(jsonSerializerOptions);
 
-        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development" &&
-            Environment.GetEnvironmentVariable("XUNIT_ENVIRONMENT") != "TEST")
+
+        if (jsonSerializerOptions.WriteIndented)
+            return;
+
+        if (!EnvironmentHelper.IsDevelopment() &&
+            !EnvironmentHelper.IsXUnitTesting())
         {
             return;
         }
-        if (jsonSerializerOptions.WriteIndented)
-            return;
+     
 
         if (jsonSerializerOptions.IsReadOnly)
         {
@@ -87,12 +91,13 @@ public static class JsonUtils
 
     private static JsonSerializerOptions CreateCacheJsonSerializerOptions()
     {
+        var writeIndented = EnvironmentHelper.IsDevelopment() || EnvironmentHelper.IsXUnitTesting();
         return new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             IncludeFields = true,
             IgnoreReadOnlyProperties = false,
-            WriteIndented = true,
+            WriteIndented = writeIndented,
             IgnoreReadOnlyFields = true,
         };
     }

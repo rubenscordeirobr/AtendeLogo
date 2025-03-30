@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using AtendeLogo.Common.Attributes;
 
 namespace AtendeLogo.Common.Utils;
 
@@ -17,7 +19,7 @@ public static class EnumUtils
         result = default;
         return false;
     }
- 
+
     public static TEnum Parse<TEnum>(
         [NotNullWhen(true)] string? value)
         where TEnum : struct, Enum
@@ -27,5 +29,39 @@ public static class EnumUtils
             return result;
         }
         throw new ArgumentException($"Value '{value}' is not a valid or defined in {typeof(TEnum).Name}.");
+    }
+
+    public static bool IsDefined(Type enumType, object value)
+    {
+        Guard.NotNull(enumType);
+
+        if (!Enum.IsDefined(enumType, value) || value is null)
+        {
+            return false;
+        }
+
+        var member = enumType.GetMember(value!.ToString()!)
+            .FirstOrDefault();
+
+        if (member is null)
+            return false;
+
+        return member.GetCustomAttribute<UndefinedValueAttribute>() == null;
+    }
+
+    public static bool IsDefined<TEnum>(TEnum value)
+         where TEnum : struct, Enum
+    {
+        if (!Enum.IsDefined(value))
+        {
+            return false;
+        }
+        var member = typeof(TEnum).GetMember(value!.ToString()!)
+            .FirstOrDefault();
+
+        if (member is null)
+            return false;
+
+        return member.GetCustomAttribute<UndefinedValueAttribute>() == null;
     }
 }

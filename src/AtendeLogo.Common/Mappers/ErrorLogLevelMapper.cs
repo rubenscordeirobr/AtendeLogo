@@ -10,12 +10,15 @@ public static class ErrorLogLevelMapper
         {
             NotFoundError => LogLevel.Information,
             OperationCanceledError => LogLevel.Information,
+
             // Warnings
             ValidationError => LogLevel.Warning,
-            UnauthorizedError => LogLevel.Warning,
+            ForbiddenError => LogLevel.Warning,
             AbortedError => LogLevel.Warning,
             TaskTimeoutError => LogLevel.Warning,
+
             // Errors
+            NoContentError => LogLevel.Error,
             BadRequestError => LogLevel.Error,
             DomainEventError => LogLevel.Error,
             RequestError => LogLevel.Error,
@@ -23,11 +26,13 @@ public static class ErrorLogLevelMapper
             CreateHttpRequestMessageError => LogLevel.Error,
             UnknownError => LogLevel.Error,
             InvalidOperationError => LogLevel.Error,
+            NotImplementedError => LogLevel.Critical,
+
             //Critical
+            CriticalNotFoundError => LogLevel.Critical,
             DatabaseError => LogLevel.Critical,
             CommandValidatorNotFoundError => LogLevel.Critical,
             InternalServerError => LogLevel.Critical,
-            NotImplementedError => LogLevel.Critical,
             _ => LogLevel.Error
         };
     }

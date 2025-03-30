@@ -18,19 +18,19 @@ public static partial class PhoneNumberInfoParser
 
         var internationalDialingCode = PhoneNumberUtils.GetInternationalDialingCode(numbers);
         var countryCode = PhoneNumberUtilsInternal.GetCountryCodeInternal(internationalDialingCode, numbers);
-        var countryMetedataInfo = PhoneNumberFormatRegistry .TryGet(countryCode);
+        var countryMetaDataInfo = PhoneNumberFormatRegistry .TryGet(countryCode);
 
         if (countryCode == Country.Unknown ||
             internationalDialingCode == InternationalDialingCode.Unknown ||
-            countryMetedataInfo == null)
+            countryMetaDataInfo == null)
         {
             return PhoneNumberInfo.Unknown(numbers);
         }
 
-        var nationalNumber = numbers.Substring(1 + countryMetedataInfo.InternationalDialingCodeLength);
-        var codeAreaLength = countryMetedataInfo.GetBetterAreaCodeLength(nationalNumber.Length);
+        var nationalNumber = numbers.Substring(1 + countryMetaDataInfo.InternationalDialingCodeLength);
+        var codeAreaLength = countryMetaDataInfo.GetBetterAreaCodeLength(nationalNumber.Length);
         var areaCode = nationalNumber.SafeTrim(codeAreaLength);
-        var formatterNumber = PhoneNumberUtilsInternal.FormatNatianalNumber(countryMetedataInfo, nationalNumber);
+        var formatterNumber = PhoneNumberUtilsInternal.FormatNatianalNumber(countryMetaDataInfo, nationalNumber);
 
         return new PhoneNumberInfo
         (
