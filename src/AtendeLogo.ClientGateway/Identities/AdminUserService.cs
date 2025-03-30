@@ -1,30 +1,31 @@
 ﻿using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
 
-namespace AtendeLogo.Presentation.Endpoints.Identity;
+namespace AtendeLogo.ClientGateway.Identities;
 
-[EndPoint(IdentityRouteConstants.AdminUsersRoute)]
-public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService
+[Route(IdentityRouteConstants.AdminUsersRoute)]
+public class AdminUserService : IAdminUserService
 {
-    private readonly IRequestMediator _mediator;
-    public AdminUsersEndpoint(IRequestMediator mediator)
+    private readonly IHttpClientMediator<AdminUserService> _mediator;
+
+    public AdminUserService(IHttpClientMediator<AdminUserService> mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpGet(routeTemplate: RouteConstants.RouteId)]
+    #region Queries
     public Task<Result<UserResponse>> GetAdminUserByIdAsync(
-        Guid id,
+        Guid id, 
         CancellationToken cancellationToken = default)
     {
         var query = new GetAdminUserByIdQuery(id);
         return _mediator.GetAsync(
             query,
+            RouteConstants.RouteId,
             cancellationToken);
     }
 
-    [HttpGet]
     public Task<Result<UserResponse>> GetAdminUserByEmailAsync(
-        string email,
+        string email, 
         CancellationToken cancellationToken = default)
     {
         var query = new GetAdminUserByEmailQuery(email);
@@ -33,9 +34,8 @@ public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService
             cancellationToken);
     }
 
-    [HttpGet]
     public Task<Result<UserResponse>> GetAdminUserByPhoneNumberAsync(
-        string phoneNumber,
+        string phoneNumber, 
         CancellationToken cancellationToken = default)
     {
         var query = new GetAdminUserByPhoneNumberQuery(phoneNumber);
@@ -44,9 +44,8 @@ public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService
             cancellationToken);
     }
 
-    [HttpGet]
     public Task<Result<UserResponse>> GetAdminUserByEmailOrPhoneNumberAsync(
-        string emailOrPhoneNumber, 
+        string emailOrPhoneNumber,
         CancellationToken cancellationToken = default)
     {
         var query = new GetAdminUserByEmailOrPhoneNumberQuery(emailOrPhoneNumber);
@@ -54,5 +53,6 @@ public class AdminUsersEndpoint : ApiEndpointBase, IAdminUserService
             query,
             cancellationToken);
     }
-}
 
+    #endregion
+}

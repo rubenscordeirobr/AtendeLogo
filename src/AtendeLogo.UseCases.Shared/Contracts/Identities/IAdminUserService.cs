@@ -1,22 +1,24 @@
-﻿using AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;
+﻿namespace AtendeLogo.UseCases.Contracts.Identities;
 
-namespace AtendeLogo.UseCases.Contracts.Identities;
-
-public interface IAdminUserService : IEndpointService
+public interface IAdminUserService  : ICommunicationService
 {
-    Task<Result<AdminUserResponse>> GetAdminUserByIdAsync(
+    #region Queries
+
+    Task<Result<UserResponse>> GetAdminUserByIdAsync(
         Guid id,
         CancellationToken cancellationToken = default);
 
-    Task<Result<AdminUserResponse>> GetAdminUserByEmailAsync(
+    Task<Result<UserResponse>> GetAdminUserByEmailAsync(
         string email,
         CancellationToken cancellationToken = default);
 
-    Task<Result<AdminUserResponse>> GetAdminUserByPhoneNumberAsync(
+    Task<Result<UserResponse>> GetAdminUserByPhoneNumberAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default);
 
-    Task<Result<AdminUserResponse>> GetAdminUserByEmailOrPhoneNumberAsync(
+    Task<Result<UserResponse>> GetAdminUserByEmailOrPhoneNumberAsync(
         string emailOrPhoneNumber,
         CancellationToken cancellationToken = default);
+
+    #endregion
 }
