@@ -1,8 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace AtendeLogo.Common.Extensions;
+namespace AtendeLogo.Common.Helpers;
 
-public static class GuidExtensions
+public static class GuidHelper
 {
     public static bool IsZeroPrefixedGuid(this Guid value)
     {

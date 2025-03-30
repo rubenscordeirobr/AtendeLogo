@@ -1,12 +1,14 @@
-﻿namespace AtendeLogo.Common.UnitTests.Extensions;
+﻿using AtendeLogo.Common.Helpers;
 
-public class GuidExtensionsTests
+namespace AtendeLogo.Common.UnitTests.Helpers;
+
+public class GuidHelperTests
 {
     [Fact]
     public void IsZeroPrefixedGuid_ShouldReturnTrue_WhenGuidIsZeroPrefixed()
     {
         // Arrange
-        var guid = GuidExtensions.NewGuidZeroPrefixed();
+        var guid = GuidHelper.NewGuidZeroPrefixed();
 
         // Act
         var result = guid.IsZeroPrefixedGuid();
@@ -32,7 +34,7 @@ public class GuidExtensionsTests
     public void NewGuidZeroPrefixed_ShouldReturnGuidWithZeroPrefix()
     {
         // Act
-        var guid = GuidExtensions.NewGuidZeroPrefixed();
+        var guid = GuidHelper.NewGuidZeroPrefixed();
 
         // Assert
         var bytes = guid.ToByteArray();
