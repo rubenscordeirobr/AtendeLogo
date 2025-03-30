@@ -1,0 +1,51 @@
+﻿using System.Net.Http.Headers;
+using AtendeLogo.ClientGateway.Common.Exceptions;
+using AtendeLogo.Shared.Constants;
+
+namespace AtendeLogo.ClientGateway.Common.Factories;
+
+public abstract class HttpRequestMessageFactory
+{
+    public Uri RequestUri { get; }
+    public HttpMethod Method { get; }
+
+    protected HttpRequestMessageFactory(
+        HttpMethod method,
+        Uri requestUri)
+    {
+        RequestUri = requestUri;
+        Method = method;
+    }
+
+     
+    /// <exception cref="CreateHttpRequestMessageException"></exception>
+    public async Task<HttpRequestMessage> CreateAsync(
+        string? clientSessionToken, 
+        string applicationName)
+    {
+        try
+        {
+            var message=  await CreateMessageAsync();
+            message.Headers.Add("Accept", "application/json");
+            message.Headers.Add("Accept-Charset", "utf-8");
+            message.Headers.Add("Accept-Encoding", "gzip, deflate");
+
+            message.Headers.Add(HttpHeaderConstants.ApplicationName, applicationName);
+
+            if (!string.IsNullOrEmpty(clientSessionToken))
+            {
+                message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", clientSessionToken);
+            }
+
+            return message;
+        }
+        catch (Exception ex)
+        {
+            throw new CreateHttpRequestMessageException(
+                "An error occurred while creating the request message.",
+                ex);
+        }
+    }
+
+    protected abstract Task<HttpRequestMessage> CreateMessageAsync();
+}

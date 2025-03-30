@@ -1,0 +1,32 @@
+﻿using System.Text;
+using AtendeLogo.ClientGateway.Common.Helpers;
+
+namespace AtendeLogo.ClientGateway.Common.Factories;
+public class JsonStringMessageFactory : HttpRequestMessageFactory
+{
+    private readonly string _jsonContent;
+    public JsonStringMessageFactory(
+           HttpMethod method,
+           Uri requestUri,
+            string jsonContent)
+        : base(method, requestUri)
+    {
+        _jsonContent = jsonContent;
+
+        HttpClientHelper.ThrowIfMethodNotAllowBody(method, requestUri);
+    }
+
+    protected override Task<HttpRequestMessage> CreateMessageAsync()
+    {
+        var stringContent = new StringContent(
+            _jsonContent,
+            Encoding.UTF8,
+            "application/json");
+
+        var message = new HttpRequestMessage(Method, RequestUri)
+        {
+            Content = stringContent
+        };
+        return Task.FromResult(message);
+    }
+}
