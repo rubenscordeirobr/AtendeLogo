@@ -37,7 +37,7 @@ public static class PasswordHelper
     public static string HashPassword(string password, string salt)
     {
         var passwordCombined = $"{password}::{salt}";
-        return HashHelper.GenerateSha256HashFromString(passwordCombined);
+        return HashHelper.CreateSha256Hash(passwordCombined);
     }
      
     public static bool VerifyPassword(

@@ -20,7 +20,7 @@ public class PasswordHelperTests
     {
         var password = "TestPassword";
         var salt = "TestSalt";
-        var expectedHash = HashHelper.GenerateSha256HashFromString($"{password}::{salt}");
+        var expectedHash = HashHelper.CreateSha256Hash($"{password}::{salt}");
 
         var result = PasswordHelper.HashPassword(password, salt);
 

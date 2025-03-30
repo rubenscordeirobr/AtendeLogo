@@ -5,17 +5,17 @@ namespace AtendeLogo.Common.Helpers;
 
 public static class HashHelper
 {
-    public static string GenerateSha256HashFromString(string input)
+    public static string CreateSha256Hash(string input)
     {
-        return GenerateSha256Hash(Encoding.UTF8.GetBytes(input));
+        return CreateSha256Hash(Encoding.UTF8.GetBytes(input));
     }
 
     public static string CreateSha256Hash(Guid firstSystemSession_Id)
     {
-        return GenerateSha256Hash(firstSystemSession_Id.ToByteArray());
+        return CreateSha256Hash(firstSystemSession_Id.ToByteArray());
     }
 
-    public static string GenerateSha256Hash(byte[] bytes)
+    public static string CreateSha256Hash(byte[] bytes)
     {
         var hashBytes = SHA256.HashData(bytes);
         return Convert.ToHexStringLower(hashBytes);

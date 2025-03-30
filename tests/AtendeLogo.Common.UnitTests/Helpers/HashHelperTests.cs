@@ -10,7 +10,7 @@ public class HashHelperTests
     [InlineData("hello", "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824")]
     public void GenerateSha256HashFromString_ShouldReturnExpectedHash(string input, string expectedHash)
     {
-        var result = HashHelper.GenerateSha256HashFromString(input);
+        var result = HashHelper.CreateSha256Hash(input);
         result.Should().Be(expectedHash);
     }
 
@@ -18,7 +18,7 @@ public class HashHelperTests
     public void CreateSha256Hash_ShouldReturnExpectedHash()
     {
         var guid = Guid.NewGuid();
-        var expectedHash = HashHelper.GenerateSha256Hash(guid.ToByteArray());
+        var expectedHash = HashHelper.CreateSha256Hash(guid.ToByteArray());
         var result = HashHelper.CreateSha256Hash(guid);
         result.Should().Be(expectedHash);
     }
