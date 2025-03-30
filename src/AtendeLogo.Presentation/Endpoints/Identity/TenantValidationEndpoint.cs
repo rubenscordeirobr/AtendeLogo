@@ -1,57 +1,83 @@
-﻿using AtendeLogo.Presentation.Common;
-using AtendeLogo.UseCases.Contracts.Identities;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace AtendeLogo.Presentation.Endpoints.Identity;
 
-[EndPoint("api/tenant-validation")]
+[AllowAnonymous]
+[ServiceRole(ServiceRole.Validation)]
+[EndPoint(IdentityRouteConstants.TenantValidation)]
 public class TenantValidationEndpoint : ApiEndpointBase, ITenantValidationService
 {
-    public override bool IsAllowAnonymous
-        => true;
+    private readonly ITenantValidationService _validationService;
 
-    private readonly ITenantValidationService _tenantValidationService;
-
-    public TenantValidationEndpoint(ITenantValidationService tenantValidationService)
+    public TenantValidationEndpoint(
+        ITenantValidationService tenantValidationService)
     {
-        _tenantValidationService = tenantValidationService;
+        _validationService = tenantValidationService;
     }
 
-    [HttpPost]
-    public Task<bool> IsEmailUniqueAsync(string email, CancellationToken token)
+    [HttpFormValidation]
+    public Task<bool> IsEmailUniqueAsync(
+        string email, 
+        CancellationToken cancellationToken = default)
     {
-        return _tenantValidationService.IsEmailUniqueAsync(email, token);
-
+        return _validationService.IsEmailUniqueAsync(email, cancellationToken);
     }
 
-    [HttpPost]
+    [HttpFormValidation]
     public Task<bool> IsEmailUniqueAsync(
         Guid currentTenant_Id,
         Guid currentTenantOwner_Id,
         string email,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return _tenantValidationService.IsEmailUniqueAsync(
+        return _validationService.IsEmailUniqueAsync(
             currentTenant_Id,
             currentTenantOwner_Id,
             email,
-            token);
+            cancellationToken);
     }
 
-    [HttpPost]
-    public Task<bool> IsFiscalCodeUniqueAsync(string fiscalCode, CancellationToken token)
+    [HttpFormValidation]
+    public Task<bool> IsFiscalCodeUniqueAsync(
+        string fiscalCode, 
+        CancellationToken cancellationToken = default)
     {
-        return _tenantValidationService.IsFiscalCodeUniqueAsync(fiscalCode, token);
+        return _validationService.IsFiscalCodeUniqueAsync(fiscalCode, cancellationToken);
     }
 
-    [HttpPost]
+    [HttpFormValidation]
     public Task<bool> IsFiscalCodeUniqueAsync(
         Guid currentTenant_Id,
         string fiscalCode,
-        CancellationToken token)
+        CancellationToken cancellationToken = default)
     {
-        return _tenantValidationService.IsFiscalCodeUniqueAsync(
+        return _validationService.IsFiscalCodeUniqueAsync(
             currentTenant_Id,
-            fiscalCode, token);
+            fiscalCode, cancellationToken);
     }
-}
 
+    [HttpFormValidation]
+    public Task<bool> IsPhoneNumberUniqueAsync(
+        string phoneNumber, 
+        CancellationToken cancellationToken = default)
+    {
+        return _validationService.IsPhoneNumberUniqueAsync(
+            phoneNumber,
+            cancellationToken);
+    }
+
+    [HttpFormValidation]
+    public Task<bool> IsPhoneNumberUniqueAsync(
+        Guid currentTenant_Id, 
+        Guid currentTenantOwner_Id,
+        string phoneNumber,
+        CancellationToken cancellationToken = default)
+    {
+        return _validationService.IsPhoneNumberUniqueAsync(
+            currentTenant_Id,
+            currentTenantOwner_Id,
+            phoneNumber,
+            cancellationToken);
+    }
+ 
+}
