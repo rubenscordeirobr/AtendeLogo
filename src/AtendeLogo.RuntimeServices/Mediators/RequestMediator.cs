@@ -131,9 +131,9 @@ public sealed class RequestMediator : IRequestMediator , IRequestMediatorTest
                 $"Handler type {typeof(TRequsetHandler).Name}");
         }
 
-        if (handler is TRequsetHandler requsetHandler)
+        if (handler is TRequsetHandler requestHandler)
         {
-            return requsetHandler;
+            return requestHandler;
         }
 
         throw new InvalidCastException(

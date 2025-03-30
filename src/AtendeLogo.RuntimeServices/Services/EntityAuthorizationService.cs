@@ -26,7 +26,7 @@ public class EntityAuthorizationService : IEntityAuthorizationService
             return;
         }
 
-        throw new UnauthorizedSecurityException(
+        throw new ForbiddenSecurityException(
             $"Access Denied: User {userSession.User_Id} (Role: {userSession.UserRole}, Tenant_Id: {userSession.Tenant_Id}) " +
             $"is not authorized to perform '{entityChangeState}' on entity '{entity.GetType().Name}' (ID: {entity.Id}, Tenant_Id: {(entity as ITenantOwned)?.Tenant_Id}).");
     }
@@ -41,18 +41,18 @@ public class EntityAuthorizationService : IEntityAuthorizationService
             return CheckAnonymousPermission(entity, userSession, entityChangeState);
         }
 
+        if (entity is UserSession &&
+            entity.Id == userSession.Id)
+        {
+            return true;
+        }
+
         if (userSession.IsTenantUser())
         {
             if (entity is ITenantOwned entityTenant)
             {
                 return entityTenant.Tenant_Id == userSession.Tenant_Id;
             }
-
-            if (entity.Equals(userSession))
-            {
-                return true;
-            }
-
             return false;
         }
         return userSession.IsSystemAdminUser();
