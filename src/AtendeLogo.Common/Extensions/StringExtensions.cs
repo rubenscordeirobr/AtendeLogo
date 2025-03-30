@@ -122,7 +122,7 @@ public static class StringExtensions
         return char.ToUpperInvariant(value[0]) + value.Substring(1);
     }
 
-    public static string Descapitalize(this string? value)
+    public static string Uncapitalize(this string? value)
     {
         if (value is null)
             return string.Empty;
@@ -130,6 +130,7 @@ public static class StringExtensions
         value = value.TrimStart();
         if (value.Length == 0)
             return string.Empty;
+
         return char.ToLowerInvariant(value[0]) + value.Substring(1);
     }
 }

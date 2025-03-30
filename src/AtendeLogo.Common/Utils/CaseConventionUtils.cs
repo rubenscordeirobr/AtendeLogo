@@ -121,8 +121,23 @@ public static partial class CaseConventionUtils
     {
         Guard.NotNullOrWhiteSpace(input);
         var words = SplitWords(input);
-        return string.Join("", words.Select((x, i) => i == 0 ? x.Descapitalize() : x.Capitalize()));
+        return string.Join("", words.Select((x, i) => i == 0 ? x.Uncapitalize() : x.Capitalize()));
     }
+
+    public static string ToTitleSnakeCase(string? input)
+    {
+        Guard.NotNullOrWhiteSpace(input);
+        var words = SplitWords(input);
+        return string.Join("_", words.Select(x => x.Capitalize()));
+    }
+
+    public static string ToScreamingSnakeCase(string? input)
+    {
+        Guard.NotNullOrWhiteSpace(input);
+        var words = SplitWords(input);
+        return string.Join("_", words.Select(x => x.ToUpperInvariant()));
+    }
+
 
     public static string ToUpperCase(string? input)
     {

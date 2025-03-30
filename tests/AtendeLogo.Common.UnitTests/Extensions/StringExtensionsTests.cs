@@ -148,9 +148,9 @@ public class StringExtensionsTests
     [InlineData(null, "")]
     [InlineData(" Test", "test")]
     [InlineData("Test", "test")]
-    public void Descapitalize_ShouldReturnExpectedResult(string? input, string expected)
+    public void Uncapitalize_ShouldReturnExpectedResult(string? input, string expected)
     {
-        input.Descapitalize()
+        input.Uncapitalize()
             .Should()
             .Be(expected);
     }
