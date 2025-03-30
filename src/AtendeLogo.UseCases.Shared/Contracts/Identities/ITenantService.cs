@@ -1,8 +1,33 @@
 ﻿namespace AtendeLogo.UseCases.Contracts.Identities;
 
-public interface ITenantService : IEndpointService
+public interface ITenantService : ICommunicationService
 {
-    Task<Result<CreateTenantResponse>> CreateTenantAsync(
+    #region Queries
+    Task<Result<TenantResponse>> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
+
+    #endregion
+
+    #region Commands
+
+    Task<Result<CreateTenantResponse>> CreateAsync(
         CreateTenantCommand command,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<OperationResponse>> UpdateAsync(
+        UpdateTenantCommand command,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<OperationResponse>> DeleteAsync(
+        DeleteTenantCommand command,
+        CancellationToken cancellationToken = default);
+
+    #endregion
+}
+public interface ITenantAddressService : ICommunicationService
+{
+    Task<Result<OperationResponse>> UpdateDefaultAddressAsync(
+        UpdateDefaultTenantAddressCommand command,
         CancellationToken cancellationToken = default);
 }
