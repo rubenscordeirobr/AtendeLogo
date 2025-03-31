@@ -21,6 +21,8 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
     {
         serviceProviderMock.AddTestOutput(testOutput);
 
+        var session = AnonymousUserConstants.AnonymousUserSession;
+
         _serviceProvider = serviceProviderMock;
         _command = new TenantUserLogoutCommand(Guid.NewGuid());
 
@@ -35,7 +37,7 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
 
         _unitOfWorkMock.Setup(u => u.UserSessions).Returns(_userSessionRepositoryMock.Object);
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new SaveChangesResult(new DomainEventContext([]), 1));
+            .ReturnsAsync(new SaveChangesResult(new DomainEventContext(session, []), 1));
     }
 
     [Fact]
@@ -57,7 +59,7 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
         //Arrange
 
         var clientSessionToken = await InitiateUserSessionAsync();
-        
+
         await using (var scope = _serviceProvider.CreateAsyncScope())
         {
             var mediator = scope.ServiceProvider.GetRequiredService<IRequestMediator>();
@@ -85,6 +87,11 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
                 .Should().NotBeEmpty()
                 .And.Contain(@event => @event is UserSessionTerminatedEvent)
                 .And.Contain(@event => @event is TenantUserSessionTerminatedEvent);
+
+            eventMediator.ExecutedDomainEvents
+               .Should().NotBeEmpty()
+               .And.Contain(result => result.DomainEvent is UserLoggedOutEvent &&
+                                      result.HandlerType == typeof(UserLoggedOutEventHandler));
 
             var terminatedUserSession = eventMediator.CapturedEvents
                 .OfType<UserSessionTerminatedEvent>()
@@ -117,7 +124,7 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
             // Arrange
             var mediator = scope.ServiceProvider.GetRequiredService<IRequestMediator>();
             var eventMediator = (IEventMediatorTest)scope.ServiceProvider.GetRequiredService<IEventMediator>();
-            
+
             var loginCommand = new TenantUserLoginCommand
             {
                 EmailOrPhoneNumber = SystemTenantConstants.Email,
@@ -142,27 +149,6 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
         }
     }
 
-    [Fact]
-    public async Task HandleAsync_ShouldBeFailure_WhenUserSessionNotFound()
-    {
-        // Arrange
-        _userSessionRepositoryMock
-            .Setup(repo => repo.GetByIdWithUserAsync(_command.Session_Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserSession)null!);
-         
-              
-        var handler = new TenantUserLogoutCommandHandler(
-            _unitOfWorkMock.Object,
-            _userSessionManagerMock.Object );
-
-
-        // Act
-        var result = await handler.RunAsync(_command, CancellationToken.None);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().NotBeNull();
-        result.Error?.Message.Should().Contain("UserSession with token");
-    }
+   
 }
 

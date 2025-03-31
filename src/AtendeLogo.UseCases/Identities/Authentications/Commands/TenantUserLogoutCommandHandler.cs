@@ -1,16 +1,24 @@
-﻿namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
+﻿using AtendeLogo.Domain.Entities.Identities.Events;
+
+namespace AtendeLogo.UseCases.Identities.Authentications.Commands;
 
 public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCommand, OperationResponse>
 {
     private readonly IIdentityUnitOfWork _unitOfWork;
     private readonly IUserSessionManager _userSessionManager;
+    private readonly IHttpContextSessionAccessor _httpContextSessionAccessor;
+    private readonly IEventMediator _eventMediator;
 
     public TenantUserLogoutCommandHandler(
         IIdentityUnitOfWork unitOfWork,
-        IUserSessionManager userSessionManager)
+        IUserSessionManager userSessionManager,
+        IHttpContextSessionAccessor httpContextSessionAccessor,
+        IEventMediator eventMediator)
     {
         _unitOfWork = unitOfWork;
         _userSessionManager = userSessionManager;
+        _httpContextSessionAccessor = httpContextSessionAccessor;
+        _eventMediator = eventMediator;
     }
 
     protected override async Task<Result<OperationResponse>> HandleAsync(
@@ -62,6 +70,10 @@ public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCom
             }
         }
 
+        var headerInfo = _httpContextSessionAccessor.RequestHeaderInfo;
+        var logoutEvent = new UserLoggedOutEvent(userSession.User, headerInfo.IpAddress);
+
+        await _eventMediator.DispatchAsync(userSession, logoutEvent);
         await _userSessionManager.RemoveSessionAsync();
 
         return Result.Success(new OperationResponse());

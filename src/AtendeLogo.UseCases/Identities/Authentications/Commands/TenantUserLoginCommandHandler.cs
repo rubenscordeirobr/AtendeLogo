@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
-using AtendeLogo.Application.Extensions;
+﻿using AtendeLogo.Domain.Entities.Identities.Events;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.UseCases.Mappers.Identities;
 
@@ -12,6 +11,7 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
     private readonly IUserSessionManager _userSessionManager;
     private readonly ISecureConfiguration _secureConfiguration;
     private readonly IAuthenticationAttemptLimiterService _authenticationLimiter;
+    private readonly IEventMediator _eventMediator;
     private readonly ILogger<TenantUserLoginCommandHandler> _logger;
 
     public TenantUserLoginCommandHandler(
@@ -20,6 +20,7 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
         IUserSessionManager userSessionManager,
         IHttpContextSessionAccessor httpContextSessionAccessor,
         IAuthenticationAttemptLimiterService authenticationValidator,
+        IEventMediator eventMediator,
         ILogger<TenantUserLoginCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
@@ -27,6 +28,7 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
         _userSessionManager = userSessionManager;
         _httpContextSessionAccessor = httpContextSessionAccessor;
         _authenticationLimiter = authenticationValidator;
+        _eventMediator = eventMediator;
         _logger = logger;
     }
 
@@ -60,13 +62,21 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
         if (user is null)
         {
             await _authenticationLimiter.IncrementFailedAttemptsAsync(headerInfo.IpAddress, cancellationToken);
-
             return Result.Failure<TenantUserLoginResponse>(new NotFoundError("TenantUser.NotFound", "Tenant user not found"));
         }
 
         var salt = _secureConfiguration.GetPasswordSalt();
         if (!PasswordHelper.VerifyPassword(command.Password, user.Password.HashValue, salt))
         {
+            var currentUserSession = _httpContextSessionAccessor.GetRequiredUserSession();
+            var loginFailedEvent = new UserLoginFailedEvent(
+                user,
+                command.EmailOrPhoneNumber,
+                command.Password,
+                headerInfo.IpAddress);
+
+            await _eventMediator.DispatchAsync(currentUserSession, loginFailedEvent);
+
             await _authenticationLimiter.IncrementFailedAttemptsAsync(headerInfo.IpAddress, cancellationToken);
             return Result.Failure<TenantUserLoginResponse>(
                 new AuthenticationError("TenantUser.InvalidPassword", "Invalid password"));
@@ -93,14 +103,14 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
                 new AuthenticationError("TenantUser.TenantInactive", "Tenant is inactive."));
         }
 
-        var userSession = UserSessionFactory.Create(
+        var newUserSession = UserSessionFactory.Create(
             user: user,
             clientHeaderInfo: headerInfo,
             authenticationType: AuthenticationType.Credentials,
             keepSession: command.KeepSession,
             tenant_id: user.Tenant_Id);
 
-        _unitOfWork.Add(userSession);
+        _unitOfWork.Add(newUserSession);
 
         var result = await _unitOfWork.SaveChangesAsync(silent: true, cancellationToken);
 
@@ -113,15 +123,24 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
         }
 
 
-        await _userSessionManager.SetSessionAsync(userSession, user);
+        await _userSessionManager.SetSessionAsync(newUserSession, user);
 
         var authorizationToken = _httpContextSessionAccessor.AuthorizationToken;
 
         Guard.NotNullOrWhiteSpace(authorizationToken);
 
-        var sessionResponse = UserSessionMapper.ToResponse(userSession);
+        var sessionResponse = UserSessionMapper.ToResponse(newUserSession);
         var userResponse = UserMapper.ToResponse(user);
         var tenantResponse = TenantMapper.ToResponse(tenant);
+
+        var loginSuccessEvent = new UserLoggedInEvent(
+           user,
+           AuthenticationType.Credentials,
+           command.EmailOrPhoneNumber,
+           headerInfo.IpAddress);
+
+
+        await _eventMediator.DispatchAsync(newUserSession, loginSuccessEvent);
 
         var response = new TenantUserLoginResponse
         {

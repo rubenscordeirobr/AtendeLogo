@@ -4,7 +4,7 @@ using AtendeLogo.Shared.Enums;
 
 namespace AtendeLogo.Persistence.Activity.Documents;
 
-public static class ActivityDocumentMapper 
+public static class ActivityDocumentMapper
 {
     public static ActivityDocument MapToDocument(ActivityBase activity)
     {
@@ -30,14 +30,17 @@ public static class ActivityDocumentMapper
             case DeletedActivity deleteActivity:
                 document.DeletedData = deleteActivity.DeletedData;
                 break;
-            case LoginSuccessfulActivity authActivity:
-                document.IPAddress = authActivity.IPAddress;
+            case UserLoginSuccessActivity authActivity:
+                document.UserIdentifier = authActivity.UserIdentifier;
+                document.IpAddress = authActivity.IpAddress;
                 document.AuthenticationType = authActivity.AuthenticationType;
                 break;
-            case LoginFailedActivity failedAuthActivity:
-                document.IPAddress = failedAuthActivity.IPAddress;
-                document.UserAgent = failedAuthActivity.UserAgent;
+            case UserLoginFailureActivity failedAuthActivity:
+
+                document.UserIdentifier = failedAuthActivity.UserIdentifier;
+                document.IpAddress = failedAuthActivity.IpAddress;
                 document.PasswordFailed = failedAuthActivity.PasswordFailed;
+                document.AuthenticationType = failedAuthActivity.AuthenticationType;
                 break;
         }
 
@@ -99,9 +102,9 @@ public static class ActivityDocumentMapper
                     Entity_Id = document.Entity_Id.GetValueOrDefault()
                 };
 
-            case ActivityType.LoginSuccessful:
+            case ActivityType.UserLoginSuccess:
 
-                return new LoginSuccessfulActivity
+                return new UserLoginSuccessActivity
                 {
                     Id = document.Id,
                     Tenant_Id = document.Tenant_Id,
@@ -109,21 +112,37 @@ public static class ActivityDocumentMapper
                     Description = document.Description,
                     ActivityDate = document.ActivityAt,
                     AuthenticationType = document.AuthenticationType ?? AuthenticationType.Unknown,
-                    IPAddress = document.IPAddress ?? "Unknown"
+                    IpAddress = document.IpAddress ?? "Unknown",
+                    UserIdentifier = document.UserIdentifier!,
+                    User_Id = document.Entity_Id.GetValueOrDefault()
                 };
 
-            case ActivityType.LoginFailed:
+            case ActivityType.UserLoginFailed:
 
-                return new LoginFailedActivity
+                return new UserLoginFailureActivity
                 {
                     Id = document.Id,
                     Tenant_Id = document.Tenant_Id,
                     UserSession_Id = document.UserSession_Id,
                     Description = document.Description,
                     ActivityDate = document.ActivityAt,
-                    IPAddress = document.IPAddress ?? "Unknown",
-                    UserAgent = document.UserAgent ?? "Unknown",
+                    IpAddress = document.IpAddress ?? "Unknown",
                     PasswordFailed = document.PasswordFailed ?? "Unknown",
+                    UserIdentifier = document.UserIdentifier!,
+                    User_Id = document.Entity_Id.GetValueOrDefault(),
+                    AuthenticationType = document.AuthenticationType ?? AuthenticationType.Unknown
+                };
+            case ActivityType.UserLogout:
+
+                return new UserLogoutActivity
+                {
+                    Id = document.Id,
+                    Tenant_Id = document.Tenant_Id,
+                    UserSession_Id = document.UserSession_Id,
+                    Description = document.Description,
+                    ActivityDate = document.ActivityAt,
+                    IpAddress = document.IpAddress ?? "Unknown",
+                    User_Id = document.Entity_Id.GetValueOrDefault()
                 };
             default:
 

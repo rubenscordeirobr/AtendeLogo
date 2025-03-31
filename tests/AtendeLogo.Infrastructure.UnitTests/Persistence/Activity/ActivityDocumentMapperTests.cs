@@ -110,15 +110,17 @@ public class ActivityDocumentMapperTests
         var tenantId = Guid.NewGuid();
         var userSessionId = Guid.NewGuid();
         var activityDate = DateTime.UtcNow;
-        var loginSuccessfulActivity = new LoginSuccessfulActivity
+        var loginSuccessfulActivity = new UserLoginSuccessActivity
         {
             Id = "activity4",
             Tenant_Id = tenantId,
             UserSession_Id = userSessionId,
             ActivityDate = activityDate,
             Description = "Login success",
-            IPAddress = "127.0.0.1",
-            AuthenticationType = AuthenticationType.Credentials
+            IpAddress = "127.0.0.1",
+            AuthenticationType = AuthenticationType.Credentials,
+            UserIdentifier = "email@email.com",
+            User_Id = Guid.NewGuid(),
         };
 
         // Act
@@ -128,8 +130,8 @@ public class ActivityDocumentMapperTests
         document.Tenant_Id.Should().Be(tenantId);
         document.UserSession_Id.Should().Be(userSessionId);
         document.Description.Should().Be(loginSuccessfulActivity.Description);
-        document.ActivityType.Should().Be(ActivityType.LoginSuccessful);
-        document.IPAddress.Should().Be("127.0.0.1");
+        document.ActivityType.Should().Be(ActivityType.UserLoginSuccess);
+        document.IpAddress.Should().Be("127.0.0.1");
         document.AuthenticationType.Should().Be(AuthenticationType.Credentials);
     }
 
@@ -140,16 +142,18 @@ public class ActivityDocumentMapperTests
         var tenantId = Guid.NewGuid();
         var userSessionId = Guid.NewGuid();
         var activityDate = DateTime.UtcNow;
-        var loginFailedActivity = new LoginFailedActivity
+        var loginFailedActivity = new UserLoginFailureActivity
         {
             Id = "activity5",
             Tenant_Id = tenantId,
             UserSession_Id = userSessionId,
             ActivityDate = activityDate,
             Description = "Login failed",
-            IPAddress = "192.168.1.1",
-            UserAgent = "TestAgent",
-            PasswordFailed = "WrongPassword"
+            IpAddress = "192.168.1.1",
+            PasswordFailed = "WrongPassword",
+            UserIdentifier = "email@email.com",
+            User_Id = Guid.NewGuid(),
+            AuthenticationType = AuthenticationType.Credentials
         };
 
         // Act
@@ -159,9 +163,8 @@ public class ActivityDocumentMapperTests
         document.Tenant_Id.Should().Be(tenantId);
         document.UserSession_Id.Should().Be(userSessionId);
         document.Description.Should().Be(loginFailedActivity.Description);
-        document.ActivityType.Should().Be(ActivityType.LoginFailed);
-        document.IPAddress.Should().Be("192.168.1.1");
-        document.UserAgent.Should().Be("TestAgent");
+        document.ActivityType.Should().Be(ActivityType.UserLoginFailed);
+        document.IpAddress.Should().Be("192.168.1.1");
         document.PasswordFailed.Should().Be("WrongPassword");
     }
 
@@ -305,8 +308,8 @@ public class ActivityDocumentMapperTests
             UserSession_Id = userSessionId,
             ActivityAt = activityDate,
             Description = "Login success doc",
-            ActivityType = ActivityType.LoginSuccessful,
-            IPAddress = "127.0.0.1",
+            ActivityType = ActivityType.UserLoginSuccess,
+            IpAddress = "127.0.0.1",
             AuthenticationType = AuthenticationType.Google
         };
 
@@ -314,8 +317,8 @@ public class ActivityDocumentMapperTests
         var activity = ActivityDocumentMapper.MapToDomain(document);
 
         // Assert
-        activity.Should().BeOfType<LoginSuccessfulActivity>();
-        var loginActivity = activity as LoginSuccessfulActivity;
+        activity.Should().BeOfType<UserLoginSuccessActivity>();
+        var loginActivity = activity as UserLoginSuccessActivity;
         loginActivity.Should().NotBeNull();
 
         Guard.NotNull(loginActivity);
@@ -325,7 +328,7 @@ public class ActivityDocumentMapperTests
         loginActivity.UserSession_Id.Should().Be(userSessionId);
         loginActivity.ActivityDate.Should().Be(activityDate);
         loginActivity.Description.Should().Be("Login success doc");
-        loginActivity.IPAddress.Should().Be("127.0.0.1");
+        loginActivity.IpAddress.Should().Be("127.0.0.1");
         loginActivity.AuthenticationType.Should().Be(AuthenticationType.Google);
     }
 
@@ -343,9 +346,8 @@ public class ActivityDocumentMapperTests
             UserSession_Id = userSessionId,
             ActivityAt = activityDate,
             Description = "Login failed doc",
-            ActivityType = ActivityType.LoginFailed,
-            IPAddress = "192.168.1.1",
-            UserAgent = "TestAgent",
+            ActivityType = ActivityType.UserLoginFailed,
+            IpAddress = "192.168.1.1",
             PasswordFailed = "WrongPassword"
         };
 
@@ -353,8 +355,8 @@ public class ActivityDocumentMapperTests
         var activity = ActivityDocumentMapper.MapToDomain(document);
 
         // Assert
-        activity.Should().BeOfType<LoginFailedActivity>();
-        var failedActivity = activity as LoginFailedActivity;
+        activity.Should().BeOfType<UserLoginFailureActivity>();
+        var failedActivity = activity as UserLoginFailureActivity;
         failedActivity.Should().NotBeNull();
 
         Guard.NotNull(failedActivity);
@@ -364,8 +366,7 @@ public class ActivityDocumentMapperTests
         failedActivity.UserSession_Id.Should().Be(userSessionId);
         failedActivity.ActivityDate.Should().Be(activityDate);
         failedActivity.Description.Should().Be("Login failed doc");
-        failedActivity.IPAddress.Should().Be("192.168.1.1");
-        failedActivity.UserAgent.Should().Be("TestAgent");
+        failedActivity.IpAddress.Should().Be("192.168.1.1");
         failedActivity.PasswordFailed.Should().Be("WrongPassword");
     }
 }

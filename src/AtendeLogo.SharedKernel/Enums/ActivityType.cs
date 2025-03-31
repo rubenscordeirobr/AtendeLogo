@@ -9,7 +9,7 @@ public enum ActivityType
     Deleted,
     Read,
     Authenticated,
-    LoginSuccessful,
-    LoginFailed,
-    Logout,
+    UserLoginSuccess,
+    UserLoginFailed,
+    UserLogout,
 }

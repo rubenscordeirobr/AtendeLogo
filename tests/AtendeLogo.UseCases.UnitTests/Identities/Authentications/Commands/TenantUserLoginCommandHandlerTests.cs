@@ -64,6 +64,11 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<ServiceProviderM
                 .And.Contain(@event => @event is TenantUserSessionStartedEvent)
                 .And.Contain(@event => @event is UserSessionStartedEvent);
 
+            eventMediator.ExecutedDomainEvents
+                .Should().NotBeEmpty()
+                .And.Contain(result => result.DomainEvent is UserLoggedInEvent &&
+                                       result.HandlerType == typeof(UserLoggedInEventHandler));
+                 
             var userSession = eventMediator.CapturedEvents
                 .OfType<TenantUserSessionStartedEvent>()
                 .First()

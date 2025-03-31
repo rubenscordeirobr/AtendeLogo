@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Domain.Entities.Identities.Events;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.UseCases.Mappers.Identities;
 
@@ -11,6 +11,7 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
     private readonly IUserSessionManager _userSessionManager;
     private readonly ISecureConfiguration _secureConfiguration;
     private readonly IAuthenticationAttemptLimiterService _authenticationLimiter;
+    private readonly IEventMediator _eventMediator;
     private readonly ILogger<AdminUserLoginCommandHandler> _logger;
 
     public AdminUserLoginCommandHandler(
@@ -19,6 +20,7 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
         IUserSessionManager userSessionManager,
         IHttpContextSessionAccessor httpContextSessionAccessor,
         IAuthenticationAttemptLimiterService authenticationValidator,
+        IEventMediator eventMediator,
         ILogger<AdminUserLoginCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
@@ -26,6 +28,7 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
         _userSessionManager = userSessionManager;
         _httpContextSessionAccessor = httpContextSessionAccessor;
         _authenticationLimiter = authenticationValidator;
+        _eventMediator = eventMediator;
         _logger = logger;
     }
 
@@ -59,13 +62,21 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
         if (user is null)
         {
             await _authenticationLimiter.IncrementFailedAttemptsAsync(headerInfo.IpAddress, cancellationToken);
-
             return Result.Failure<AdminUserLoginResponse>(new NotFoundError("AdminUser.NotFound", "AdminUser not found"));
         }
 
         var salt = _secureConfiguration.GetPasswordSalt();
         if (!PasswordHelper.VerifyPassword(command.Password, user.Password.HashValue, salt))
         {
+            var currentUserSession = _httpContextSessionAccessor.GetRequiredUserSession();
+            var loginFailedEvent = new UserLoginFailedEvent(
+                user, 
+                command.EmailOrPhoneNumber,
+                command.Password,
+                headerInfo.IpAddress);
+
+            await _eventMediator.DispatchAsync(currentUserSession, loginFailedEvent);
+
             await _authenticationLimiter.IncrementFailedAttemptsAsync(headerInfo.IpAddress, cancellationToken);
             return Result.Failure<AdminUserLoginResponse>(
                 new AuthenticationError("AdminUser.InvalidPassword", "Invalid password"));
@@ -73,20 +84,21 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
 
         if (cancellationToken.IsCancellationRequested)
         {
+
             return Result.Failure<AdminUserLoginResponse>(
                 new OperationCanceledError(null,
                     "AdminUserLoginCommandHandler.HandleAsync",
                     "Operation was canceled."));
-        } 
+        }
 
-        var userSession = UserSessionFactory.Create(
+        var newUserSession = UserSessionFactory.Create(
             user: user,
             clientHeaderInfo: headerInfo,
             authenticationType: AuthenticationType.Credentials,
             keepSession: command.KeepSession,
             tenant_id: null);
 
-        _unitOfWork.Add(userSession);
+        _unitOfWork.Add(newUserSession);
 
         var result = await _unitOfWork.SaveChangesAsync(silent: true, cancellationToken);
 
@@ -99,14 +111,23 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
         }
 
 
-        await _userSessionManager.SetSessionAsync(userSession, user);
+        await _userSessionManager.SetSessionAsync(newUserSession, user);
 
         var authorizationToken = _httpContextSessionAccessor.AuthorizationToken;
 
         Guard.NotNullOrWhiteSpace(authorizationToken);
 
-        var sessionResponse = UserSessionMapper.ToResponse(userSession);
+        var sessionResponse = UserSessionMapper.ToResponse(newUserSession);
         var userResponse = UserMapper.ToResponse(user);
+
+        var loginSuccessEvent = new UserLoggedInEvent(
+            user,
+            AuthenticationType.Credentials,
+            command.EmailOrPhoneNumber,
+            headerInfo.IpAddress);
+
+
+        await _eventMediator.DispatchAsync(newUserSession, loginSuccessEvent);
 
         var response = new AdminUserLoginResponse
         {

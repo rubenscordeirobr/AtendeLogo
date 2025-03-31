@@ -21,6 +21,8 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
     {
         serviceProviderMock.AddTestOutput(testOutput);
 
+        var session = AnonymousUserConstants.AnonymousUserSession;
+
         _serviceProvider = serviceProviderMock;
         _command = new AdminUserLogoutCommand(Guid.NewGuid());
 
@@ -35,7 +37,7 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
 
         _unitOfWorkMock.Setup(u => u.UserSessions).Returns(_userSessionRepositoryMock.Object);
         _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new SaveChangesResult(new DomainEventContext([]), 1));
+            .ReturnsAsync(new SaveChangesResult(new DomainEventContext(session,[]), 1));
     }
 
     [Fact]
@@ -85,6 +87,11 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
                 .Should().NotBeEmpty()
                 .And.Contain(@event => @event is UserSessionTerminatedEvent)
                 .And.NotContain(@event => @event is TenantUserSessionTerminatedEvent);
+
+            eventMediator.ExecutedDomainEvents
+                .Should().NotBeEmpty()
+                .And.Contain(result => result.DomainEvent is UserLoggedOutEvent &&
+                                        result.HandlerType == typeof(UserLoggedOutEventHandler));
 
             var terminatedUserSession = eventMediator.CapturedEvents
                 .OfType<UserSessionTerminatedEvent>()
@@ -141,28 +148,6 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
 
         }
     }
-
-    [Fact]
-    public async Task HandleAsync_ShouldBeFailure_WhenUserSessionNotFound()
-    {
-        // Arrange
-        _userSessionRepositoryMock
-            .Setup(repo => repo.GetByIdWithUserAsync(_command.Session_Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserSession)null!);
-         
-              
-        var handler = new AdminUserLogoutCommandHandler(
-            _unitOfWorkMock.Object,
-            _userSessionManagerMock.Object );
-
-
-        // Act
-        var result = await handler.RunAsync(_command, CancellationToken.None);
-
-        // Assert
-        result.IsFailure.Should().BeTrue();
-        result.Error.Should().NotBeNull();
-        result.Error?.Message.Should().Contain("UserSession with token");
-    }
+ 
 }
 

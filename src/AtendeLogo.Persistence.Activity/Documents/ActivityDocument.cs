@@ -33,7 +33,8 @@ public class ActivityDocument
     public string? NewData { get; set; }
     public string? DeletedData { get; set; }
 
-    public string? IPAddress { get; set; }
-    public string? UserAgent { get; set; }
+ 
+    public string? UserIdentifier { get; set; }
+    public string? IpAddress { get; set; }
     public string? PasswordFailed { get; set; }
 }
