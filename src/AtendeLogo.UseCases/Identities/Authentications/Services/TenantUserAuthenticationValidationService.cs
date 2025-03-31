@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
-
-namespace AtendeLogo.UseCases.Identities.Authentications.Services;
+﻿namespace AtendeLogo.UseCases.Identities.Authentications.Services;
 
 internal class TenantUserAuthenticationValidationService : ITenantUserAuthenticationValidationService
 {

@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
-using AtendeLogo.Common.Mappers;
+﻿using AtendeLogo.Common.Mappers;
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 

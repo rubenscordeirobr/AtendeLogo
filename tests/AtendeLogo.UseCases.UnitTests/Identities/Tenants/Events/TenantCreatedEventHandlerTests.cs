@@ -22,10 +22,11 @@ public class TenantCreatedEventHandlerTests
     public async Task HandleAsync_ShouldLogInformation_WhenTenantCreatedEventIsHandled()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var tenant = _figure.Create<Tenant>();
         var tenantUser = _figure.Create<TenantUser>();
         var createdEvent = new TenantCreatedEvent(tenant, tenantUser);
-        var eventContext = new DomainEventContext([createdEvent]);
+        var eventContext = new DomainEventContext(session, [createdEvent]);
 
         // Act
         await _eventMediator.DispatchAsync(eventContext);

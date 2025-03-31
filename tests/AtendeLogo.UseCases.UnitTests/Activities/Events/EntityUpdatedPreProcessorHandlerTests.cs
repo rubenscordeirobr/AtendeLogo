@@ -18,10 +18,11 @@ public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<ServiceProvid
     public async Task EventMediator_ShouldDispatch()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var entity = _figure.Create<TenantUser>();
         var eventMediator = _serviceProvider.GetRequiredService<IEventMediator>();
         var updateEvent = new EntityUpdatedEvent<TenantUser>(entity, []);
-        var eventContext = new DomainEventContext([updateEvent]);
+        var eventContext = new DomainEventContext(session, [updateEvent]);
        
         // Act
         await eventMediator.PreProcessorDispatchAsync(eventContext);
@@ -36,9 +37,10 @@ public class EntityUpdatedPreProcessorHandlerTests : IClassFixture<ServiceProvid
     public async Task PreProcessAsync_ShouldNotThrow()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var entity = _figure.Create<TenantUser>();
         var updateEvent = new EntityUpdatedEvent<TenantUser>(entity, []);
-        var eventContext = new DomainEventContext([updateEvent]);
+        var eventContext = new DomainEventContext(session, [updateEvent]);
         var eventData = DomainEventDataFactory.Create(eventContext, updateEvent);
         var handler = new EntityUpdatedPreProcessorHandler<TenantUser>();
 

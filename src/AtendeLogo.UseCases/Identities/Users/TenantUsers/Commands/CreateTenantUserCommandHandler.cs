@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
-
-namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Users.TenantUsers.Commands;
 
 public class CreateTenantUserCommandHandler : CommandHandler<CreateTenantUserCommand, CreateTenantUserResponse>
 {

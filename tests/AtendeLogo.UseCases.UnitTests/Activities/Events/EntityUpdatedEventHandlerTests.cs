@@ -21,10 +21,11 @@ public class EntityUpdatedEventHandlerTests
     public async Task EventMediator_ShouldDispatch()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var entity = _figure.Create<TenantUser>();
         var eventMediator = _serviceProvider.GetRequiredService<IEventMediator>();
         var updatedEvent = new EntityUpdatedEvent<TenantUser>(entity, []);
-        var eventContext = new DomainEventContext([updatedEvent]);
+        var eventContext = new DomainEventContext(session, [updatedEvent]);
        
         // Act
         await eventMediator.DispatchAsync(eventContext);

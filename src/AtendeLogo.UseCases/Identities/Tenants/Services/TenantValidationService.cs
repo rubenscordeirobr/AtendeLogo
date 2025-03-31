@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Application.Models.Communication;
-
-namespace AtendeLogo.UseCases.Identities.Tenants.Services;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Services;
 
 internal class TenantValidationService : ITenantValidationService
 {

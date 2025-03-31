@@ -21,13 +21,13 @@ public class EntityCreatedEventHandlerTests
     public async Task EventMediator_ShouldDispatch()
     {
         // Arrange
-        
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var entity = _figure.Create<TenantUser>();
 
         var eventMediator = _serviceProvider.GetRequiredService<IEventMediator>();
 
         var createdEvent = new EntityCreatedEvent<TenantUser>(entity, []);
-        var eventContext = new DomainEventContext([createdEvent]);
+        var eventContext = new DomainEventContext(session, [createdEvent]);
 
         // Act
         await eventMediator.DispatchAsync(eventContext);

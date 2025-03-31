@@ -25,7 +25,8 @@ public class UserSessionTerminatedEventHandlerTests
     {
         // Arrange
         var user = SystemTenantConstants.OwnerUser; ;
-        
+        var session = AnonymousUserConstants.AnonymousUserSession;
+
         var userSession = UserSessionFactory.Create(
             user: user,
             clientHeaderInfo: ClientRequestHeaderInfo.System,
@@ -34,7 +35,7 @@ public class UserSessionTerminatedEventHandlerTests
             tenant_id: null);
 
         var createdEvent = new UserSessionTerminatedEvent(userSession, SessionTerminationReason.SessionExpired);
-        var eventContext = new DomainEventContext([createdEvent]);
+        var eventContext = new DomainEventContext(session, [createdEvent]);
 
         // Act
         await _eventMediator.DispatchAsync(eventContext);

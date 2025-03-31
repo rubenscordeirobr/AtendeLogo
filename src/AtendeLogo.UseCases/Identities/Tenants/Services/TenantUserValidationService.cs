@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Shared.ValueObjects;
-
-namespace AtendeLogo.UseCases.Identities.Tenants.Services;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Services;
 
 internal class TenantUserValidationService : ITenantUserValidationService
 {

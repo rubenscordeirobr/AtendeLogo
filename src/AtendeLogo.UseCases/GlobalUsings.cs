@@ -16,3 +16,6 @@ global using AtendeLogo.UseCases.Contracts.Identities;
 global using AtendeLogo.Common.Helpers;
 global using AtendeLogo.Common.Utils;
 global using AtendeLogo.UseCases.Identities.Shared;
+global using AtendeLogo.Application.Extensions;
+global using AtendeLogo.Application.Contracts.Mediators;
+global using AtendeLogo.Application.Contracts.Security;

@@ -20,10 +20,11 @@ public class EntityDeletedEventHandlerTests
     public async Task EventMediator_ShouldDispatch()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var entity = _figure.Create<TenantUser>();
         var eventMediator = _serviceProvider.GetRequiredService<IEventMediator>();
         var deletedEvent = new EntityDeletedEvent<TenantUser>(entity, []);
-        var eventContext = new DomainEventContext([deletedEvent]);
+        var eventContext = new DomainEventContext(session,[deletedEvent]);
 
         // Act
         await eventMediator.DispatchAsync(eventContext);

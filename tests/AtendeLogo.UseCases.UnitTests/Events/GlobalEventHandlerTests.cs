@@ -21,9 +21,10 @@ public class GlobalEventHandlerTests
     public async Task EventMediator_ShouldDispatchForCreateEntityEvent()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var entity = _figure.Create<TenantUser>();
         var createdEvent = new EntityCreatedEvent<TenantUser>(entity, []);
-        var eventContext = new DomainEventContext([createdEvent]);
+        var eventContext = new DomainEventContext(session, [createdEvent]);
        
         // Act
         await _eventMediator.DispatchAsync(eventContext);
@@ -38,9 +39,10 @@ public class GlobalEventHandlerTests
     public async Task EventMediator_ShouldDispatchForPasswordChanged()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var entity = _figure.Create<TenantUser>();
         var passwordChangedEvent = new PasswordChangedEvent(entity);
-        var eventContext = new DomainEventContext([passwordChangedEvent]);
+        var eventContext = new DomainEventContext(session, [passwordChangedEvent]);
 
         // Act
         await _eventMediator.DispatchAsync(eventContext);

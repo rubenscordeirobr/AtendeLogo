@@ -1,6 +1,4 @@
-﻿
-using AtendeLogo.Application.Extensions;
-using AtendeLogo.UseCases.Mappers.Identities;
+﻿using AtendeLogo.UseCases.Mappers.Identities;
 
 namespace AtendeLogo.UseCases.Identities.Users.SystemUsers.Queries;
 
