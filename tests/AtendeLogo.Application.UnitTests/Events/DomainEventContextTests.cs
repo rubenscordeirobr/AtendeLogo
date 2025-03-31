@@ -2,7 +2,7 @@
 
 namespace AtendeLogo.Application.UnitTests.Events;
 
-public class DomainEventContextTests  
+public class DomainEventContextTests
 {
     [Fact]
     public void Constructor_ShouldInitializeEvents()
@@ -11,7 +11,8 @@ public class DomainEventContextTests
         var events = new List<IDomainEvent> { new MockDomainEvent() };
 
         // Act
-        var context = new DomainEventContext(events);
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var context = new DomainEventContext(session, events);
 
         // Assert
         context.Events.Should().BeEquivalentTo(events);
@@ -21,7 +22,8 @@ public class DomainEventContextTests
     public void Cancel_ShouldSetIsCanceledAndError()
     {
         // Arrange
-        var context = new DomainEventContext(new List<IDomainEvent>());
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var context = new DomainEventContext(session, new List<IDomainEvent>());
         var error = new DomainEventError("DomainTest.Error", "Test error");
 
         // Act
@@ -36,7 +38,8 @@ public class DomainEventContextTests
     public void Cancel_WhenAlreadyLocked_ShouldThrowInvalidOperationException()
     {
         // Arrange
-        var context = new DomainEventContext(new List<IDomainEvent>());
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var context = new DomainEventContext(session, new List<IDomainEvent>());
         context.LockCancellation();
         var error = new DomainEventError("DomainTest.Error", "Test error");
 
@@ -46,12 +49,13 @@ public class DomainEventContextTests
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("The context cannot be canceled.");
     }
- 
+
     [Fact]
     public void GetException_WhenCanceled_ShouldReturnExceptionWithErrorMessage()
     {
         // Arrange
-        var context = new DomainEventContext([]);
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var context = new DomainEventContext(session, []);
         var error = new DomainEventError("DomainTest.Error", "Test error");
         context.Cancel(error);
 
@@ -70,7 +74,8 @@ public class DomainEventContextTests
     public void AddExecutedEventResults_ShouldAddResults()
     {
         // Arrange
-        var context = new DomainEventContext(new List<IDomainEvent>());
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var context = new DomainEventContext(session, new List<IDomainEvent>());
         var domainEvent = new MockDomainEvent();
         var results = new List<ExecutedDomainEventResult>
         {
@@ -90,7 +95,8 @@ public class DomainEventContextTests
     public void GetExecutedEventResults_WhenNoResults_ShouldReturnEmptyList()
     {
         // Arrange
-        var context = new DomainEventContext(new List<IDomainEvent>());
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var context = new DomainEventContext(session, new List<IDomainEvent>());
         var domainEvent = new MockDomainEvent();
 
         // Act

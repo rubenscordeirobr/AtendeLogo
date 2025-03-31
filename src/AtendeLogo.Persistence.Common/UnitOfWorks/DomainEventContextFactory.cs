@@ -30,7 +30,7 @@ internal static class DomainEventContextFactory
             }
         }
 
-        return new DomainEventContext(domainEvents);
+        return new DomainEventContext(userSession, domainEvents);
     }
 
     private static IEntityStateChangedEvent? CreateEntityStateChangedEven(

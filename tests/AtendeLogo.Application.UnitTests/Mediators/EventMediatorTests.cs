@@ -12,10 +12,11 @@ public class EventMediatorTests
     public async Task EventMediator_ShouldDispatchEvent()
     {
         // Arrange
+        var session = AnonymousUserConstants.AnonymousUserSession;
         var types = new Type[] { typeof(MockDomainEventHandler) };
         var eventMediator = CreateEventMediator(types);
         var domainEvent = new MockDomainEvent();
-        var domainEventContext = new DomainEventContext([domainEvent]);
+        var domainEventContext = new DomainEventContext(session, [domainEvent]);
 
         // Act
         await eventMediator.DispatchAsync(domainEventContext);
@@ -45,7 +46,8 @@ public class EventMediatorTests
         var eventMediator = CreateEventMediator(types);
 
         var @event = new MockDomainEvent();
-        var domainEventContext = new DomainEventContext([@event]);
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var domainEventContext = new DomainEventContext(session, [@event]);
 
         // Act
         await eventMediator.DispatchAsync(domainEventContext);
@@ -73,7 +75,8 @@ public class EventMediatorTests
         var types = new Type[] { typeof(MockDomainEventPreProcessorHandler) };
         var eventMediator = CreateEventMediator(types);
         var domainEvent = new MockDomainEvent();
-        var domainEventContext = new DomainEventContext([domainEvent]);
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var domainEventContext = new DomainEventContext(session, [domainEvent]);
 
         // Act
         await eventMediator.PreProcessorDispatchAsync(domainEventContext);
@@ -99,7 +102,8 @@ public class EventMediatorTests
         var types = new Type[] { typeof(MockDomainEventPreProcessorCanceledHandler) };
         var eventMediator = CreateEventMediator(types);
         var domainEvent = new MockDomainEvent();
-        var domainEventContext = new DomainEventContext([domainEvent]);
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var domainEventContext = new DomainEventContext(session, [domainEvent]);
 
         // Act
         await eventMediator.PreProcessorDispatchAsync(domainEventContext);
@@ -131,8 +135,9 @@ public class EventMediatorTests
         var types = new Type[] { typeof(MockDomainEventPreProcessorCanceledHandler) };
         var eventMediator = CreateEventMediator(types);
         var domainEvent = new MockDomainEvent();
-    
-        var domainEventContext = new DomainEventContext([domainEvent]);
+
+        var session = AnonymousUserConstants.AnonymousUserSession;
+        var domainEventContext = new DomainEventContext(session, [domainEvent]);
         await eventMediator.PreProcessorDispatchAsync(domainEventContext);
 
         // Act

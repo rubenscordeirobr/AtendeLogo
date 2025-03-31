@@ -19,7 +19,7 @@ internal class TransactionUnitOfWorkExecutor : UnitOfWorkExecutorBase, IAsyncDis
         : base(dbContext, userSessionAccessor, entityAuthorizationService, eventMediator, logger)
     {
         _transaction = transaction;
-        _transactionDomainEventContext = new();
+        _transactionDomainEventContext = new(userSessionAccessor.GetRequiredUserSession());
     }
 
     public override async Task<SaveChangesResult> SaveChangesAsync(

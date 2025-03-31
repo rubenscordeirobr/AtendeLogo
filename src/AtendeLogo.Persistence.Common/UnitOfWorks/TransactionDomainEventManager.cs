@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.Persistence.Common.UnitOfWorks;
 
-internal class TransactionDomainEventManager
+internal class TransactionDomainEventManager(IUserSession userSession)
 {
     internal readonly List<DomainEventContext> _domainEventContexts = new();
 
@@ -19,6 +19,6 @@ internal class TransactionDomainEventManager
             .Distinct()
             .ToList();
 
-        return new DomainEventContext(events);
+        return new DomainEventContext(userSession, events);
     }
 }

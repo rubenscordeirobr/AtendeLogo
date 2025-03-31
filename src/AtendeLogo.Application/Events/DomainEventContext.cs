@@ -13,11 +13,18 @@ public sealed class DomainEventContext : IDomainEventContext
     [MemberNotNullWhen(true, nameof(Exception))]
     public bool IsCanceled { get; private set; }
 
+    public IUserSession UserSession { get; }
+
     public DomainEventError? Error { get; private set; }
 
-    public DomainEventContext(IEnumerable<IDomainEvent> events)
+    public DomainEventContext(
+        IUserSession userSession, 
+        IEnumerable<IDomainEvent> events)
     {
+        Guard.NotNull(userSession);
         Guard.NotNull(events);
+
+        UserSession = userSession;
         Events = events.ToList();
     }
 
