@@ -2,11 +2,12 @@
 using AtendeLogo.Persistence.Activity.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 
 namespace AtendeLogo.Persistence.Activity;
 
-public static class ActivitiyPersistenceServiceConfiguration
+public static class ActivityPersistenceServiceConfiguration
 {
     public static IServiceCollection AddActivityPersistenceServices(
         this IServiceCollection services,
@@ -15,6 +16,13 @@ public static class ActivitiyPersistenceServiceConfiguration
         services.AddSingleton<IMongoClient>(provider =>
         {
             var connectionString = configuration.GetConnectionString("ActivityMongoDb");
+            // Apply global convention to ignore nulls
+            var conventionPack = new ConventionPack
+            {
+                new IgnoreIfNullConvention(true)
+            };
+            ConventionRegistry.Register("IgnoreNulls", conventionPack, _ => true);
+
             return new MongoClient(connectionString);
         });
 
