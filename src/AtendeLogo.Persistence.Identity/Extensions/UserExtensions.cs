@@ -16,7 +16,7 @@ internal static class UserExtensions
         user.SetPropertyValue(p => p.Name, AnonymousUserConstants.Name);
         user.SetPropertyValue(p => p.UserStatus, UserStatus.Anonymous);
         user.SetPropertyValue(p => p.UserState, UserState.Active);
-
+        
         user.SetCreateSession(AnonymousUserConstants.Session_Id);
     }
 }

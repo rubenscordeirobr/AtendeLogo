@@ -42,7 +42,8 @@ public class DefaultSaveChangesInterceptor : SaveChangesInterceptor
                         "The SaveChanges method must be call into the UnitOfWork class");
                 }
 
-                if (!Debugger.IsAttached && entity.LastUpdatedAt.AddSeconds(10) < DateTime.UtcNow)
+                if (entity.Id != Guid.Empty &&
+                    entity.LastUpdatedAt.AddSeconds(30) < DateTime.UtcNow)
                 {
                     var message = $"The entity {entity.GetType().Name} {entity.Id} " +
                                   $" The last update must e less than 10 seconds";

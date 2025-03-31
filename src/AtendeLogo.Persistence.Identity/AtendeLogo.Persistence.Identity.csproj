@@ -13,4 +13,8 @@
     <ProjectReference Include="..\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

@@ -15,18 +15,19 @@ public partial class InitialMigration : Migration
         migrationBuilder.AlterDatabase()
             .Annotation("Npgsql:CollationDefinition:case_accent_insensitive", "und-u-ks-level1,und-u-ks-level1,icu,False")
             .Annotation("Npgsql:Enum:authentication_type", "anonymous,credentials,facebook,google,microsoft,sms,system,unknown,whats_app")
-            .Annotation("Npgsql:Enum:business_type", "civil_registry_office,system")
+            .Annotation("Npgsql:Enum:business_type", "civil_registry_office,system,unknown")
             .Annotation("Npgsql:Enum:country", "argentina,bolivia,brazil,canada,chile,colombia,ecuador,france,germany,guyana,italy,mexico,paraguay,peru,portugal,spain,suriname,united_kingdom,united_states,unknown,uruguay,venezuela")
-            .Annotation("Npgsql:Enum:currency", "brl,eur,usd")
+            .Annotation("Npgsql:Enum:currency", "brl,eur,unknown,usd")
             .Annotation("Npgsql:Enum:language", "default,english,french,german,italian,portuguese,spanish")
             .Annotation("Npgsql:Enum:password_strength", "empty,medium,strong,weak")
-            .Annotation("Npgsql:Enum:tenant_state", "cancelled,closed,new,onboarding,operational,system,trial")
-            .Annotation("Npgsql:Enum:tenant_status", "active,archived,inactive,pending,suspended")
-            .Annotation("Npgsql:Enum:tenant_type", "company,individual,system")
-            .Annotation("Npgsql:Enum:user_role", "admin,chat_agent,manager,none,operator,owner,system,viewer")
-            .Annotation("Npgsql:Enum:user_state", "active,blocked,deleted,inactive,new,pending_verification,suspended")
-            .Annotation("Npgsql:Enum:user_status", "anonymous,away,busy,do_not_disturb,offline,online,system")
-            .Annotation("Npgsql:Enum:verification_state", "not_verified,verified")
+            .Annotation("Npgsql:Enum:tenant_state", "cancelled,closed,new,onboarding,operational,system,trial,unknown")
+            .Annotation("Npgsql:Enum:tenant_status", "active,archived,inactive,pending,suspended,unknown")
+            .Annotation("Npgsql:Enum:tenant_type", "company,individual,system,undefined")
+            .Annotation("Npgsql:Enum:user_role", "admin,anonymous,chat_agent,none,operator,owner,system_admin,viewer")
+            .Annotation("Npgsql:Enum:user_state", "active,blocked,deleted,inactive,new,pending_verification,suspended,unknown")
+            .Annotation("Npgsql:Enum:user_status", "anonymous,away,busy,do_not_disturb,new,offline,online,system,unknown")
+            .Annotation("Npgsql:Enum:user_type", "admin_user,anonymous,system_user,tenant_user,undefined")
+            .Annotation("Npgsql:Enum:verification_state", "not_verified,undefined,verified")
             .Annotation("Npgsql:PostgresExtension:uuid-ossp", ",,");
 
         migrationBuilder.CreateTable(
@@ -68,20 +69,19 @@ public partial class InitialMigration : Migration
             columns: table => new
             {
                 id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
-                client_session_token = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false, collation: "case_accent_insensitive"),
                 application_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, collation: "case_accent_insensitive"),
-                ip_address = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false, collation: "case_accent_insensitive"),
-                auth_token = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true, collation: "case_accent_insensitive"),
+                ip_address = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false, collation: "case_accent_insensitive"),
                 user_agent = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false, collation: "case_accent_insensitive"),
                 is_active = table.Column<bool>(type: "boolean", nullable: false),
+                keep_session = table.Column<bool>(type: "boolean", nullable: false),
                 last_activity = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                 started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                 terminated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                expiration_time = table.Column<TimeSpan>(type: "interval", nullable: true),
                 language = table.Column<Language>(type: "language", nullable: false),
                 authentication_type = table.Column<AuthenticationType>(type: "authentication_type", nullable: false),
                 termination_reason = table.Column<int>(type: "integer", nullable: true),
                 user_role = table.Column<UserRole>(type: "user_role", nullable: false),
+                user_type = table.Column<UserType>(type: "user_type", nullable: false),
                 user_id = table.Column<Guid>(type: "uuid", nullable: false),
                 tenant_id = table.Column<Guid>(type: "uuid", nullable: true),
                 GeoLocation_Latitude = table.Column<double>(type: "double precision", nullable: true),
@@ -106,7 +106,6 @@ public partial class InitialMigration : Migration
             {
                 id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
                 name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, collation: "case_accent_insensitive"),
-                fiscal_code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, collation: "case_accent_insensitive"),
                 email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false, collation: "case_accent_insensitive"),
                 business_type = table.Column<BusinessType>(type: "business_type", nullable: false),
                 country = table.Column<Country>(type: "country", nullable: false),
@@ -115,6 +114,7 @@ public partial class InitialMigration : Migration
                 tenant_state = table.Column<TenantState>(type: "tenant_state", nullable: false),
                 tenant_status = table.Column<TenantStatus>(type: "tenant_status", nullable: false),
                 tenant_type = table.Column<TenantType>(type: "tenant_type", nullable: false),
+                fiscal_code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                 phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                 owner_user_id = table.Column<Guid>(type: "uuid", nullable: true),
                 address_id = table.Column<Guid>(type: "uuid", nullable: true),
@@ -149,7 +149,6 @@ public partial class InitialMigration : Migration
                 id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
                 name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false, collation: "case_accent_insensitive"),
                 email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false, collation: "case_accent_insensitive"),
-                profile_picture_url = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true, collation: "case_accent_insensitive"),
                 role = table.Column<UserRole>(type: "user_role", nullable: false),
                 language = table.Column<Language>(type: "language", nullable: false),
                 user_state = table.Column<UserState>(type: "user_state", nullable: false),
@@ -194,17 +193,6 @@ public partial class InitialMigration : Migration
             name: "ix_addresses_tenant_id",
             table: "addresses",
             column: "tenant_id");
-
-        migrationBuilder.CreateIndex(
-            name: "ix_sessions_auth_token",
-            table: "sessions",
-            column: "auth_token");
-
-        migrationBuilder.CreateIndex(
-            name: "ix_sessions_client_session_token",
-            table: "sessions",
-            column: "client_session_token",
-            unique: true);
 
         migrationBuilder.CreateIndex(
             name: "ix_sessions_tenant_id",
@@ -304,8 +292,6 @@ public partial class InitialMigration : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        Guard.NotNull(migrationBuilder);
-
         migrationBuilder.DropForeignKey(
             name: "fk_addresses_tenants_tenant_id",
             table: "addresses");
