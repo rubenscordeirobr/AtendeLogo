@@ -26,7 +26,6 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
         _serviceProvider = serviceProviderMock;
         _command = new TenantUserLogoutCommand(Guid.NewGuid());
 
-
         _unitOfWorkMock = new Mock<IIdentityUnitOfWork>();
         _userSessionManagerMock = new Mock<IUserSessionManager>();
         _userSessionRepositoryMock = new Mock<IUserSessionRepository>();

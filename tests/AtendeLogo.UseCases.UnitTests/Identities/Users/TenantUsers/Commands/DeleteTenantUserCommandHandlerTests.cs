@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.UseCases.Identities.Users.TenantUsers.Commands;
 
-
 namespace AtendeLogo.UseCases.UnitTests.Identities.Users.TenantUsers.Commands;
 
 public class DeleteTenantUserCommandHandlerTests : IClassFixture<ServiceProviderMock<TenantOwnerRole>>
@@ -31,7 +30,6 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<ServiceProvider
         handlerType.Should().BeOfType<DeleteTenantUserCommandHandler>();
     }
 
-
     [Fact]
     public async Task HandleAsync_ReturnSuccess()
     {
@@ -58,9 +56,7 @@ public class DeleteTenantUserCommandHandlerTests : IClassFixture<ServiceProvider
         createUserResult.IsSuccess
             .Should()
             .BeTrue("The user should be created successfully");
-
-
-
+         
         var deleteCommand = new DeleteTenantUserCommand(createUserResult.Value!.Id);
 
         //Act

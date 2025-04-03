@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.UseCases.Identities.Tenants.Commands;
 
-
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
 public class DeleteTenantCommandHandlerTests : IClassFixture<ServiceProviderMock<AdminUserRole>>
@@ -63,7 +62,6 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<ServiceProviderMock
         createTenantResult.IsSuccess
             .Should()
             .BeTrue("The tenant should be created successfully");
-
 
         var deleteCommand = new DeleteTenantCommand(createTenantResult.Value!.Id);
 

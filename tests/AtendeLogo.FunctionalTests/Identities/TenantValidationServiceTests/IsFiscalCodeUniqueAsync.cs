@@ -37,7 +37,6 @@ public partial class TenantValidationServiceTests
         result.Should().BeFalse();
     }
 
-
     [Fact]
     public async Task IsFiscalCodeUnique_WithTenant_ShouldReturnTrue()
     {

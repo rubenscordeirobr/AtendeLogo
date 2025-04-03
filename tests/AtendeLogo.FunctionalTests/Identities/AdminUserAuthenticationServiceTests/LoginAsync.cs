@@ -102,7 +102,6 @@ public partial class AdminUserAuthenticationServiceTests
         attempt4.ShouldBeFailureForErrors<AuthenticationError, TooManyRequestsError>(isAssignableTo: true);
         attempt5.ShouldBeFailureForErrors<AuthenticationError, TooManyRequestsError>(isAssignableTo: true);
 
-
         result.ShouldBeFailure<TooManyRequestsError>();
 
         ClearCache();

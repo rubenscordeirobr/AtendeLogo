@@ -32,7 +32,6 @@ public class DefaultSaveChangesInterceptor : SaveChangesInterceptor
                 .Where(entry => entry.State == EntityState.Added ||
                            entry.State == EntityState.Modified);
 
-
             foreach (var entity in entries.Select(entry => entry.Entity))
             {
                 if (entity.CreatedSession_Id == Guid.Empty ||

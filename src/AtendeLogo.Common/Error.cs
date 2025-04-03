@@ -179,7 +179,6 @@ public record ParserError(
     string Message)
     : Error(Exception, Code, Message);
 
-
 public record NoContentError(
     string Code,
     string Message)

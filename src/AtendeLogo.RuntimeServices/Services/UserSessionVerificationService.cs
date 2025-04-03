@@ -4,7 +4,6 @@ using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.Shared.Configuration;
 
-
 namespace AtendeLogo.RuntimeServices.Services;
 
 public class UserSessionVerificationService : IUserSessionVerificationService, IUserSessionVerificationServiceTest, IAsyncDisposable
@@ -58,7 +57,6 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
         return await _unitWork.UserSessions.GetByIdAsync(session_Id.Value);
     }
-
 
     private async Task ValidateSessionAsync(IUserSession userSession)
     {

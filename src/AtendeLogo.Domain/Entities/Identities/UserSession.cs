@@ -1,6 +1,5 @@
 ﻿namespace AtendeLogo.Domain.Entities.Identities;
 
-
 public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 {
     private readonly List<IDomainEvent> _events = new();
@@ -86,7 +85,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
 
     public void UpdateLastActivity()
     {
-        this.LastUpdatedAt = DateTime.UtcNow;
+        LastUpdatedAt = DateTime.UtcNow;
     }
 
   

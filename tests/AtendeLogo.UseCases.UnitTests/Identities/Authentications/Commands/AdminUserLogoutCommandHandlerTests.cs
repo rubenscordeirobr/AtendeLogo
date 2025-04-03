@@ -26,7 +26,6 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
         _serviceProvider = serviceProviderMock;
         _command = new AdminUserLogoutCommand(Guid.NewGuid());
 
-
         _unitOfWorkMock = new Mock<IIdentityUnitOfWork>();
         _userSessionManagerMock = new Mock<IUserSessionManager>();
         _userSessionRepositoryMock = new Mock<IUserSessionRepository>();

@@ -86,7 +86,6 @@ internal static class MetadataHelpers
             return parameters;
         }
 
-
         if (firstDescriptor.HttpVerb != HttpVerb.Get)
         {
             throw new InvalidCastException("Operation parameters are only supported for GET requests.");

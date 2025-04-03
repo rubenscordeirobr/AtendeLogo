@@ -1,5 +1,4 @@
 ﻿
-
 using System.Net.NetworkInformation;
 
 namespace AtendeLogo.ClientGateway.Common.Helpers;

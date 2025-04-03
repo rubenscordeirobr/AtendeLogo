@@ -2,7 +2,6 @@
 using AtendeLogo.Shared.Configuration;
 namespace AtendeLogo.Application.Extensions;
 
-
 public static class UserSessionExtensions
 {
     public static bool IsUpdatePending(this IUserSession userSession)

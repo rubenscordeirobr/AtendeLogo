@@ -27,10 +27,8 @@ public class SecureConfiguration : ISecureConfiguration
     public string GetAuthenticationKey()
         => GetConfigurationValue(SecureConfigKeysProvider.JwtAuthentication);
 
-
     public string GetJwtAudience()
         => GetConfigurationValue(SecureConfigKeysProvider.JwtAudience);
-
 
     public string GetJwtIssuer()
        => GetConfigurationValue(SecureConfigKeysProvider.JwtIssuer);

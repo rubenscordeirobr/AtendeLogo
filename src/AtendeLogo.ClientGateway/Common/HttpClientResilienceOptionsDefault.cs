@@ -1,5 +1,4 @@
 ﻿
-
 namespace AtendeLogo.ClientGateway.Common;
 public class HttpClientResilienceOptionsDefault : IHttpClientResilienceOptions
 {

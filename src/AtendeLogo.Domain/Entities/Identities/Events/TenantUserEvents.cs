@@ -11,7 +11,6 @@ public record TenantUserRemovedEvent(
 public record TenantUserSessionStartedEvent(
     UserSession UserSession) : IDomainEvent;
 
-
 public record TenantUserSessionTerminatedEvent(
     UserSession UserSession) : IDomainEvent;
 

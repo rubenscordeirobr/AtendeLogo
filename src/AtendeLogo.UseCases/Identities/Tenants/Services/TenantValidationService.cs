@@ -61,7 +61,6 @@ internal class TenantValidationService : ITenantValidationService
     {
         phoneNumber = SanitizeUtils.SanitizePhoneNumber(phoneNumber);
 
-
         return !await _tenantRepository.PhoneNumberExitsAsync(phoneNumber, cancellationToken) &&
             !await _tenantUserRepository.PhoneNumberExistsAsync(phoneNumber, cancellationToken);
     }

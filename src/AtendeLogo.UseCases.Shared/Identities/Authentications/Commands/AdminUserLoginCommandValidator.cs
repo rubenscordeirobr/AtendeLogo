@@ -30,7 +30,6 @@ public class AdminUserLoginCommandValidator : CommandValidator<AdminUserLoginCom
             .MaximumLength(ValidationConstants.PasswordMaxLength)
                 .WithMessage(localizer["AdminAuthentication.PasswordTooLong", "Password cannot be longer than {MaxLength} characters"]);
 
-
         //Async
         RuleFor(x => x.EmailOrPhoneNumber)
             .MustAsync(IsEmailOrPhoneNumberExitsAsync)

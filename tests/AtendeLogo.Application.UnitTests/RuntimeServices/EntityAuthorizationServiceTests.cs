@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Persistence.Identity.Extensions;
 
-
 namespace AtendeLogo.Application.UnitTests.RuntimeServices;
 
 public class EntityAuthorizationServiceTests

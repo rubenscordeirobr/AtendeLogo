@@ -1,5 +1,4 @@
 ﻿
-
 namespace AtendeLogo.Domain.Entities.Activities;
 
 public sealed record UserLoginSuccessActivity : ActivityBase

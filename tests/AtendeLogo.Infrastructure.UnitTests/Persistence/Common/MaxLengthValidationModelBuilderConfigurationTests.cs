@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-
 namespace AtendeLogo.Infrastructure.UnitTests.Persistence.Common;
 
 public class MaxLengthValidationModelBuilderConfigurationTests

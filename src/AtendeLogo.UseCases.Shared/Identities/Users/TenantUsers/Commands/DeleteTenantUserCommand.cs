@@ -2,7 +2,6 @@
 
 public record DeleteTenantUserCommand(Guid Id) : CommandRequest<OperationResponse>;
 
-
 public class DeleteTenantUserCommandValidator : CommandValidator<DeleteTenantUserCommand>
 {
     public DeleteTenantUserCommandValidator(

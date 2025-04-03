@@ -30,7 +30,6 @@ public class TenantUserLoginCommandValidator : CommandValidator<TenantUserLoginC
             .MaximumLength(ValidationConstants.PasswordMaxLength)
                 .WithMessage(localizer["TenantUserAuthentication.PasswordTooLong", "Password cannot be longer than {MaxLength} characters"]);
 
-
         //Async
         RuleFor(x => x.EmailOrPhoneNumber)
             .MustAsync(IsEmailOrPhoneNumberExitsAsync)

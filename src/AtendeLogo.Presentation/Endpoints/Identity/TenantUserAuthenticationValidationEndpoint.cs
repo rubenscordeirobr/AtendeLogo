@@ -35,4 +35,3 @@ public class TenantUserAuthenticationValidationEndpoint : ApiEndpointBase, ITena
     }
 }
 
-

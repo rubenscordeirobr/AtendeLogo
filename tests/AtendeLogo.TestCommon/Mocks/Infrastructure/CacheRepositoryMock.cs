@@ -11,7 +11,6 @@ public class CacheRepositoryMock : ICacheRepository
     protected virtual JsonSerializerOptions JsonSerializationOptions { get; }
         = new JsonSerializerOptions(JsonSerializerOptions.Web) { IncludeFields = true };
 
-
     public Task<bool> KeyExistsAsync(string cacheKey)
     {
         return Task.FromResult(_cache.ContainsKey(cacheKey));

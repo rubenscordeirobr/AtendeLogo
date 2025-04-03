@@ -6,7 +6,6 @@ public sealed record TenantCreatedEvent(
 public sealed record TenantUpdatedEvent(
    Tenant Tenant) : IDomainEvent;
 
-
 public sealed record TenantAddressAddedEvent(
     Tenant tenant,
     TenantAddress newAddress) : IDomainEvent;

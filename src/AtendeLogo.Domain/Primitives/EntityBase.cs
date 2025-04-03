@@ -11,12 +11,12 @@ public abstract class EntityBase
 
     internal virtual void SetCreateSession(Guid session_Id)
     {
-        if ((Id != Guid.Empty && !Id.IsZeroPrefixedGuid()) ||
+        if ((Id != Guid.Empty && !Id.IsZeroPrefixedGuid()) || 
             (CreatedAt != default && !Id.IsZeroPrefixedGuid()))
         {
             throw new InvalidOperationException("Cannot set create date for existing entity");
         }
- 
+
         LastUpdatedAt = CreatedAt;
         CreatedSession_Id = session_Id;
         LastUpdatedSession_Id = session_Id;

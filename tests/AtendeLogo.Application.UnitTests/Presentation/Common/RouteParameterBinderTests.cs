@@ -103,7 +103,6 @@ public class RouteParameterBinderTests
         var descriptor = CreateDescriptor(method!);
         var context = new DefaultHttpContext();
 
-
         var mockParameter = new Mock<ParameterInfo>();
         var parameter = mockParameter.Object;
 

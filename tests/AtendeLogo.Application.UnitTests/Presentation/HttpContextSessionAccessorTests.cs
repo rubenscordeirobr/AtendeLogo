@@ -6,7 +6,6 @@ using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Presentation;
 
-
 public class HttpContextSessionAccessorTests
 {
     private readonly Fixture _fixture = new();
@@ -112,7 +111,6 @@ public class HttpContextSessionAccessorTests
         var accessor = new HttpContextSessionAccessor(httpContextAccessorMock.Object, loggerMock.Object);
         var dummyClaims = _fixture.Create<UserSessionClaims>();
 
-
         // Act
         accessor.UserSessionClaims = dummyClaims;
 
@@ -146,7 +144,6 @@ public class HttpContextSessionAccessorTests
         // Assert
         userSession.Should().BeNull();
 
-
 #pragma warning disable CS8620
 
         loggerMock.Verify(
@@ -162,5 +159,3 @@ public class HttpContextSessionAccessorTests
 
     }
 }
-
-

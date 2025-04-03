@@ -30,7 +30,6 @@ public partial class TenantUserValidationServiceTests
             .BeFalse();
     }
 
-
     [Fact]
     public async Task IsEmailUnique_WithTenantAndOwner_ShouldReturnTrue()
     {
@@ -48,7 +47,5 @@ public partial class TenantUserValidationServiceTests
         result.Should()
             .BeTrue();
     }
-
-    
 }
 

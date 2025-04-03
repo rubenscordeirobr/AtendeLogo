@@ -4,4 +4,3 @@ public record AdminUserLogoutCommand(
     Guid Session_Id)
     : CommandRequest<OperationResponse>;
 
-

@@ -65,8 +65,6 @@ internal sealed class HttpRequestExecutor
         ResponseResult responseResult,
         CancellationToken cancellationToken)
     {
-
-
         try
         {
             var response = _httpContext.Response;

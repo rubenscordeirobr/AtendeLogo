@@ -55,7 +55,6 @@ public static class HttpErrorMapper
             HttpStatusCode.UnprocessableContent
                 => new ValidationError(code, message), //422
 
-
             HttpStatusCode.TooManyRequests
                 => new TooManyRequestsError(code, message), //429 
 

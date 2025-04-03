@@ -177,7 +177,6 @@ public sealed class EventMediator : IEventMediator, IEventMediatorTest, IDisposa
 
     }
 
-
     public void Dispose()
     {
         _executedDomainEvents.Clear();
@@ -185,7 +184,6 @@ public sealed class EventMediator : IEventMediator, IEventMediatorTest, IDisposa
         _capturedEvents.Clear();
         GC.SuppressFinalize(this);
     }
-
 
     #region IEventMediatorTest
     IReadOnlyList<IDomainEvent> IEventMediatorTest.CapturedEvents

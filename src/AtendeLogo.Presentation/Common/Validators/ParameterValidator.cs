@@ -33,7 +33,6 @@ internal static class ParameterValidator
             return;
         }
 
-
         var routeParameters = descriptor.RouteParameters;
         var operatorParameters = descriptor.OperationParameters;
         var method = descriptor.Method;

@@ -47,7 +47,6 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<ServiceProviderM
             var eventMediator = (IEventMediatorTest)scope.ServiceProvider.GetRequiredService<IEventMediator>();
             var cacheSessionService = scope.ServiceProvider.GetRequiredService<IUserSessionCacheService>();
 
-
             eventMediator.CapturedEvents
                 .Should()
                 .BeEmpty();

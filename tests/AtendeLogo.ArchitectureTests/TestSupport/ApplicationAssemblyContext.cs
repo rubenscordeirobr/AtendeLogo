@@ -136,7 +136,6 @@ public class ApplicationAssemblyContext
         IdentityPersistenceAssembly = typeof(Persistence.Identity.IdentityPersistenceServiceConfiguration).Assembly;
         ActivityPersistenceAssembly = typeof(Persistence.Activity.ActivityPersistenceServiceConfiguration).Assembly;
 
-
         InfrastructuresAssemblies = [
             InfrastructureAssembly,
             IdentityPersistenceAssembly,

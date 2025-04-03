@@ -33,7 +33,6 @@ public partial class TenantUserAuthenticationValidationServiceTests
             .BeTrue();
     }
 
-
     [Fact]
     public async Task EmailOrPhoneNumberExists_WithExistingFormattedPhoneNumber_ShouldReturnTrue()
     {
@@ -80,7 +79,4 @@ public partial class TenantUserAuthenticationValidationServiceTests
         result.Should()
             .BeFalse();
     }
-
 }
-
-

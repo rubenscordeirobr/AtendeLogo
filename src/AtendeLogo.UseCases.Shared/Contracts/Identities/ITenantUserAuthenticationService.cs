@@ -8,7 +8,6 @@ public interface ITenantUserAuthenticationService : ICommunicationService
         TenantUserLoginCommand command,
         CancellationToken cancellationToken = default);
 
-
     Task<Result<OperationResponse>> LogoutAsync(
         TenantUserLogoutCommand command,
         CancellationToken cancellationToken = default);

@@ -7,4 +7,3 @@ public record AdminUserLoginCommand : CommandRequest<AdminUserLoginResponse>
     public required bool KeepSession { get; init; }
 }
 
-

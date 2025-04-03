@@ -18,7 +18,6 @@ public abstract class HttpContextSessionAccessorMock : IHttpContextSessionAccess
     public UserSessionClaims? UserSessionClaims { get; set; }
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
 
-
     protected HttpContextSessionAccessorMock(IUserSessionTokenHandler tokenHandler)
     {
         _tokenHandler = tokenHandler;

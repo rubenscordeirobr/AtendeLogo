@@ -106,7 +106,6 @@ public static class RouteBinder
         public string Route { get; }
         public string? ParameterName { get; }
 
-
         internal RouteTemplateBinder(string route)
         {
             Route = route;
@@ -169,5 +168,4 @@ public static class RouteBinder
         }
     }
 }
-
 

@@ -12,4 +12,3 @@ public interface IHttpContextSessionAccessor : IApplicationService
     UserSessionClaims? UserSessionClaims { get; set; }
 }
 
-

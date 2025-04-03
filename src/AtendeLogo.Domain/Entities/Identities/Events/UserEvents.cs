@@ -10,7 +10,6 @@ public record UserLoggedInEvent (
     string UserIdentifier ,
     string IpAddress) : IDomainEvent;
 
-
 public record UserLoginFailedEvent (
     User User,
     string UserIdentifier,
@@ -20,5 +19,4 @@ public record UserLoginFailedEvent (
 public record UserLoggedOutEvent(
     User User, 
     string IpAddress) : IDomainEvent;
-
 

@@ -2,9 +2,6 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Activities.Events;
 
-
-
-
 public class UserLoggedInEventHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Fixture _fixture;

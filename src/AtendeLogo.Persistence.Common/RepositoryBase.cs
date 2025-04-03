@@ -209,6 +209,5 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         return this;
     }
 
-
     #endregion
 }

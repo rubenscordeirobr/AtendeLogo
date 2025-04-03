@@ -96,14 +96,11 @@ public partial class TenantUserAuthenticationServiceTests
         var result = await _clientService.LoginAsync(command);
 
         // Assert
-
-
         attempt1.ShouldBeFailureForErrors<AuthenticationError, TooManyRequestsError>(isAssignableTo: true);
         attempt2.ShouldBeFailureForErrors<AuthenticationError, TooManyRequestsError>(isAssignableTo: true);
         attempt3.ShouldBeFailureForErrors<AuthenticationError, TooManyRequestsError>(isAssignableTo: true);
         attempt4.ShouldBeFailureForErrors<AuthenticationError, TooManyRequestsError>(isAssignableTo: true);
         attempt5.ShouldBeFailureForErrors<AuthenticationError, TooManyRequestsError>(isAssignableTo: true);
-
 
         result.ShouldBeFailure<TooManyRequestsError>();
 

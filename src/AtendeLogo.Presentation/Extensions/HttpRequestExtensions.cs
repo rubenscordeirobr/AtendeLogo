@@ -27,5 +27,3 @@ internal static class HttpRequestExtensions
         return $"{path}{queryString}";
     }
 }
-
-

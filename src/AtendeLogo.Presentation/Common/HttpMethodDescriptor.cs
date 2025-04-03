@@ -38,7 +38,6 @@ internal sealed class HttpMethodDescriptor
             ? Parameters.FirstOrDefault()?.ParameterType
             : null;
 
-
     internal HttpMethodDescriptor(MethodInfo method)
     {
         var parameters = method.GetParameters();

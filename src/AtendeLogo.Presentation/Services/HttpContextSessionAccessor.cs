@@ -53,7 +53,6 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
         set => SetHttpContextItem(HttpContextItemsConstants.EndpointInstance, value);
     }
 
-
     private TItem? TryGetHttpContextItem<TItem>(string key)
         where TItem : class
     {

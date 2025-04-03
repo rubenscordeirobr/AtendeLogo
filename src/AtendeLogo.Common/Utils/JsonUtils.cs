@@ -32,7 +32,6 @@ public static class JsonUtils
     {
         Guard.NotNull(jsonSerializerOptions);
 
-
         if (jsonSerializerOptions.WriteIndented)
             return;
 

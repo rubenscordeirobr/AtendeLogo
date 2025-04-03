@@ -34,5 +34,3 @@ public class AdminUserAuthenticationValidationEndpoint : ApiEndpointBase, IAdmin
             .EmailOrPhoneNumberExitsAsync(emailOrPhoneNumber, cancellationToken);
     }
 }
-
-

@@ -9,4 +9,3 @@ public interface IUserSessionManager : IApplicationService
     Task RemoveSessionAsync(Guid userSession_Id);
 }
 
-

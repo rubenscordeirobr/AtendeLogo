@@ -48,7 +48,6 @@ public class AdminUserLoginCommandHandlerTests : IClassFixture<ServiceProviderMo
             var eventMediator = (IEventMediatorTest)scope.ServiceProvider.GetRequiredService<IEventMediator>();
             var cacheSessionService = scope.ServiceProvider.GetRequiredService<IUserSessionCacheService>();
 
-
             eventMediator.CapturedEvents
                 .Should()
                 .BeEmpty();

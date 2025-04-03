@@ -1,5 +1,4 @@
 ﻿
-
 using AtendeLogo.UseCases.Mappers.Identities;
 
 namespace AtendeLogo.UseCases.Identities.Users.AdminUsers.Queries;

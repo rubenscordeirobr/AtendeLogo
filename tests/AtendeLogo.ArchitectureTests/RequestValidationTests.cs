@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Application.Contracts.Handlers;
 
-
 namespace AtendeLogo.ArchitectureTests;
 
 public class RequestValidationTests

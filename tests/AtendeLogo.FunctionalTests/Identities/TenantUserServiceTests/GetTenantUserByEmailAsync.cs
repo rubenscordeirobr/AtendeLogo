@@ -66,6 +66,3 @@ public partial class TenantUserServiceTests
         result.ShouldBeFailure<NotFoundError>();
     }
 }
-
-
-

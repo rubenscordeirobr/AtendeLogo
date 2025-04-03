@@ -138,7 +138,6 @@ public static partial class CaseConventionUtils
         return string.Join("_", words.Select(x => x.ToUpperInvariant()));
     }
 
-
     public static string ToUpperCase(string? input)
     {
         Guard.NotNullOrWhiteSpace(input);

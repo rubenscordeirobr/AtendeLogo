@@ -63,5 +63,3 @@ internal sealed record ResponseResult
     public static ResponseResult Error(Error error)
         => new ResponseResult(error.StatusCode, error.CreateErrorResponse());
 }
-
-

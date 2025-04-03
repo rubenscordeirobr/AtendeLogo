@@ -110,7 +110,6 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
                      "Failed to save user session."));
         }
 
-
         await _userSessionManager.SetSessionAsync(newUserSession, user);
 
         var authorizationToken = _httpContextSessionAccessor.AuthorizationToken;
@@ -125,7 +124,6 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
             AuthenticationType.Credentials,
             command.EmailOrPhoneNumber,
             headerInfo.IpAddress);
-
 
         await _eventMediator.DispatchAsync(newUserSession, loginSuccessEvent);
 

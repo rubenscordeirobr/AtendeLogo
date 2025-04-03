@@ -14,7 +14,6 @@ public class UserSessionCacheServiceTests
         _testOutput = testOutput;
     }
 
-
     [Fact]
     public async Task ExistsAsync_ShouldReturnTrue_WhenClientSessionTokenExists()
     {

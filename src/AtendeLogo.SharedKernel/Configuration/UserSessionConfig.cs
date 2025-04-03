@@ -10,7 +10,6 @@ public static class UserSessionConfig
     private static readonly TimeSpan PersistentSessionRefreshThreshold = TimeSpan.FromDays(7);
     private static readonly TimeSpan DefaultSessionRefreshThreshold = TimeSpan.FromMinutes(5);
 
-
     public static TimeSpan GetSessionExpiration(bool keepSession)
     {
         return keepSession

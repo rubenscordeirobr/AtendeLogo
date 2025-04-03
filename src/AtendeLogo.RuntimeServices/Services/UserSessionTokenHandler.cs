@@ -49,7 +49,6 @@ public class UserSessionTokenHandler : IUserSessionTokenHandler
     {
         Guard.NotNull(userSessionClaims);
 
-
         var expirationTime = UserSessionConfig.GetSessionExpiration(keepSession);
 
         var claims = new[]

@@ -122,7 +122,6 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
                 "Failed to save user session."));
         }
 
-
         await _userSessionManager.SetSessionAsync(newUserSession, user);
 
         var authorizationToken = _httpContextSessionAccessor.AuthorizationToken;
@@ -138,7 +137,6 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
            AuthenticationType.Credentials,
            command.EmailOrPhoneNumber,
            headerInfo.IpAddress);
-
 
         await _eventMediator.DispatchAsync(newUserSession, loginSuccessEvent);
 

@@ -37,7 +37,6 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<Service
         var tenantUserRepository = _serviceProvider.GetRequiredService<ITenantUserRepository>();
         var tenantUser = await tenantUserRepository.GetByPhoneNumberAsync(SystemTenantConstants.PhoneNumber);
 
-
         Guard.NotNull(tenantUser);
 
         var query = new GetTenantUserByPhoneNumberQuery(tenantUser.PhoneNumber.Number);
