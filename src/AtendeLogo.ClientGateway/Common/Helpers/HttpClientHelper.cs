@@ -2,7 +2,7 @@
 using AtendeLogo.Common.Converters;
 using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Utils;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.ClientGateway.Common.Helpers;
 

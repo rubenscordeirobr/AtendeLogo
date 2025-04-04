@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Application.Commands;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 using AtendeLogo.UseCases;
 using FluentValidation;
 using Microsoft.Extensions.Logging;

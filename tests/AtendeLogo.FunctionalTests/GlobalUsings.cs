@@ -1,5 +1,5 @@
 ﻿global using AtendeLogo.ClientGateway;
-global using AtendeLogo.ClientGateway.Common.Contracts;
+global using AtendeLogo.ClientGateway.Common.Abstractions;
 global using AtendeLogo.Common;
 global using AtendeLogo.Common.Utils;
 global using AtendeLogo.FunctionalTests.Mocks;
@@ -8,7 +8,7 @@ global using AtendeLogo.TestCommon.Extensions;
 global using AtendeLogo.TestCommon.Mocks;
 global using AtendeLogo.TestCommon.Utils;
 global using AtendeLogo.UseCases.Constants;
-global using AtendeLogo.UseCases.Contracts.Identities;
+global using AtendeLogo.UseCases.Abstractions.Identities;
 global using FluentAssertions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Xunit;

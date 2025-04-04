@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Application.Abstractions.Security;
 using AtendeLogo.Shared.Models.Security;
 using Microsoft.Extensions.Logging;
 using Moq;

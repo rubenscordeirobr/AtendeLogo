@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Mediators;
+﻿using AtendeLogo.Application.Abstractions.Mediators;
 using AtendeLogo.Application.Events;
 
 namespace AtendeLogo.Application.Extensions;

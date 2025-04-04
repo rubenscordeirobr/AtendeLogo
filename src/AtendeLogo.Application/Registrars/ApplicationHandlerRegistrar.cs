@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using AtendeLogo.Application.Contracts.Handlers;
-using AtendeLogo.Application.Contracts.Registrars;
+using AtendeLogo.Application.Abstractions.Handlers;
+using AtendeLogo.Application.Abstractions.Registrars;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

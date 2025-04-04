@@ -1,5 +1,5 @@
-﻿using AtendeLogo.Application.Contracts.Handlers;
-using AtendeLogo.Application.Contracts.Registrars;
+﻿using AtendeLogo.Application.Abstractions.Handlers;
+using AtendeLogo.Application.Abstractions.Registrars;
 using AtendeLogo.Application.Events;
 using AtendeLogo.Application.Exceptions;
 using Microsoft.Extensions.Logging;

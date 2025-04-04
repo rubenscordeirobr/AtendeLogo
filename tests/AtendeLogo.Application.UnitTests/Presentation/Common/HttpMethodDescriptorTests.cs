@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Presentation.Common.Exceptions;
 using AtendeLogo.Presentation.Common;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 using AtendeLogo.Presentation.Common.Attributes;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;

@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Application.Abstractions.Security;
 using AtendeLogo.Common.Exceptions;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Common.Utils;

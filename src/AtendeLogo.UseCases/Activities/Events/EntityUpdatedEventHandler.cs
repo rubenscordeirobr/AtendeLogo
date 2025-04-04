@@ -1,5 +1,5 @@
 ﻿using System.Dynamic;
-using AtendeLogo.Application.Contracts.Persistence.Activities;
+using AtendeLogo.Application.Abstractions.Persistence.Activities;
 using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Domain.Primitives;
 

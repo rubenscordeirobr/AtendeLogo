@@ -3,7 +3,7 @@ using System.Reflection;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Presentation.Common.Exceptions;
 using AtendeLogo.Presentation.Common.Validators;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AtendeLogo.Presentation.Common;

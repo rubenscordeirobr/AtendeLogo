@@ -292,6 +292,8 @@ public partial class InitialMigration : Migration
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
+        Guard.NotNull(migrationBuilder);
+
         migrationBuilder.DropForeignKey(
             name: "fk_addresses_tenants_tenant_id",
             table: "addresses");

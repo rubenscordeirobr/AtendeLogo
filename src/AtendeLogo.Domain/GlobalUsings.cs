@@ -5,7 +5,7 @@ global using AtendeLogo.Common.Enums;
 global using AtendeLogo.Domain.Entities.Identities.Events;
 global using AtendeLogo.Domain.Exceptions;
 global using AtendeLogo.Domain.Primitives;
-global using AtendeLogo.Domain.Primitives.Contracts;
+global using AtendeLogo.Domain.Primitives.Abstractions;
 global using AtendeLogo.Shared.Constants;
 global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.Interfaces.Common;

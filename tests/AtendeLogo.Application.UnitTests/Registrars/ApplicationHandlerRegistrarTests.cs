@@ -1,8 +1,8 @@
 ﻿using AtendeLogo.Application.Commands;
-using AtendeLogo.Application.Contracts.Events;
-using AtendeLogo.Application.Contracts.Handlers;
+using AtendeLogo.Application.Abstractions.Events;
+using AtendeLogo.Application.Abstractions.Handlers;
 using AtendeLogo.Application.Exceptions;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Application.UnitTests.Registrars;
 

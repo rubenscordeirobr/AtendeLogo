@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identities;
+﻿using AtendeLogo.Application.Abstractions.Persistence.Identities;
 using AtendeLogo.Application.Extensions;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;

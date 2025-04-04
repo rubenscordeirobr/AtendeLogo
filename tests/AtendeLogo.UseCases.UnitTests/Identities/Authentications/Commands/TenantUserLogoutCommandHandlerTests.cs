@@ -1,5 +1,5 @@
 ﻿using AtendeLogo.Application.Common;
-using AtendeLogo.Application.Contracts.Services;
+using AtendeLogo.Application.Abstractions.Services;
 using AtendeLogo.Domain.Entities.Identities.Events;
 using AtendeLogo.Shared.Models.Identities;
 using AtendeLogo.UseCases.Identities.Authentications.Commands;

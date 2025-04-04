@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Activities;
+﻿using AtendeLogo.Application.Abstractions.Persistence.Activities;
 using AtendeLogo.Persistence.Activity.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

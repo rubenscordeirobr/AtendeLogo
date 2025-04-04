@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Events;
+﻿using AtendeLogo.Application.Abstractions.Events;
 using AtendeLogo.Domain.Primitives;
 using Microsoft.Extensions.DependencyInjection;
 

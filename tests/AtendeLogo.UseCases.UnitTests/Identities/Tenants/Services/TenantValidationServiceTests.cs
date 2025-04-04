@@ -1,4 +1,4 @@
-﻿using AtendeLogo.UseCases.Contracts.Identities;
+﻿using AtendeLogo.UseCases.Abstractions.Identities;
 using AtendeLogo.UseCases.Identities.Tenants.Services;
 using Moq;
 

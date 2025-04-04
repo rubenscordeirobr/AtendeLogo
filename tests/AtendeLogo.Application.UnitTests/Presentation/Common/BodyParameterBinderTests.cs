@@ -3,7 +3,7 @@ using System.Text;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Attributes;
 using AtendeLogo.Presentation.Common.Binders;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 using Microsoft.AspNetCore.Http;
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
  

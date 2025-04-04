@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using AtendeLogo.Application.Contracts.Security;
+using AtendeLogo.Application.Abstractions.Security;
 using AtendeLogo.Shared.Configuration;
 using AtendeLogo.Shared.Factories;
 using AtendeLogo.Shared.Models.Security;

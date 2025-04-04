@@ -1,8 +1,8 @@
 ﻿global using System;
 global using System.Collections.Generic;
 global using System.Linq.Expressions;
-global using AtendeLogo.Application.Contracts.Persistence.Identities;
-global using AtendeLogo.Application.Contracts.Services;
+global using AtendeLogo.Application.Abstractions.Persistence.Identities;
+global using AtendeLogo.Application.Abstractions.Services;
 global using AtendeLogo.Common;
 global using AtendeLogo.Common.Enums;
 global using AtendeLogo.Domain.Entities.Identities;

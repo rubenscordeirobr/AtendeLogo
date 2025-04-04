@@ -1,7 +1,7 @@
-﻿using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Application.Abstractions.Security;
 using AtendeLogo.Infrastructure.Cache;
 using AtendeLogo.Infrastructure.Services;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;

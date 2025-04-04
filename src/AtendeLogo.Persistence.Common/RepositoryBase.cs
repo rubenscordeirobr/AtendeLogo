@@ -2,7 +2,7 @@
 using AtendeLogo.Domain.Helpers;
 using AtendeLogo.Persistence.Common.Enums;
 using AtendeLogo.Persistence.Common.Exceptions;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Persistence.Common;
 

@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Services;
+﻿using AtendeLogo.Application.Abstractions.Services;
 using AtendeLogo.TestCommon.Mocks.Infrastructure;
 
 namespace AtendeLogo.FunctionalTests.Identities;

@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Mediators;
+﻿using AtendeLogo.Application.Abstractions.Mediators;
 
 namespace AtendeLogo.TestCommon.Extensions;
 

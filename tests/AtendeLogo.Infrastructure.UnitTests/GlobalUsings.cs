@@ -9,7 +9,7 @@ global using Xunit.Abstractions;
 global using AtendeLogo.Domain.Primitives;
 global using AtendeLogo.TestCommon.Mocks;
 global using AtendeLogo.Common;
-global using AtendeLogo.Domain.Primitives.Contracts;
+global using AtendeLogo.Domain.Primitives.Abstractions;
 global using AtendeLogo.Shared.Interfaces.Common;
 global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.ValueObjects;

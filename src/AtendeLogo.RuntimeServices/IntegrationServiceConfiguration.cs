@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Application.Abstractions.Security;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.RuntimeServices;

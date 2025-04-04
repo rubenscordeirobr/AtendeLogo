@@ -9,4 +9,4 @@ global using FluentValidation;
 global using AtendeLogo.Common;
 global using AtendeLogo.Common.Extensions;
 global using AtendeLogo.TestCommon.Mocks;
-global using AtendeLogo.Shared.Contracts;
+global using AtendeLogo.Shared.Abstractions;

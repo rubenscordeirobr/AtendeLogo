@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Events;
+﻿using AtendeLogo.Application.Abstractions.Events;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AtendeLogo.Persistence.Common.UnitOfWorks;

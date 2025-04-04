@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>", Scope = "member", Target = "~P:AtendeLogo.Application.Contracts.Events.IDomainEventContext.Error")]
+[assembly: SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>", Scope = "member", Target = "~P:AtendeLogo.Application.Abstractions.Events.IDomainEventContext.Error")]

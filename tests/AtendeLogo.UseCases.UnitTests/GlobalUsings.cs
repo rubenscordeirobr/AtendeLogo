@@ -1,5 +1,5 @@
-﻿global using AtendeLogo.Application.Contracts.Mediators;
-global using AtendeLogo.Application.Contracts.Persistence.Identities;
+﻿global using AtendeLogo.Application.Abstractions.Mediators;
+global using AtendeLogo.Application.Abstractions.Persistence.Identities;
 global using AtendeLogo.Application.Events;
 global using AtendeLogo.Common;
 global using AtendeLogo.Common.Enums;
@@ -14,7 +14,7 @@ global using AtendeLogo.TestCommon.Mocks.Repositories;
 global using AtendeLogo.TestCommon.Utils;
 global using AtendeLogo.UseCases.Activities.Events;
 global using AtendeLogo.UseCases.Shared;
-global using AtendeLogo.RuntimeServices.Contracts;
+global using AtendeLogo.RuntimeServices.Abstractions;
 global using AtendeLogo.RuntimeServices.Mediators;
 global using AtendeLogo.UseCases.Identities.Shared;
 global using AutoFixture;

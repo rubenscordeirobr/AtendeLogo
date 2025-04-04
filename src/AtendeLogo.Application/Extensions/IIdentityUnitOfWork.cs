@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Persistence.Identities;
+﻿using AtendeLogo.Application.Abstractions.Persistence.Identities;
 
 namespace AtendeLogo.Application.Extensions;
 

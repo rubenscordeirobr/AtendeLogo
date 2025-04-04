@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Handlers;
+﻿using AtendeLogo.Application.Abstractions.Handlers;
 using AtendeLogo.Application.Exceptions;
 using Microsoft.Extensions.Logging;
 

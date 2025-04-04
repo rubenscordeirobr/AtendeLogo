@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Application.Abstractions.Security;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 

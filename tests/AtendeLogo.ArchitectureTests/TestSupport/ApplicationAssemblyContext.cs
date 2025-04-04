@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Handlers;
+﻿using AtendeLogo.Application.Abstractions.Handlers;
 using AtendeLogo.Domain.Primitives;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
@@ -130,7 +130,7 @@ public class ApplicationAssemblyContext
         RuntimeServicesAssembly = typeof(RuntimeServices.RuntimeServicesConfiguration).Assembly;
 
         PresentationAssembly = typeof(Presentation.PresentationServiceConfiguration).Assembly;
-        ClientGatewayAssembly = typeof(ClientGateway.Common.Contracts.IHttpClientExecutor).Assembly;
+        ClientGatewayAssembly = typeof(ClientGateway.Common.Abstractions.IHttpClientExecutor).Assembly;
 
         InfrastructureAssembly = typeof(Infrastructure.InfrastructureServiceConfiguration).Assembly;
         IdentityPersistenceAssembly = typeof(Persistence.Identity.IdentityPersistenceServiceConfiguration).Assembly;

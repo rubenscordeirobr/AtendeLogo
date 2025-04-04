@@ -1,5 +1,6 @@
 ﻿using AtendeLogo.TestCommon.Mocks;
 using Microsoft.Extensions.Logging;
+using AtendeLogo.Application.Extensions;
 
 namespace AtendeLogo.TestCommon.Extensions;
 
@@ -32,8 +33,13 @@ public static class MockConfigurationExtensions
         this IServiceCollection services)
         where TRoleProvider : IRoleProvider, new()
     {
-        var roleProvider = new TRoleProvider();
+        services.AddTransient(provider =>
+         {
+             var accessor = provider.GetRequiredService<IHttpContextSessionAccessor>();
+             return accessor.GetRequiredUserSession();
+         });
 
+        var roleProvider = new TRoleProvider();
         switch (roleProvider.UserRole)
         {
             case UserRole.Anonymous:

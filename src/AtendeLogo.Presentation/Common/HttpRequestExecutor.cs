@@ -6,7 +6,7 @@ using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Mappers;
 using AtendeLogo.Presentation.Common.Binders;
 using AtendeLogo.Application.Extensions;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.DependencyInjection;

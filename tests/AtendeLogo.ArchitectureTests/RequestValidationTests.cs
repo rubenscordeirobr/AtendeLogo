@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Handlers;
+﻿using AtendeLogo.Application.Abstractions.Handlers;
 
 namespace AtendeLogo.ArchitectureTests;
 

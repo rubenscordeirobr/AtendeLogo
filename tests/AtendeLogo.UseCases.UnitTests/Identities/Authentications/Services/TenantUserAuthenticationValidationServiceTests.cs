@@ -1,5 +1,5 @@
-﻿using AtendeLogo.Application.Contracts.Security;
-using AtendeLogo.UseCases.Contracts.Identities;
+﻿using AtendeLogo.Application.Abstractions.Security;
+using AtendeLogo.UseCases.Abstractions.Identities;
 using AtendeLogo.UseCases.Identities.Authentications.Services;
 using Moq;
 

@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Security;
+﻿using AtendeLogo.Application.Abstractions.Security;
 using AtendeLogo.Persistence.Common.Interceptors;
 using AtendeLogo.Persistence.Identity.Repositories;
 using AtendeLogo.Persistence.Identity.Seed;

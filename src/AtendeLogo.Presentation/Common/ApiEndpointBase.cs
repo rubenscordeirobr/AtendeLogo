@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Presentation.Common;
 

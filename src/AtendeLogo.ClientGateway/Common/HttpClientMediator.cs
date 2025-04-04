@@ -3,7 +3,7 @@ using AtendeLogo.ClientGateway.Common.Factories;
 using AtendeLogo.ClientGateway.Common.Helpers;
 using AtendeLogo.Common.Exceptions;
 using AtendeLogo.Common.Helpers;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.ClientGateway.Common;
 

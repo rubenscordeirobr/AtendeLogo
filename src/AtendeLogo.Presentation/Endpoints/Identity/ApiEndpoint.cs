@@ -1,4 +1,4 @@
-﻿using AtendeLogo.UseCases.Contracts;
+﻿using AtendeLogo.UseCases.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AtendeLogo.Presentation.Endpoints.Identity;

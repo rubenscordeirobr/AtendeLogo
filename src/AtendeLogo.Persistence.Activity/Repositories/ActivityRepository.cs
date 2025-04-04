@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using AtendeLogo.Application.Contracts.Persistence.Activities;
+using AtendeLogo.Application.Abstractions.Persistence.Activities;
 using AtendeLogo.Common;
 using AtendeLogo.Domain.Entities.Activities;
 using AtendeLogo.Persistence.Activity.Documents;

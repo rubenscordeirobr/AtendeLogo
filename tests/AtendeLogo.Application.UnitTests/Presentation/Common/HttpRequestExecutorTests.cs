@@ -6,7 +6,7 @@ using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Attributes;
 using AtendeLogo.TestCommon.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using AtendeLogo.Application.Contracts.Security;
+using AtendeLogo.Application.Abstractions.Security;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
 

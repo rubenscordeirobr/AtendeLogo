@@ -1,5 +1,5 @@
 ﻿using AtendeLogo.Application.Common;
-using AtendeLogo.Application.Contracts.Events;
+using AtendeLogo.Application.Abstractions.Events;
 using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Common;

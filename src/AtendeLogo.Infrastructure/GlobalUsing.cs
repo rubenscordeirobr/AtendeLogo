@@ -1,2 +1,2 @@
 ﻿global using System;
-global using AtendeLogo.Application.Contracts.Services;
+global using AtendeLogo.Application.Abstractions.Services;

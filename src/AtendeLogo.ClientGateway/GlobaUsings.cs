@@ -1,9 +1,9 @@
 ﻿global using System;
 global using System.Collections.Generic;
 global using AtendeLogo.UseCases.Constants;
-global using AtendeLogo.UseCases.Contracts.Identities;
+global using AtendeLogo.UseCases.Abstractions.Identities;
 global using AtendeLogo.Common;
 global using AtendeLogo.UseCases.Common;
 global using AtendeLogo.ClientGateway.Common.Attributes;
-global using AtendeLogo.ClientGateway.Common.Contracts;
+global using AtendeLogo.ClientGateway.Common.Abstractions;
 global using AtendeLogo.UseCases.Identities.Shared;

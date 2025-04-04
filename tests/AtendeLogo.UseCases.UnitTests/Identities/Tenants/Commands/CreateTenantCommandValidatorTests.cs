@@ -1,6 +1,6 @@
-﻿using AtendeLogo.Shared.Contracts;
+﻿using AtendeLogo.Shared.Abstractions;
 using AtendeLogo.UseCases.Common.Validations;
-using AtendeLogo.UseCases.Contracts.Identities;
+using AtendeLogo.UseCases.Abstractions.Identities;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
 using Moq;
 

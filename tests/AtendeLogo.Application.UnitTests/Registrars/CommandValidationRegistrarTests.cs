@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Shared.Contracts;
+﻿using AtendeLogo.Shared.Abstractions;
 using AtendeLogo.UseCases;
 using AtendeLogo.UseCases.Common.Excpetions;
 using FluentValidation;

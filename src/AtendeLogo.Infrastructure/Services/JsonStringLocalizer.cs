@@ -1,5 +1,5 @@
 ﻿using AtendeLogo.Common.Utils;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Infrastructure.Services;
 

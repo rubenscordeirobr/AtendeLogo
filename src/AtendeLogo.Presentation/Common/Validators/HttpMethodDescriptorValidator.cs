@@ -1,5 +1,5 @@
 ﻿using AtendeLogo.Presentation.Common.Exceptions;
-using AtendeLogo.Shared.Contracts;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Presentation.Common.Validators;
 

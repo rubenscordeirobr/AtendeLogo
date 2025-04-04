@@ -1,7 +1,7 @@
 ﻿using AtendeLogo.Application;
-using AtendeLogo.Application.Contracts.Handlers;
-using AtendeLogo.Application.Contracts.Persistence;
-using AtendeLogo.Application.Contracts.Services;
+using AtendeLogo.Application.Abstractions.Handlers;
+using AtendeLogo.Application.Abstractions.Persistence;
+using AtendeLogo.Application.Abstractions.Services;
 using AtendeLogo.Infrastructure;
 using AtendeLogo.Infrastructure.Helpers;
 using AtendeLogo.Persistence.Activity;

@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Application.Contracts.Registrars;
+﻿using AtendeLogo.Application.Abstractions.Registrars;
 
 namespace AtendeLogo.Application.Registrars;
 
