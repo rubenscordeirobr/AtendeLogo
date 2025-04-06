@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Globalization;
 using System.Reflection;
+using AtendeLogo.Common.Attributes;
 using AtendeLogo.Common.Factories;
 
 namespace AtendeLogo.Common.Converters;
@@ -61,6 +62,12 @@ public static class OperatorParameterConverter
     public static object? Parse(string? stringValue, ParameterInfo parameter)
     {
         Guard.NotNull(parameter);
+
+        var resolverAttribute = parameter.GetCustomAttribute<ParameterParserResolverAttribute>();
+        if (resolverAttribute != null)
+        {
+            return resolverAttribute.Parse(stringValue);
+        }
 
         var value = Parse(stringValue, parameter.ParameterType);
         if (value is null)
