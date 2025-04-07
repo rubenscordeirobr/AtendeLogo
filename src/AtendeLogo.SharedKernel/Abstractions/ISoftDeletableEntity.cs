@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Domain.Primitives.Abstractions;
+﻿namespace AtendeLogo.Shared.Abstractions;
 
 public interface ISoftDeletableEntity
 {
