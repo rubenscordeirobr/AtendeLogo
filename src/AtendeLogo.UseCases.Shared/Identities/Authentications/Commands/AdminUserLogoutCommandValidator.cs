@@ -3,7 +3,7 @@
 public class AdminUserLogoutCommandValidator : CommandValidator<AdminUserLogoutCommand>
 {
     public AdminUserLogoutCommandValidator(
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<AdminUserLogoutCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(localizer);

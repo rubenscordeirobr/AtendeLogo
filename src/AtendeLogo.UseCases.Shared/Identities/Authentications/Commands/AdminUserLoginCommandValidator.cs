@@ -6,7 +6,7 @@ public class AdminUserLoginCommandValidator : CommandValidator<AdminUserLoginCom
 
     public AdminUserLoginCommandValidator(
         IAdminUserAuthenticationValidationService validationService,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<AdminUserLoginCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(validationService);
@@ -33,7 +33,7 @@ public class AdminUserLoginCommandValidator : CommandValidator<AdminUserLoginCom
         //Async
         RuleFor(x => x.EmailOrPhoneNumber)
             .MustAsync(IsEmailOrPhoneNumberExitsAsync)
-                .WithMessage(localizer["AdminAuthentication..EmailOrPhoneNumberNotExists", "Email or phone number does not exist."]);
+                .WithMessage(localizer["AdminAuthentication.EmailOrPhoneNumberNotExists", "Email or phone number does not exist."]);
     }
      
     private Task<bool> IsEmailOrPhoneNumberExitsAsync(

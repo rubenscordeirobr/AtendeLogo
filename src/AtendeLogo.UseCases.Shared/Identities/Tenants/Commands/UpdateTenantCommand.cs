@@ -1,5 +1,4 @@
-﻿
-namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
 public record UpdateTenantCommand : CommandRequest<OperationResponse> 
 {

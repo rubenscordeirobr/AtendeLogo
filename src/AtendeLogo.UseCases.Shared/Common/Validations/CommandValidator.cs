@@ -4,9 +4,9 @@ namespace AtendeLogo.UseCases.Common.Validations;
 public abstract class CommandValidator<TCommand> : AbstractValidator<TCommand>
     where TCommand : ICommandRequest
 {
-    protected IJsonStringLocalizer<ValidationMessages> Localizer { get; }
+    protected IJsonStringLocalizer<TCommand> Localizer { get; }
 
-    protected CommandValidator(IJsonStringLocalizer<ValidationMessages> localizer)
+    protected CommandValidator(IJsonStringLocalizer<TCommand> localizer)
     {
         Localizer = localizer;
         ClassLevelCascadeMode = CascadeMode.Stop;

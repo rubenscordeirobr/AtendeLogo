@@ -6,7 +6,7 @@ public class TenantUserLoginCommandValidator : CommandValidator<TenantUserLoginC
 
     public TenantUserLoginCommandValidator(
         ITenantUserAuthenticationValidationService validationService,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<TenantUserLoginCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(validationService);

@@ -6,7 +6,7 @@ public class CreateTenantUserCommandValidator : CommandValidator<CreateTenantUse
 
     public CreateTenantUserCommandValidator(
         ITenantUserValidationService validationService,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<CreateTenantUserCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(validationService);

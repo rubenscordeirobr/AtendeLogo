@@ -3,7 +3,7 @@
 public class TenantUserLogoutCommandValidator : CommandValidator<TenantUserLogoutCommand>
 {
     public TenantUserLogoutCommandValidator(
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<TenantUserLogoutCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(localizer);

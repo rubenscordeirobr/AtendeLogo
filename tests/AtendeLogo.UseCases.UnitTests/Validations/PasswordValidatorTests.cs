@@ -1,13 +1,20 @@
-﻿using AtendeLogo.UseCases.Common.Validations;
+﻿using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.UseCases.UnitTests.Validations;
 
-public class PasswordValidatorTests  
+public class PasswordValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IValidator<Password> _validator;
-    public PasswordValidatorTests()
+    
+    public PasswordValidatorTests(
+        ServiceProviderMock<AnonymousRole> serviceProviderMock,
+        ITestOutputHelper testOutput)
     {
-        var localizer = new JsonStringLocalizerMock<ValidationMessages>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        var localizer = serviceProviderMock
+            .GetRequiredService<IJsonStringLocalizer<Password>>();
+
         _validator = new PasswordValidator(localizer);
     }
 

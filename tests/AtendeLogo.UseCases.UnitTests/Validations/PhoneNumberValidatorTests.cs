@@ -1,24 +1,30 @@
-﻿using AtendeLogo.UseCases.Common.Validations;
+﻿using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.UseCases.UnitTests.Validations;
 
-public class PhoneNumberValidatorTests 
+public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IValidator<PhoneNumber> _validator;
 
-    public PhoneNumberValidatorTests()
+    public PhoneNumberValidatorTests(
+      ServiceProviderMock<AnonymousRole> serviceProviderMock,
+      ITestOutputHelper testOutput)
     {
-        var localizer = new JsonStringLocalizerMock<ValidationMessages>();
+        serviceProviderMock.AddTestOutput(testOutput);
+
+        var localizer = serviceProviderMock
+            .GetRequiredService<IJsonStringLocalizer<PhoneNumber>>();
+
         _validator = new PhoneNumberValidator(localizer);
     }
-
+     
     [Fact]
     public void Validator_ShouldBePhoneNumberValidatorType()
     {
         _validator.Should().BeOfType<PhoneNumberValidator>();
     }
 
-        [Fact]
+    [Fact]
     public void When_PhoneNumber_IsEmpty_ValidationFails()
     {
         // Arrange

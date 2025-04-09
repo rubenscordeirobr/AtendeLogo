@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Shared.Abstractions;
-using AtendeLogo.UseCases.Common.Validations;
 using AtendeLogo.UseCases.Abstractions.Identities;
 using AtendeLogo.UseCases.Identities.Authentications.Commands;
 using Moq;
@@ -86,7 +85,7 @@ public class AdminUserLoginCommandValidatorTests : IClassFixture<ServiceProvider
     public async Task ValidationResult_ShouldHaveError_When_EmailOrPhoneNumberNotExists()
     {
         // Arrange
-        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
+        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<AdminUserLoginCommand>>();
         var validationServiceSetup = new Mock<IAdminUserAuthenticationValidationService>();
 
         validationServiceSetup

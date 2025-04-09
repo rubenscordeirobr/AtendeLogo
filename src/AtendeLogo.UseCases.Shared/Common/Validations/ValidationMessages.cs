@@ -1,3 +1,3 @@
-﻿namespace AtendeLogo.UseCases.Common.Validations;
+﻿//namespace AtendeLogo.UseCases.Common.Validations;
 
-public class ValidationMessages { }
+//public class ValidationMessages { }

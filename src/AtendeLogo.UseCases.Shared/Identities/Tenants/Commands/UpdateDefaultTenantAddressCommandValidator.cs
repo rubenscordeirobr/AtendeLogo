@@ -3,7 +3,8 @@
 public class UpdateDefaultTenantAddressCommandValidator : AbstractValidator<UpdateDefaultTenantAddressCommand>
 {
     public UpdateDefaultTenantAddressCommandValidator(
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<UpdateDefaultTenantAddressCommand> localizer,
+        IJsonStringLocalizer<AddressValidator> addressLocalizer)
     {
         Guard.NotNull(localizer);
 
@@ -19,6 +20,6 @@ public class UpdateDefaultTenantAddressCommandValidator : AbstractValidator<Upda
 
         RuleFor(x => x.Address)
             .NotNull()
-            .SetValidator(new AddressValidator(localizer));
+            .SetValidator(new AddressValidator(addressLocalizer));
     }
 }

@@ -5,7 +5,7 @@ public static partial class DefaultValidationsExtensions
 {
     public static IRuleBuilderOptions<T, PhoneNumber> PhoneNumber<T>(
         this IRuleBuilder<T, PhoneNumber> ruleBuilder,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer localizer)
     {
         Guard.NotNull(ruleBuilder);
 
@@ -15,7 +15,7 @@ public static partial class DefaultValidationsExtensions
 
     public static IRuleBuilderOptions<T, string> PhoneNumber<T>(
         this IRuleBuilder<T, string> ruleBuilder,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer localizer)
     {
         Guard.NotNull(ruleBuilder);
         Guard.NotNull(localizer);
@@ -31,7 +31,7 @@ public static partial class DefaultValidationsExtensions
 
 public class PhoneNumberValidator : AbstractValidator<PhoneNumber>
 {
-    public PhoneNumberValidator(IJsonStringLocalizer<ValidationMessages> localizer)
+    public PhoneNumberValidator(IJsonStringLocalizer localizer)
     {
         Guard.NotNull(localizer);
 

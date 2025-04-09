@@ -8,7 +8,7 @@ public class UpdateTenantCommandValidator : CommandValidator<UpdateTenantCommand
 
     public UpdateTenantCommandValidator(
         ITenantValidationService tenantValidationService,
-        IJsonStringLocalizer<ValidationMessages> localizer) 
+        IJsonStringLocalizer<UpdateTenantCommand> localizer) 
         : base(localizer)
     {
 

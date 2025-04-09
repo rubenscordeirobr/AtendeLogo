@@ -4,7 +4,7 @@ public record DeleteTenantCommand(Guid Tenant_Id) : CommandRequest<OperationResp
 public class DeleteTenantCommandValidator : CommandValidator<DeleteTenantCommand>
 {
     public DeleteTenantCommandValidator(
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<DeleteTenantCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(localizer);

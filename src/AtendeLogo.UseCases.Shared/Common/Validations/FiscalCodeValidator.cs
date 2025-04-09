@@ -5,7 +5,7 @@ public static partial class DefaultValidationsExtensions
 {
     public static IRuleBuilderOptions<T, FiscalCode> FiscalCodeCountry<T>(
         this IRuleBuilder<T, FiscalCode> ruleBuilder,
-        IJsonStringLocalizer<ValidationMessages> localizer,
+        IJsonStringLocalizer localizer,
         Country country)
     {
         Guard.NotNull(ruleBuilder);
@@ -17,7 +17,7 @@ public static partial class DefaultValidationsExtensions
     public static IRuleBuilderOptions<T, FiscalCode> FiscalCode<T>(
         this IRuleBuilder<T, FiscalCode> ruleBuilder,
         Func<T, Country> funcCountry,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer localizer)
     {
         Guard.NotNull(ruleBuilder);
 
@@ -30,7 +30,7 @@ public class FiscalCodeValidator : AbstractValidator<FiscalCode>
 {
     public FiscalCodeValidator(
         Country country,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer localizer)
     {
         Guard.NotNull(localizer);
 

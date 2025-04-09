@@ -4,7 +4,7 @@ public static partial class DefaultValidationsExtensions
 {
     public static IRuleBuilderOptions<T, Password> Password<T>(
      this IRuleBuilder<T, Password> ruleBuilder,
-     IJsonStringLocalizer<ValidationMessages> localizer)
+     IJsonStringLocalizer localizer)
     {
         Guard.NotNull(ruleBuilder);
 
@@ -14,7 +14,7 @@ public static partial class DefaultValidationsExtensions
 
     public static IRuleBuilderOptions<T, string> CreatePassword<T>(
          this IRuleBuilder<T, string> ruleBuilder,
-         IJsonStringLocalizer<ValidationMessages> localizer)
+         IJsonStringLocalizer localizer)
     {
         Guard.NotNull(ruleBuilder);
         Guard.NotNull(localizer);
@@ -40,7 +40,7 @@ public static partial class DefaultValidationsExtensions
 
 public class PasswordValidator : AbstractValidator<Password>
 {
-    public PasswordValidator(IJsonStringLocalizer<ValidationMessages> localizer)
+    public PasswordValidator(IJsonStringLocalizer localizer)
     {
         Guard.NotNull(localizer);
 

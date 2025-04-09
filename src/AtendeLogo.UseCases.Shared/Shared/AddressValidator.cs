@@ -2,7 +2,7 @@
 
 public class AddressValidator : AbstractValidator<AddressDto>
 {
-    public AddressValidator(IJsonStringLocalizer<ValidationMessages> localizer)
+    public AddressValidator(IJsonStringLocalizer<AddressValidator> localizer)
     {
         Guard.NotNull(localizer);
 

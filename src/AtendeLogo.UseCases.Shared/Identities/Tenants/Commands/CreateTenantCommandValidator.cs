@@ -6,7 +6,7 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
 
     public CreateTenantCommandValidator(
         ITenantValidationService tenantValidationService,
-        IJsonStringLocalizer<ValidationMessages> localizer)
+        IJsonStringLocalizer<CreateTenantCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(tenantValidationService);

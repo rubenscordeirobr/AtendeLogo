@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.Shared.Abstractions;
-using AtendeLogo.UseCases.Common.Validations;
 using AtendeLogo.UseCases.Abstractions.Identities;
 using AtendeLogo.UseCases.Identities.Users.TenantUsers.Commands;
 using Moq;
@@ -129,7 +128,7 @@ public class CreateTenantUserCommandValidatorTests : IClassFixture<ServiceProvid
     public async Task ValidationResult_ShouldEmailBeUnique()
     {
         // Arrange
-        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
+        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantUserCommand>>();
         var tenantValidationSetup = new Mock<ITenantUserValidationService>();
 
         tenantValidationSetup
@@ -151,7 +150,7 @@ public class CreateTenantUserCommandValidatorTests : IClassFixture<ServiceProvid
     public async Task ValidationResult_ShouldPhoneNumberBeUnique()
     {
         // Arrange
-        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<ValidationMessages>>();
+        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantUserCommand>>();
         var tenantValidationSetup = new Mock<ITenantUserValidationService>();
 
         tenantValidationSetup
