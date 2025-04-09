@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Domain.Helpers;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Application.UnitTests.Domain.Helpers;
 

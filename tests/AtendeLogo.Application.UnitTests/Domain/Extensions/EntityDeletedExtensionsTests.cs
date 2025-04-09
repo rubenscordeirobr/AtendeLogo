@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using AtendeLogo.Shared.Abstractions;
+using Moq;
 
 namespace AtendeLogo.Application.UnitTests.Domain.Extensions;
 

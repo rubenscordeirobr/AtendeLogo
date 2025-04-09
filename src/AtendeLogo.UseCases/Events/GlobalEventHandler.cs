@@ -1,4 +1,4 @@
-﻿using AtendeLogo.Domain.Primitives.Abstractions;
+﻿using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.UseCases.Events;
 internal class GlobalEventHandler : IDomainEventHandler<IDomainEvent>

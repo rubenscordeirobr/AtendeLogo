@@ -1,6 +1,7 @@
 ﻿using AtendeLogo.Application.Abstractions.Events;
 using AtendeLogo.Application.Abstractions.Registrars;
 using AtendeLogo.Application.Exceptions;
+using AtendeLogo.Shared.Abstractions;
 using Microsoft.Extensions.Logging;
 using Moq;
 

@@ -1,4 +1,6 @@
-﻿using AtendeLogo.Common.Utils;
+﻿using System.Security.Claims;
+using AtendeLogo.Common.Utils;
+using AtendeLogo.Shared.Constants;
 using AtendeLogo.Shared.Interfaces.Identities;
 using AtendeLogo.Shared.Models.Security;
 
@@ -7,7 +9,7 @@ namespace AtendeLogo.Shared.Factories;
 public static class UserSessionClaimsFactory
 {
     public static UserSessionClaims Create(
-        IUserSession userSession, 
+        IUserSession userSession,
         IUser user)
     {
         Guard.NotNull(userSession);
@@ -24,6 +26,30 @@ public static class UserSessionClaimsFactory
     }
 
     public static Result<UserSessionClaims> Create(
+        IEnumerable<Claim> claims, 
+        DateTime expiration)
+    {
+        Guard.NotNull(claims);
+
+        var claimsList = claims as IList<Claim> ?? [.. claims];
+        var name = claimsList.FirstOrDefault(static c => c.Type == ClaimTypes.Name)?.Value;
+        var email = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var phoneNumber = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone)?.Value;
+        var sessionId = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.SessionId)?.Value;
+        var userRole = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        var userType = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.UserType)?.Value;
+         
+        return Create(
+           name: name,
+           email: email,
+           phoneNumber: phoneNumber,
+           sessionIdString: sessionId,
+           userRoleString: userRole,
+           userTypeString: userType,
+           expiration: expiration);
+    }
+
+    private static Result<UserSessionClaims> Create(
         string? name,
         string? email,
         string? phoneNumber,
@@ -86,7 +112,7 @@ public static class UserSessionClaimsFactory
                     $"Failed to parse UserRole from string: {userRoleString}"));
         }
 
-        if(expiration is null)
+        if (expiration is null)
         {
             return Result.Failure<UserSessionClaims>(
                 new ParserError(
@@ -95,7 +121,7 @@ public static class UserSessionClaimsFactory
                     $"Expiration is null"));
         }
 
-        if(expiration < DateTime.UtcNow)
+        if (expiration < DateTime.UtcNow)
         {
             return Result.Failure<UserSessionClaims>(
                 new ParserError(
@@ -123,7 +149,7 @@ public static class UserSessionClaimsFactory
           phoneNumber,
           session_Id,
           userRole,
-          userType, 
+          userType,
           expiration);
     }
 }

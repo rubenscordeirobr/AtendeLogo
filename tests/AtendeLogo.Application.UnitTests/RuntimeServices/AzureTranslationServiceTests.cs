@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Application.Models.Secrets;
-using AtendeLogo.RuntimeServices.Services.Azure;
+﻿using AtendeLogo.RuntimeServices.Services.Azure;
 using AtendeLogo.TestCommon.Extensions;
 
 namespace AtendeLogo.Application.UnitTests.RuntimeServices;

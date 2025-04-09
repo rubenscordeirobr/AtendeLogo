@@ -6,7 +6,7 @@ using AtendeLogo.Infrastructure.Helpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace AtendeLogo.Infrastructure.Services;
+namespace AtendeLogo.Infrastructure.Configurations;
 
 public class SecureConfiguration : ISecureConfiguration
 {

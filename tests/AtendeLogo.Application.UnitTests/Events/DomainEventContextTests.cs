@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Application.Abstractions.Handlers;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Application.UnitTests.Events;
 

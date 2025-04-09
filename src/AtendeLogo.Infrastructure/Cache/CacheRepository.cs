@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
 namespace AtendeLogo.Infrastructure.Cache;
