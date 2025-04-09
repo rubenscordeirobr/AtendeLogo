@@ -1,7 +1,11 @@
 ﻿namespace AtendeLogo.Shared.Abstractions;
 
-public interface IJsonStringLocalizer<out T>
+public interface IJsonStringLocalizer
 {
-    string this[string name, string defaultValue, params object[] args] { get; }
+    string this[string localizationKey, string defaultValue, params object[] args] { get; }
 
+}
+public interface IJsonStringLocalizer<out T> : IJsonStringLocalizer
+{
+    
 }

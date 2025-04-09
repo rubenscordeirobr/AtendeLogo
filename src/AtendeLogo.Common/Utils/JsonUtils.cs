@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using AtendeLogo.Common.Helpers;
 
@@ -7,9 +9,13 @@ namespace AtendeLogo.Common.Utils;
 public static class JsonUtils
 {
     private static JsonSerializerOptions? _cacheJsonSerializerOptions;
+    private static JsonSerializerOptions? _langJsonSerializerOptions;
 
     public static JsonSerializerOptions CacheJsonSerializerOptions
         => (_cacheJsonSerializerOptions ??= CreateCacheJsonSerializerOptions());
+
+    public static JsonSerializerOptions LocalizationJsonSerializerOptions
+        => (_langJsonSerializerOptions ??= CreateLangJsonSerializerOptions());
 
     public static string Serialize(object? obj, JsonSerializerOptions? options = null)
     {
@@ -40,7 +46,6 @@ public static class JsonUtils
         {
             return;
         }
-     
 
         if (jsonSerializerOptions.IsReadOnly)
         {
@@ -99,6 +104,27 @@ public static class JsonUtils
             WriteIndented = writeIndented,
             IgnoreReadOnlyFields = true,
         };
+    }
+
+    private static JsonSerializerOptions CreateLangJsonSerializerOptions()
+    {
+        return new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+    }
+
+    public static T? DeserializeFile<T>(string fileName, JsonSerializerOptions? options = null)
+    {
+        if (!File.Exists(fileName))
+        {
+            throw new FileNotFoundException($"File not found: {fileName}", fileName: fileName);
+        }
+
+        var json = File.ReadAllText(fileName, Encoding.UTF8);
+        return Deserialize<T>(json, options);
+
     }
 }
 

@@ -1,6 +1,5 @@
 ﻿namespace AtendeLogo.Common.Attributes;
 
-
 [AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
 public abstract class ParameterParserResolverAttribute : Attribute
 {

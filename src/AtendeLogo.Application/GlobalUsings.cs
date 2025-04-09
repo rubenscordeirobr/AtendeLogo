@@ -15,4 +15,3 @@ global using AtendeLogo.Shared.Abstractions;
 global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.Interfaces.Identities;
 global using AtendeLogo.Shared.Interfaces.Common;
-global using AtendeLogo.Domain.Primitives.Abstractions;
