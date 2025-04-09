@@ -1,0 +1,39 @@
+﻿using AtendeLogo.Application.Models.Secrets;
+using AtendeLogo.RuntimeServices.Services.Azure;
+using AtendeLogo.TestCommon.Extensions;
+
+namespace AtendeLogo.Application.UnitTests.RuntimeServices;
+
+public class AzureTranslationServiceTests
+{
+    private readonly ITestOutputHelper _testOutput;
+    private readonly TestOutputLogger<AzureTranslationService> _logger;
+    public AzureTranslationServiceTests(ITestOutputHelper testOutput)
+    {
+        _testOutput = testOutput;
+        _logger = new TestOutputLogger<AzureTranslationService>(_testOutput);
+    }
+
+    [Fact]
+    public async Task Test_TranslateText()
+    {
+        // Arrange
+        var azureSecretsTest = AzureTranslationSecretsTestFactory.Create();
+        var translationService = new AzureTranslationService(azureSecretsTest, _logger);
+
+        var textToTranslate = "Hello, world!";
+        var sourceLanguage = "en";
+        var targetLanguage = "pt-br"; // 
+        // Act
+        var result = await translationService.TextTranslateAsync(
+            textToTranslate,
+            sourceLanguage,
+            targetLanguage);
+
+        // Assert
+        result.ShouldBeSuccessful();
+    }
+
+    
+}
+
