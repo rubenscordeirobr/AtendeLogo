@@ -15,7 +15,7 @@ public class TenantUserAuthenticationValidationEndpoint : ApiEndpointBase, ITena
         _validationService = validationService;
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> VerifyTenantUserCredentialsAsync(
         string emailOrPhoneNumber,
         string password,
@@ -25,7 +25,7 @@ public class TenantUserAuthenticationValidationEndpoint : ApiEndpointBase, ITena
             .VerifyTenantUserCredentialsAsync(emailOrPhoneNumber, password, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> EmailOrPhoneNumberExitsAsync(
         string emailOrPhoneNumber,
         CancellationToken cancellationToken = default)

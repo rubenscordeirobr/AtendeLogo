@@ -18,6 +18,7 @@ internal sealed class HttpMethodDescriptor
     public string RouteTemplate { get; }
     public string OperationTemplate { get; }
     public Type ResponseType { get; }
+
     public ParameterInfo[] Parameters { get; }
     public ParameterInfo[] ParametersWithoutRoute { get; }
     public ParameterInfo[] RouteParameters { get; }
@@ -93,7 +94,7 @@ internal sealed class HttpMethodDescriptor
     private string GetRouteTemplate()
     {
         if (string.IsNullOrWhiteSpace(Attribute.RouteTemplate) &&
-            Attribute is HttpFormValidationAttribute _)
+            Attribute is HttpFormAttribute _)
         {
             return RouteHelper.CreateValidationRoute(Method.Name);
         }

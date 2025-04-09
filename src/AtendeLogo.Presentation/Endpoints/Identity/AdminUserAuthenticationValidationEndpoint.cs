@@ -15,7 +15,7 @@ public class AdminUserAuthenticationValidationEndpoint : ApiEndpointBase, IAdmin
         _validationService = validationService;
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> VerifyAdminUserCredentialsAsync(
         string emailOrPhoneNumber,
         string password,
@@ -25,7 +25,7 @@ public class AdminUserAuthenticationValidationEndpoint : ApiEndpointBase, IAdmin
             .VerifyAdminUserCredentialsAsync(emailOrPhoneNumber, password, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> EmailOrPhoneNumberExitsAsync(
         string emailOrPhoneNumber,
         CancellationToken cancellationToken = default)

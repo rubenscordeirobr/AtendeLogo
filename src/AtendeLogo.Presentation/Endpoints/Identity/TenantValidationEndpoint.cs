@@ -15,7 +15,7 @@ public class TenantValidationEndpoint : ApiEndpointBase, ITenantValidationServic
         _validationService = tenantValidationService;
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsEmailUniqueAsync(
         string email, 
         CancellationToken cancellationToken = default)
@@ -23,7 +23,7 @@ public class TenantValidationEndpoint : ApiEndpointBase, ITenantValidationServic
         return _validationService.IsEmailUniqueAsync(email, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsEmailUniqueAsync(
         Guid currentTenant_Id,
         Guid currentTenantOwner_Id,
@@ -37,7 +37,7 @@ public class TenantValidationEndpoint : ApiEndpointBase, ITenantValidationServic
             cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsFiscalCodeUniqueAsync(
         string fiscalCode, 
         CancellationToken cancellationToken = default)
@@ -45,7 +45,7 @@ public class TenantValidationEndpoint : ApiEndpointBase, ITenantValidationServic
         return _validationService.IsFiscalCodeUniqueAsync(fiscalCode, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsFiscalCodeUniqueAsync(
         Guid currentTenant_Id,
         string fiscalCode,
@@ -56,7 +56,7 @@ public class TenantValidationEndpoint : ApiEndpointBase, ITenantValidationServic
             fiscalCode, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsPhoneNumberUniqueAsync(
         string phoneNumber, 
         CancellationToken cancellationToken = default)
@@ -66,7 +66,7 @@ public class TenantValidationEndpoint : ApiEndpointBase, ITenantValidationServic
             cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsPhoneNumberUniqueAsync(
         Guid currentTenant_Id, 
         Guid currentTenantOwner_Id,

@@ -15,7 +15,7 @@ public class TenantUserValidationEndpoint : ApiEndpointBase, ITenantUserValidati
         _validationService = validationService;
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsEmailUniqueAsync(
         string email,
         CancellationToken cancellationToken = default)
@@ -23,7 +23,7 @@ public class TenantUserValidationEndpoint : ApiEndpointBase, ITenantUserValidati
         return _validationService.IsEmailUniqueAsync(email, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsEmailUniqueAsync(
         Guid currentUser_Id,
         string email,
@@ -32,7 +32,7 @@ public class TenantUserValidationEndpoint : ApiEndpointBase, ITenantUserValidati
         return _validationService.IsEmailUniqueAsync(currentUser_Id, email, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsPhoneNumberUniqueAsync(
         string phoneNumber,
         CancellationToken cancellationToken = default)
@@ -40,7 +40,7 @@ public class TenantUserValidationEndpoint : ApiEndpointBase, ITenantUserValidati
         return _validationService.IsPhoneNumberUniqueAsync(phoneNumber, cancellationToken);
     }
 
-    [HttpFormValidation]
+    [HttpForm]
     public Task<bool> IsPhoneNumberUniqueAsync(
         Guid currentUser_Id,
         string phoneNumber,
