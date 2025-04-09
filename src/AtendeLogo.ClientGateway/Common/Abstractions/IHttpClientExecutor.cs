@@ -2,10 +2,8 @@
 
 namespace AtendeLogo.ClientGateway.Common.Abstractions;
 
-public interface IHttpClientExecutor
+public interface IHttpClientExecutor : IDisposable
 {
-    Uri BaseAddress { get; }
-
     Task<Result<T>> SendAsync<T>(
         HttpRequestMessageFactory messageFactory,
         CancellationToken cancellationToken)

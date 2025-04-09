@@ -5,36 +5,30 @@ using AtendeLogo.ClientGateway.Common.Exceptions;
 using AtendeLogo.ClientGateway.Common.Factories;
 using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Mappers;
+using AtendeLogo.Shared.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.ClientGateway.Common;
 
-public class HttpClientExecutor : IHttpClientExecutor
+public sealed class HttpClientExecutor : IHttpClientExecutor
 {
-    private static readonly SemaphoreSlim _lock = new(1, 1);
+    private static readonly SemaphoreSlim _internetStatusSyncLock = new(1, 1);
 
-    private readonly HttpClient _httpClient;
     private readonly IHttpClientResilienceOptions _resilienceOptions;
     private readonly IInternetStatusService _internetStatusService;
     private readonly IConnectionStatusNotifier _connectionStatusNotifier;
     private readonly IClientAuthorizationTokenManager _authorizationTokenManager;
-    private readonly IClientApplicationInfo _clientApplicationInfo;
+    private readonly IApplicationInfo _clientApplicationInfo;
     private readonly ILogger<HttpClientExecutor> _logger;
 
-    public Uri BaseAddress
-        => _httpClient.BaseAddress
-        ?? throw new InvalidOperationException("BaseAddress is not set");
-
     public HttpClientExecutor(
-        HttpClient httpClient,
         IHttpClientResilienceOptions resilienceOptions,
         IInternetStatusService internetStatusService,
         IConnectionStatusNotifier connectionStatusNotifier,
         IClientAuthorizationTokenManager authorizationTokenManager,
-        IClientApplicationInfo clientApplicationInfo,
+        IApplicationInfo clientApplicationInfo,
         ILogger<HttpClientExecutor> logger)
     {
-        _httpClient = httpClient;
         _resilienceOptions = resilienceOptions;
         _connectionStatusNotifier = connectionStatusNotifier;
         _internetStatusService = internetStatusService;
@@ -48,7 +42,6 @@ public class HttpClientExecutor : IHttpClientExecutor
         CancellationToken cancellationToken) where T : notnull
     {
         Guard.NotNull(messageFactory);
-
         try
         {
             await _resilienceOptions.ConcurrentLock.WaitAsync(cancellationToken);
@@ -84,8 +77,9 @@ public class HttpClientExecutor : IHttpClientExecutor
             var applicationName = _clientApplicationInfo.ApplicationName;
             var authorizationToken = await _authorizationTokenManager.GetAuthorizationTokenAsync();
 
+            var httpClient = messageFactory.HttpClient;
             using var requestMessage = await messageFactory.CreateAsync(authorizationToken, applicationName);
-            using var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
+            using var response = await httpClient.SendAsync(requestMessage, cancellationToken);
 
             await ValidateAuthorizationTokenAsync(response);
 
@@ -96,18 +90,17 @@ public class HttpClientExecutor : IHttpClientExecutor
                     if (response.StatusCode == HttpStatusCode.NoContent)
                     {
                         //No content is not supported, should use OperationResponse instead 
-                     
+
                         var noContentError = new NoContentError(
                             "HttpClientExecutor.NoContentError",
                             "The response does not contain any content.");
 
                         Log(messageFactory, noContentError, null, attemptCount);
-                       
+
                         return Result.Failure<T>(noContentError);
                     }
 
                     var value = await response.Content.ReadFromJsonAsync<T>(cancellationToken);
-                    await TestValueAsync(value);
                     return Result.Success(value!);
                 }
                 catch (Exception ex)
@@ -240,7 +233,7 @@ public class HttpClientExecutor : IHttpClientExecutor
     {
         try
         {
-            await _lock.WaitAsync(cancellationToken);
+            await _internetStatusSyncLock.WaitAsync(cancellationToken);
 
             if (!await _internetStatusService.CheckInternetConnectionAsync())
             {
@@ -251,7 +244,7 @@ public class HttpClientExecutor : IHttpClientExecutor
         }
         finally
         {
-            _lock.Release();
+            _internetStatusSyncLock.Release();
         }
     }
 
@@ -294,11 +287,9 @@ public class HttpClientExecutor : IHttpClientExecutor
             _ => false
         };
     }
-
-    //This method is used to test the value after deserialization, it can be overridden in the derived class
-    protected virtual Task TestValueAsync<T>(T? value)
-        where T : notnull
+     
+    public void Dispose()
     {
-        return Task.CompletedTask;
+        GC.SuppressFinalize(this);
     }
 }

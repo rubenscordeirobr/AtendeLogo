@@ -8,26 +8,30 @@ namespace AtendeLogo.ClientGateway.Common.Factories;
 public class JsonMessageFactory : HttpRequestMessageFactory
 {
     private readonly object _value;
+    private readonly JsonSerializerOptions? _jsonOptions;
     public JsonMessageFactory(
+        HttpClient httpClient,
         HttpMethod method,
         Uri requestUri,
-        object content)
-        : base(method, requestUri)
+        JsonSerializerOptions? jsonOptions,
+        object value)
+        : base(httpClient, method, requestUri)
     {
-        _value = content;
+        _value = value;
+        _jsonOptions = jsonOptions;
         HttpClientHelper.ThrowIfMethodNotAllowBody(method, requestUri);
     }
     protected override Task<HttpRequestMessage> CreateMessageAsync()
     {
-        var options = JsonSerializerOptions.Web;
-        JsonUtils.EnableIndentationInDevelopment(options);
+        var jsonOptions = _jsonOptions ?? JsonSerializerOptions.Web;
+        JsonUtils.EnableIndentationInDevelopment(jsonOptions);
 
-        var jsonContent = JsonContent.Create(_value, options: options);
+        var jsonContent = JsonContent.Create(_value, options: jsonOptions);
         var message = new HttpRequestMessage(Method, RequestUri)
         {
             Content = jsonContent
         };
-       
+
         return Task.FromResult(message);
     }
 

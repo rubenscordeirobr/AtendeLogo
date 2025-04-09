@@ -1,26 +1,45 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text.Json;
 using AtendeLogo.ClientGateway.Common.Factories;
 using AtendeLogo.ClientGateway.Common.Helpers;
 using AtendeLogo.Common.Exceptions;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Shared.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AtendeLogo.ClientGateway.Common;
 
-public class HttpClientMediator<T> : IHttpClientMediator<T>
-    where T : ICommunicationService
+public class HttpClientMediator<TService> : IHttpClientMediator<TService>
+    where TService : ICommunicationService
 {
-    private readonly IHttpClientExecutor _executor;
+    private readonly HttpClient _httpClient;
     private readonly ValidationResultCache _validationCache = new();
     private readonly string _baseRoute;
+    private readonly JsonSerializerOptions? _jsonOptions;
+    private readonly IServiceProvider _serviceProvider;
 
-    public HttpClientMediator(IHttpClientExecutor executor)
+    public HttpClientMediator(
+        IHttpClientProvider httpClientProvider,
+        IServiceProvider serviceProvider)
     {
-        _executor = executor;
-        _baseRoute = RouteBinder.GetRoute<T>();
+        Guard.NotNull(httpClientProvider);
+
+        _baseRoute = RouteBinderHelper.GetRoute<TService>();
+        _jsonOptions = CommunicationServiceHelper.GetJsonOptions<TService>();
+        _httpClient = httpClientProvider.GetHttpClient<TService>();
+        _serviceProvider = serviceProvider;
     }
 
     #region Queries
+    public Task<Result<TResponse>> GetAsync<TResponse>(
+        string? route,
+        CancellationToken cancellationToken = default)
+        where TResponse : notnull
+    {
+        var requestUri = BuildUri(route, null);
+        var messageFactory = new NoContentMessageFactory(_httpClient, HttpMethod.Get, requestUri);
+        return SendAsyncInternal<TResponse>(messageFactory, cancellationToken);
+    }
 
     public Task<Result<TResponse>> GetAsync<TResponse>(
       IQueryRequest<TResponse> query,
@@ -137,10 +156,8 @@ public class HttpClientMediator<T> : IHttpClientMediator<T>
         Guard.NotNull(parameterNames);
         Guard.NotNull(parameterValues);
 
-        var boundRoute = RouteBinder.BindRoute(parameterNames, parameterValues, route);
+        var boundRoute = RouteBinderHelper.BindRoute(parameterNames, parameterValues, route);
         var keyValuePairs = HttpClientHelper.CreateFormKeyValuePairs(parameterNames, parameterValues);
-        var requestUri = BuildUri(boundRoute);
-
         var cacheKey = CacheValidationHelper.CreateCacheKey(route, keyValuePairs);
 
         if (_validationCache.TryGetValue(cacheKey, out var isValid))
@@ -148,8 +165,10 @@ public class HttpClientMediator<T> : IHttpClientMediator<T>
             return isValid;
         }
 
-        var messageFactory = new FormMessageFactory(HttpMethod.Post, requestUri, keyValuePairs);
-        var result = await _executor.SendAsync<bool>(messageFactory, cancellationToken);
+        var requestUri = BuildUri(boundRoute);
+        var messageFactory = new FormMessageFactory(_httpClient, HttpMethod.Post, requestUri, keyValuePairs);
+
+        var result = await SendAsyncInternal<bool>(messageFactory, cancellationToken);
         if (result.IsSuccess)
         {
             _validationCache.Add(cacheKey, result.Value);
@@ -167,17 +186,47 @@ public class HttpClientMediator<T> : IHttpClientMediator<T>
 
     #endregion
 
+    public Task<Result<TResponse>> FormAsync<TResponse>(
+       string[] parameterNames,
+       object[] parameterValues,
+       CancellationToken cancellationToken,
+       [CallerMemberName] string callerMethodName = "")
+       where TResponse : notnull
+    {
+        var route = RouteHelper.CreateValidationRoute(callerMethodName);
+        return FormAsync<TResponse>(parameterNames, parameterValues, route, cancellationToken);
+    }
+
+    public Task<Result<TResponse>> FormAsync<TResponse>(
+        string[] parameterNames,
+        object[] parameterValues,
+        string route,
+        CancellationToken cancellationToken = default)
+        where TResponse : notnull
+    {
+        Guard.NotNull(parameterNames);
+        Guard.NotNull(parameterValues);
+
+        var boundRoute = RouteBinderHelper.BindRoute(parameterNames, parameterValues, route);
+        var requestUri = BuildUri(boundRoute);
+        var keyValuePairs = HttpClientHelper.CreateFormKeyValuePairs(parameterNames, parameterValues);
+        var messageFactory = new FormMessageFactory(_httpClient, HttpMethod.Post, requestUri, keyValuePairs);
+         
+        return SendAsyncInternal<TResponse>(messageFactory, cancellationToken);
+    }
+
     private Task<Result<TResponse>> GetAsyncInternal<TResponse>(
         string? route,
         IQueryRequest query,
         CancellationToken cancellationToken)
         where TResponse : notnull
     {
-        var boundRoute = RouteBinder.BindRoute(query, route);
+        var boundRoute = RouteBinderHelper.BindRoute(query, route);
         var queryUri = HttpClientHelper.CreateQueryString(query);
         var requestUri = BuildUri(boundRoute, queryUri);
-        var messageFactory = new NoContentMessageFactory(HttpMethod.Get, requestUri);
-        return _executor.SendAsync<TResponse>(messageFactory, cancellationToken);
+        var messageFactory = new NoContentMessageFactory(_httpClient, HttpMethod.Get, requestUri);
+
+        return SendAsyncInternal<TResponse>(messageFactory, cancellationToken);
     }
 
     private Task<Result<TResponse>> SendAsync<TResponse>(
@@ -187,16 +236,25 @@ public class HttpClientMediator<T> : IHttpClientMediator<T>
         CancellationToken cancellationToken)
         where TResponse : IResponse
     {
-        var route = RouteBinder.BindRoute(command, routeTemplate);
+        var route = RouteBinderHelper.BindRoute(command, routeTemplate);
         var requestUri = BuildUri(route);
 
-        var messageFactory = new JsonMessageFactory(method, requestUri, command);
-        return _executor.SendAsync<TResponse>(messageFactory, cancellationToken);
+        var messageFactory = new JsonMessageFactory(
+            _httpClient,
+            method,
+            requestUri,
+            _jsonOptions,
+            command);
+
+        return SendAsyncInternal<TResponse>(messageFactory, cancellationToken);
     }
 
     private Uri BuildUri(string? route, string? query = null)
     {
-        var baseAddress = _executor.BaseAddress;
+        var baseAddress = _httpClient.BaseAddress ?? throw new InvalidOperationException(
+            $"The {nameof(HttpClient)} used for the service '{typeof(TService).Name}' does not have a base address configured. " +
+            "Please set the 'BaseAddress' property before making any requests.");
+
         var path = RouteHelper.Combine(_baseRoute, route);
         var uriBuilder = new UriBuilder(baseAddress)
         {
@@ -204,6 +262,29 @@ public class HttpClientMediator<T> : IHttpClientMediator<T>
             Query = query
         };
         return uriBuilder.Uri;
+    }
+
+    private async Task<Result<TResponse>> SendAsyncInternal<TResponse>(
+        HttpRequestMessageFactory messageFactory,
+        CancellationToken cancellationToken) where TResponse : notnull
+    {
+        try
+        {
+            using var executor = _serviceProvider.GetRequiredService<IHttpClientExecutor>();
+            return await executor.SendAsync<TResponse>(messageFactory, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            var message = $"Failed to send request. " +
+                $"RequestUri: {messageFactory.RequestUri}," +
+                $"HttpMethod: {messageFactory.Method}, " +
+                $"Error: {ex.Message}";
+
+            var error = new UnknownError(ex,
+                "HttpClientMediator.SendAsyncInternal", message);
+
+            return Result.Failure<TResponse>(error);
+        }
     }
 }
 

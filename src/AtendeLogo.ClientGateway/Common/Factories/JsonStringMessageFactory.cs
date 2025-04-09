@@ -6,10 +6,11 @@ public class JsonStringMessageFactory : HttpRequestMessageFactory
 {
     private readonly string _jsonContent;
     public JsonStringMessageFactory(
+           HttpClient httpClient,
            HttpMethod method,
            Uri requestUri,
             string jsonContent)
-        : base(method, requestUri)
+        : base(httpClient, method, requestUri)
     {
         _jsonContent = jsonContent;
 

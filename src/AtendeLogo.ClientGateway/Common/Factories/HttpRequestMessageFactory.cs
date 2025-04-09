@@ -6,13 +6,16 @@ namespace AtendeLogo.ClientGateway.Common.Factories;
 
 public abstract class HttpRequestMessageFactory
 {
+    public HttpClient HttpClient { get; }
     public Uri RequestUri { get; }
     public HttpMethod Method { get; }
 
     protected HttpRequestMessageFactory(
+        HttpClient httpClient,
         HttpMethod method,
         Uri requestUri)
     {
+        HttpClient = httpClient;
         RequestUri = requestUri;
         Method = method;
     }

@@ -3,9 +3,10 @@
 public class NoContentMessageFactory : HttpRequestMessageFactory
 {
     public NoContentMessageFactory(
+        HttpClient httpClient,
         HttpMethod method,
         Uri requestUri)
-        : base(method, requestUri)
+        : base(httpClient, method, requestUri)
     {
     }
 

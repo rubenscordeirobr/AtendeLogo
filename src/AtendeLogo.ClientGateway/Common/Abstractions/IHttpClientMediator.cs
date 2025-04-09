@@ -3,12 +3,18 @@ using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.ClientGateway.Common.Abstractions;
 
-public interface IHttpClientMediator<T>
-    where T : ICommunicationService
+public interface IHttpClientMediator<TService>
+    where TService : ICommunicationService
 {
     #region Queries
 
     // GET
+
+    Task<Result<TResponse>> GetAsync<TResponse>(
+        string? route,
+        CancellationToken cancellationToken = default)
+        where TResponse : notnull;
+
     Task<Result<TResponse>> GetAsync<TResponse>(
         IQueryRequest<TResponse> query,
         CancellationToken cancellationToken = default)
@@ -80,5 +86,20 @@ public interface IHttpClientMediator<T>
         object[] parameterValues,
         CancellationToken cancellationToken = default,
         [CallerMemberName] string callerMethodName = "");
+
+    //Form 
+    Task<Result<TResponse>> FormAsync<TResponse>(
+        string[] parameterNames,
+        object[] parameterValues,
+        string route,
+        CancellationToken cancellationToken = default)
+        where TResponse : notnull;
+
+    Task<Result<TResponse>> FormAsync<TResponse>(
+       string[] parameterNames,
+       object[] parameterValues,
+       CancellationToken cancellationToken,
+      [CallerMemberName] string callerMethodName = "")
+      where TResponse : notnull;
 }
 
