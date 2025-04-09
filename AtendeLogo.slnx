@@ -9,9 +9,14 @@
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/01-UI/" Id="717f1626-31b9-8664-f7bb-6f3cf30fa3ca">
+    <Project Path="src/AtendeLogo.TenantPortal.BlazorServer/AtendeLogo.TenantPortal.BlazorServer.csproj" />
+    <Project Path="src/AtendeLogo.TenantPortal.BlazorWasm/AtendeLogo.TenantPortal.BlazorWasm.csproj" />
+    <Project Path="src/AtendeLogo.TenantPortal.Components/AtendeLogo.TenantPortal.Components.csproj" />
+    <Project Path="src/AtendeLogo.UI.Components/AtendeLogo.UI.Components.csproj" Id="9f269696-684f-4b3b-84d4-8ea28aa1a34c" />
+  </Folder>
+  <Folder Name="/src/02-API/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
     <Project Path="src/AtendeLogo.IdentityApi/AtendeLogo.IdentityApi.csproj" />
   </Folder>
-  <Folder Name="/src/02-API/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8" />
   <Folder Name="/src/03-Presentation/" Id="22dcb3f3-dbd6-7824-654e-ba8e20c7a15d">
     <Project Path="src/AtendeLogo.ClientGateway/AtendeLogo.ClientGateway.csproj" />
     <Project Path="src/AtendeLogo.Presentation/AtendeLogo.Presentation.csproj" />
@@ -27,10 +32,10 @@
   </Folder>
   <Folder Name="/src/06-Infrastructure/" Id="1f87a12e-d750-680c-2313-99ae4bc9444d">
     <Project Path="src/AtendeLogo.Infrastructure/AtendeLogo.Infrastructure.csproj" />
-    <Project Path="src/AtendeLogo.RuntimeServices/AtendeLogo.RuntimeServices.csproj" Id="2a1a259d-2cea-45cc-bfbc-975d056faa51" />
     <Project Path="src/AtendeLogo.Persistence.Activity/AtendeLogo.Persistence.Activity.csproj" />
     <Project Path="src/AtendeLogo.Persistence.Common/AtendeLogo.Persistence.Common.csproj" />
     <Project Path="src/AtendeLogo.Persistence.Identity/AtendeLogo.Persistence.Identity.csproj" />
+    <Project Path="src/AtendeLogo.RuntimeServices/AtendeLogo.RuntimeServices.csproj" Id="2a1a259d-2cea-45cc-bfbc-975d056faa51" />
   </Folder>
   <Folder Name="/src/07-Common/" Id="1a81cfe0-9ef7-747b-16c1-63226edbcad8">
     <Project Path="src/AtendeLogo.Common/AtendeLogo.Common.csproj" />

@@ -42,11 +42,11 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
 - **Key Features:**
   - **Validation Constants:** Centralized constants, such as maximum string lengths and business rule constraints.
   - **Enums:** Shared enumerations used across multiple layers.
-  - **Interfaces:** Shared contracts that multiple layers may implement.
+  - **Abstractions:** Shared Abstractions that multiple layers may implement.
 
   - **Structure:**
   
-  - This project contains only **structs**, records, enums, and interfaces.
+  - This project contains only **abstractions**, records, enums, and interfaces.
   - No methods or utility classes are included in this layer.
   - This layer should not reference any other project in the solution.
 
@@ -66,8 +66,8 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
 
 #### AtendeLogo.Application
 - **Purpose:**  
-  This layer contains application-specific, contracts and mediator for commands, queries, and domain events. It serves as a bridge between the Domain and Infrastructure layers.
-- **Contracts**
+  This layer contains application-specific, abstractions and mediator for commands, queries, and domain events. It serves as a bridge between the Domain and Infrastructure layers.
+- **Abstractions**
   - Notifications
   - Persistence
   - Security
@@ -93,10 +93,10 @@ This project serves as a DRY (Don't Repeat Yourself) library containing common u
   - **DTOs:** Data Transfer Objects used for API communication.
   - **Validation Logic:** Centralized validation rules for input data using FluentValidation or similar libraries.
   - **Interfaces** Interfaces ensuring integrity, such as Automapper
-  - **Contracts** Services that will be used by the UI to communicate with the backend
+  - **Abstractions** Services that will be used by the UI to communicate with the backend
  
 - **Structure:**
-  - This project contains **DTOs**, **validation classes**, **interfaces**, and **contracts**.
+  - This project contains **DTOs**, **validation classes**, **interfaces**, and **Abstractions**.
   - This project should reference AtendeLogo.SharedKernel and AtendeLogo.Common, but no other project in the solution.
   
 

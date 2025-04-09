@@ -1,14 +1,5 @@
 services:
-  identity-api:
-    image: ${DOCKER_REGISTRY-}identity-api
-    container_name: identity-api
-    build:
-      context: .
-      dockerfile: src/AtendeLogo.IdentityApi/Dockerfile
-    ports:
-      - 5000:8080
-      - 5001:8081
-
+  # Postgres
   postgres:
     container_name: postgres
     image: postgres:latest
@@ -20,8 +11,22 @@ services:
       - POSTGRES_PASSWORD=Temp@Teste123%$
     volumes:
       - ./scripts/postgres-init:/docker-entrypoint-initdb.d/
-      - K:\Docker\Volumes\Postgres\Data:/var/lib/postgresql/data
+#     - K:\Docker\Volumes\Postgres\Data:/var/lib/postgresql/data
 
+  # PgAdmin
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@atendelogo.com
+      - PGADMIN_DEFAULT_PASSWORD=Temp@Teste123%$
+    depends_on:
+      - postgres
+
+  # Redis Cache
   redis:
     container_name: redis
     image: redis:latest
@@ -34,6 +39,7 @@ services:
     environment:
       - REDIS_PASSWORD=Temp@Teste123%$
   
+  # MongoDB
   mongodb:
     container_name: mongodb
     image: mongo:latest
@@ -46,6 +52,31 @@ services:
       - MONGO_INITDB_DATABASE=activityDB
     volumes:
       - ./scripts/mongo-init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  # Identity API
+  identity-api:
+    image: ${DOCKER_REGISTRY-}identity-api
+    container_name: identity-api
+    build:
+      context: .
+      dockerfile: src/AtendeLogo.IdentityApi/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_SUB_ENVIRONMENT=DockerCompose
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - 5000:8080
+      - 5001:8081
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./localization:/opt/app/localization
+      - ./.secrets:/opt/app/secrets
+    depends_on:
+      - postgres
+      - redis
+      - mongodb
 
 volumes:
   redis-data:

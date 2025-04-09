@@ -8,10 +8,18 @@ indent_style = space
 vsspell_section_id = 90ec7a963caf4b8d9953f149ca5253a0
  
 
-[*.cs]
+
 #csharp_ignore_words = Validator
 #vsspell_ignored_keywords = Validator
 #vsspell_ignored_words = Validator
+
+[*]
+cspell.language = pt-BR,en
+vscspell.language = pt-BR,en
+cspell.dictionaries = softwareTerms
+vsspell.dictionaries = softwareTerms
+spelling_languages = en-us,pt-br
+spelling_error_severity = suggestion
 
 # XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
@@ -85,6 +93,7 @@ dotnet_naming_style.instance_field_style.required_prefix = _
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4
 end_of_line = crlf
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 ###############################
 # C# Coding Conventions       #
 ###############################
@@ -156,8 +165,16 @@ csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
 
 # IDE 
-# IDE0083
+#dotnet_analyzer_diagnostic.severity = warning
+dotnet_diagnostic.IDE2000.severity = warning
+dotnet_style_allow_multiple_blank_lines_experimental = false
+
+# IDE
 dotnet_diagnostic.IDE0083.severity = warning;
+dotnet_diagnostic.IDE0046.severity = none; 
+dotnet_diagnostic.IDE0011.severity = none; 
+dotnet_diagnostic.IDE0055.severity = none; 
+ 
 
 
 # Code Analysis
@@ -206,8 +223,14 @@ dotnet_code_quality.CA1716.allowed_keywords = Error, Shared
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1031.severity = none
 
+# CA1812: 
+dotnet_diagnostic.CA1812.severity = suggestion
 
 # SonarLint
+
+#S1066 : Collapsible if statements should not be nested
+dotnet_diagnostic.S1066.severity = suggestion
+
 # S2094 :  Remove this empty record, write its code or make it an interface
 dotnet_diagnostic.S2094.severity = none
 
@@ -225,7 +248,6 @@ dotnet_diagnostic.S2139.severity = none
 
 # S6608 : Indexing at Count -1 should be used instead of the Enumerable extension method Last()
 dotnet_diagnostic.S6608.severity = warning
-
 
 # S1135
 dotnet_diagnostic.S1135.severity = suggestion

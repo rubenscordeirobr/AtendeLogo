@@ -1,0 +1,33 @@
+<Solution>
+  <Folder Name="/infra/" />
+  <Folder Name="/solution-items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/01-UI/" Id="717f1626-31b9-8664-f7bb-6f3cf30fa3ca">
+    <Project Path="src/AtendeLogo.TenantPortal.BlazorServer/AtendeLogo.TenantPortal.BlazorServer.csproj" />
+    <Project Path="src/AtendeLogo.TenantPortal.BlazorWasm/AtendeLogo.TenantPortal.BlazorWasm.csproj" />
+    <Project Path="src/AtendeLogo.TenantPortal.Components/AtendeLogo.TenantPortal.Components.csproj" />
+    <Project Path="src/AtendeLogo.UI.Components/AtendeLogo.UI.Components.csproj" Id="9f269696-684f-4b3b-84d4-8ea28aa1a34c" />
+  </Folder>
+  
+  <Folder Name="/src/03-Presentation/" Id="22dcb3f3-dbd6-7824-654e-ba8e20c7a15d">
+    <Project Path="src/AtendeLogo.ClientGateway/AtendeLogo.ClientGateway.csproj" />
+  </Folder>
+  <Folder Name="/src/04-UseCases/" Id="bad4283d-b835-5bd4-5fb2-9f508aec391b">
+    <Project Path="src/AtendeLogo.UseCases.Shared/AtendeLogo.UseCases.Shared.csproj" />
+  </Folder>
+  <Folder Name="/src/05-Core/" Id="575d36c4-fccc-3e0a-e8ab-1f4fea846db0">
+    <Project Path="src/AtendeLogo.Domain/AtendeLogo.Domain.csproj" />
+    <Project Path="src/AtendeLogo.SharedKernel/AtendeLogo.SharedKernel.csproj" />
+  </Folder>
+ 
+  <Folder Name="/src/07-Common/" Id="1a81cfe0-9ef7-747b-16c1-63226edbcad8">
+    <Project Path="src/AtendeLogo.Common/AtendeLogo.Common.csproj" />
+  </Folder>
+  
+</Solution>

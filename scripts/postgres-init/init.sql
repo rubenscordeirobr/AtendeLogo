@@ -1,11 +1,11 @@
- CREATE DATABASE atende_logo
+ CREATE DATABASE identitydb
     WITH OWNER "atende_logo_user"
     ENCODING 'UTF8'
     LC_COLLATE = 'en_US.UTF-8'
     LC_CTYPE = 'en_US.UTF-8'
     TEMPLATE template0;
     
-\connect atende_logo atende_logo_user
+\connect identitydb atende_logo_user
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 

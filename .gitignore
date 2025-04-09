@@ -14,7 +14,19 @@ bin
 *.scc
 *.dll
 
+.secrets
+
 .well-known
 
 temp/
 copilot-instructions.md
+AtendeLogo.AppHost/
+AtendeLogo.ServiceDefaults/
+AtendeLogo.TenantPortal/
+tools/
+Web.config
+
+AtendeLogo.TenantPortal.BlazorServer/
+AtendeLogo.TenantPortal.BlazorWasm/
+AtendeLogo.TenantPortal.Components/
+AtendeLogo.UI.Components/
