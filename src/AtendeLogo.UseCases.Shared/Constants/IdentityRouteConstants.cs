@@ -10,10 +10,10 @@
     public const string TenantValidation = $"{IdentityBase}/tenant-validation";
     public const string TenantUserValidation = $"{IdentityBase}/tenant-users-validation";
     public const string TenantUserAuthentication = $"{IdentityBase}/tenant-user-authentication";
-    public const string TenantUserAuthenticationValidation = $"{IdentityBase}/tenant--user-authentication-validation";
+    public const string TenantUserAuthenticationValidation = $"{IdentityBase}/tenant-user-authentication-validation";
 
     public const string AdminUserAuthentication = $"{IdentityBase}/admin-user-authentication";
-    public const string AdminUserAuthenticationValidation = $"{IdentityBase}/admin--user-authentication-validation";
+    public const string AdminUserAuthenticationValidation = $"{IdentityBase}/admin-user-authentication-validation";
 
     public const string TenantAddress = $"{IdentityBase}/tenant-address";
     public const string TenantUpdateDefaultAddress = "update-default-address";

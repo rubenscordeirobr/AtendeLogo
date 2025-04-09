@@ -5,6 +5,8 @@ namespace AtendeLogo.Application.Abstractions.Services;
 
 public interface IHttpContextSessionAccessor : IApplicationService
 {
+    string RequestUrl { get; }
+    Guid? UserSession_Id { get; }
     ClientRequestHeaderInfo RequestHeaderInfo { get; }
     string? AuthorizationToken { get; set; }
     IUserSession? UserSession { get; set; }

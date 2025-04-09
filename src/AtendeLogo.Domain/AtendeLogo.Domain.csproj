@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<AnalysisMode>all</AnalysisMode>
-    <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisLevel>latest</AnalysisLevel>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -18,6 +18,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
 		<ProjectReference Include="..\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Primitives\Abstractions\" />
 	</ItemGroup>
  
 </Project>

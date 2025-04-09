@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using AtendeLogo.Application.Exceptions;
+﻿using AtendeLogo.Application.Exceptions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace AtendeLogo.Persistence.Common.Interceptors;

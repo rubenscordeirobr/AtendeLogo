@@ -3,19 +3,28 @@
 public static class JwtUtils
 {
     public const string AuthenticationScheme = "Bearer";
-    public static string? GetTokenFromAuthorizationHeader(string? authorizationHeader)
+    public static string? ExtractTokenFromAuthorizationHeader(string? authorizationHeader)
     {
 
         if (string.IsNullOrWhiteSpace(authorizationHeader))
         {
             return null;
         }
-   
-        if (authorizationHeader.StartsWith(AuthenticationScheme, StringComparison.Ordinal))
+
+        if (IsBearerToken(authorizationHeader))
         {
             return authorizationHeader.Substring(AuthenticationScheme.Length).Trim();
         }
         return null;
+    }
+
+    public static bool IsBearerToken(string? authorizationHeader)
+    {
+        if (string.IsNullOrWhiteSpace(authorizationHeader))
+        {
+            return false;
+        }
+        return authorizationHeader.StartsWith(AuthenticationScheme, StringComparison.Ordinal);
     }
 
     public static string FormatAsAuthorizationHeader(string? token)
@@ -24,7 +33,7 @@ public static class JwtUtils
         {
             return string.Empty;
         }
-        if(token.StartsWith(AuthenticationScheme, StringComparison.Ordinal))
+        if (token.StartsWith(AuthenticationScheme, StringComparison.Ordinal))
         {
             return token;
         }

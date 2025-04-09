@@ -1,7 +1,7 @@
 ﻿using AtendeLogo.Common.Helpers;
 
 namespace AtendeLogo.Domain.Primitives;
-public abstract class EntityBase
+public abstract class EntityBase : IEntityBase
 {
     public Guid Id { get; protected set; }
     public DateTime CreatedAt { get; protected set; }

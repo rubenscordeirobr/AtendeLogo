@@ -182,5 +182,11 @@ public record ParserError(
 public record NoContentError(
     string Code,
     string Message)
-    : Error(Code, 
+    : Error(Code,
             Message + " For responses with no content, please use OperationResponse.");
+
+public record AzureServiceError(
+     Exception? Exception,
+     string Code,
+     string Message)
+    : Error(Exception, Code, Message);
