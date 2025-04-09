@@ -27,7 +27,7 @@ public sealed class UserSessionManager : IUserSessionManager
     }
 
     public Guid? UserSession_Id
-        => _httpContextSessionAccessor.UserSessionClaims?.Session_Id;
+        => _httpContextSessionAccessor.UserSession_Id;
 
     public async Task<IUserSession?> GetSessionAsync()
     {
@@ -62,7 +62,7 @@ public sealed class UserSessionManager : IUserSessionManager
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error adding client session cookie.");
+            _logger.LogError(ex, "Error adding client session.");
         }
     }
       

@@ -14,7 +14,6 @@ global using AtendeLogo.Shared.Constants;
 global using AtendeLogo.Shared.Abstractions;
 global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.Interfaces.Identities;
-global using AtendeLogo.Domain.Primitives.Abstractions;
 global using AtendeLogo.RuntimeServices.Abstractions;
 global using AtendeLogo.RuntimeServices.Mediators;
 global using AtendeLogo.RuntimeServices.Services;

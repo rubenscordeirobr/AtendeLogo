@@ -18,4 +18,7 @@
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Configurations\" />
+    </ItemGroup>
 </Project>

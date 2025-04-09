@@ -2,15 +2,17 @@
 using AtendeLogo.Shared.Interfaces.Identities;
 using AtendeLogo.Shared.Models.Security;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.Presentation.Services;
 
 public class HttpContextSessionAccessor : IHttpContextSessionAccessor
 {
+    private const string UserSessionCookieKey = nameof(UserSessionCookieKey);
     private readonly HttpContext _httpContext;
     private readonly ILogger<HttpContextSessionAccessor> _logger;
-    
+
     public HttpContextSessionAccessor(
         IHttpContextAccessor httpContextAccessor,
         ILogger<HttpContextSessionAccessor> logger)
@@ -28,7 +30,13 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
     }
 
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
-         
+
+    public string RequestUrl
+        => _httpContext.Request.GetDisplayUrl();
+
+    public Guid? UserSession_Id
+        => UserSessionClaims?.Session_Id ?? _httpContext.TryGetCookieGuid(UserSessionCookieKey);
+
     public string? AuthorizationToken
     {
         get => TryGetHttpContextItem<string>(HttpContextItemsConstants.AuthorizationToken);
@@ -44,7 +52,11 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
     public IUserSession? UserSession
     {
         get => TryGetHttpContextItem<IUserSession>(HttpContextItemsConstants.UserSession);
-        set => SetHttpContextItem(HttpContextItemsConstants.UserSession, value);
+        set
+        {
+            SetHttpContextItem(HttpContextItemsConstants.UserSession, value);
+            _httpContext.SetCookie(UserSessionCookieKey, value?.Id.ToString());
+        }
     }
 
     public IEndpointService? EndpointInstance

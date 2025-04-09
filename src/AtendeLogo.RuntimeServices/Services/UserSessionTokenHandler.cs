@@ -81,21 +81,9 @@ public class UserSessionTokenHandler : IUserSessionTokenHandler
             return null;
         }
 
-        var name = principal.FindFirst(ClaimTypes.Name)?.Value;
-        var email = principal.FindFirst(ClaimTypes.Email)?.Value;
-        var phoneNumber = principal.FindFirst(ClaimTypes.MobilePhone)?.Value;
-        var sessionId = principal.FindFirst(UserSessionClaimTypes.SessionId)?.Value;
-        var userRole = principal.FindFirst(ClaimTypes.Role)?.Value;
-        var userType = principal.FindFirst(UserSessionClaimTypes.UserType)?.Value;
-
         var result = UserSessionClaimsFactory.Create(
-            name: name,
-            email: email,
-            phoneNumber: phoneNumber,
-            sessionIdString: sessionId,
-            userRoleString: userRole,
-            userTypeString: userType,
-            expiration: jwt.ValidTo);
+            principal.Claims,
+            jwt.ValidTo);
 
         if (result.IsFailure)
         {
@@ -111,7 +99,7 @@ public class UserSessionTokenHandler : IUserSessionTokenHandler
     private ClaimsPrincipal? ValidateAndReadPrincipal(string authorizationToken, out SecurityToken? validatedToken)
     {
         validatedToken = null;
-      
+
         if (!_tokenHandler.CanReadToken(authorizationToken))
         {
             _logger.LogError("JwtSecurityTokenHandler.CanReadToken. Invalid token: {AuthorizationToken}. ", authorizationToken);

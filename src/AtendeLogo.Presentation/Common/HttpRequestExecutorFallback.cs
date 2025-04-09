@@ -26,7 +26,7 @@ internal class HttpRequestExecutorFallback
 
         _httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-        var responseError= new ErrorResponse($"HttpRequestExecutorFallback.RouteNotRound", route);
+        var responseError= new ErrorResponse($"HttpRequestExecutorFallback.RouteNotFound", route);
         await WriteResponseAsync(responseError, _httpContext.RequestAborted);
 
     }
