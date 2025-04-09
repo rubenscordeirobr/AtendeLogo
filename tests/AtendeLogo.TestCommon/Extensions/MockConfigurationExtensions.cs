@@ -1,6 +1,8 @@
-﻿using AtendeLogo.TestCommon.Mocks;
+﻿using AtendeLogo.Application.Extensions;
+using AtendeLogo.Common.Exceptions;
+using AtendeLogo.Shared.Localization;
+using AtendeLogo.TestCommon.Mocks;
 using Microsoft.Extensions.Logging;
-using AtendeLogo.Application.Extensions;
 
 namespace AtendeLogo.TestCommon.Extensions;
 
@@ -9,10 +11,38 @@ public static class MockConfigurationExtensions
     public static IServiceCollection AddMockInfrastructureServices(
         this IServiceCollection services)
     {
-        return services.AddSingleton(typeof(IJsonStringLocalizer<>), typeof(JsonStringLocalizerMock<>))
-            .AddSingleton<ISecureConfiguration, SecureConfigurationMock>()
+        var localizationFolder = GetLocalizationFolder();
+        var config = new JsonLocalizationConfiguration
+        {
+            ResourcesRootPath = localizationFolder,
+            AutoAddMissingKeys = true,
+            AutoUpdateDefaultKeys = true,
+            AutoTranslate = true,
+            CustomTranslationModelId = null
+        };
+
+        var azureSecretsTest = AzureTranslationSecretsTestFactory.Create();
+
+        return services.AddSingleton<ISecureConfiguration, SecureConfigurationMock>()
             .AddSingleton<ICacheRepository, CacheRepositoryMock>()
-            .AddSingleton<IEmailSender, EmailSenderMock>();
+            .AddSingleton<IEmailSender, EmailSenderMock>()
+            .AddSingleton<IFileService, FileServiceMock>()
+            .AddSingleton<JsonLocalizationCacheConfiguration>(config)
+            .AddSingleton(config)
+            .AddSingleton(azureSecretsTest);
+    }
+
+    private static string GetLocalizationFolder()
+    {
+        var temp = AppContext.BaseDirectory;
+        var current = new DirectoryInfo(temp);
+        var testsDirectory = current.GetRequiredParent("tests");
+        var localizationPath = Path.GetFullPath(Path.Combine(testsDirectory.FullName, "../localization"));
+        if (!Directory.Exists(localizationPath))
+        {
+            throw new DirectoryNotFoundException($"Localization folder not found: {localizationPath}");
+        }
+        return localizationPath;
     }
 
     public static IServiceCollection AddPersistenceServicesMock(

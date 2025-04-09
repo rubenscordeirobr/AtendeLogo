@@ -37,16 +37,23 @@ public class ApplicationServiceCollection : ServiceCollection
             { SecureConfigKeysProvider.JwtIssuer.AppSettingsKey, "fake-jwt-issuer" }
         };
 
+        var fakeHostEnvironmentMock = new Mock<IHostEnvironment>();
+        fakeHostEnvironmentMock.Setup(x => x.EnvironmentName).Returns("Development");
+        fakeHostEnvironmentMock.Setup(x => x.ApplicationName).Returns("AtendeLogo");
+        fakeHostEnvironmentMock.Setup(x => x.ContentRootPath).Returns(Directory.GetCurrentDirectory());
+         
         var fakeConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurations!)
             .Build();
+
+        var fakeHostEnvironment = fakeHostEnvironmentMock.Object;
 
         this.AddApplicationServices()
             .AddRuntimeServices()
             .AddUserCasesServices()
             .AddUserCasesSharedServices()
             .AddPresentationServices()
-            .AddInfrastructureServices(fakeConfiguration)
+            .AddInfrastructureServices(fakeConfiguration, fakeHostEnvironment)
             .AddIdentityPersistenceServices(fakeConfiguration)
             .AddActivityPersistenceServices(fakeConfiguration);
 

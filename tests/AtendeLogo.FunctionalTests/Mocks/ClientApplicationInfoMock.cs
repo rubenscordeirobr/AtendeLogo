@@ -1,6 +1,8 @@
-﻿namespace AtendeLogo.FunctionalTests.Mocks;
+﻿using AtendeLogo.Shared.Abstractions;
 
-public class ClientApplicationInfoMock : IClientApplicationInfo
+namespace AtendeLogo.FunctionalTests.Mocks;
+
+public class ClientApplicationInfoMock : IApplicationInfo
 {
     public string ApplicationName 
         => "AtendeLogo.Test";

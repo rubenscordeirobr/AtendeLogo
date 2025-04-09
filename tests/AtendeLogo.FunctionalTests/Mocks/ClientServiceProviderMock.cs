@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using AtendeLogo.Shared.Abstractions;
 using AtendeLogo.Shared.Enums;
 using AtendeLogo.UseCases.Identities.Authentications.Commands;
 using Microsoft.Extensions.Logging;
@@ -24,27 +25,29 @@ public class ClientServiceProviderMock<TRoleProvider>
 
         var servicesCollection = new ServiceCollection()
             .AddClientGatewayServices()
-            .AddSingleton(typeof(ILogger<>), typeof(TestOutputLogger<>))
-            .AddSingleton<IInternetStatusService, InternetStatusServiceMock>()
-            .AddSingleton<IConnectionStatusNotifier, ConnectionStatusNotifierMock>()
+            .AddTenantUserAuthenticationServices()
+            .AddAdminUserAuthenticationServices()
             .AddSingleton<ITestOutputHelper, TestOutputProxy>()
-            .AddSingleton<IClientAuthorizationTokenManager, ClientAuthorizationTokenManagerMock>()
-            .AddSingleton<IClientTenantUserSessionContext, ClientTenantUserSessionContextMock>()
-            .AddSingleton<IClientAdminUserSessionContext, ClientAdminUserSessionContextMock>()
-            .AddSingleton<IClientApplicationInfo, ClientApplicationInfoMock>()
-            .AddTransient(x => CreateClient());
+            .AddSingleton(typeof(ILogger<>), typeof(TestOutputLogger<>))
+            .AddSingleton<IApplicationInfo, ClientApplicationInfoMock>()
+            .AddSingleton(x => CreateHttpClientProvider())
+            .AddScoped<IInternetStatusService, InternetStatusServiceMock>()
+            .AddScoped<IConnectionStatusNotifier, ConnectionStatusNotifierMock>()
+            .AddScoped<IClientAuthorizationTokenManager, ClientAuthorizationTokenManagerMock>()
+            .AddScoped<IClientTenantUserSessionContext, ClientTenantUserSessionContextMock>()
+            .AddScoped<IClientAdminUserSessionContext, ClientAdminUserSessionContextMock>();
 
         _serviceProvider = servicesCollection.BuildServiceProvider();
     }
 
-    private HttpClient CreateClient()
+    public IHttpClientProvider CreateHttpClientProvider()
     {
         var httpClient = _host.CreateClient();
         if (Debugger.IsAttached)
         {
             httpClient.Timeout = TimeSpan.FromMinutes(20);
         }
-        return httpClient;
+        return new InternalHttpClientProvider(httpClient);
     }
 
     public async Task InitializeAsync()
@@ -69,7 +72,7 @@ public class ClientServiceProviderMock<TRoleProvider>
         }
 
     }
-     
+
     private async Task LoginSystemTenantOwnerAsync()
     {
         var authenticationService = _serviceProvider.GetRequiredService<ITenantUserAuthenticationService>();
@@ -118,5 +121,20 @@ public class ClientServiceProviderMock<TRoleProvider>
     {
         _host.AddTestOutput(output);
         base.AddTestOutput(output);
+    }
+
+    class InternalHttpClientProvider : IHttpClientProvider
+    {
+        private readonly HttpClient _httpClient;
+
+        public InternalHttpClientProvider(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public HttpClient GetHttpClient<T>()
+        {
+            return _httpClient;
+        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-
-namespace AtendeLogo.FunctionalTests;
+﻿namespace AtendeLogo.FunctionalTests;
 
 public class HttpClientTests : IClassFixture<IdentityWebHostMock<AnonymousRole>>
 {
@@ -64,17 +61,8 @@ public class HttpClientTests : IClassFixture<IdentityWebHostMock<AnonymousRole>>
 
         response.Should().BeOfType<ErrorResponse>();
         response!.Code.Should()
-            .Be("HttpRequestExecutorFallback.RouteNotRound");
+            .Be("HttpRequestExecutorFallback.RouteNotFound");
     }
 }
 
-public static class HttpResponseMessageExtensions
-{
-    public static void MediaTypeShouldBeApplicationJson(this HttpResponseMessage response)
-    {
-        var mediaType = response.Content?.Headers?.ContentType?.MediaType;
-        mediaType.Should().Be("application/json");
-
-    }
-}
-
+ 

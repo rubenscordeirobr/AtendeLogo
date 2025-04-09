@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common.Enums;
-using AtendeLogo.Shared.Enums;
+﻿using AtendeLogo.Shared.Enums;
 using AtendeLogo.Shared.ValueObjects;
 using AtendeLogo.UseCases.Identities.Tenants.Commands;
 

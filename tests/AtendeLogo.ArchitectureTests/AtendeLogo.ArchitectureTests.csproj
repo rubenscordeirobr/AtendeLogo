@@ -1,40 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
- 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NetArchTest.Rules" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <RunSettingsFilePath>$(MSBuildProjectDirectory)\test.runsettings</RunSettingsFilePath>
+    </PropertyGroup>
 
-    <PackageReference Include="FluentAssertions" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Http" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="NetArchTest.Rules" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio" />
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\AtendeLogo.Application\AtendeLogo.Application.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.ClientGateway\AtendeLogo.ClientGateway.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Common\AtendeLogo.Common.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Domain\AtendeLogo.Domain.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.RuntimeServices\AtendeLogo.RuntimeServices.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.UseCases.Shared\AtendeLogo.UseCases.Shared.csproj" />
-    <ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
-    <ProjectReference Include="..\AtendeLogo.Application.UnitTests\AtendeLogo.Application.UnitTests.csproj" />
-    <ProjectReference Include="..\AtendeLogo.FunctionalTests\AtendeLogo.FunctionalTests.csproj" />
-    <ProjectReference Include="..\AtendeLogo.Infrastructure.UnitTests\AtendeLogo.Infrastructure.UnitTests.csproj" />
-    <ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
-    <ProjectReference Include="..\AtendeLogo.UseCases.UnitTests\AtendeLogo.UseCases.UnitTests.csproj" />
-  </ItemGroup>
- 
+        <PackageReference Include="FluentAssertions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\AtendeLogo.Application\AtendeLogo.Application.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.ClientGateway\AtendeLogo.ClientGateway.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.Common\AtendeLogo.Common.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.Domain\AtendeLogo.Domain.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.Infrastructure\AtendeLogo.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Activity\AtendeLogo.Persistence.Activity.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.RuntimeServices\AtendeLogo.RuntimeServices.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.SharedKernel\AtendeLogo.SharedKernel.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.UseCases.Shared\AtendeLogo.UseCases.Shared.csproj" />
+        <ProjectReference Include="..\..\src\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
+        <ProjectReference Include="..\AtendeLogo.Application.UnitTests\AtendeLogo.Application.UnitTests.csproj" />
+        <ProjectReference Include="..\AtendeLogo.FunctionalTests\AtendeLogo.FunctionalTests.csproj" />
+        <ProjectReference Include="..\AtendeLogo.Infrastructure.UnitTests\AtendeLogo.Infrastructure.UnitTests.csproj" />
+        <ProjectReference Include="..\AtendeLogo.TestCommon\AtendeLogo.TestCommon.csproj" />
+        <ProjectReference Include="..\AtendeLogo.UseCases.UnitTests\AtendeLogo.UseCases.UnitTests.csproj" />
+    </ItemGroup>
+
 </Project>

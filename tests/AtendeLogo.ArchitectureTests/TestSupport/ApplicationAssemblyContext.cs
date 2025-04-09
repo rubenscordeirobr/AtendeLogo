@@ -124,13 +124,13 @@ public class ApplicationAssemblyContext
         ApplicationAssembly = typeof(Application.ApplicationServiceConfiguration).Assembly;
 
         UseCasesAssembly = typeof(UseCases.UseCasesServiceConfiguration).Assembly;
-        SharedKernelAssembly = typeof(Shared.ValueObjects.ValueObjectBase).Assembly;
-        UseCasesSharedAssembly = typeof(UseCases.Common.Validations.ValidationMessages).Assembly;
+        SharedKernelAssembly = typeof(Shared.SharedKernelServiceConfiguration).Assembly;
+        UseCasesSharedAssembly = typeof(UseCases.SharedUseCasesServiceConfiguration).Assembly;
 
         RuntimeServicesAssembly = typeof(RuntimeServices.RuntimeServicesConfiguration).Assembly;
 
         PresentationAssembly = typeof(Presentation.PresentationServiceConfiguration).Assembly;
-        ClientGatewayAssembly = typeof(ClientGateway.Common.Abstractions.IHttpClientExecutor).Assembly;
+        ClientGatewayAssembly = typeof(ClientGateway.ClientGatewayServiceConfiguration).Assembly;
 
         InfrastructureAssembly = typeof(Infrastructure.InfrastructureServiceConfiguration).Assembly;
         IdentityPersistenceAssembly = typeof(Persistence.Identity.IdentityPersistenceServiceConfiguration).Assembly;

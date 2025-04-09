@@ -17,7 +17,10 @@ public abstract class HttpContextSessionAccessorMock : IHttpContextSessionAccess
     public IEndpointService? EndpointInstance { get; set; }
     public UserSessionClaims? UserSessionClaims { get; set; }
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
-
+    public string RequestUrl
+        => "http://localhost:5000/api/test";
+    public Guid? UserSession_Id =>
+        UserSessionClaims?.Session_Id;
     protected HttpContextSessionAccessorMock(IUserSessionTokenHandler tokenHandler)
     {
         _tokenHandler = tokenHandler;

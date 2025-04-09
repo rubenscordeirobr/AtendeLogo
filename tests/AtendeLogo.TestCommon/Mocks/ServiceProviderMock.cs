@@ -1,6 +1,7 @@
 ﻿using AtendeLogo.Application;
 using AtendeLogo.RuntimeServices;
 using AtendeLogo.UseCases;
+using AtendeLogo.Shared;
 using AtendeLogo.TestCommon.Extensions;
 
 namespace AtendeLogo.TestCommon.Mocks;
@@ -23,6 +24,7 @@ public class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvi
     private IServiceProvider BuildServiceProvider()
     {
         return new ServiceCollection()
+            .AddSharedKernelServices()
             .AddApplicationServices()
             .AddLoggerServiceMock()
             .AddRuntimeServices()
