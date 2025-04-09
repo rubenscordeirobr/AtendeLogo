@@ -1,0 +1,4 @@
+﻿{
+  "PhoneNumber.Number": "Phone number cannot be empty.",
+  "PhoneNumber.TooLong": "Phone number cannot be longer than {MaxLength} characters."
+}

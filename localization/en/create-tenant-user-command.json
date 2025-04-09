@@ -1,0 +1,19 @@
+﻿{
+  "Tenant.IdRequired": "Id is required.",
+  "TenantUser.NameRequired": "Name is required.",
+  "TenantUser.NameTooShort": "Name cannot be shorter than {MinLength} characters.",
+  "TenantUser.NameTooLong": "Name cannot be longer than {MaxLength} characters.",
+  "TenantUser.InvalidEmail": "Invalid email address.",
+  "PhoneNumber.Number": "Phone number cannot be empty.",
+  "PhoneNumber.TooLong": "Phone number cannot be longer than {MaxLength} characters.",
+  "PasswordEmpty": "Password cannot be empty",
+  "PasswordTooShort": "Password must be at least {MinLength} characters long",
+  "PasswordTooLong": "Password cannot be longer than {MaxLength} characters",
+  "PasswordUppercase": "Password must contain at least one uppercase letter",
+  "PasswordLowercase": "Password must contain at least one lowercase letter",
+  "PasswordNumber": "Password must contain at least one number",
+  "PasswordSpecialCharacter": "Password must contain at least one special character",
+  "TenantUser.InvalidRole": "Invalid role.",
+  "TenantUser.EmailExists": "Email already exists.",
+  "TenantUser.PhoneNumberExists": "Phone number already exists."
+}

@@ -1,0 +1,4 @@
+﻿{
+  "PhoneNumber.Number": "O número de telefone não pode estar vazio.",
+  "PhoneNumber.TooLong": "O número de telefone não pode ter mais de {MaxLength} caracteres."
+}
