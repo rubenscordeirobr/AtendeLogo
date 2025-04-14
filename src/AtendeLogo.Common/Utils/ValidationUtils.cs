@@ -6,24 +6,23 @@ namespace AtendeLogo.Common.Utils;
 public static class ValidationUtils
 {
     private static readonly Regex _hexRegex = new(@"^[a-fA-F0-9]+$", RegexOptions.Compiled);
-    
+
     private static readonly Regex _emailRegex = new(
        @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-!#$%&'*+/=?^_`{|}~\w]|\.(?!\.))+)(?<=\S)@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$",
-       RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture,
-       TimeSpan.FromMilliseconds(500));
+       RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
     public static bool IsEmail(string? value)
     {
-        if(string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value))
             return true;
 
-        if(value.Length < 3 || value.Length > 254)
+        if (value.Length < 3 || value.Length > 254)
             return false;
 
         return _emailRegex.IsMatch(value);
 
     }
-     
+
     public static bool IsFullPhoneNumberValid(string? phoneNumber)
     {
         return PhoneNumberUtils.IsFullPhoneNumberValid(phoneNumber);
