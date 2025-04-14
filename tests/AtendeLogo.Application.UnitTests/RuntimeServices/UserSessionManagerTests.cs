@@ -112,6 +112,10 @@ public class UserSessionManagerTests
             .Setup(x => x.UserSessionClaims)
             .Returns(dummyClaims);
 
+        _httpContextSessionAccessorMock
+            .Setup(x => x.UserSession_Id)
+            .Returns(sessionId);
+
         var userSessionMock = new Mock<IUserSession>();
         userSessionMock.Setup(x => x.Id)
             .Returns(sessionId);

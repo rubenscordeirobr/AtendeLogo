@@ -72,6 +72,6 @@ public static class ClientGatewayServiceConfiguration
       this IServiceProvider serviceProvider)
     {
         var cache = serviceProvider.GetRequiredService<IJsonStringLocalizerCache>();
-        await cache.InitializeAsync(Language.Default);
+        await cache.LoadLanguageAsync(Language.Default);
     }
 }

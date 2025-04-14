@@ -3,6 +3,8 @@ using AtendeLogo.RuntimeServices;
 using AtendeLogo.UseCases;
 using AtendeLogo.Shared;
 using AtendeLogo.TestCommon.Extensions;
+using AtendeLogo.Shared.Helpers;
+using AtendeLogo.Shared.Extensions;
 
 namespace AtendeLogo.TestCommon.Mocks;
 public class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvider
@@ -23,7 +25,7 @@ public class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvi
 
     private IServiceProvider BuildServiceProvider()
     {
-        return new ServiceCollection()
+        var serviceProvider = new ServiceCollection()
             .AddSharedKernelServices()
             .AddApplicationServices()
             .AddLoggerServiceMock()
@@ -36,5 +38,16 @@ public class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvi
             .AddUserCasesSharedServices()
             .AddSingleton<ITestOutputHelper, TestOutputProxy>()
             .BuildServiceProvider();
+
+        InitializeJsonLocalizerCache(serviceProvider);
+        return serviceProvider;
+            
+    }
+
+    private void InitializeJsonLocalizerCache(ServiceProvider serviceProvider)
+    {
+        var LocalizerCache = serviceProvider.GetRequiredService<IJsonStringLocalizerCache>();
+        var task = LocalizerCache.LoadDefaultLanguageAsync();
+        task.Wait();
     }
 }

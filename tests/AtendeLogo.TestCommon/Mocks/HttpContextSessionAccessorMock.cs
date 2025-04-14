@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Common.Helpers;
+﻿using AtendeLogo.Common.Enums;
+using AtendeLogo.Common.Helpers;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.Persistence.Identity.Extensions;
@@ -17,6 +18,7 @@ public abstract class HttpContextSessionAccessorMock : IHttpContextSessionAccess
     public IEndpointService? EndpointInstance { get; set; }
     public UserSessionClaims? UserSessionClaims { get; set; }
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
+    public Language Language { get; } = Language.Default;
     public string RequestUrl
         => "http://localhost:5000/api/test";
     public Guid? UserSession_Id =>

@@ -12,4 +12,7 @@ public class ClientApplicationInfoMock : IApplicationInfo
 
     public string Environment
         => "Test";
+
+    public string Title 
+        => "AtendeLogo Test Application";
 }
