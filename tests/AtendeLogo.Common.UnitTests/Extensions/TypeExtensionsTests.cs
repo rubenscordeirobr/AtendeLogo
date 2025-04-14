@@ -291,6 +291,77 @@ public class TypeExtensionsTests
             .WithMessage($"The property NonExistent was not found in the type {type.Name}");
     }
 
+    [Fact]
+    public void GetDisplayName_ShouldThrowArgumentNullException_WhenTypeIsNull()
+    {
+        // Arrange
+        Type? type = null;
+
+        // Act
+        Action act = () => type!.GetDisplayName();
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>("because the guard method enforces a non-null type");
+    }
+
+    [Fact]
+    public void GetDisplayName_ShouldReturnTypeName_ForNonGenericType()
+    {
+        // Arrange
+        Type type = typeof(string);
+
+        // Act
+        string displayName = type.GetDisplayName();
+
+        // Assert
+        displayName.Should().Be("String", "because for a non-generic type, the display name is its Name");
+    }
+
+    [Fact]
+    public void GetDisplayName_ShouldReturnGenericTypeName_WithGenericArguments()
+    {
+        // Arrange
+        Type type = typeof(List<int>);
+
+        // Act
+        string displayName = type.GetDisplayName();
+
+        // Assert
+        displayName.Should().Be("List<Int32>", "because the generic type List<int> should be displayed with its type argument");
+    }
+
+    [Fact]
+    public void GetDisplayName_ShouldReturnGenericTypeName_WithMultipleGenericArguments()
+    {
+        // Arrange
+        Type type = typeof(Dictionary<string, int>);
+
+        // Act
+        string displayName = type.GetDisplayName();
+
+        // Assert
+        displayName.Should().Be("Dictionary<String, Int32>", "because Dictionary<string, int> should list both type arguments");
+    }
+
+    [Fact]
+    public void GetDisplayName_ShouldReturnNestedTypeName_WithDeclaringTypeName()
+    {
+        // Arrange
+        Type type = typeof(Outer.Nested);
+
+        // Act
+        string displayName = type.GetDisplayName();
+
+        // Assert
+        displayName.Should().Be("Outer.Nested", "because nested types should include the declaring type name");
+    }
+
+    // Dummy types for testing nested types.
+    private class Outer
+    {
+        public class Nested { }
+    }
+
     private class BaseClass { }
     private class DerivedClass : BaseClass { }
 

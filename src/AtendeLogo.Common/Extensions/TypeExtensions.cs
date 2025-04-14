@@ -18,7 +18,7 @@ public static class TypeExtensions
 
         return type.IsSubclassOf(typeof(T));
     }
-     
+
     public static bool IsSubclassOfOrEquals<T>(this Type type)
     {
         return type.IsSubclassOfOrEquals(typeof(T));
@@ -209,7 +209,7 @@ public static class TypeExtensions
     {
         if (type is null)
             return false;
-        
+
         return types.Any(type.IsAssignableTo);
     }
 
@@ -290,7 +290,7 @@ public static class TypeExtensions
     public static Type GetUnderlyingType(this Type type)
     {
         Guard.NotNull(type);
-         
+
         if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
             return Nullable.GetUnderlyingType(type)
@@ -317,5 +317,24 @@ public static class TypeExtensions
             throw new InvalidOperationException($"The property {propertyName} was not found in the type {type.Name}");
         }
         return property;
+    }
+
+    public static string GetDisplayName(this Type type, bool excludeNestedTypeNames = false)
+    {
+        Guard.NotNull(type);
+
+        if (type.IsGenericType)
+        {
+            var genericArguments = type.GetGenericArguments()
+                .Select(x => GetDisplayName(x, excludeNestedTypeNames));
+
+            return $"{type.Name.Split('`')[0]}<{string.Join(", ", genericArguments)}>";
+        }
+
+        if (!excludeNestedTypeNames && type.IsNested && type.DeclaringType is not null)
+        {
+            return $"{type.DeclaringType.Name}.{type.Name}";
+        }
+        return type.Name;
     }
 }
