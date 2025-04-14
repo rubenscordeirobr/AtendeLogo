@@ -69,7 +69,7 @@ public static class LanguageHelper
 
     public static string BuildLanguagePathWithQuery(string languageTag, string path, string? queryString)
     {
-        if (IsLangTagSupported(languageTag))
+        if (!IsLangTagSupported(languageTag))
         {
             throw new InvalidOperationException(
                 $"Language '{languageTag}' is not supported.");

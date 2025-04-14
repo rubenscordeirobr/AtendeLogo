@@ -27,7 +27,7 @@ public class JsonStringLocalizer<T> : IJsonStringLocalizer<T>
     {
         get
         {
-            var language = _languageProvider.GetLanguage();
+            var language = _languageProvider.Language;
             var localizationString = _cache.GetLocalizedString(
                 language,
                 _resourceKey,

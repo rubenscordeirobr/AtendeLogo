@@ -8,15 +8,18 @@ namespace AtendeLogo.RuntimeServices.Services;
 
 public class UserSessionVerificationService : IUserSessionVerificationService, IUserSessionVerificationServiceTest, IAsyncDisposable
 {
+    private readonly IJsonStringLocalizerCache _localizerCache;
     private readonly IIdentityUnitOfWork _unitWork;
     private readonly IHttpContextSessionAccessor _httpContextSessionAccessor;
     private readonly IUserSessionManager _userSessionManger;
 
     public UserSessionVerificationService(
+        IJsonStringLocalizerCache localizerCache,
         IUserSessionManager userSessionManger,
         IHttpContextSessionAccessor httpContextSessionAccessor,
         IIdentityUnitOfWork unitWork)
     {
+        _localizerCache = localizerCache;
         _userSessionManger = userSessionManger;
         _httpContextSessionAccessor = httpContextSessionAccessor;
         _unitWork = unitWork;
@@ -24,9 +27,16 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     public async Task<IUserSession> VerifyAsync()
     {
+        await LoadLanguageAsync();
         var userSession = await GetValidUserSessionAsync();
         _httpContextSessionAccessor.UserSession = userSession;
         return userSession;
+    }
+
+    private async Task LoadLanguageAsync()
+    {
+        var language = _httpContextSessionAccessor.Language;
+        await _localizerCache.LoadLanguageAsync(language);
     }
 
     private async Task<IUserSession> GetValidUserSessionAsync()

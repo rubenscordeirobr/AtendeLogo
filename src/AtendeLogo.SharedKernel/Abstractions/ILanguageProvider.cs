@@ -2,5 +2,5 @@
 
 public interface ILanguageProvider
 {
-    Language GetLanguage();
+    Language Language { get; }
 }

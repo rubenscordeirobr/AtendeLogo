@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Shared.Helpers;
-
-namespace AtendeLogo.Shared.Abstractions;
+﻿namespace AtendeLogo.Shared.Abstractions;
 
 public interface IJsonStringLocalizerCache
 {
@@ -10,11 +8,6 @@ public interface IJsonStringLocalizerCache
         string localizationKey,
         string defaultValue);
 
-    Task InitializeAsync(Language language);
+    Task LoadLanguageAsync(Language language);
 
-    public Task InitializeAsync(string language)
-    {
-        var languageEnum = LanguageHelper.GetLanguageEnum(language);
-        return InitializeAsync(languageEnum);
-    }
 }

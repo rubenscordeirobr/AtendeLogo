@@ -24,7 +24,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         _logger = logger;
     }
 
-    public async Task InitializeAsync(Language language)
+    public async Task LoadLanguageAsync(Language language)
     {
         try
         {
