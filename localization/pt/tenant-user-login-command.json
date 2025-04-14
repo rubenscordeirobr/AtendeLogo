@@ -1,9 +1,0 @@
-﻿{
-  "TenantUserAuthentication.EmailOrPhoneNumberRequired": "É necessário e-mail ou número de telefone.",
-  "TenantUserAuthentication.EmailOrPhoneNumberMaxLength": "O e-mail ou número de telefone deve ter menos de 255 caracteres.",
-  "TenantUserAuthentication.InvalidEmailOrPhoneNumber": "E-mail ou número de telefone inválido.",
-  "TenantUserAuthentication.PasswordRequired": "A senha é necessária.",
-  "TenantUserAuthentication.PasswordTooShort": "A senha deve ter pelo menos {MinLength} caracteres",
-  "TenantUserAuthentication.PasswordTooLong": "A senha não pode ter mais de {MaxLength} caracteres",
-  "TenantUserAuthentication.EmailOrPhoneNumberNotExists": "E-mail ou número de telefone não existe."
-}
