@@ -1,52 +1,89 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using AtendeLogo.Common.Utils;
-using AtendeLogo.Shared.Abstractions;
-using AtendeLogo.Shared.Constants;
 
 namespace AtendeLogo.Shared.Helpers;
 
 public static class LocalizationHelper
 {
+    private const string AtendeLogoNamespace = "AtendeLogo";
     private static readonly ConcurrentDictionary<Type, string> _cache = new();
+
     public static string GetResourceKey<T>()
     {
-        if (_cache.TryGetValue(typeof(T), out var resourceKey))
+        return GetResourceKey(typeof(T));
+    }
+
+    internal static string GetResourceKey(Type type)
+    {
+        Guard.NotNull(type);
+
+        if (_cache.TryGetValue(type, out var resourceKey))
         {
             return resourceKey;
         }
-        resourceKey = GetResourceKeyInternal<T>();
-        _cache.TryAdd(typeof(T), resourceKey);
+
+        resourceKey = GetResourceKeyInternal(type);
+        _cache.TryAdd(type, resourceKey);
         return resourceKey;
     }
 
-    private static string GetResourceKeyInternal<T>()
+    private static string GetResourceKeyInternal(Type type)
     {
-        var resourceKey = CaseConventionUtils.ToKebabCase(typeof(T).Name);
-        var resourcePrefixName = GetResourcePrefix<T>();
-        if(resourcePrefixName is null)
+        var namespaceKey = GenerateKey(type.Namespace);
+        var nameKey = GenerateKey(type.GetDisplayName(excludeNestedTypeNames: true));
+        if (string.IsNullOrWhiteSpace(namespaceKey))
         {
-            return resourceKey;
+            return nameKey;
         }
-        return $"{resourcePrefixName}-{resourceKey}";
+
+        return $"{namespaceKey}{Path.AltDirectorySeparatorChar}{nameKey.TrimStart(Path.AltDirectorySeparatorChar)}";
     }
 
-    private static string? GetResourcePrefix<T>()
+    [return: NotNullIfNotNull(nameof(name))]
+    private static string? GenerateKey(string? name)
     {
-        var type = typeof(T);
-        if (type.IsSubclassOf<ValueObjectBase>())
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return "value-objects";
+            return null;
         }
 
-        if (type.IsAssignableTo<IEntityBase>())
+        var fullName = name.Replace('.', Path.AltDirectorySeparatorChar)
+            .Replace('+', '-')
+            .Replace('<', '-')
+            .Replace('>', '-');
+
+        var parts = fullName.Split(Path.AltDirectorySeparatorChar);
+
+        if (parts[0] == AtendeLogoNamespace)
         {
-            return "entities";
+            parts[0] = string.Empty;
         }
 
-        if (type.Namespace?.Contains(ApplicationNameConstants.TenantPortal) == true)
+        var sb = new StringBuilder();
+        foreach (var part in parts)
         {
-            return "tenant-portal";
+            if (!string.IsNullOrWhiteSpace(part))
+            {
+                if (sb.Length > 0)
+                {
+                    sb.Append(Path.AltDirectorySeparatorChar);
+                }
+                sb.Append(CaseConventionUtils.ToKebabCase(part));
+            }
         }
-        return null;
+        return sb.ToString();
+    }
+
+    public static string GetResourceKeyFromFileName(string languagePath, string resourceFile)
+    {
+        Guard.NotNullOrWhiteSpace(languagePath);
+        Guard.NotNullOrWhiteSpace(resourceFile);
+
+        var relativePath = Path.GetRelativePath(languagePath, resourceFile);
+        var keyWithoutExtension = PathUtils.RemoveExtension(relativePath);
+        var normalizedKey = keyWithoutExtension.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return normalizedKey.TrimStart(Path.AltDirectorySeparatorChar);
     }
 }

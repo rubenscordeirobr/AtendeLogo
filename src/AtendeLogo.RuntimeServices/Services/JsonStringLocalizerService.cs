@@ -2,6 +2,7 @@
 using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Utils;
 using AtendeLogo.Shared;
+using AtendeLogo.Shared.Helpers;
 using AtendeLogo.Shared.Localization;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +30,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         _configuration = configuration;
         _translationService = translationService;
     }
-     
+
     public async Task<Result<LocalizationResourceMap>> GetLocalizationResourceMapAsync(
         Language language,
         CancellationToken cancellationToken = default)
@@ -41,14 +42,14 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
             var resourceMap = new LocalizationResourceMap();
             var languagePath = Path.Combine(_configuration.ResourcesRootPath, language.GetLanguageTag());
             var resourcesFiles = _fileService.GetFiles(
-                languagePath, 
-                "*.json", 
-                SearchOption.TopDirectoryOnly,
+                languagePath,
+                "*.json",
+                SearchOption.AllDirectories,
                 throwIfDirectoryDoesNotExist: false);
 
             foreach (var resourceFile in resourcesFiles)
             {
-                var resourceId = Path.GetFileNameWithoutExtension(resourceFile);
+                var resourceId = LocalizationHelper.GetResourceKeyFromFileName(languagePath, resourceFile);
                 var localizedStrings = await LoadLocalizedStringsAsync(resourceFile);
                 resourceMap.Add(resourceId, localizedStrings);
             }
@@ -209,7 +210,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         await _fileService.WriteAllTextAsync(resourceFilePath, jsonContent);
     }
 
-    private string BuildResourceFilePath(string languageTag, string resourceIdentifier)
+    private string BuildResourceFilePath(string languageTag, string resourceKey)
     {
         var resourceRootPath = _configuration.ResourcesRootPath;
         if (!_fileService.DirectoryExists(resourceRootPath))
@@ -218,7 +219,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
             return string.Empty;
         }
 
-        var recourseFileName = $"{resourceIdentifier}.json";
+        var recourseFileName = $"{resourceKey}.json";
         var resourcePath = Path.Combine(resourceRootPath, languageTag, recourseFileName);
         return resourcePath;
     }
@@ -238,14 +239,6 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
 
     public void Dispose()
     {
-        try
-        {
-            _syncLock.Dispose();
-        }
-        catch
-        {
-            // Ignore exceptions during disposal
-        }
         GC.SuppressFinalize(this);
     }
 }
