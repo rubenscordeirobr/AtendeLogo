@@ -64,4 +64,15 @@ public static class EnumUtils
 
         return member.GetCustomAttribute<UndefinedValueAttribute>() == null;
     }
+
+    public static T Random<T>()
+        where T : struct, Enum
+    {
+        var random = new Random();
+        var values = Enum.GetValues<T>();
+#pragma warning disable CA5394 
+        var randomIndex = random.Next(0, values.Length);
+#pragma warning restore CA5394 
+        return values[randomIndex];
+    }
 }
