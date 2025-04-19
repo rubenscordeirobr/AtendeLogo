@@ -35,7 +35,7 @@ public class TenantUserLoginCommandValidator : CommandValidator<TenantUserLoginC
             .MustAsync(IsEmailOrPhoneNumberExitsAsync)
                 .WithMessage(localizer["TenantUserAuthentication.EmailOrPhoneNumberNotExists", "Email or phone number does not exist."]);
     }
-     
+      
     private Task<bool> IsEmailOrPhoneNumberExitsAsync(
         string emailOrPhoneNumber,
         CancellationToken cancellationToken)
@@ -43,6 +43,17 @@ public class TenantUserLoginCommandValidator : CommandValidator<TenantUserLoginC
         return _validationService.EmailOrPhoneNumberExitsAsync(
             emailOrPhoneNumber,
             cancellationToken);
+    }
+
+    private Task<bool> VerifyTenantUserCredentialsAsync(
+     TenantUserLoginCommand command,
+     CancellationToken cancellationToken)
+    {
+        return _validationService
+            .VerifyTenantUserCredentialsAsync(
+                command.EmailOrPhoneNumber,
+                command.Password,
+                cancellationToken);
     }
 }
 

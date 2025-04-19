@@ -54,8 +54,8 @@ public static class ClientGatewayServiceConfiguration
     {
         return services.AddScoped<ITenantUserAuthenticationService, TenantUserAuthenticationService>()
             .AddScoped<ITenantUserAuthenticationValidationService, TenantUserAuthenticationValidationService>()
-            .AddScoped<IValidator<TenantUserLoginCommand>, TenantUserLoginCommandValidator>()
-            .AddScoped<IValidator<TenantUserLogoutCommand>, TenantUserLogoutCommandValidator>();
+            .AddTransient<IValidator<TenantUserLoginCommand>, TenantUserLoginCommandValidator>()
+            .AddTransient<IValidator<TenantUserLogoutCommand>, TenantUserLogoutCommandValidator>();
     }
 
     public static IServiceCollection AddAdminUserAuthenticationServices(
@@ -63,9 +63,9 @@ public static class ClientGatewayServiceConfiguration
     {
         return services.AddScoped<IAdminUserAuthenticationService, AdminUserAuthenticationService>()
             .AddScoped<IAdminUserAuthenticationValidationService, AdminUserAuthenticationValidationService>()
-            .AddScoped<IValidator<AdminUserLoginCommand>, AdminUserLoginCommandValidator>()
-            .AddScoped<IValidator<AdminUserLogoutCommand>, AdminUserLogoutCommandValidator>()
-            .AddScoped<IAdminUserService, AdminUserService>();
+            .AddScoped<IAdminUserService, AdminUserService>()
+            .AddTransient<IValidator<AdminUserLoginCommand>, AdminUserLoginCommandValidator>()
+            .AddTransient<IValidator<AdminUserLogoutCommand>, AdminUserLogoutCommandValidator>();
     }
 
     public static async Task InitializeClientServiceAsync(
