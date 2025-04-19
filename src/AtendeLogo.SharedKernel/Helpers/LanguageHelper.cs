@@ -75,10 +75,10 @@ public static class LanguageHelper
                 $"Language '{languageTag}' is not supported.");
         }
 
-        var result = $"/{languageTag}/{path}";
+        var result = $"/{languageTag}/{path?.TrimEnd('/')}";
         if (!string.IsNullOrEmpty(queryString))
         {
-            return $"?{queryString}";
+            return $"{result}?{queryString}";
         }
         return result;
 

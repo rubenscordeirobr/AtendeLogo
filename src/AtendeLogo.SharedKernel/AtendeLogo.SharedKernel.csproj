@@ -5,7 +5,9 @@
         <AnalysisLevel>latest</AnalysisLevel>
         <RootNamespace>AtendeLogo.Shared</RootNamespace>
     </PropertyGroup>
-
+    <ItemGroup>
+        <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
+    </ItemGroup>
     <ItemGroup>
         
         <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
