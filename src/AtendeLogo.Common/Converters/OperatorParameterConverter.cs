@@ -1,16 +1,10 @@
-﻿using System.Collections.Concurrent;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Reflection;
-using AtendeLogo.Common.Attributes;
-using AtendeLogo.Common.Factories;
 
 namespace AtendeLogo.Common.Converters;
 
 public static class OperatorParameterConverter
 {
-    private static readonly NullabilityInfoContext NullabilityContext = new();
-    private static readonly ConcurrentDictionary<ParameterInfo, NullabilityState> NullabilityCache = new();
-
     public static string? ToString(object value)
     {
         if (value is null)
@@ -70,15 +64,9 @@ public static class OperatorParameterConverter
         }
 
         var value = Parse(stringValue, parameter.ParameterType);
-        if (value is null)
+        if (value is null && !parameter.IsNullable())
         {
-            var nullability = NullabilityCache.GetOrAdd(parameter,
-                   param => NullabilityContext.Create(param).ReadState);
-
-            if (nullability == NullabilityState.NotNull)
-            {
-                return TypeDefaultValueFactory.GetNotNullDefaultValue(parameter.ParameterType);
-            }
+            return TypeDefaultValueFactory.GetNotNullDefaultValue(parameter.ParameterType);
         }
         return value;
     }
