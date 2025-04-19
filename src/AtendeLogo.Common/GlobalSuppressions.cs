@@ -29,8 +29,8 @@
     Justification = "<Pending>", 
     Scope = "member", Target = "~M:AtendeLogo.Common.Utils.RandomUtils.GenerateRandomNumber(System.Int32)~System.String")]
 
-[assembly: SuppressMessage("Major Code Smell", 
-    "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", 
-    Justification = "The goals is set private field", 
+
+[assembly: SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", 
+    Justification = "",
     Scope = "member", 
-    Target = "~M:AtendeLogo.Common.Utils.ReflectionUtils.SetFiledValue(System.Object,System.String,System.Object)")]
+    Target = "~F:AtendeLogo.Common.Utils.ReflectionUtils.AllInstanceBindingFlags")]

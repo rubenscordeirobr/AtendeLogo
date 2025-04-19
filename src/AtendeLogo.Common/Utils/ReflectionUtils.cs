@@ -4,15 +4,19 @@ namespace AtendeLogo.Common.Utils;
 
 public static class ReflectionUtils
 {
+
+    public const BindingFlags AllInstanceBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+     
+
     public static void SetFiledValue(
         object targetInstance,
-        string fieldName, 
+        string fieldName,
         object value)
     {
         Guard.NotNull(targetInstance);
         Guard.NotNullOrWhiteSpace(fieldName);
 
-        var field = targetInstance.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        var field = targetInstance.GetType().GetField(fieldName, AllInstanceBindingFlags);
         if (field is null)
         {
             throw new MissingFieldException(
@@ -20,5 +24,6 @@ public static class ReflectionUtils
         }
         field.SetValue(targetInstance, value);
     }
-}
 
+
+}
