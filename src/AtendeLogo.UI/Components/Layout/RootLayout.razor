@@ -1,0 +1,62 @@
+﻿@inherits LayoutComponentBase
+@inject IThemeService ThemeService
+@inject IJsonStringLocalizer<RootLayout> Localizer
+
+<FluentDesignTheme Mode="@Mode"
+                   OfficeColor="@OfficeColor">
+
+    <div class="dark-mode-switch">
+        <FluentSwitch Label="@Localizer["DarkModeSwitchLabel", "Dark Mode"]"
+                      @bind-Value="@IsDarkMode" />
+    </div>
+
+    @Body
+
+    <BusyIndicatorProvider />
+    <FluentDialogProvider />
+
+</FluentDesignTheme>
+
+@code
+{
+    public DesignThemeModes Mode { get; set; } = DefaultLayoutConstants.ThemeMode;
+
+    public OfficeColor? OfficeColor { get; set; } = DefaultLayoutConstants.DefaultOfficeColor;
+
+    private bool IsDarkMode
+    {
+        get => Mode == DesignThemeModes.Dark;
+        set => ThemeService.SetThemeMode(value ? DesignThemeModes.Dark : DesignThemeModes.Light);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await ThemeService.InicializeAsync();
+
+        Mode = ThemeService.ThemeMode;
+        OfficeColor = ThemeService.OfficeColor;
+
+        ThemeService.OnThemeModeChanged += OnThemeModeChanged;
+        ThemeService.OnOfficeColorChanged += OnOfficeColorChanged;
+    }
+     
+
+    private void OnThemeModeChanged()
+    {
+        Mode = ThemeService.ThemeMode;
+        StateHasChanged();
+    }
+
+    private void OnOfficeColorChanged()
+    {
+        OfficeColor = ThemeService.OfficeColor;
+    }
+
+    void PickRandomColor()
+    {
+        var random = OfficeColorUtilities.GetRandom();
+        ThemeService.SetOfficeColor(random);
+    }
+
+}
