@@ -190,3 +190,8 @@ public record AzureServiceError(
      string Code,
      string Message)
     : Error(Exception, Code, Message);
+
+public record OperationInProgressError(
+    string Code,
+    string Message)
+    : Error(Code, Message);
