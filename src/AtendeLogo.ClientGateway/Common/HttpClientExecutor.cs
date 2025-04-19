@@ -176,8 +176,6 @@ public sealed class HttpClientExecutor : IHttpClientExecutor
 
         if (attemptCount >= _resilienceOptions.MaxRetryAttempts)
         {
-            await _connectionStatusNotifier.NotifyConnectionFailureAsync();
-
             Log(messageFactory, error, exception, attemptCount);
             return Result.Failure<T>(error);
         }
@@ -237,9 +235,9 @@ public sealed class HttpClientExecutor : IHttpClientExecutor
 
             if (!await _internetStatusService.CheckInternetConnectionAsync())
             {
-                _connectionStatusNotifier?.OnConnectionLost();
+                await _connectionStatusNotifier.NotifyConnectionLostAsync();
                 await _internetStatusService.WaitForInternetConnectionAsync();
-                _connectionStatusNotifier?.OnConnectionRestored();
+                await _connectionStatusNotifier.NotifyConnectionRestoredAsync();
             }
         }
         finally

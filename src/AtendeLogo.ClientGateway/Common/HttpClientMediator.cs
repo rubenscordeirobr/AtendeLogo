@@ -16,10 +16,12 @@ public class HttpClientMediator<TService> : IHttpClientMediator<TService>
     private readonly ValidationResultCache _validationCache = new();
     private readonly string _baseRoute;
     private readonly JsonSerializerOptions? _jsonOptions;
+    private readonly IRequestErrorNotifier _requestErrorNotifier;
     private readonly IServiceProvider _serviceProvider;
 
     public HttpClientMediator(
         IHttpClientProvider httpClientProvider,
+        IRequestErrorNotifier requestErrorNotifier,
         IServiceProvider serviceProvider)
     {
         Guard.NotNull(httpClientProvider);
@@ -27,6 +29,7 @@ public class HttpClientMediator<TService> : IHttpClientMediator<TService>
         _baseRoute = RouteBinderHelper.GetRoute<TService>();
         _jsonOptions = CommunicationServiceHelper.GetJsonOptions<TService>();
         _httpClient = httpClientProvider.GetHttpClient<TService>();
+        _requestErrorNotifier = requestErrorNotifier;
         _serviceProvider = serviceProvider;
     }
 
@@ -211,7 +214,7 @@ public class HttpClientMediator<TService> : IHttpClientMediator<TService>
         var requestUri = BuildUri(boundRoute);
         var keyValuePairs = HttpClientHelper.CreateFormKeyValuePairs(parameterNames, parameterValues);
         var messageFactory = new FormMessageFactory(_httpClient, HttpMethod.Post, requestUri, keyValuePairs);
-         
+
         return SendAsyncInternal<TResponse>(messageFactory, cancellationToken);
     }
 
@@ -271,7 +274,14 @@ public class HttpClientMediator<TService> : IHttpClientMediator<TService>
         try
         {
             using var executor = _serviceProvider.GetRequiredService<IHttpClientExecutor>();
-            return await executor.SendAsync<TResponse>(messageFactory, cancellationToken);
+            var result = await executor.SendAsync<TResponse>(messageFactory, cancellationToken);
+            if (result.IsFailure)
+            {
+                await _requestErrorNotifier
+                    .NotifyRequestErrorAsync(result.Error, messageFactory.RequestUri);
+
+            }
+            return result;
         }
         catch (Exception ex)
         {

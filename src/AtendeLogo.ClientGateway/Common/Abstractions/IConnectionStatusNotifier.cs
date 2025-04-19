@@ -2,7 +2,6 @@
 
 public interface IConnectionStatusNotifier
 {
-    Task NotifyConnectionFailureAsync();
-    void OnConnectionLost();
-    void OnConnectionRestored();
+    Task NotifyConnectionLostAsync();
+    Task NotifyConnectionRestoredAsync();
 }
