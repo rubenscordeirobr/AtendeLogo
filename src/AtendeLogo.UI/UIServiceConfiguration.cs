@@ -18,7 +18,7 @@ public static class UIServiceConfiguration
             .AddScoped<IInternetStatusService, InternetStatusService>()
             .AddScoped<IConnectionStatusNotifier, ConnectionStatusNotifier>()
             .AddScoped<IRequestErrorNotifier, RequestErrorNotifier>()
-            .AddScoped<ILanguageProvider, LanguageProvider>()
+            .AddScoped<ICultureProvider, CultureProvider>()
             .AddScoped<IClientAuthorizationTokenManager, ClientAuthorizationTokenManager>()
             .AddScoped<IBusyIndicatorService, BusyIndicatorService>()
             .AddScoped<IThemeService, ThemeService>();

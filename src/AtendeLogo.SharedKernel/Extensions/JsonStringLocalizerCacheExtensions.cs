@@ -1,25 +1,24 @@
 ﻿using AtendeLogo.Shared.Abstractions;
-using AtendeLogo.Shared.Helpers;
 
 namespace AtendeLogo.Shared.Extensions;
 
 public static class JsonStringLocalizerCacheExtensions
 {
-    public static Task LoadLanguageAsync(
+    public static Task LoadCultureAsync(
         this IJsonStringLocalizerCache localizerCache,
-        string language)
+        string cultureCode)
     {
         Guard.NotNull(localizerCache);
-        Guard.NotNullOrWhiteSpace(language);
+        Guard.NotNullOrWhiteSpace(cultureCode);
 
-        var languageEnum = LanguageHelper.GetLanguageEnum(language);
-        return localizerCache.LoadLanguageAsync(languageEnum);
+        var culture = CultureHelper.GetCulture(cultureCode);
+        return localizerCache.LoadCultureAsync(culture);
     }
 
-    public static Task LoadDefaultLanguageAsync( 
+    public static Task LoadDefaultCultureAsync( 
         this IJsonStringLocalizerCache localizerCache )
     {
         Guard.NotNull(localizerCache);
-        return localizerCache.LoadLanguageAsync(LanguageHelper.DefaultLanguage);
+        return localizerCache.LoadCultureAsync(CultureHelper.DefaultCulture);
     }
 }

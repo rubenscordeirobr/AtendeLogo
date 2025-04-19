@@ -37,7 +37,7 @@ public sealed class CreateTenantCommandHandler
             businessType: command.BusinessType,
             currency: command.Currency,
             country: command.Country,
-            language: command.Language,
+            culture: command.Culture,
             tenantState: TenantState.New,
             tenantStatus: TenantStatus.Active,
             tenantType: command.TenantType,
@@ -47,7 +47,7 @@ public sealed class CreateTenantCommandHandler
        var user = tenant.CreateUser(
            name: command.Name,
            email: command.Email,
-           language: command.Language,
+           culture: command.Culture,
            userState: UserState.Active,
            userStatus: UserStatus.Online,
            role: UserRole.Owner,

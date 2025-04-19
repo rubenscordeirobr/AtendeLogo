@@ -16,7 +16,7 @@ public static class ValidationConstants
     
     // Tenant
     public const int CurrencyMaxLength = 3;
-    public const int LanguageMaxLength = 5; //pt-BR
+    public const int CultureMaxLength = 15; //ca-ES-valencia
     public const int FiscalCodeMaxLength = 20;
     public const int DefaultTimeZoneMaxLength = 50;
 

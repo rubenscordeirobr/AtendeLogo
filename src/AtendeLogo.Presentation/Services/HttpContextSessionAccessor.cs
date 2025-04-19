@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Common.Enums;
+using AtendeLogo.Common.Helpers;
 using AtendeLogo.Shared.Abstractions;
-using AtendeLogo.Shared.Helpers;
 using AtendeLogo.Shared.Interfaces.Identities;
 using AtendeLogo.Shared.Models.Security;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +31,8 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
     }
 
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
-    public Language Language
-        => GetLanguageInternal();
+    public Culture Culture
+        => ExtractCultureFromRequest();
 
     public string RequestUrl
         => _httpContext.Request.GetDisplayUrl();
@@ -102,14 +102,14 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
         }
     }
 
-    private Language GetLanguageInternal()
+    private Culture ExtractCultureFromRequest()
     {
-        var language = LanguageHelper.GetLanguageFromUrl(RequestUrl);
-        if (language.HasValue)
+        var culture = CultureHelper.GetCultureFromUrl(RequestUrl);
+        if (culture.HasValue)
         {
-            return language.Value;
+            return culture.Value;
         }
-        return  this.UserSession?.Language ?? Language.Default;
+        return  this.UserSession?.Culture ?? Culture.Default;
     }
 
     private static class HttpContextItemsConstants

@@ -7,29 +7,29 @@ namespace AtendeLogo.Shared.Localization;
 public class JsonStringLocalizer<T> : IJsonStringLocalizer<T>
 {
     private readonly IJsonStringLocalizerCache _cache;
-    private readonly ILanguageProvider _languageProvider;
+    private readonly ICultureProvider _cultureProvider;
 
     private readonly string _resourceKey;
 
     public JsonStringLocalizer(
         IJsonStringLocalizerCache localizationCache,
-        ILanguageProvider localizationProvider)
+        ICultureProvider localizationProvider)
     {
         Guard.NotNull(localizationCache);
         Guard.NotNull(localizationProvider);
 
         _resourceKey = LocalizationHelper.GetResourceKey<T>();
         _cache = localizationCache;
-        _languageProvider = localizationProvider;
+        _cultureProvider = localizationProvider;
     }
 
     public string this[string localizationKey, string defaultValue, params object[] args]
     {
         get
         {
-            var language = _languageProvider.Language;
+            var culture = _cultureProvider.Culture;
             var localizationString = _cache.GetLocalizedString(
-                language,
+                culture,
                 _resourceKey,
                 localizationKey,
                 defaultValue);

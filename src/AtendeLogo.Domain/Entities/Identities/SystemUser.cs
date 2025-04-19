@@ -6,14 +6,14 @@ public sealed class SystemUser : User
     private SystemUser(
        string name,
        string email,
-       Language language,
+       Culture culture,
        UserRole role,
        UserState userState,
        UserStatus userStatus,
        VerificationState emailVerificationState,
        VerificationState phoneNumberVerificationState,
        PhoneNumber phoneNumber)
-       : base(name, email, language, role, userState, userStatus,
+       : base(name, email, culture, role, userState, userStatus,
               emailVerificationState, phoneNumberVerificationState, phoneNumber, Password.Empty)
     {
     }
@@ -21,13 +21,13 @@ public sealed class SystemUser : User
     public SystemUser(
         string name,
         string email,
-        Language language,
+        Culture culture,
         UserRole role,
         UserState userState,
         UserStatus userStatus,
         PhoneNumber phoneNumber,
         Password password)
-        : base(name, email, language, role, userState, userStatus,
+        : base(name, email, culture, role, userState, userStatus,
                VerificationState.NotVerified, VerificationState.NotVerified, phoneNumber, password)
     {
     }

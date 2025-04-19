@@ -31,11 +31,11 @@ public class UpdateTenantCommandValidator : CommandValidator<UpdateTenantCommand
             .IsInEnumValue()
             .WithMessage(localizer["Tenant.InvalidCountry", "Invalid country."]);
        
-        RuleFor(x => x.Language)
+        RuleFor(x => x.Culture)
             .NotEmpty()
-            .WithMessage(localizer["Tenant.LanguageRequired", "Language is required."])
+            .WithMessage(localizer["Tenant.CultureRequired", "Culture is required."])
             .IsInEnumValue()
-            .WithMessage(localizer["Tenant.InvalidLanguage", "Invalid language."]);
+            .WithMessage(localizer["Tenant.InvalidCulture", "Invalid culture."]);
         
         RuleFor(x => x.Currency)
             .IsInEnumValue()

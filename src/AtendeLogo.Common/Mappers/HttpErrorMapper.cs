@@ -2,7 +2,6 @@
 using System.Net;
 using System.Security.Authentication;
 using AtendeLogo.Common.Enums;
-using AtendeLogo.Common.Exceptions;
 
 namespace AtendeLogo.Common.Mappers;
 

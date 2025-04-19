@@ -1,24 +1,23 @@
 ﻿using AtendeLogo.Shared.Abstractions;
-using AtendeLogo.Shared.Helpers;
 
 namespace AtendeLogo.Shared.Localization;
 
 public class DefaultResourceInitializer
 {
     private readonly IJsonStringLocalizerService _localizerService;
-    private readonly Language _targetLanguage;
+    private readonly Culture _targetCulture;
 
     public DefaultResourceInitializer(
         IJsonStringLocalizerService localizerService,
-        Language targetLanguage)
+        Culture targetCulture)
     {
         _localizerService = localizerService;
-        _targetLanguage = LanguageHelper.Normalize(targetLanguage);
+        _targetCulture = CultureHelper.Normalize(targetCulture);
     }
 
     public async Task<bool> InitializeAsync(LocalizationResourceMap targetMap)
     {
-        if (_targetLanguage == LanguageHelper.DefaultLanguage)
+        if (_targetCulture == CultureHelper.DefaultCulture)
         {
             return false;
         }
@@ -47,7 +46,7 @@ public class DefaultResourceInitializer
     private async Task<LocalizationResourceMap> GetDefaultResourceMapAsync()
     {
         var result = await _localizerService.GetLocalizationResourceMapAsync(
-           LanguageHelper.DefaultLanguage,
+           CultureHelper.DefaultCulture,
            CancellationToken.None);
 
         if (result.IsFailure)
@@ -74,7 +73,7 @@ public class DefaultResourceInitializer
 
                 var defaultValue = defaultStrings[key];
                 await _localizerService.AddLocalizedStringAsync(
-                    _targetLanguage,
+                    _targetCulture,
                     resourceKey,
                     key,
                     defaultValue);

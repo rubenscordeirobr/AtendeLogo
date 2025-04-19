@@ -76,12 +76,12 @@ public static class LocalizationHelper
         return sb.ToString();
     }
 
-    public static string GetResourceKeyFromFileName(string languagePath, string resourceFile)
+    public static string GetResourceKeyFromFileName(string culturePath, string resourceFile)
     {
-        Guard.NotNullOrWhiteSpace(languagePath);
+        Guard.NotNullOrWhiteSpace(culturePath);
         Guard.NotNullOrWhiteSpace(resourceFile);
 
-        var relativePath = Path.GetRelativePath(languagePath, resourceFile);
+        var relativePath = Path.GetRelativePath(culturePath, resourceFile);
         var keyWithoutExtension = PathUtils.RemoveExtension(relativePath);
         var normalizedKey = keyWithoutExtension.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         return normalizedKey.TrimStart(Path.AltDirectorySeparatorChar);

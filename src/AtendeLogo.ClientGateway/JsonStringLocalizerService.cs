@@ -19,32 +19,32 @@ public class JsonStringLocalizerService : IJsonStringLocalizerService
     }
 
     public Task<Result<LocalizationResourceMap>> GetLocalizationResourceMapAsync(
-        Language language,
+        Culture culture,
         CancellationToken cancellationToken = default)
     {
-        var route = $"{language.GetLanguageTag()}";
+        var route = $"{culture.GetCultureCode()}";
         return _mediator.GetAsync<LocalizationResourceMap>(route, cancellationToken);
     }
      
     public Task<Result<LocalizedStrings>> GetLocalizedStringsAsync(
-        Language language, 
+        Culture culture, 
         string resourceKey, 
         CancellationToken cancellationToken = default)
     {
-        var route = $"{language.GetLanguageTag()}/{resourceKey}";
+        var route = $"{culture.GetCultureCode()}/{resourceKey}";
         return _mediator.GetAsync<LocalizedStrings>(route, cancellationToken);
     }
 
     public Task<Result<OperationResponse>> AddLocalizedStringAsync(
-        Language language,
+        Culture culture,
         string resourceKey,
         string localizationKey,
         string defaultValue,
         CancellationToken cancellationToken = default)
     {
         return _mediator.FormAsync<OperationResponse>(
-            [nameof(language), nameof(resourceKey), nameof(localizationKey), nameof(defaultValue)],
-            [language, resourceKey, localizationKey, defaultValue],
+            [nameof(culture), nameof(resourceKey), nameof(localizationKey), nameof(defaultValue)],
+            [culture, resourceKey, localizationKey, defaultValue],
             cancellationToken);
     }
 

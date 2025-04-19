@@ -144,7 +144,7 @@ public class TenantUserAuthenticationValidationServiceTests
             tenant: tenant,
             name: "Test User",
             email: "test@example.com",
-            language: Language.Default,
+            culture: Culture.Default,
             role: UserRole.Anonymous,
             userState: UserState.New,
             userStatus: UserStatus.Online,

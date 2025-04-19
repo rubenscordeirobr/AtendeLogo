@@ -20,7 +20,7 @@ public static class RuntimeServicesConfiguration
             .AddScoped<IRequestMediator, RequestMediator>()
             .AddScoped<IEventMediator, EventMediator>()
             .AddScoped<IUserSessionManager, UserSessionManager>()
-            .AddScoped<ILanguageProvider, LanguageProvider>()
+            .AddScoped<ICultureProvider, CultureProvider>()
             .AddTransient<IUserSessionVerificationService, UserSessionVerificationService>();
 
         return services;

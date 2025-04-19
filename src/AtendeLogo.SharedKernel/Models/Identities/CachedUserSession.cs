@@ -14,7 +14,7 @@ public class CachedUserSession : IUserSession
     public DateTime LastActivity { get; }
     public DateTime StartedAt { get; }
     public DateTime? TerminatedAt { get; }
-    public Language Language { get; }
+    public Culture Culture { get; }
     public AuthenticationType AuthenticationType { get; }
     public SessionTerminationReason? TerminationReason { get; }
     public UserRole UserRole { get; }
@@ -34,7 +34,7 @@ public class CachedUserSession : IUserSession
          DateTime lastActivity,
          DateTime startedAt,
          DateTime? terminatedAt,
-         Language language,
+         Culture culture,
          AuthenticationType authenticationType,
          SessionTerminationReason? terminationReason,
          UserRole userRole,
@@ -53,7 +53,7 @@ public class CachedUserSession : IUserSession
         LastActivity = lastActivity;
         StartedAt = startedAt;
         TerminatedAt = terminatedAt;
-        Language = language;
+        Culture = culture;
         AuthenticationType = authenticationType;
         TerminationReason = terminationReason;
         UserRole = userRole;
@@ -77,7 +77,7 @@ public class CachedUserSession : IUserSession
             lastActivity: session.LastActivity,
             startedAt: session.StartedAt,
             terminatedAt: session.TerminatedAt,
-            language: session.Language,
+            culture: session.Culture,
             authenticationType: session.AuthenticationType,
             terminationReason: session.TerminationReason,
             userRole: session.UserRole,
@@ -98,7 +98,7 @@ public class CachedUserSession : IUserSession
          DateTime lastActivity,
          DateTime startedAt,
          DateTime? terminatedAt,
-         Language language,
+         Culture culture,
          AuthenticationType authenticationType,
          SessionTerminationReason? terminationReason,
          UserRole userRole,
@@ -117,7 +117,7 @@ public class CachedUserSession : IUserSession
             lastActivity,
             startedAt,
             terminatedAt,
-            language,
+            culture,
             authenticationType,
             terminationReason,
             userRole,

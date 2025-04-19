@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Attributes;
-
-namespace AtendeLogo.Common.Enums;
+﻿namespace AtendeLogo.Common.Enums;
 
 public enum Currency
 {

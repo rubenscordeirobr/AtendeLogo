@@ -47,7 +47,7 @@ public class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvi
     private void InitializeJsonLocalizerCache(ServiceProvider serviceProvider)
     {
         var LocalizerCache = serviceProvider.GetRequiredService<IJsonStringLocalizerCache>();
-        var task = LocalizerCache.LoadDefaultLanguageAsync();
+        var task = LocalizerCache.LoadDefaultCultureAsync();
         task.Wait();
     }
 }

@@ -10,7 +10,7 @@ public interface IUserSession
     DateTime StartedAt { get; }
     DateTime? TerminatedAt { get; }
     DateTime LastActivity { get; }
-    Language Language { get; }
+    Culture Culture { get; }
     AuthenticationType AuthenticationType { get; }
     SessionTerminationReason? TerminationReason { get; }
     UserRole UserRole { get; }

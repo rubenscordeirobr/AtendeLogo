@@ -11,7 +11,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public DateTime LastActivity { get; private set; }
     public DateTime StartedAt { get; private set; }
     public DateTime? TerminatedAt { get; private set; }
-    public Language Language { get; private set; }
+    public Culture Culture { get; private set; }
     public AuthenticationType AuthenticationType { get; private set; }
     public SessionTerminationReason? TerminationReason { get; private set; }
     public UserRole UserRole { get; private set; }
@@ -30,7 +30,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         bool isActive,
         bool keepSession,
         AuthenticationType authenticationType,
-        Language language,
+        Culture culture,
         UserRole userRole,
         UserType userType,
         Guid user_Id,
@@ -41,7 +41,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         UserAgent = userAgent;
         KeepSession = keepSession;
         AuthenticationType = authenticationType;
-        Language = language;
+        Culture = culture;
         UserRole = userRole;
         UserType = userType;
         User_Id = user_Id;

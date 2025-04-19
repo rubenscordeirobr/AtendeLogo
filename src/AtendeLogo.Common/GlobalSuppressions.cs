@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", 
-    Justification = "The 'Error' record is only used internally within this project and will not be exposed to other languages.", 
+    Justification = "The 'Error' record is only used internally within this project and will not be exposed to other cultures.", 
     Scope = "member", 
     Target = "~P:AtendeLogo.Common.IResultValue.Error")]
 
@@ -13,7 +13,7 @@
 
 [assembly: SuppressMessage("Naming",
     "CA1716:Identifiers should not match keywords", 
-    Justification = "The 'Error' record is only used internally within this project and will not be exposed to other languages.", Scope = "type", Target = "~T:AtendeLogo.Common.Error")]
+    Justification = "The 'Error' record is only used internally within this project and will not be exposed to other cultures.", Scope = "type", Target = "~T:AtendeLogo.Common.Error")]
 
 [assembly: SuppressMessage("Performance", "CA1819:Properties should not return arrays", 
     Justification = "This property is metadata only. ",

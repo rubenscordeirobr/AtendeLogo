@@ -36,7 +36,7 @@ public class CreateTenantUserCommandHandler : CommandHandler<CreateTenantUserCom
         var tenantUser = tenant.CreateUser(
             name: command.Name,
             email: command.Email,
-            language: tenant.Language,
+            culture: tenant.Culture,
             role: command.Role,
             userState: UserState.New,
             userStatus: UserStatus.New,

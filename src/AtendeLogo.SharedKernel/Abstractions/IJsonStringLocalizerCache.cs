@@ -3,11 +3,11 @@
 public interface IJsonStringLocalizerCache
 {
     string GetLocalizedString(
-        Language language,
+        Culture culture,
         string resourceIdentifier,
         string localizationKey,
         string defaultValue);
 
-    Task LoadLanguageAsync(Language language);
+    Task LoadCultureAsync(Culture culture);
 
 }

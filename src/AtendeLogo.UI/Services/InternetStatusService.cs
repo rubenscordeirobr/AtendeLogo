@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.ClientGateway.Common.Abstractions;
+using AtendeLogo.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
@@ -21,7 +22,7 @@ public class InternetStatusService : IInternetStatusService
     {
         try
         {
-            if (!_jsRuntime.CheckRuntimeInitialization())
+            if (!_jsRuntime.IsJsRuntimeInitialized())
             {
                 return await CheckInternetConnectionServerSideAsync();
             }

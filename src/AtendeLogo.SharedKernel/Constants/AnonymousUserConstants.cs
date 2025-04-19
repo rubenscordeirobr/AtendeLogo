@@ -31,7 +31,7 @@ public static class AnonymousUserConstants
             VerificationState.Verified,
             VerificationState.Verified,
             new PhoneNumber(PhoneNumber),
-            Language.Default,
+            Culture.Default,
             UserRole.Anonymous,
             UserType.Anonymous
         );
@@ -51,7 +51,7 @@ public static class AnonymousUserConstants
             lastActivity: DateTime.UtcNow,
             startedAt: DateTime.UtcNow,
             terminatedAt: null,
-            language: Language.Default,
+            culture: Culture.Default,
             authenticationType: AuthenticationType.Anonymous,
             terminationReason: null,
             userRole: UserRole.Anonymous,

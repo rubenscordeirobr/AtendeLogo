@@ -27,7 +27,7 @@ public class UpdateTenantCommandHandler
         tenant.Update(
             name: command.Name,
             country: command.Country,
-            language: command.Language,
+            culture: command.Culture,
             currency: command.Currency,
             businessType: command.BusinessType,
             tenantType: command.TenantType,

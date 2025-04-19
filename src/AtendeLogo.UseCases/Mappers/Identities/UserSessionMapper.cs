@@ -17,7 +17,7 @@ internal static class UserSessionMapper
             StartedAt = userSession.StartedAt,
             TerminatedAt = userSession.TerminatedAt,
             LastActivity = userSession.LastActivity,
-            Language = userSession.Language,
+            Culture = userSession.Culture,
             AuthenticationType = userSession.AuthenticationType,
             TerminationReason = userSession.TerminationReason,
             UserRole = userSession.UserRole,

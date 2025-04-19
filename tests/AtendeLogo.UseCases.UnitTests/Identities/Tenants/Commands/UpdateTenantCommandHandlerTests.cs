@@ -19,7 +19,7 @@ public class UpdateTenantCommandHandlerTests : IClassFixture<ServiceProviderMock
             Name = "Tenant name",
             FiscalCode = new FiscalCode(fakeCpf),
             Country = Country.Brazil,
-            Language = Language.Portuguese,
+            Culture = Culture.PtBr,
             Currency = Currency.BRL,
             BusinessType = BusinessType.CivilRegistryOffice,
             TenantType = TenantType.Company,

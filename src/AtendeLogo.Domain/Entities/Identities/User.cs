@@ -7,7 +7,7 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     public string Name { get; protected set; }
     public string Email { get; protected set; }
     public UserRole Role { get; protected set; }
-    public Language Language { get; protected set; }
+    public Culture Culture { get; protected set; }
     public UserState UserState { get; protected set; }
     public UserStatus UserStatus { get; protected set; }
     public VerificationState EmailVerificationState { get; protected set; }
@@ -21,7 +21,7 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
     protected User(
         string name,
         string email,
-        Language language,
+        Culture culture,
         UserRole role,
         UserState userState,
         UserStatus userStatus,
@@ -36,7 +36,7 @@ public abstract class User : EntityBase, IUser, ISoftDeletableEntity, IAscending
          
         Name = name;
         Email = email;
-        Language = language;
+        Culture = culture;
         Role = role;
         UserState = userState;
         UserStatus = userStatus;

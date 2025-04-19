@@ -4,6 +4,11 @@
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Migrations\20250331064100_InitialMigration.cs" />
+    <Compile Remove="Migrations\20250331064100_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\IdentityDbContextModelSnapshot.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <InternalsVisibleTo Include="AtendeLogo.Persistence.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.Application.UnitTests" />
     <InternalsVisibleTo Include="AtendeLogo.TestCommon" />

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AtendeLogo.Common.Attributes;
 
 namespace AtendeLogo.Common.Enums;
 
@@ -11,6 +10,7 @@ public enum Country
     [Display(Name = "United States")]
     [CountryNumericCode(840)]
     [CountryAbbreviation("USA")]
+
     UnitedStates,
 
     [Display(Name = "Canada")]

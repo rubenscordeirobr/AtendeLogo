@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using AtendeLogo.Common.Exceptions;
-using AtendeLogo.Common.Utils;
 using AtendeLogo.UI.Core;
 
 namespace AtendeLogo.UI.Components.Pages;
@@ -8,7 +7,7 @@ namespace AtendeLogo.UI.Components.Pages;
 public abstract class PageBase : ComponentBase
 {
     [Parameter]
-    public string? Lang { get; set; }
+    public string? Culture { get; set; }
 
     protected override void OnInitialized()
     {

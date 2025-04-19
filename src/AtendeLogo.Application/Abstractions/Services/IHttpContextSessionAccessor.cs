@@ -8,7 +8,7 @@ public interface IHttpContextSessionAccessor : IApplicationService
 {
     string RequestUrl { get; }
     Guid? UserSession_Id { get; }
-    Language Language { get; }
+    Culture Culture { get; }
     ClientRequestHeaderInfo RequestHeaderInfo { get; }
 
     string? AuthorizationToken { get; set; }

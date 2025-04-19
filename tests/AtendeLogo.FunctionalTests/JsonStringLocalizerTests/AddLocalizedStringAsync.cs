@@ -6,13 +6,13 @@ public partial class JsonStringLocalizerServiceTests
     public async Task AddLocalizedStringAsync_ShouldBeSuccessful()
     {
         // Arrange
-        var language = Language.Portuguese;
+        var culture = Culture.PtBr;
         var resourceKey = "test-resource-key";
         var localizationKey = "TestLocalizationKey";
         var defaultValue = "TestValue";
         // Act
         var result = await _clientService.AddLocalizedStringAsync(
-            language,
+            culture,
             resourceKey,
             localizationKey,
             defaultValue);

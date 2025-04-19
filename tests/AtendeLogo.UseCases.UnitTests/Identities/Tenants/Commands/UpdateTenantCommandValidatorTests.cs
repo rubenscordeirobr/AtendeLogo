@@ -19,7 +19,7 @@ public class UpdateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
             Name = "John Doe",
             FiscalCode = new FiscalCode("76776292027"),
             Country = Country.Brazil,
-            Language = Language.Portuguese,
+            Culture = Culture.PtBr,
             Currency = Currency.BRL,
             BusinessType = BusinessType.CivilRegistryOffice,
             TenantType = TenantType.Company,
@@ -76,13 +76,13 @@ public class UpdateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     }
 
     [Theory]
-    [InlineData((Language)(-1))]
-    [InlineData(Language.Default)]
-    public async Task ValidationResult_ShouldHaveError_When_Language_IsInvalid(Language language)
+    [InlineData((Culture)(-1))]
+    [InlineData(Culture.Default)]
+    public async Task ValidationResult_ShouldHaveError_When_Culture_IsInvalid(Culture culture)
     {
-        var command = _validCommand with { Language = language };
+        var command = _validCommand with { Culture = culture };
         var result = await _validator.TestValidateAsync(command);
-        result.ShouldHaveValidationErrorFor(x => x.Language);
+        result.ShouldHaveValidationErrorFor(x => x.Culture);
     }
 
     [Theory]

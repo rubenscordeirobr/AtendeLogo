@@ -27,16 +27,16 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     public async Task<IUserSession> VerifyAsync()
     {
-        await LoadLanguageAsync();
+        await LoadCultureAsync();
         var userSession = await GetValidUserSessionAsync();
         _httpContextSessionAccessor.UserSession = userSession;
         return userSession;
     }
 
-    private async Task LoadLanguageAsync()
+    private async Task LoadCultureAsync()
     {
-        var language = _httpContextSessionAccessor.Language;
-        await _localizerCache.LoadLanguageAsync(language);
+        var culture = _httpContextSessionAccessor.Culture;
+        await _localizerCache.LoadCultureAsync(culture);
     }
 
     private async Task<IUserSession> GetValidUserSessionAsync()

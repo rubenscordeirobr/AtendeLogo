@@ -11,7 +11,7 @@ public sealed record UserSessionResponse : IUserSession, IResponse
     public required DateTime StartedAt { get; init; }
     public required DateTime? TerminatedAt { get; init; }
     public required DateTime LastActivity { get; init; }
-    public required Language Language { get; init; }
+    public required Culture Culture { get; init; }
     public required AuthenticationType AuthenticationType { get; init; }
     public required SessionTerminationReason? TerminationReason { get; init; }
     public required UserRole UserRole { get; init; }

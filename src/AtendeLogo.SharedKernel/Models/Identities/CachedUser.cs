@@ -11,7 +11,7 @@ public class CachedUser : IUser
     public VerificationState EmailVerificationState { get; }
     public VerificationState PhoneNumberVerificationState { get; }
     public PhoneNumber PhoneNumber { get; }
-    public Language Language { get; }
+    public Culture Culture { get; }
     public UserRole Role { get; }
     public UserType UserType { get; }
 
@@ -23,7 +23,7 @@ public class CachedUser : IUser
         VerificationState emailVerificationState,
         VerificationState phoneNumberVerificationState,
         PhoneNumber phoneNumber,
-        Language language,
+        Culture culture,
         UserRole role,
         UserType userType
     )
@@ -34,7 +34,7 @@ public class CachedUser : IUser
         EmailVerificationState = emailVerificationState;
         PhoneNumberVerificationState = phoneNumberVerificationState;
         PhoneNumber = phoneNumber;
-        Language = language;
+        Culture = culture;
         Role = role;
         UserType = userType;
     }
@@ -50,7 +50,7 @@ public class CachedUser : IUser
             user.EmailVerificationState,
             user.PhoneNumberVerificationState,
             user.PhoneNumber,
-            user.Language,
+            user.Culture,
             user.Role,
             user.UserType
          );
@@ -63,7 +63,7 @@ public class CachedUser : IUser
         VerificationState emailVerificationState,
         VerificationState phoneNumberVerificationState,
         PhoneNumber phoneNumber,
-        Language language,
+        Culture culture,
         UserRole role,
         UserType userType)
     {
@@ -74,7 +74,7 @@ public class CachedUser : IUser
             emailVerificationState,
             phoneNumberVerificationState,
             phoneNumber,
-            language,
+            culture,
             role,
             userType
         );

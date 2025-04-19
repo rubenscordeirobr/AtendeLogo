@@ -33,6 +33,7 @@ public class ClientServiceProviderMock<TRoleProvider>
             .AddSingleton(x => CreateHttpClientProvider())
             .AddScoped<IInternetStatusService, InternetStatusServiceMock>()
             .AddScoped<IConnectionStatusNotifier, ConnectionStatusNotifierMock>()
+            .AddScoped<IRequestErrorNotifier, RequestErrorNotifierMock>()
             .AddScoped<IClientAuthorizationTokenManager, ClientAuthorizationTokenManagerMock>()
             .AddScoped<IClientTenantUserSessionContext, ClientTenantUserSessionContextMock>()
             .AddScoped<IClientAdminUserSessionContext, ClientAdminUserSessionContextMock>();

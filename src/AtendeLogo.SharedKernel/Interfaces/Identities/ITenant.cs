@@ -4,7 +4,7 @@ public interface ITenant
     string Name { get; }
     string Email { get; }
     Country Country { get; }
-    Language Language { get; }
+    Culture Culture { get; }
     Currency Currency { get; }
     BusinessType BusinessType { get; }
     TenantType TenantType { get; }

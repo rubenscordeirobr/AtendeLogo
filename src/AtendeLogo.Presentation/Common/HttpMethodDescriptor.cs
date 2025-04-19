@@ -157,7 +157,7 @@ internal sealed class HttpMethodDescriptor
         var end = routePart.IndexOf('}', StringComparison.Ordinal);
         if (end > start)
         {
-            return routePart.Substring(start + 1, end - start - 1);
+            return routePart.Substring(start + 1, end - start - 1).TrimStart('*');
         }
 
         throw new RouteTemplateException(

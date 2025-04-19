@@ -6,15 +6,16 @@ public class ConnectionStatusNotifierMock : IConnectionStatusNotifier
     {
         return Task.CompletedTask;
     }
-
-    public void OnConnectionLost()
+  
+    public Task NotifyConnectionLostAsync()
     {
         // Do nothing
+        return Task.CompletedTask;
     }
 
-    public void OnConnectionRestored()
+    public Task NotifyConnectionRestoredAsync()
     {
         // Do nothing
-
+        return Task.CompletedTask;
     }
 }

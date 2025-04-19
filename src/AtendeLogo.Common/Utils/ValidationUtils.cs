@@ -1,5 +1,7 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using AtendeLogo.Common.Enums;
 
 namespace AtendeLogo.Common.Utils;
 
@@ -11,7 +13,8 @@ public static class ValidationUtils
        @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-!#$%&'*+/=?^_`{|}~\w]|\.(?!\.))+)(?<=\S)@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$",
        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
-    public static bool IsEmail(string? value)
+
+    public static bool IsEmail([NotNullWhen(true)] string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return true;
@@ -22,8 +25,12 @@ public static class ValidationUtils
         return _emailRegex.IsMatch(value);
 
     }
+    public static bool IsNationalNumberValid(Country country, [NotNullWhen(true)] string? phoneNumber)
+    {
+        return PhoneNumberUtils.IsNationalNumberValid(country, phoneNumber);
+    }
 
-    public static bool IsFullPhoneNumberValid(string? phoneNumber)
+    public static bool IsFullPhoneNumberValid([NotNullWhen(true)] string? phoneNumber)
     {
         return PhoneNumberUtils.IsFullPhoneNumberValid(phoneNumber);
     }
@@ -72,5 +79,6 @@ public static class ValidationUtils
             return false;
         return Guid.TryParse(value, out _);
     }
+
 
 }

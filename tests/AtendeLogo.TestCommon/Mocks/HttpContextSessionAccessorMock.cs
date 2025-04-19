@@ -18,7 +18,7 @@ public abstract class HttpContextSessionAccessorMock : IHttpContextSessionAccess
     public IEndpointService? EndpointInstance { get; set; }
     public UserSessionClaims? UserSessionClaims { get; set; }
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
-    public Language Language { get; } = Language.Default;
+    public Culture Culture { get; } = Culture.Default;
     public string RequestUrl
         => "http://localhost:5000/api/test";
     public Guid? UserSession_Id =>

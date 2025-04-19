@@ -32,7 +32,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
     }
 
     public async Task<Result<LocalizationResourceMap>> GetLocalizationResourceMapAsync(
-        Language language,
+        Culture culture,
         CancellationToken cancellationToken = default)
     {
         try
@@ -40,16 +40,16 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
             await _syncLock.WaitAsync(cancellationToken);
 
             var resourceMap = new LocalizationResourceMap();
-            var languagePath = Path.Combine(_configuration.ResourcesRootPath, language.GetLanguageTag());
+            var culturePath = Path.Combine(_configuration.ResourcesRootPath, culture.GetCultureCode());
             var resourcesFiles = _fileService.GetFiles(
-                languagePath,
+                culturePath,
                 "*.json",
                 SearchOption.AllDirectories,
                 throwIfDirectoryDoesNotExist: false);
 
             foreach (var resourceFile in resourcesFiles)
             {
-                var resourceId = LocalizationHelper.GetResourceKeyFromFileName(languagePath, resourceFile);
+                var resourceId = LocalizationHelper.GetResourceKeyFromFileName(culturePath, resourceFile);
                 var localizedStrings = await LoadLocalizedStringsAsync(resourceFile);
                 resourceMap.Add(resourceId, localizedStrings);
             }
@@ -57,7 +57,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to load localized strings for language {Language}", language);
+            _logger.LogError(ex, "Failed to load localized strings for culture {Culture}", culture);
             var error = new UnknownError(ex, "JsonStringLocalizerService.GetLocalizedStringsAsync", $"Failed to load localized strings. Erro: {ex.Message} ");
             return Result.Failure<LocalizationResourceMap>(error);
         }
@@ -68,14 +68,14 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
     }
 
     public async Task<Result<LocalizedStrings>> GetLocalizedStringsAsync(
-        Language language,
+        Culture culture,
         string resourceKey,
         CancellationToken cancellationToken = default)
     {
         try
         {
             await _syncLock.WaitAsync(cancellationToken);
-            var resourceFilePath = BuildResourceFilePath(language.GetLanguageTag(), resourceKey);
+            var resourceFilePath = BuildResourceFilePath(culture.GetCultureCode(), resourceKey);
             var localizedStrings = await LoadLocalizedStringsAsync(resourceFilePath);
             return Result.Success(localizedStrings);
         }
@@ -94,7 +94,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
     }
 
     public async Task<Result<OperationResponse>> AddLocalizedStringAsync(
-        Language language,
+        Culture culture,
         string resourceKey,
         string localizationKey,
         string defaultValue,
@@ -105,15 +105,15 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
             return Result.Success(new OperationResponse());
         }
 
-        if (!language.IsDefaultLanguage() && !_configuration.AutoTranslate)
+        if (!culture.IsDefaultCulture() && !_configuration.AutoTranslate)
         {
             return Result.Success(new OperationResponse());
         }
 
-        var translatedResult = await GetTranslatedValueAsync(language, defaultValue);
+        var translatedResult = await GetTranslatedValueAsync(culture, defaultValue);
         if (translatedResult.IsSuccess)
         {
-            await AddOrUpdateLocalizedStringAsync(language, resourceKey, localizationKey, translatedResult.Value);
+            await AddOrUpdateLocalizedStringAsync(culture, resourceKey, localizationKey, translatedResult.Value);
         }
         return Result.Success(new OperationResponse());
     }
@@ -130,7 +130,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         }
 
         await AddOrUpdateLocalizedStringAsync(
-            Language.Default,
+            Culture.Default,
             resourceKey,
             localizationKey,
             defaultValue);
@@ -158,7 +158,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
     }
 
     private async Task AddOrUpdateLocalizedStringAsync(
-        Language language,
+        Culture culture,
         string resourceKey,
         string localizationKey,
         string defaultValue)
@@ -174,8 +174,8 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         {
             await _syncLock.WaitAsync();
 
-            var defaultLanguageTag = language.GetLanguageTag();
-            var resourceFilePath = BuildResourceFilePath(defaultLanguageTag, resourceKey);
+            var defaultCultureCode = culture.GetCultureCode();
+            var resourceFilePath = BuildResourceFilePath(defaultCultureCode, resourceKey);
             var localizedStrings = await LoadLocalizedStringsAsync(resourceFilePath);
             if (localizedStrings.TryGetValue(localizationKey, out var currentTranslation))
             {
@@ -210,7 +210,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         await _fileService.WriteAllTextAsync(resourceFilePath, jsonContent);
     }
 
-    private string BuildResourceFilePath(string languageTag, string resourceKey)
+    private string BuildResourceFilePath(string cultureCode, string resourceKey)
     {
         var resourceRootPath = _configuration.ResourcesRootPath;
         if (!_fileService.DirectoryExists(resourceRootPath))
@@ -220,12 +220,12 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         }
 
         var recourseFileName = $"{resourceKey}.json";
-        var resourcePath = Path.Combine(resourceRootPath, languageTag, recourseFileName);
+        var resourcePath = Path.Combine(resourceRootPath, cultureCode, recourseFileName);
         return resourcePath;
     }
-    private async Task<Result<string>> GetTranslatedValueAsync(Language language, string defaultValue)
+    private async Task<Result<string>> GetTranslatedValueAsync(Culture culture, string defaultValue)
     {
-        if (language.IsDefaultLanguage())
+        if (culture.IsDefaultCulture())
         {
             return Result.Success(defaultValue);
         }
@@ -233,7 +233,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         return await _translationService.TextTranslateAsync(
             defaultValue,
             "en",
-            language.GetLanguageTag(),
+            culture.GetCultureCode(),
             _configuration.CustomTranslationModelId);
     }
 
