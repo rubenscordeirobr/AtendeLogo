@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using AtendeLogo.Common.Enums;
 
 namespace AtendeLogo.Common.Utils;
 

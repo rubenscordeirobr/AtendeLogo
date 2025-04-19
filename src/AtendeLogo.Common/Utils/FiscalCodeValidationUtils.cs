@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Enums;
-
-namespace AtendeLogo.Common.Utils;
+﻿namespace AtendeLogo.Common.Utils;
 
 public static class FiscalCodeValidationUtils
 {

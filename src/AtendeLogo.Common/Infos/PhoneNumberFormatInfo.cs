@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Enums;
-
-namespace AtendeLogo.Common.Infos;
+﻿namespace AtendeLogo.Common.Infos;
 
 public partial record PhoneNumberFormatInfo
 {

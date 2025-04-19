@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common.Enums;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace AtendeLogo.Common.Helpers;
 public static class PasswordHelper

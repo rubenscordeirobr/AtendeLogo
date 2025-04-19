@@ -2,7 +2,6 @@
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using AtendeLogo.Common.Helpers;
 
 namespace AtendeLogo.Common.Utils;
 

@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common.Enums;
-using AtendeLogo.Common.Mappers;
+﻿using AtendeLogo.Common.Mappers;
 using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Common.Helpers;
@@ -83,5 +82,15 @@ public static class CultureHelper
         return result;
 
     }
+    public static Country GetCountry(Culture culture)
+    {
+        return CultureMapper.MapCountry(culture);
+    }
+    public static Currency GetCurrency(Culture culture)
+    {
+        return CultureMapper.MapCurrency(culture);
+    }
+
+  
 }
 

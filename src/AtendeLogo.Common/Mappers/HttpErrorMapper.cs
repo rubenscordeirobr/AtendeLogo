@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Authentication;
-using AtendeLogo.Common.Enums;
 
 namespace AtendeLogo.Common.Mappers;
 

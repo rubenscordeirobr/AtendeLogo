@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Common.Enums;
-using AtendeLogo.Common.Infos;
+﻿using AtendeLogo.Common.Infos;
 
 namespace AtendeLogo.Common.Resources;
 
