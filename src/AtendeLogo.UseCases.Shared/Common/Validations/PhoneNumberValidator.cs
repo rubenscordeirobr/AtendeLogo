@@ -35,8 +35,6 @@ public class PhoneNumberValidator : AbstractValidator<PhoneNumber>
     {
         Guard.NotNull(localizer);
 
-        ClassLevelCascadeMode = CascadeMode.Stop;
-
         RuleFor(x => x.Number)
             .NotEmpty()
             .WithMessage(localizer["PhoneNumber.Number", "Phone number cannot be empty."])

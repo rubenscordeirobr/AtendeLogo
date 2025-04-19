@@ -34,8 +34,6 @@ public class FiscalCodeValidator : AbstractValidator<FiscalCode>
     {
         Guard.NotNull(localizer);
 
-        ClassLevelCascadeMode = CascadeMode.Stop;
-
         RuleFor(x => x.Value)
             .NotEmpty()
             .WithMessage(localizer["FiscalCode.Value", "Fiscal code is required."])

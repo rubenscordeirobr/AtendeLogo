@@ -9,6 +9,10 @@ public static class SharedUseCasesServiceConfiguration
     public static IServiceCollection AddUserCasesSharedServices(
         this IServiceCollection services )
     {
+
+        ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Stop;
+        ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
+         
         services.AddCommandValidationServicesFromAssembly(Assembly.GetExecutingAssembly());
         return services;
     }

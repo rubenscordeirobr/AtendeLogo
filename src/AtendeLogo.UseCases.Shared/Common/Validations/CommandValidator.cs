@@ -9,7 +9,6 @@ public abstract class CommandValidator<TCommand> : AbstractValidator<TCommand>
     protected CommandValidator(IJsonStringLocalizer<TCommand> localizer)
     {
         Localizer = localizer;
-        ClassLevelCascadeMode = CascadeMode.Stop;
     }
 
     public override ValidationResult Validate(ValidationContext<TCommand> context)
