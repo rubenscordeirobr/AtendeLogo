@@ -1,0 +1,5 @@
+﻿{
+  "Tenant.IdRequired": "Tenant Id is required.",
+  "Tenant.AddressNameRequired": "Address name is required.",
+  "Tenant.AddressNameTooLong": "Address name cannot be longer than {MaxLength} characters."
+}

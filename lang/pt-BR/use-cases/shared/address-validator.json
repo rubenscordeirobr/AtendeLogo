@@ -1,0 +1,14 @@
+﻿{
+  "Address.StreetRequired": "Street é obrigatório.",
+  "Address.StreetTooLong": "Street não pode ter mais de {MaxLength} caracteres.",
+  "Address.NumberRequired": "O número é obrigatório.",
+  "Address.NumberTooLong": "O número não pode ser maior que {MaxLength} caracteres.",
+  "Address.ZipCodeRequired": "O CEP é obrigatório.",
+  "Address.ZipCodeTooLong": "O CEP não pode ter mais de {MaxLength} caracteres.",
+  "Address.CityRequired": "A cidade é necessária.",
+  "Address.CityTooLong": "Cidade não pode ter mais de {MaxLength} caracteres.",
+  "Address.StateRequired": "O estado é necessário.",
+  "Address.StateTooLong": "O estado não pode ser maior que {MaxLength} caracteres.",
+  "Address.CountryRequired": "País é obrigatório.",
+  "Address.InvalidCountry": "País inválido."
+}

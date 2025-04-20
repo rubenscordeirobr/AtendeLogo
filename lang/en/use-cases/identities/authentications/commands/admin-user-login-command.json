@@ -1,0 +1,9 @@
+﻿{
+  "AdminAuthentication.EmailOrPhoneNumberRequired": "Email or phone number is required.",
+  "AdminAuthentication.EmailOrPhoneNumberMaxLength": "Email or phone number must be less than 255 characters.",
+  "AdminAuthentication.InvalidEmailOrPhoneNumber": "Invalid email or phone number.",
+  "AdminAuthentication.PasswordRequired": "Password is required.",
+  "AdminAuthentication.PasswordTooShort": "Password must be at least {MinLength} characters long",
+  "AdminAuthentication.PasswordTooLong": "Password cannot be longer than {MaxLength} characters",
+  "AdminAuthentication.EmailOrPhoneNumberNotExists": "Email or phone number does not exist."
+}

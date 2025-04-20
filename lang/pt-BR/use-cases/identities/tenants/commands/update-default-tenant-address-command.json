@@ -1,0 +1,5 @@
+﻿{
+  "Tenant.IdRequired": "A ID do locatário é necessária.",
+  "Tenant.AddressNameRequired": "O nome do endereço é obrigatório.",
+  "Tenant.AddressNameTooLong": "O nome do endereço não pode ter mais de {MaxLength} caracteres."
+}
