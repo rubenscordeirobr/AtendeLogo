@@ -22,9 +22,6 @@ jobs:
       run: |
          mkdir -p .secrets
          echo "${{ secrets.AZURE_TRANSLATOR_SECRET_JSON }}" | base64 -d > .secrets/azure-translator-secrets.json
-    
-    - name: Display azure-translator-secrets.json
-      run: cat .secrets/azure-translator-secrets.json
 
     - name: Validate azure-translator-secrets.json
       run: jq empty .secrets/azure-translator-secrets.json
