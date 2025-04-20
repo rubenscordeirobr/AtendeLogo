@@ -11,7 +11,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
     public BusinessType BusinessType { get; private set; }
     public Country Country { get; private set; }
     public Currency Currency { get; private set; }
-    public Culture Culture { get; private set; }
+    public Language Language { get; private set; }
     public TenantState TenantState { get; private set; }
     public TenantStatus TenantStatus { get; private set; }
     public TenantType TenantType { get; private set; }
@@ -37,14 +37,14 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
         BusinessType businessType,
         Country country,
         Currency currency,
-        Culture culture,
+        Language language,
         TenantState tenantState,
         TenantStatus tenantStatus,
         TenantType tenantType,
         FiscalCode fiscalCode,
         PhoneNumber phoneNumber)
         : this(name, email, businessType, country, currency,
-              culture, tenantState, tenantStatus, tenantType, fiscalCode, phoneNumber, TimeZoneOffset.Default)
+              language, tenantState, tenantStatus, tenantType, fiscalCode, phoneNumber, TimeZoneOffset.Default)
     {
 
     }
@@ -55,7 +55,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
         BusinessType businessType,
         Country country,
         Currency currency,
-        Culture culture,
+        Language language,
         TenantState tenantState,
         TenantStatus tenantStatus,
         TenantType tenantType,
@@ -69,7 +69,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
         BusinessType = businessType;
         Country = country;
         Currency = currency;
-        Culture = culture;
+        Language = language;
         TenantState = tenantState;
         TenantStatus = tenantStatus;
         TenantType = tenantType;
@@ -174,7 +174,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
     public TenantUser CreateUser(
         string name,
         string email,
-        Culture culture,
+        Language language,
         UserState userState,
         UserStatus userStatus,
         UserRole role,
@@ -185,7 +185,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
              tenant: this,
              name: name,
              email: email,
-             culture: culture,
+             language: language,
              userState: userState,
              userStatus: userStatus,
              role: role,
@@ -201,7 +201,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
     public void Update(
         string name, 
         Country country,
-        Culture culture, 
+        Language language, 
         Currency currency,
         BusinessType businessType, 
         TenantType tenantType,
@@ -210,7 +210,7 @@ public sealed class Tenant : EntityBase, ITenant, ITenantOwned, ISoftDeletableEn
         Name = name;
         FiscalCode = fiscalCode;
         Country = country;
-        Culture = culture;
+        Language = language;
         Currency = currency;
         BusinessType = businessType;
         TenantType = tenantType;

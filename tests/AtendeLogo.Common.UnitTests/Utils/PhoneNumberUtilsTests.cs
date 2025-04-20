@@ -55,7 +55,7 @@ public class PhoneNumberUtilsTests
         Country country, string nationalNumber, string expectedFullNumber)
     {
         var result = PhoneNumberUtils.GetFullPhoneNumber(country, nationalNumber);
-        
+
         result.Should().Be(expectedFullNumber);
     }
 
@@ -63,13 +63,16 @@ public class PhoneNumberUtilsTests
     [InlineData(Country.UnitedStates, "+15551234567", "+15551234567")]
     [InlineData(Country.Mexico, "+521234567890", "+521234567890")]
     [InlineData(Country.Brazil, "+5511987654321", "+5511987654321")]
+#pragma warning disable S4144  
     public void GetFullPhoneNumber_WithExistingInternationalFormat_ReturnsUnchanged(
+
         Country country, string nationalNumber, string expectedFullNumber)
     {
         var result = PhoneNumberUtils.GetFullPhoneNumber(country, nationalNumber);
-        
+
         result.Should().Be(expectedFullNumber);
     }
+#pragma warning restore S4144
 
     [Theory]
     [InlineData(Country.UnitedStates, "+25551234567")]
@@ -79,7 +82,7 @@ public class PhoneNumberUtilsTests
         Country country, string nationalNumber)
     {
         var action = () => PhoneNumberUtils.GetFullPhoneNumber(country, nationalNumber);
-        
+
         action.Should().Throw<ArgumentException>()
             .WithMessage("*contains invalid international dialing code*")
             .And.ParamName.Should().Be("nationalNumber");
@@ -93,7 +96,7 @@ public class PhoneNumberUtilsTests
         Country country, string nationalNumber)
     {
         var action = () => PhoneNumberUtils.GetFullPhoneNumber(country, nationalNumber);
-        
+
         action.Should().Throw<ArgumentException>()
             .WithMessage("*is too short*")
             .And.ParamName.Should().Be("nationalNumber");
@@ -103,7 +106,7 @@ public class PhoneNumberUtilsTests
     public void GetFullPhoneNumber_UnsupportedCountryCode_ThrowsArgumentException()
     {
         var action = () => PhoneNumberUtils.GetFullPhoneNumber(Country.Unknown, "1234567890");
-        
+
         action.Should().Throw<ArgumentException>()
             .WithMessage("*is not supported for phone number formatting*")
             .And.ParamName.Should().Be("country");

@@ -16,10 +16,10 @@ public static class CultureHelper
         return CultureMapper.MapCulture(cultureCode) ?? Culture.Default;
     }
 
-    public static Culture? GetCultureFromUrl(string requestUrl)
+    public static Culture GetCultureFromUrl(string requestUrl)
     {
         var firstSegment = requestUrl?.Split('/').FirstOrDefault();
-        return CultureMapper.MapCulture(firstSegment);
+        return CultureMapper.MapCulture(firstSegment) ?? Culture.Default;
     }
 
     public static bool IsCultureCodeSupported(string? cultureCode)
@@ -58,6 +58,7 @@ public static class CultureHelper
             ?  DefaultCulture
             : culture;
     }
+
     public static string BuildDefaultCulturePathWithQuery(string path, string? queryString)
     {
         Guard.NotNullOrWhiteSpace(path);
@@ -82,15 +83,20 @@ public static class CultureHelper
         return result;
 
     }
+
     public static Country GetCountry(Culture culture)
     {
         return CultureMapper.MapCountry(culture);
     }
+
     public static Currency GetCurrency(Culture culture)
     {
         return CultureMapper.MapCurrency(culture);
     }
 
-  
+    public static Language GetLanguage(Culture culture)
+    {
+        return CultureMapper.MapLanguage(culture);
+    }
 }
 

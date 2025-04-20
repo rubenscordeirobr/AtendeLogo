@@ -5,16 +5,16 @@ namespace AtendeLogo.Shared.Abstractions;
 public interface IJsonStringLocalizerService : ICommunicationService
 {
     Task<Result<LocalizationResourceMap>> GetLocalizationResourceMapAsync(
-        Culture culture, 
+        Language language, 
         CancellationToken cancellationToken = default);
 
     Task<Result<LocalizedStrings>> GetLocalizedStringsAsync(
-        Culture culture,
+        Language language,
         string resourceKey,
         CancellationToken cancellationToken = default);
 
     Task<Result<OperationResponse>> AddLocalizedStringAsync(
-        Culture culture,
+        Language language,
         string resourceKey,
         string localizationKey,
         string defaultValue,

@@ -9,7 +9,7 @@ public partial class JsonStringLocalizerServiceTests
     public async Task HttpClient_GetLocalizedStringsAsync_ByLangTag_ReturnsOk()
     {
         // Arrange
-        var route = $"{RouteConstants.StringLocalizerService}/pt";
+        var route = $"{RouteConstants.StringLocalizerService}/pt-br";
         // Act
         var messageResponse = await _httpClient.GetAsync(route);
         var response = await messageResponse.Content.ReadFromJsonAsync<LocalizationResourceMap>();
@@ -26,7 +26,7 @@ public partial class JsonStringLocalizerServiceTests
     {
         // Arrange
         var resourceKey = LocalizationHelper.GetResourceKey<TenantUserLoginCommand>();
-        var route = $"{RouteConstants.StringLocalizerService}/pt/{resourceKey}";
+        var route = $"{RouteConstants.StringLocalizerService}/pt-br/{resourceKey}";
         // Act
         var messageResponse = await _httpClient.GetAsync(route);
         var response = await messageResponse.Content.ReadFromJsonAsync<Dictionary<string, string>>();
@@ -42,7 +42,7 @@ public partial class JsonStringLocalizerServiceTests
     public async Task GetLocalizedStringsAsync_ByCulture_ShouldBeSuccessful()
     {
         // Act
-        var result = await _clientService.GetLocalizationResourceMapAsync(Culture.PtBr);
+        var result = await _clientService.GetLocalizationResourceMapAsync(Language.PortugueseBrazil);
 
         // Assert
         result.ShouldBeSuccessful();
@@ -52,8 +52,8 @@ public partial class JsonStringLocalizerServiceTests
     public async Task DefaultResourceInitializer_ShouldBeSuccessful()
     {
         // Arrange
-        var result = await _clientService.GetLocalizationResourceMapAsync(Culture.PtBr);
-        var resourceMapInitializer = new DefaultResourceInitializer(_clientService, Culture.PtBr);
+        var result = await _clientService.GetLocalizationResourceMapAsync(Language.PortugueseBrazil);
+        var resourceMapInitializer = new DefaultResourceInitializer(_clientService, Language.PortugueseBrazil);
 
         // Act
         result.ShouldBeSuccessful();
@@ -73,7 +73,7 @@ public partial class JsonStringLocalizerServiceTests
         var resourceKey = LocalizationHelper.GetResourceKey<TenantUserLoginCommand>();
 
         // Act
-        var result = await _clientService.GetLocalizedStringsAsync(Culture.PtBr, resourceKey);
+        var result = await _clientService.GetLocalizedStringsAsync(Language.PortugueseBrazil, resourceKey);
 
         // Assert
         result.ShouldBeSuccessful();

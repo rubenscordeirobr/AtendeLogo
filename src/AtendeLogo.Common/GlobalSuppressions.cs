@@ -29,7 +29,6 @@
     Justification = "<Pending>", 
     Scope = "member", Target = "~M:AtendeLogo.Common.Utils.RandomUtils.GenerateRandomNumber(System.Int32)~System.String")]
 
-
 [assembly: SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields", 
     Justification = "",
     Scope = "member", 

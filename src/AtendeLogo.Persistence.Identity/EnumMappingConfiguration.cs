@@ -19,6 +19,7 @@ public static partial class EnumMappingConfiguration
             .AddMapEnum<TContext, Country>(isInMemory)
             .AddMapEnum<TContext, Currency>(isInMemory)
             .AddMapEnum<TContext, Culture>(isInMemory)
+            .AddMapEnum<TContext, Language>(isInMemory)
             .AddMapEnum<TContext, PasswordStrength>(isInMemory)
             .AddMapEnum<TContext, TenantState>(isInMemory)
             .AddMapEnum<TContext, TenantStatus>(isInMemory)

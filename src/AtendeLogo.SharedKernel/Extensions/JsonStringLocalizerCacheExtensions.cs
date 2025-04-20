@@ -6,19 +6,19 @@ public static class JsonStringLocalizerCacheExtensions
 {
     public static Task LoadCultureAsync(
         this IJsonStringLocalizerCache localizerCache,
-        string cultureCode)
+        string languageCode)
     {
         Guard.NotNull(localizerCache);
-        Guard.NotNullOrWhiteSpace(cultureCode);
+        Guard.NotNullOrWhiteSpace(languageCode);
 
-        var culture = CultureHelper.GetCulture(cultureCode);
-        return localizerCache.LoadCultureAsync(culture);
+        var language = LanguageHelper.GetLanguage(languageCode);
+        return localizerCache.LoadLanguageAsync(language);
     }
 
     public static Task LoadDefaultCultureAsync( 
         this IJsonStringLocalizerCache localizerCache )
     {
         Guard.NotNull(localizerCache);
-        return localizerCache.LoadCultureAsync(CultureHelper.DefaultCulture);
+        return localizerCache.LoadLanguageAsync(LanguageHelper.DefaultLanguage);
     }
 }

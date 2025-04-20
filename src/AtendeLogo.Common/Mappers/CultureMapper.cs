@@ -6,33 +6,33 @@ public static class CultureMapper
     {
         return culture switch
         {
-            Culture.Default => "en-us",
+            Culture.Default => "en-US",
             // North America
-            Culture.EnUs => "en-us",
-            Culture.EnCa => "en-ca",
-            Culture.EsMx => "es-mx",
+            Culture.EnUs => "en-US",
+            Culture.EnCa => "en-CA",
+            Culture.EsMx => "es-MX",
 
             // South America
-            Culture.EsAr => "es-ar",
-            Culture.EsBo => "es-bo",
-            Culture.PtBr => "pt-br",
-            Culture.EsCl => "es-cl",
-            Culture.EsCo => "es-co",
-            Culture.EsEc => "es-ec",
-            Culture.EnGy => "en-gy",
-            Culture.EsPe => "es-pe",
-            Culture.GnPy => "gn-py",
-            Culture.NlSr => "nl-sr",
-            Culture.EsUy => "es-uy",
-            Culture.EsVe => "es-ve",
+            Culture.EsAr => "es-AR",
+            Culture.EsBo => "es-BO",
+            Culture.PtBr => "pt-BR",
+            Culture.EsCl => "es-CL",
+            Culture.EsCo => "es-CO",
+            Culture.EsEc => "es-EC",
+            Culture.EnGy => "en-GY",
+            Culture.EsPe => "es-PE",
+            Culture.GnPy => "gn-PY",
+            Culture.NlSr => "nl-SR",
+            Culture.EsUy => "es-UY",
+            Culture.EsVe => "es-VE",
 
             // Europe
-            Culture.EsEs => "es-es",
-            Culture.DeDe => "de-de",
-            Culture.FrFr => "fr-fr",
-            Culture.EnGb => "en-gb",
-            Culture.ItIt => "it-it",
-            Culture.PtPt => "pt-pt",
+            Culture.EsEs => "es-ES",
+            Culture.DeDe => "de-DE",
+            Culture.FrFr => "fr-FR",
+            Culture.EnGb => "en-GB",
+            Culture.ItIt => "it-IT",
+            Culture.PtPt => "pt-PT",
 
             _ => throw new NotImplementedException($"Culture {culture} not implemented in CultureMapper")
 
@@ -112,32 +112,68 @@ public static class CultureMapper
         {
             // North America
             Culture.EnUs => Currency.USD,
-            Culture.EnCa => Currency.USD, // Canada officially uses CAD, but assuming USD for simplicity
+            Culture.EnCa => Currency.USD, // Canada: CAD
             Culture.EsMx => Currency.USD,
           
             // South America
-            Culture.EsAr => Currency.USD, // Argentina uses ARS
-            Culture.EsBo => Currency.USD, // Bolivia uses BOB
+            Culture.EsAr => Currency.USD, // Argentina: ARS
+            Culture.EsBo => Currency.USD, // Bolivia: BOB
             Culture.PtBr => Currency.BRL,
-            Culture.EsCl => Currency.USD, // Chile uses CLP
-            Culture.EsCo => Currency.USD, // Colombia uses COP
+            Culture.EsCl => Currency.USD, // Chile: CLP
+            Culture.EsCo => Currency.USD, // Colombia: COP
             Culture.EsEc => Currency.USD,
-            Culture.EnGy => Currency.USD, // Guyana uses GYD
-            Culture.EsPe => Currency.USD, // Peru uses PEN
-            Culture.GnPy => Currency.USD, // Paraguay uses PYG
-            Culture.NlSr => Currency.USD, // Suriname uses SRD
-            Culture.EsUy => Currency.USD, // Uruguay uses UYU
-            Culture.EsVe => Currency.USD, // Venezuela uses VES
+            Culture.EnGy => Currency.USD, // Guyana: GYD
+            Culture.EsPe => Currency.USD, // Peru:PEN
+            Culture.GnPy => Currency.USD, // Paraguay: PYG
+            Culture.NlSr => Currency.USD, // Suriname: SRD
+            Culture.EsUy => Currency.USD, // Uruguay: UYU
+            Culture.EsVe => Currency.USD, // Venezuela: VES
 
             // Europe
             Culture.EsEs => Currency.EUR,
             Culture.DeDe => Currency.EUR,
             Culture.FrFr => Currency.EUR,
-            Culture.EnGb => Currency.EUR, // UK uses GBP; fallback to EUR
+            Culture.EnGb => Currency.EUR, // UK: GBP 
             Culture.ItIt => Currency.EUR,
             Culture.PtPt => Currency.EUR,
             _ => throw new NotImplementedException($"Currency for culture {culture} not implemented in CultureMapper")
         };
 
+    }
+
+    internal static Language MapLanguage(Culture culture)
+    {
+        return culture switch
+        {
+            Culture.Default => Language.Default,
+            // North America
+            Culture.EnUs => Language.English,
+            Culture.EnCa => Language.English,
+            Culture.EsMx => Language.LatinSpanish,
+
+            // South America
+            Culture.EsAr => Language.LatinSpanish,
+            Culture.EsBo => Language.LatinSpanish,
+            Culture.PtBr => Language.PortugueseBrazil,
+            Culture.EsCl => Language.LatinSpanish,
+            Culture.EsCo => Language.LatinSpanish,
+            Culture.EsEc => Language.LatinSpanish,
+            Culture.EnGy => Language.English,
+            Culture.EsPe => Language.LatinSpanish,
+            Culture.GnPy => Language.LatinSpanish,
+            Culture.NlSr => Language.LatinSpanish,
+            Culture.EsUy => Language.LatinSpanish,
+            Culture.EsVe => Language.LatinSpanish,
+
+            // Europe
+            Culture.EsEs => Language.Spanish,
+            Culture.DeDe => Language.German,
+            Culture.FrFr => Language.French,
+            Culture.EnGb => Language.English,
+            Culture.ItIt => Language.Italian,
+            Culture.PtPt => Language.PortuguesePortugal,
+
+            _ => throw new NotImplementedException($"Language for culture {culture} not implemented in CultureMapper")
+        };
     }
 }

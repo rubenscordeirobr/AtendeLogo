@@ -45,7 +45,7 @@ internal class IdentityDbSeeder
         var anonymousUser = new SystemUser(
             name: "Anonymous",
             email: "anonymous@atendelogo.com.br",
-            culture: Culture.Default,
+            language: Language.Default,
             role: UserRole.Anonymous,
             userState: UserState.Active,
             userStatus: UserStatus.Anonymous,
@@ -80,7 +80,7 @@ internal class IdentityDbSeeder
         var adminUser = new AdminUser(
             name: DefaultAdminUserConstants.Name,
             email: DefaultAdminUserConstants.Email,
-            culture: Culture.Default,
+            language: Language.Default,
             role: UserRole.Admin,
             userState: UserState.Active,
             userStatus: UserStatus.System,
@@ -112,7 +112,7 @@ internal class IdentityDbSeeder
             businessType: BusinessType.System,
             country: Country.Brazil,
             currency: Currency.BRL,
-            culture: Culture.Default,
+            language: Language.Default,
             tenantState: TenantState.System,
             tenantStatus: TenantStatus.Active,
             tenantType: TenantType.System,
@@ -124,7 +124,7 @@ internal class IdentityDbSeeder
         var tenantUser = systemTenant.CreateUser(
              name: SystemTenantConstants.Name,
              email: SystemTenantConstants.Email,
-             culture: Culture.Default,
+             language: Language.Default,
              userState: UserState.Active,
              userStatus: UserStatus.System,
              role: UserRole.Admin,

@@ -8,6 +8,7 @@ public enum Culture
     EnUs, // United States
     EnCa, // Canada (English)
     EsMx, // Mexico (Spanish)
+    FrCa, // Canada (French)
 
     // South America
 

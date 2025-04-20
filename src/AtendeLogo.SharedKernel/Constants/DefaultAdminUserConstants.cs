@@ -28,7 +28,7 @@ public static class DefaultAdminUserConstants
             VerificationState.Verified,
             VerificationState.Verified,
             new PhoneNumber(PhoneNumber),
-            Culture.Default,
+            Language.Default,
             UserRole.Admin,
             UserType.AdminUser
         );

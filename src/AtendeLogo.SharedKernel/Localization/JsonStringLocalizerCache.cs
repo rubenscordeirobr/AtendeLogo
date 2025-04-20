@@ -6,7 +6,7 @@ namespace AtendeLogo.Shared.Localization;
 
 public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDisposable
 {
-    private readonly Dictionary<Culture, LocalizationResourceMap> _localizedStringsCache = new();
+    private readonly Dictionary<Language, LocalizationResourceMap> _localizedStringsCache = new();
     private readonly SemaphoreSlim _cacheLock = new(1, 1);
 
     private readonly IServiceProvider _serviceProvider;
@@ -23,31 +23,31 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         _logger = logger;
     }
 
-    public async Task LoadCultureAsync(Culture culture)
+    public async Task LoadLanguageAsync(Language language)
     {
         try
         {
             await _cacheLock.WaitAsync();
 
-            culture = CultureHelper.Normalize(culture);
+            language = LanguageHelper.Normalize(language);
 
-            if (_localizedStringsCache.ContainsKey(culture))
+            if (_localizedStringsCache.ContainsKey(language))
                 return;
 
             await using var scope = _serviceProvider.CreateAsyncScope();
             var localizerService = scope.ServiceProvider.GetRequiredService<IJsonStringLocalizerService>();
 
-            var result = await localizerService.GetLocalizationResourceMapAsync(culture);
+            var result = await localizerService.GetLocalizationResourceMapAsync(language);
             if (result.IsFailure)
             {
                 throw new InvalidOperationException(
-                    $"Failed to initialize localization cache for culture {culture}: {result.Error}");
+                    $"Failed to initialize localization cache for language {language}: {result.Error}");
             }
-            _localizedStringsCache[culture] = result.Value;
+            _localizedStringsCache[language] = result.Value;
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex, "Error initializing localization cache for culture {Culture}", culture);
+            _logger.LogCritical(ex, "Error initializing localization cache for language {Language}", language);
             throw;
         }
         finally
@@ -57,45 +57,46 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
     }
 
     public string GetLocalizedString(
-        Culture culture,
+        Language language,
         string resourceIdentifier,
         string localizationKey,
         string defaultValue)
     {
         Guard.NotNullOrWhiteSpace(resourceIdentifier);
-        culture = CultureHelper.Normalize(culture);
+        language = LanguageHelper.Normalize(language);
 
-        EnsureCultureCacheReady(culture);
+        EnsureLanguageCacheReady(language);
 
-        if (_localizedStringsCache.TryGetValue(culture, out var resourceMap))
+        if (_localizedStringsCache.TryGetValue(language, out var resourceMap))
         {
             if (resourceMap.TryGetValue(resourceIdentifier, out var localizationMap))
             {
                 if (localizationMap.TryGetValue(localizationKey, out var localizedString))
                 {
-                    if (culture.IsDefaultCulture() && defaultValue != localizedString)
+                    if (language.IsDefaultLanguage() && defaultValue != localizedString)
                     {
                         _ = UpdateDefaultLocalizedStringIfNeededAsync(resourceIdentifier, localizationKey, defaultValue);
                     }
                     return localizedString;
                 }
             }
-            _ = AddLocalizationStringIfNeededAsync(culture, resourceIdentifier, localizationKey, defaultValue);
+            _ = AddLocalizationStringIfNeededAsync(language, resourceIdentifier, localizationKey, defaultValue);
         }
         return defaultValue;
     }
-    private void EnsureCultureCacheReady(Culture culture)
+
+    private void EnsureLanguageCacheReady(Language language)
     {
-        if (_localizedStringsCache.ContainsKey(culture))
+        if (_localizedStringsCache.ContainsKey(language))
             return;
 
         throw new InvalidOperationException(
-            $"Localization cache for culture {culture} is not initialized. " +
+            $"Localization cache for language {language} is not initialized. " +
             $"Call InitializeAsync first.");
     }
 
     private async Task AddLocalizationStringIfNeededAsync(
-        Culture culture,
+        Language language,
         string resourceIdentifier,
         string localizationKey,
         string defaultValue)
@@ -106,7 +107,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
             var localizerService = scope.ServiceProvider.GetRequiredService<IJsonStringLocalizerService>();
 
             await localizerService.AddLocalizedStringAsync(
-                culture,
+                language,
                 resourceIdentifier,
                 localizationKey,
                 defaultValue);

@@ -102,7 +102,7 @@ public class AdminUserAuthenticationValidationServiceTests
         return new AdminUser(
             name: "Admin User",
             email: "admin@example.com",
-            culture: Culture.Default,
+            language: Language.Default,
             role: UserRole.Admin,
             userState: UserState.New,
             userStatus: UserStatus.Online,

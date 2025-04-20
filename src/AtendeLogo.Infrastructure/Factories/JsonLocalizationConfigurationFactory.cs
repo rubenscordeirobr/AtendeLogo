@@ -67,12 +67,12 @@ public static class JsonLocalizationConfigurationFactory
     {
         if (hostEnvironment.IsDockerCompose())
         {
-            return "/opt/app/localization";
+            return "/opt/app/lang";
         }
          
         // Retrieve the 'src' folder path using the extension method.
         var srcDirectory = hostEnvironment.GetDevelopmentSrcOrTestsDirectory();
         // The Localization folder is assumed to be at the same level as the src folder.
-        return Path.GetFullPath(Path.Combine(srcDirectory.FullName, "../localization"));
+        return Path.GetFullPath(Path.Combine(srcDirectory.FullName, "../lang"));
     }
 }

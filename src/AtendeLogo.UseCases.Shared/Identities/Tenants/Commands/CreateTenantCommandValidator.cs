@@ -48,7 +48,7 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
             .IsInEnumValue()
             .WithMessage(localizer["Tenant.InvalidCountry", "Invalid country."]);
 
-        RuleFor(x => x.Culture)
+        RuleFor(x => x.Language)
             .NotEmpty()
             .WithMessage(localizer["Tenant.CultureRequired", "Culture is required."])
             .IsInEnumValue()

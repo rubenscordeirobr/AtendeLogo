@@ -21,7 +21,7 @@ public static class TenantMapper
             Country = tenant.Country,
             Currency = tenant.Currency,
             FiscalCode = tenant.FiscalCode,
-            Culture = tenant.Culture,
+            Language = tenant.Language,
             TenantName = tenant.Name,
             TenantType = tenant.TenantType,
             TimeZoneOffset = tenant.TimeZoneOffset,

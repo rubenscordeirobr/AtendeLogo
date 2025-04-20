@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.Common.Enums;
+using AtendeLogo.Common.Mappers;
 
 namespace AtendeLogo.RuntimeServices.Providers;
 
@@ -8,7 +9,6 @@ public class CultureProvider : ICultureProvider
 
     public CultureProvider(IHttpContextSessionAccessor sessionAccessor)
     {
-        // Constructor logic here
         _sessionAccessor = sessionAccessor;
     }
 
@@ -16,9 +16,12 @@ public class CultureProvider : ICultureProvider
         => _sessionAccessor.Culture;
 
     public Currency Currency
-        => throw new NotImplementedException();
+        => CultureMapper.MapCurrency(Culture);
 
-    public Country Country 
-        => throw new NotImplementedException();
+    public Country Country
+        => CultureMapper.MapCountry(Culture);
+
+    public Language Language
+        => _sessionAccessor.Language;
 }
 

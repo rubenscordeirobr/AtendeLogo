@@ -7,7 +7,7 @@ public sealed record CreateTenantCommand : CommandRequest<CreateTenantResponse>
     public required string Email { get; init; }
     public required string Password { get; init; }
     public required Country Country { get; init; }
-    public required Culture Culture { get; init; }
+    public required Language Language { get; init; }
     public required Currency Currency { get; init; }
     public required BusinessType BusinessType { get; init; }
     public required TenantType TenantType { get; init; }

@@ -31,7 +31,7 @@ public static class SystemTenantConstants
             VerificationState.Verified,
             VerificationState.Verified,
             new PhoneNumber(PhoneNumber),
-            Culture.Default,
+            Language.Default,
             UserRole.Owner,
             UserType.TenantUser
         );

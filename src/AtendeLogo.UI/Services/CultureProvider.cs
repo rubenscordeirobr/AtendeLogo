@@ -13,17 +13,21 @@ public class CultureProvider : ICultureProvider
         _stringLocalizerCache = stringLocalizerCache;
     }
 
-    public Culture Culture
-        => _culture;
-   
     public async Task SetCultureAsync(string cultureCode)
     {
         _culture = CultureHelper.GetCulture(cultureCode);
         await _stringLocalizerCache.LoadCultureAsync(cultureCode);
     }
 
-    public Currency Currency
-        => throw new NotImplementedException();
+    public Culture Culture
+        => _culture;
 
-    public Country Country => throw new NotImplementedException();
+    public Country Country
+        => CultureHelper.GetCountry(_culture);
+
+    public Language Language
+        => CultureHelper.GetLanguage(_culture);
+
+    public Currency Currency
+        => CultureHelper.GetCurrency(_culture);
 }

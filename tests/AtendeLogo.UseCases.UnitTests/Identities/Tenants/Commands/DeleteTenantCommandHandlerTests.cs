@@ -50,7 +50,7 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<ServiceProviderMock
             Email = fakeEmail,
             Password = "Password123!",
             Country = Country.Brazil,
-            Culture = Culture.PtBr,
+            Language = Language.PortugueseBrazil,
             Currency = Currency.BRL,
             BusinessType = BusinessType.CivilRegistryOffice,
             TenantType = TenantType.Company,

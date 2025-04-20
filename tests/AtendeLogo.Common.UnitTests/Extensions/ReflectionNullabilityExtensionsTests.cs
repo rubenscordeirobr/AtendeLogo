@@ -138,7 +138,7 @@ public class ReflectionNullabilityExtensionsTests
 
     #region TestClass
 
-#pragma warning disable S3459, S1186
+#pragma warning disable S3459, S1186, CS0649, CS0067
 
     private class TestClass
     {

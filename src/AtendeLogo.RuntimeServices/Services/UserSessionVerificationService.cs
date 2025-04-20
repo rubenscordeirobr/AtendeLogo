@@ -1,5 +1,6 @@
 ﻿using AtendeLogo.Application.Abstractions.Persistence.Identities;
 using AtendeLogo.Application.Extensions;
+using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.Shared.Configuration;
@@ -27,16 +28,19 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     public async Task<IUserSession> VerifyAsync()
     {
-        await LoadCultureAsync();
+        await LoadLanguageAsync(_httpContextSessionAccessor.Language);
+     
         var userSession = await GetValidUserSessionAsync();
         _httpContextSessionAccessor.UserSession = userSession;
+
+        await LoadLanguageAsync(userSession.Language);
         return userSession;
     }
 
-    private async Task LoadCultureAsync()
+    private async Task LoadLanguageAsync(Language language)
     {
-        var culture = _httpContextSessionAccessor.Culture;
-        await _localizerCache.LoadCultureAsync(culture);
+        //_localizerCache handle will check language is already loaded, avoid unnecessary loading
+        await _localizerCache.LoadLanguageAsync(language);
     }
 
     private async Task<IUserSession> GetValidUserSessionAsync()

@@ -12,7 +12,6 @@ public static class ValidationUtils
        @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|([-!#$%&'*+/=?^_`{|}~\w]|\.(?!\.))+)(?<=\S)@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$",
        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
-
     public static bool IsEmail([NotNullWhen(true)] string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -78,6 +77,4 @@ public static class ValidationUtils
             return false;
         return Guid.TryParse(value, out _);
     }
-
-
 }

@@ -3,10 +3,10 @@ using AtendeLogo.Common.Helpers;
 
 namespace AtendeLogo.Presentation.Resolver;
 
-public class ParameterCultureParserResolver : IParameterParserResolver
+public class ParameterLanguageParserResolver : IParameterParserResolver
 {
     public object? Parse(string? stringValue)
     {
-        return CultureHelper.GetCulture(stringValue);
+        return LanguageHelper.GetLanguage(stringValue);
     }
 }

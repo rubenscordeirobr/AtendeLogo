@@ -5,7 +5,7 @@ public interface IUser
     Guid Id { get; }
     string Name { get; }
     string Email { get; }
-    Culture Culture { get; }
+    Language Language { get; }
     UserRole Role { get; }
     UserType UserType { get; }
     VerificationState EmailVerificationState { get; }

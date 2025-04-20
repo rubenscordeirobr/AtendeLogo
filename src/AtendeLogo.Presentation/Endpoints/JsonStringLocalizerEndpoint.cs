@@ -25,35 +25,35 @@ public class JsonStringLocalizerEndpoint : ApiEndpointBase, IJsonStringLocalizer
     }
  
 
-    [HttpGet(routeTemplate: "/{culture}")]
+    [HttpGet(routeTemplate: "/{language}")]
     public Task<Result<LocalizationResourceMap>> GetLocalizationResourceMapAsync(
-        [ParameterParserResolver<ParameterCultureParserResolver>]
-        Culture culture,
+        [ParameterParserResolver<ParameterLanguageParserResolver>]
+        Language language,
         CancellationToken cancellationToken = default)
     {
-        return _jsonStringLocalizerService.GetLocalizationResourceMapAsync(culture, cancellationToken);
+        return _jsonStringLocalizerService.GetLocalizationResourceMapAsync(language, cancellationToken);
     }
      
-    [HttpGet(routeTemplate: "/{culture}/{*resourceKey}")]
+    [HttpGet(routeTemplate: "/{language}/{*resourceKey}")]
     public Task<Result<LocalizedStrings>> GetLocalizedStringsAsync(
-        [ParameterParserResolver<ParameterCultureParserResolver>]
-        Culture culture,
+        [ParameterParserResolver<ParameterLanguageParserResolver>]
+        Language language,
         string resourceKey,
         CancellationToken cancellationToken = default)
     {
-        return _jsonStringLocalizerService.GetLocalizedStringsAsync(culture, resourceKey, cancellationToken);
+        return _jsonStringLocalizerService.GetLocalizedStringsAsync(language, resourceKey, cancellationToken);
     }
 
     [HttpForm]
     public Task<Result<OperationResponse>> AddLocalizedStringAsync(
-        Culture culture,
+        Language language,
         string resourceKey,
         string localizationKey,
         string defaultValue,
         CancellationToken cancellationToken = default)
     {
         return _jsonStringLocalizerService.AddLocalizedStringAsync(
-            culture,
+            language,
             resourceKey,
             localizationKey,
             defaultValue,

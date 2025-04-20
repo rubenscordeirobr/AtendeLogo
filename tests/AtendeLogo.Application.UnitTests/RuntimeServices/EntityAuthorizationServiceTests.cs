@@ -117,7 +117,7 @@ public class EntityAuthorizationServiceTests
         public DateTime StartedAt { get; set; }
         public DateTime? TerminatedAt { get; set; }
         public DateTime LastActivity { get; set; }
-        public Culture Culture { get; set; }
+        public Language Language { get; set; }
         public AuthenticationType AuthenticationType { get; set; }
         public SessionTerminationReason? TerminationReason { get; set; }
         public UserRole UserRole { get; set; }

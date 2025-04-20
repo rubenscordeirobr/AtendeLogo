@@ -24,6 +24,4 @@ public static class ReflectionUtils
         }
         field.SetValue(targetInstance, value);
     }
-
-
 }

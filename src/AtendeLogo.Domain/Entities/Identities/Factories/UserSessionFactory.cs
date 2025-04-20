@@ -25,7 +25,7 @@ public static class UserSessionFactory
              isActive: true,
              keepSession: keepSession,
              authenticationType: authenticationType,
-             culture: user.Culture,
+             language: user.Language,
              userRole: user.Role,
              userType: user.UserType,
              user_Id: user.Id,

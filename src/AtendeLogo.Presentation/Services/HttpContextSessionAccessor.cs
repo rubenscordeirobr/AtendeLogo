@@ -28,11 +28,15 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
 
         RequestHeaderInfo = _httpContext.GetRequestHeaderInfo();
         AuthorizationToken = RequestHeaderInfo.AuthorizationToken;
+        Culture = ExtractCultureFromRequest();
     }
 
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
-    public Culture Culture
-        => ExtractCultureFromRequest();
+    public Culture Culture { get; }
+
+    public Language Language
+        => UserSession?.Language
+            ?? CultureHelper.GetLanguage(Culture);
 
     public string RequestUrl
         => _httpContext.Request.GetDisplayUrl();
@@ -104,12 +108,7 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
 
     private Culture ExtractCultureFromRequest()
     {
-        var culture = CultureHelper.GetCultureFromUrl(RequestUrl);
-        if (culture.HasValue)
-        {
-            return culture.Value;
-        }
-        return  this.UserSession?.Culture ?? Culture.Default;
+        return CultureHelper.GetCultureFromUrl(RequestUrl);
     }
 
     private static class HttpContextItemsConstants

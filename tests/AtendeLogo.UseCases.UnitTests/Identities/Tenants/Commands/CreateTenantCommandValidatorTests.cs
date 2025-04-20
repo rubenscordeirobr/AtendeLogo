@@ -27,7 +27,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
             Email = "tenant1@atendelogo.com",
             Password = "Password123!",
             Country = Country.Brazil,
-            Culture = Culture.PtBr,
+            Language = Language.PortugueseBrazil,
             Currency = Currency.BRL,
             BusinessType = BusinessType.CivilRegistryOffice,
             TenantType = TenantType.Company,
@@ -192,20 +192,20 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
 
     [Theory]
     [InlineData(null)]
-    [InlineData((Culture)(-1))]
-    public async Task ValidationResult_ShouldHaveError_When_Culture_IsInvalid(Culture? culture)
+    [InlineData((Language)(-1))]
+    public async Task ValidationResult_ShouldHaveError_When_Language_IsInvalid(Language? culture)
     {
         // Arrange
         var command = _validadCommand with
         {
-            Culture = culture.GetValueOrDefault()
+            Language = culture.GetValueOrDefault()
         };
 
         // Act
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Culture);
+        result.ShouldHaveValidationErrorFor(x => x.Language);
 
     }
 

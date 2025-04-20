@@ -11,7 +11,7 @@ internal static class UserMapper
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
-            Culture = user.Culture,
+            Language = user.Language,
             Role = user.Role,
             UserType = user.UserType,
             EmailVerificationState = user.EmailVerificationState,

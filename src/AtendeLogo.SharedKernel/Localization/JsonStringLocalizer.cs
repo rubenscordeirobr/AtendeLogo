@@ -13,23 +13,23 @@ public class JsonStringLocalizer<T> : IJsonStringLocalizer<T>
 
     public JsonStringLocalizer(
         IJsonStringLocalizerCache localizationCache,
-        ICultureProvider localizationProvider)
+        ICultureProvider cultureProvider)
     {
         Guard.NotNull(localizationCache);
-        Guard.NotNull(localizationProvider);
+        Guard.NotNull(cultureProvider);
 
         _resourceKey = LocalizationHelper.GetResourceKey<T>();
         _cache = localizationCache;
-        _cultureProvider = localizationProvider;
+        _cultureProvider = cultureProvider;
     }
 
     public string this[string localizationKey, string defaultValue, params object[] args]
     {
         get
         {
-            var culture = _cultureProvider.Culture;
+            var language = _cultureProvider.Language;
             var localizationString = _cache.GetLocalizedString(
-                culture,
+                language,
                 _resourceKey,
                 localizationKey,
                 defaultValue);
