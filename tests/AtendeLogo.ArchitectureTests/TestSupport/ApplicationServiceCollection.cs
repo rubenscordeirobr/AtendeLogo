@@ -8,6 +8,7 @@ using AtendeLogo.Persistence.Activity;
 using AtendeLogo.Persistence.Identity;
 using AtendeLogo.Presentation;
 using AtendeLogo.RuntimeServices;
+using AtendeLogo.Shared;
 using AtendeLogo.UseCases;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,7 @@ public class ApplicationServiceCollection : ServiceCollection
 
         this.AddApplicationServices()
             .AddRuntimeServices()
+            .AddSharedKernelServices()
             .AddUserCasesServices()
             .AddUserCasesSharedServices()
             .AddPresentationServices()

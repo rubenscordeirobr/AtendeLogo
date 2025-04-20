@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.ArchitectureTests;
+﻿using AtendeLogo.Common.Extensions;
+
+namespace AtendeLogo.ArchitectureTests;
 
 public class RegisteredServiceValidationTests
     : IClassFixture<ApplicationServiceProvider>,
@@ -77,7 +79,7 @@ public class RegisteredServiceValidationTests
 
         _output.WriteLine($"Service {serviceType.Name} has a public constructor with all dependencies");
     }
-
+     
     public static IEnumerable<object[]> ImplementServiceTypes
     {
         get
@@ -96,12 +98,11 @@ public class RegisteredServiceValidationTests
         var services = _serviceProvider.Services;
         var clientServices = _clientServiceProvider.Services;
 
-        //Act
         var serviceDescriptor = services
                 .FirstOrDefault(x => x.ServiceType == serviceType || x.ImplementationType == serviceType)
             ?? clientServices
                 .FirstOrDefault(x => x.ServiceType == serviceType || x.ImplementationType == serviceType);
-
+              
         //Assert
         serviceDescriptor.Should()
             .NotBeNull($"The service {serviceType.Name} should be registered");

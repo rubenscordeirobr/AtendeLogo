@@ -9,7 +9,9 @@ public class ClientGatewayServiceCollection : ServiceCollection
     public ClientGatewayServiceCollection()
     {
         this.AddUserCasesSharedServices()
-            .AddClientGatewayServices();
+            .AddClientGatewayServices()
+            .AddAdminUserAuthenticationServices()
+            .AddTenantUserAuthenticationServices();
 
         this.AddSingleton<ITestOutputHelper, TestOutputProxy>();
     }
