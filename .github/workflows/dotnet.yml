@@ -1,4 +1,4 @@
-name: .NET
+﻿name: .NET
 
 on:
   push:
@@ -17,6 +17,12 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+
+    - name: Create azure-translator-secrets.json
+      run: |
+        mkdir -p secrets
+         echo "${{ secrets.AZURE_TRANSLATOR_SECRET_JSON }}" >  secrets/azure-translator-secrets.json
+    
     - name: Restore dependencies
       run: dotnet restore AtendeLogo.slnx
     - name: Build
