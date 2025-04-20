@@ -22,9 +22,6 @@
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/01-UI/" Id="717f1626-31b9-8664-f7bb-6f3cf30fa3ca">
-    <Project Path="src/AtendeLogo.TenantPortal.BlazorServer/AtendeLogo.TenantPortal.BlazorServer.csproj" />
-    <Project Path="src/AtendeLogo.TenantPortal.BlazorWasm/AtendeLogo.TenantPortal.BlazorWasm.csproj" />
-    <Project Path="src/AtendeLogo.TenantPortal/AtendeLogo.TenantPortal.csproj" />
     <Project Path="src/AtendeLogo.UI/AtendeLogo.UI.csproj" />
   </Folder>
   <Folder Name="/src/02-API/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
