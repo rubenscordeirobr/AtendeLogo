@@ -20,9 +20,12 @@ jobs:
 
     - name: Create azure-translator-secrets.json
       run: |
-        mkdir -p secrets
-         echo "${{ secrets.AZURE_TRANSLATOR_SECRET_JSON }}" >  secrets/azure-translator-secrets.json
+         mkdir -p .secrets
+         echo "${{ secrets.AZURE_TRANSLATOR_SECRET_JSON }}" > .secrets/azure-translator-secrets.json
     
+    - name: Display azure-translator-secrets.json
+      run: cat .secrets/azure-translator-secrets.json
+
     - name: Restore dependencies
       run: dotnet restore AtendeLogo.slnx
     - name: Build
