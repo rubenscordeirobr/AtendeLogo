@@ -1,6 +1,9 @@
 ﻿
+using AtendeLogo.Application.Extensions;
+using AtendeLogo.Shared;
+
 var builder = WebApplication.CreateBuilder(args);
-var env = builder.Environment;
+var environment = builder.Environment;
 
 builder.InitializeEnvironmentSettings()
     .ConfigureCors()
@@ -8,15 +11,17 @@ builder.InitializeEnvironmentSettings()
 
 var configuration = builder.Configuration;
 
-if (!env.IsTest())
+if (!environment.IsTest())
 {
     builder.Services
-        .AddInfrastructureServices(configuration)
+        .AddInfrastructureServices(configuration, environment)
         .AddIdentityPersistenceServices(configuration)
         .AddActivityPersistenceServices(configuration);
 }
 
-builder.Services.AddApplicationServices()
+builder.Services
+    .AddSharedKernelServices()
+    .AddApplicationServices()
     .AddRuntimeServices()
     .AddUserCasesSharedServices()
     .AddUserCasesServices()
@@ -37,7 +42,7 @@ app.UsePresentationServices();
 app.MapPresentationEndPoints();
 app.MapFallback();
 
-if (env.IsDevelopment() && !env.IsTest())
+if (environment.IsDevelopment() && !environment.IsTest())
 {
     app.MapOpenApi();
 

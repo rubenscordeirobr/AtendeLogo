@@ -1,6 +1,6 @@
 ﻿namespace AtendeLogo.IdentityApi.Conventions;
 
-public partial class KebabCaseTransformer : IOutboundParameterTransformer
+internal sealed class KebabCaseTransformer : IOutboundParameterTransformer
 {
     public string? TransformOutbound(object? value)
     {

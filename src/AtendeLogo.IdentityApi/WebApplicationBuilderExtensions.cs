@@ -1,8 +1,8 @@
 ﻿namespace AtendeLogo.IdentityApi;
 
-public static class WebApplicationBuilderExtensions
+internal static class WebApplicationBuilderExtensions
 {
-    public static IHostApplicationBuilder InitializeEnvironmentSettings(
+    internal static IHostApplicationBuilder InitializeEnvironmentSettings(
         this IHostApplicationBuilder builder)
     {
         var baseEnv = builder.Environment.EnvironmentName;
@@ -36,7 +36,6 @@ public static class WebApplicationBuilderExtensions
     public static IHostApplicationBuilder AddEssentialServices(
          this IHostApplicationBuilder builder)
     {
-
 #pragma warning disable S125 
         /* builder.AddServiceDefaults(); */
 #pragma warning restore S125 
@@ -44,9 +43,7 @@ public static class WebApplicationBuilderExtensions
           .AddHttpContextAccessor()
           .AddOpenApi()
           .AddSwaggerGen();
-
-
-
+         
         builder.Services.AddControllers(options =>
         {
             options.Conventions.Add(new RouteTokenTransformerConvention(new KebabCaseTransformer()));
