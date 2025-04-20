@@ -49,15 +49,15 @@ public partial class JsonStringLocalizerServiceTests
     }
 
     [Fact]
-    public async Task DefaultResourceInitializer_ShouldBeSuccessful()
+    public async Task SeedMissingLocalizationKeys_ShouldBeSuccessful()
     {
         // Arrange
         var result = await _clientService.GetLocalizationResourceMapAsync(Language.PortugueseBrazil);
-        var resourceMapInitializer = new DefaultResourceInitializer(_clientService, Language.PortugueseBrazil);
+        var seeder = new MissingLocalizationSeeder(_clientService, Language.PortugueseBrazil);
 
         // Act
         result.ShouldBeSuccessful();
-        Task act = resourceMapInitializer.InitializeAsync(result.Value!);
+        Task act = seeder.SeedAsync(result.Value!);
 
         // Assert
         await FluentActions

@@ -26,7 +26,7 @@ public static class JsonLocalizationConfigurationFactory
         return new JsonLocalizationConfiguration
         {
             ResourcesRootPath = resourcesRootPath,
-            AutoAddMissingKeys = autoAddMissingKeys ,
+            AutoSeedMissingLocalization = autoAddMissingKeys ,
             AutoUpdateDefaultKeys = autoUpdateDefaultKeys ,
             AutoTranslate = autoTranslate ,
             CustomTranslationModelId = customTranslationModelId

@@ -20,7 +20,7 @@ public static class ClientGatewayServiceConfiguration
         var isDevelopment = EnvironmentHelper.IsDevelopment();
         var localizerConfiguration = new JsonLocalizationCacheConfiguration
         {
-            AutoAddMissingKeys = isDevelopment,
+            AutoSeedMissingLocalization = isDevelopment,
             AutoUpdateDefaultKeys = isDevelopment,
             AutoTranslate = isDevelopment,
             CustomTranslationModelId = null
@@ -72,6 +72,6 @@ public static class ClientGatewayServiceConfiguration
       this IServiceProvider serviceProvider)
     {
         var cache = serviceProvider.GetRequiredService<IJsonStringLocalizerCache>();
-        await cache.LoadLanguageAsync(Language.Default);
+        await cache.EnsureLanguageLoadedAsync(Language.Default);
     }
 }

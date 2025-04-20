@@ -100,7 +100,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
         string defaultValue,
         CancellationToken cancellationToken = default)
     {
-        if (!_configuration.AutoAddMissingKeys)
+        if (!_configuration.AutoSeedMissingLocalization)
         {
             return Result.Success(new OperationResponse());
         }

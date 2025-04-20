@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Shared.Abstractions;
+﻿using System.Diagnostics;
+using AtendeLogo.Shared.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -23,7 +24,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         _logger = logger;
     }
 
-    public async Task LoadLanguageAsync(Language language)
+    public async Task EnsureLanguageLoadedAsync(Language language)
     {
         try
         {
@@ -43,7 +44,13 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
                 throw new InvalidOperationException(
                     $"Failed to initialize localization cache for language {language}: {result.Error}");
             }
-            _localizedStringsCache[language] = result.Value;
+            
+            var resourceMap = result.Value;
+            if (_configuration.AutoSeedMissingLocalization)
+            {
+                await SeedMissingLocalizationAsync(localizerService, resourceMap, language);
+            }
+            _localizedStringsCache[language] = resourceMap;
         }
         catch (Exception ex)
         {
@@ -92,7 +99,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
 
         throw new InvalidOperationException(
             $"Localization cache for language {language} is not initialized. " +
-            $"Call InitializeAsync first.");
+            $"Call LoadLanguageAsync first.");
     }
 
     private async Task AddLocalizationStringIfNeededAsync(
@@ -101,7 +108,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         string localizationKey,
         string defaultValue)
     {
-        if (_configuration.AutoAddMissingKeys)
+        if (_configuration.AutoSeedMissingLocalization)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
             var localizerService = scope.ServiceProvider.GetRequiredService<IJsonStringLocalizerService>();
@@ -130,7 +137,28 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
                 defaultValue);
         }
     }
-     
+
+    private async Task SeedMissingLocalizationAsync(
+       IJsonStringLocalizerService localizerService,
+       LocalizationResourceMap targetMap,
+       Language language)
+    {
+        if (language.IsDefaultLanguage())
+        {
+            return;
+        }
+
+        var seeder = new MissingLocalizationSeeder(localizerService, language);
+        if (_localizedStringsCache.TryGetValue(LanguageHelper.DefaultLanguage, out var sourceMap))
+        {
+            await seeder.SeedAsync(sourceMap, targetMap);
+        }
+        else
+        {
+            await seeder.SeedAsync(targetMap);
+        }
+    }
+
     public void Dispose()
     {
         try

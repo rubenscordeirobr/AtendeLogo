@@ -15,7 +15,7 @@ public static class MockConfigurationExtensions
         var config = new JsonLocalizationConfiguration
         {
             ResourcesRootPath = localizationFolder,
-            AutoAddMissingKeys = true,
+            AutoSeedMissingLocalization = true,
             AutoUpdateDefaultKeys = true,
             AutoTranslate = true,
             CustomTranslationModelId = null

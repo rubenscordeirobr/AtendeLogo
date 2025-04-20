@@ -28,19 +28,18 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     public async Task<IUserSession> VerifyAsync()
     {
-        await LoadLanguageAsync(_httpContextSessionAccessor.Language);
+        await EnsureLanguageLoadedAsync(_httpContextSessionAccessor.Language);
      
         var userSession = await GetValidUserSessionAsync();
         _httpContextSessionAccessor.UserSession = userSession;
 
-        await LoadLanguageAsync(userSession.Language);
+        await EnsureLanguageLoadedAsync(userSession.Language);
         return userSession;
     }
 
-    private async Task LoadLanguageAsync(Language language)
+    private async Task EnsureLanguageLoadedAsync(Language language)
     {
-        //_localizerCache handle will check language is already loaded, avoid unnecessary loading
-        await _localizerCache.LoadLanguageAsync(language);
+        await _localizerCache.EnsureLanguageLoadedAsync(language);
     }
 
     private async Task<IUserSession> GetValidUserSessionAsync()

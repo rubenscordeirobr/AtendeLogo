@@ -4,7 +4,7 @@ namespace AtendeLogo.Shared.Extensions;
 
 public static class JsonStringLocalizerCacheExtensions
 {
-    public static Task LoadCultureAsync(
+    public static Task EnsureLanguageLoadedAsync(
         this IJsonStringLocalizerCache localizerCache,
         string languageCode)
     {
@@ -12,13 +12,13 @@ public static class JsonStringLocalizerCacheExtensions
         Guard.NotNullOrWhiteSpace(languageCode);
 
         var language = LanguageHelper.GetLanguage(languageCode);
-        return localizerCache.LoadLanguageAsync(language);
+        return localizerCache.EnsureLanguageLoadedAsync(language);
     }
 
-    public static Task LoadDefaultCultureAsync( 
+    public static Task EnsureDefaultCultureAsync( 
         this IJsonStringLocalizerCache localizerCache )
     {
         Guard.NotNull(localizerCache);
-        return localizerCache.LoadLanguageAsync(LanguageHelper.DefaultLanguage);
+        return localizerCache.EnsureLanguageLoadedAsync(LanguageHelper.DefaultLanguage);
     }
 }

@@ -16,7 +16,7 @@ public class CultureProvider : ICultureProvider
     public async Task SetCultureAsync(string cultureCode)
     {
         _culture = CultureHelper.GetCulture(cultureCode);
-        await _stringLocalizerCache.LoadCultureAsync(cultureCode);
+        await _stringLocalizerCache.EnsureLanguageLoadedAsync(cultureCode);
     }
 
     public Culture Culture

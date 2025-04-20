@@ -2,32 +2,44 @@
 
 namespace AtendeLogo.Shared.Localization;
 
-public class DefaultResourceInitializer
+internal class MissingLocalizationSeeder
 {
     private readonly IJsonStringLocalizerService _localizerService;
-    private readonly Language _targetCulture;
+    private readonly Language _targetLanguage;
 
-    public DefaultResourceInitializer(
+    public MissingLocalizationSeeder(
         IJsonStringLocalizerService localizerService,
-        Language targetCulture)
+        Language target)
     {
         _localizerService = localizerService;
-        _targetCulture = LanguageHelper.Normalize(targetCulture);
+        _targetLanguage = LanguageHelper.Normalize(target);
     }
 
-    public async Task<bool> InitializeAsync(LocalizationResourceMap targetMap)
+    public async Task<bool> SeedAsync(LocalizationResourceMap targetMap)
     {
-        if (_targetCulture == LanguageHelper.DefaultLanguage)
+        if (_targetLanguage == LanguageHelper.DefaultLanguage)
         {
             return false;
         }
 
-        var defaultMap = await GetDefaultResourceMapAsync();
+        var sourceMap = await GetDefaultResourceMapAsync();
+        return await SeedAsync(sourceMap, targetMap);
+    }
+
+    public async Task<bool> SeedAsync(
+        LocalizationResourceMap sourceMap,
+        LocalizationResourceMap targetMap)
+    {
+        if (_targetLanguage == LanguageHelper.DefaultLanguage)
+        {
+            return false;
+        }
+
         var anyResourceChanged = false;
 
-        foreach (var resourceId in defaultMap.Keys)
+        foreach (var resourceId in sourceMap.Keys)
         {
-            var defaultStrings = defaultMap[resourceId];
+            var defaultStrings = sourceMap[resourceId];
             var targetStrings = targetMap.GetValueOrDefault(resourceId) ?? new LocalizedStrings();
 
             var resourceChanged = await SyncMissingLocalizedStringsAsync(
@@ -73,7 +85,7 @@ public class DefaultResourceInitializer
 
                 var defaultValue = defaultStrings[key];
                 await _localizerService.AddLocalizedStringAsync(
-                    _targetCulture,
+                    _targetLanguage,
                     resourceKey,
                     key,
                     defaultValue);

@@ -8,6 +8,6 @@ public interface IJsonStringLocalizerCache
         string localizationKey,
         string defaultValue);
 
-    Task LoadLanguageAsync(Language language);
+    Task EnsureLanguageLoadedAsync(Language language);
 
 }
