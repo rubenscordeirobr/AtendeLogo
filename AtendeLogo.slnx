@@ -1,5 +1,18 @@
 <Solution>
   <Folder Name="/infra/" />
+  <Folder Name="/scripts/" Id="e660ad3f-39f6-4607-bb7b-4030369cf622">
+    <File Path="scripts/Generate-CompilerConfig.ps1" />
+    <File Path="scripts/Set-WhatsAppEnvVars.ps1" />
+  </Folder>
+  <Folder Name="/scripts/docker-compose/" Id="6192a6cd-d3e9-4e55-b4e3-fbacec00495a">
+    <File Path="scripts/docker-componse/docker-compose-up.cmd" />
+  </Folder>
+  <Folder Name="/scripts/mongo-db-init/" Id="25588281-f65d-4597-b34e-4f3717d8aaef">
+    <File Path="scripts/mongo-init/mongo-init.js" />
+  </Folder>
+  <Folder Name="/scripts/postgres-init/" Id="f5f4a23f-21e2-4191-a6ff-379896021b03">
+    <File Path="scripts/postgres-init/init.sql" />
+  </Folder>
   <Folder Name="/solution-items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
@@ -11,8 +24,8 @@
   <Folder Name="/src/01-UI/" Id="717f1626-31b9-8664-f7bb-6f3cf30fa3ca">
     <Project Path="src/AtendeLogo.TenantPortal.BlazorServer/AtendeLogo.TenantPortal.BlazorServer.csproj" />
     <Project Path="src/AtendeLogo.TenantPortal.BlazorWasm/AtendeLogo.TenantPortal.BlazorWasm.csproj" />
-    <Project Path="src/AtendeLogo.TenantPortal.Components/AtendeLogo.TenantPortal.Components.csproj" />
-    <Project Path="src/AtendeLogo.UI.Components/AtendeLogo.UI.Components.csproj" Id="9f269696-684f-4b3b-84d4-8ea28aa1a34c" />
+    <Project Path="src/AtendeLogo.TenantPortal/AtendeLogo.TenantPortal.csproj" />
+    <Project Path="src/AtendeLogo.UI/AtendeLogo.UI.csproj" />
   </Folder>
   <Folder Name="/src/02-API/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
     <Project Path="src/AtendeLogo.IdentityApi/AtendeLogo.IdentityApi.csproj" />

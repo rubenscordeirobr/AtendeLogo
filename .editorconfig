@@ -1,4 +1,4 @@
-###############################
+﻿###############################
 # Core EditorConfig Options   #
 ###############################
 root = true
@@ -6,8 +6,6 @@ root = true
 [*]
 indent_style = space
 vsspell_section_id = 90ec7a963caf4b8d9953f149ca5253a0
- 
-
 
 #csharp_ignore_words = Validator
 #vsspell_ignored_keywords = Validator
@@ -27,6 +25,10 @@ indent_size = 4
 
 # XML config files
 [*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
+indent_size = 4
+
+#Json
+[*.{json,json5,jsonc}]
 indent_size = 4
 
 # Code files

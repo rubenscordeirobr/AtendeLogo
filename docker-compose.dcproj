@@ -13,7 +13,7 @@
     
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="init-scripts\**" />
+    <None Remove="scripts\**" />
   </ItemGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
@@ -21,12 +21,5 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-    <None Include="scripts\docker-componse\docker-compose-up.cmd" />
-    <None Include="scripts\mongo-init\mongo-init.js" />
-    <None Include="scripts\postgres-init\init.sql" />
-    <None Include="scripts\Set-WhatsAppEnvVars.ps1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="scripts\sqls\" />
   </ItemGroup>
 </Project>

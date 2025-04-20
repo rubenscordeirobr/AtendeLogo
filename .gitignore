@@ -1,4 +1,4 @@
-/scripts/Set-WhatsAppEnvVars.ps1
+﻿/scripts/Set-WhatsAppEnvVars.ps1
 .vscode
 .vs
 /docs
@@ -13,10 +13,13 @@ bin
 *.pidb
 *.scc
 *.dll
+*.css
 
 .secrets
 
 .well-known
+compilerconfig.json
+test-resource-key.json
 
 temp/
 copilot-instructions.md
@@ -28,5 +31,6 @@ Web.config
 
 AtendeLogo.TenantPortal.BlazorServer/
 AtendeLogo.TenantPortal.BlazorWasm/
-AtendeLogo.TenantPortal.Components/
-AtendeLogo.UI.Components/
+AtendeLogo.TenantPortal/
+AtendeLogo.IdentityApi/
+lang/
