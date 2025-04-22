@@ -75,7 +75,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         TerminatedAt = DateTime.UtcNow;
         TerminationReason = reason;
 
-        _events.Add(new UserSessionTerminatedEvent(this, reason));
+        _events.Add(new UserSessionEvents(this, reason));
 
         if (UserType == UserType.TenantUser)
         {
@@ -88,7 +88,12 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         LastUpdatedAt = DateTime.UtcNow;
     }
 
-  
+    public void ChangeLanguage(Language language)
+    {
+        Language = language;
+        _events.Add(new UserSessionLanguageChangedEvent(this, language));
+    }
+     
     #region IUser, IDomainEventAggregate
 
     public IReadOnlyList<IDomainEvent> DomainEvents => _events;

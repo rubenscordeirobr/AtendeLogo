@@ -3,6 +3,9 @@
 public sealed record UserSessionStartedEvent(
         UserSession UserSession) : IDomainEvent;
 
-public sealed record UserSessionTerminatedEvent(
+public sealed record UserSessionEvents(
         UserSession UserSession,
         SessionTerminationReason Reason) : IDomainEvent;
+
+public sealed record UserSessionLanguageChangedEvent
+        (UserSession UserSession, Language Language) : IDomainEvent;
