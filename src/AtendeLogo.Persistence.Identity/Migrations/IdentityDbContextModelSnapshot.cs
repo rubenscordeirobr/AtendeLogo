@@ -28,8 +28,9 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "authentication_type", new[] { "anonymous", "credentials", "facebook", "google", "microsoft", "sms", "system", "unknown", "whats_app" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "business_type", new[] { "civil_registry_office", "system", "unknown" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "country", new[] { "argentina", "bolivia", "brazil", "canada", "chile", "colombia", "ecuador", "france", "germany", "guyana", "italy", "mexico", "paraguay", "peru", "portugal", "spain", "suriname", "united_kingdom", "united_states", "unknown", "uruguay", "venezuela" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "culture", new[] { "de_de", "en_ca", "en_gb", "en_gy", "en_us", "es_ar", "es_bo", "es_cl", "es_co", "es_ec", "es_es", "es_mx", "es_pe", "es_uy", "es_ve", "fr_ca", "fr_fr", "gn_py", "it_it", "nl_sr", "pt_br", "pt_pt", "undefined" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "currency", new[] { "brl", "eur", "unknown", "usd" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "language", new[] { "default", "english", "french", "german", "italian", "portuguese", "spanish" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "language", new[] { "default", "english", "french", "german", "italian", "latin_spanish", "portuguese_brazil", "portuguese_portugal", "spanish" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "password_strength", new[] { "empty", "medium", "strong", "weak" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_state", new[] { "cancelled", "closed", "new", "onboarding", "operational", "system", "trial", "unknown" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_status", new[] { "active", "archived", "inactive", "pending", "suspended", "unknown" });

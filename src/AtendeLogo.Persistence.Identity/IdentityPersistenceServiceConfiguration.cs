@@ -15,7 +15,7 @@ public static class IdentityPersistenceServiceConfiguration
         IConfiguration configuration)
     {
         return services.AddNpgsqlIdentityDbContext(configuration)
-            .AddIdentyRepositoryServices();
+            .AddIdentityRepositoryServices();
     }
 
     private static IServiceCollection AddNpgsqlIdentityDbContext(
@@ -44,7 +44,7 @@ public static class IdentityPersistenceServiceConfiguration
         );
     }
 
-    internal static IServiceCollection AddIdentyRepositoryServices(this IServiceCollection services)
+    internal static IServiceCollection AddIdentityRepositoryServices(this IServiceCollection services)
     {
         return services.AddScoped<IAdminUserRepository, AdminUserRepository>()
              .AddScoped<ITenantUserRepository, TenantUserRepository>()
