@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Shared.Models.Security;
+﻿using AtendeLogo.ClientGateway.Abstractions;
+using AtendeLogo.Shared.Models.Security;
 using AtendeLogo.UseCases.Identities.Shared;
 
 namespace AtendeLogo.FunctionalTests.Mocks;

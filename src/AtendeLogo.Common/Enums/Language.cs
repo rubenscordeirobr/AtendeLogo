@@ -4,6 +4,7 @@ namespace AtendeLogo.Common.Enums;
 
 public enum Language
 {
+    [Display(Name = "Default")]
     Default,
 
     [Display(Name = "Portuguese (Brazil)")]

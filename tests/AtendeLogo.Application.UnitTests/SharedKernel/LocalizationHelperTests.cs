@@ -1,15 +1,15 @@
 ﻿using AtendeLogo.Shared.Helpers;
 
-namespace AtendeLogo.Common.UnitTests.Helpers;
+namespace AtendeLogo.Application.UnitTests.SharedKernel;
 
 public class LocalizationHelperTests
 {
 
     [Theory]
-    [InlineData(typeof(TestType), "common/unit-tests/helpers/test-type")]
-    [InlineData(typeof(TestType<List<string>>), "common/unit-tests/helpers/test-type-list-string")]
-    [InlineData(typeof(TestType<>), "common/unit-tests/helpers/test-type-t")]
-    [InlineData(typeof(TestType<List<string>, int>), "common/unit-tests/helpers/test-type-list-string-int-32")]
+    [InlineData(typeof(TestType), "application/unit-tests/shared-kernel/test-type")]
+    [InlineData(typeof(TestType<List<string>>), "application/unit-tests/shared-kernel/test-type-list-string")]
+    [InlineData(typeof(TestType<>), "application/unit-tests/shared-kernel/test-type-t")]
+    [InlineData(typeof(TestType<List<string>, int>), "application/unit-tests/shared-kernel/test-type-list-string-int-32")]
     public void GetResourceKey_ShouldReturnNonEmptyString_ForNonNullType(
         Type type, string expected)
     {
@@ -28,8 +28,8 @@ public class LocalizationHelperTests
     public void GetResourceKey_ShouldReturnTheSameValue_OnMultipleCalls()
     {
         // Act
-        string resourceKey1 = LocalizationHelper.GetResourceKey<TestType>();
-        string resourceKey2 = LocalizationHelper.GetResourceKey<TestType>();
+        var resourceKey1 = LocalizationHelper.GetResourceKey<TestType>();
+        var resourceKey2 = LocalizationHelper.GetResourceKey<TestType>();
 
         // Assert
         resourceKey1.Should()

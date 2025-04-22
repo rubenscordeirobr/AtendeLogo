@@ -18,5 +18,6 @@ public static class EnumExtensions
         var attribute = field.GetCustomAttribute<DescriptionAttribute>();
         return attribute?.Description ?? string.Empty;
     }
+ 
 }
 

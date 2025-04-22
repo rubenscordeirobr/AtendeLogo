@@ -2,7 +2,8 @@
 
 public enum Culture
 {
-    Default,
+    [UndefinedValue]
+    Undefined = 0,
 
     // North America
     EnUs, // United States

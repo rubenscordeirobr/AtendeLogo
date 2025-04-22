@@ -3,7 +3,6 @@ using AtendeLogo.RuntimeServices;
 using AtendeLogo.UseCases;
 using AtendeLogo.Shared;
 using AtendeLogo.TestCommon.Extensions;
-using AtendeLogo.Shared.Helpers;
 using AtendeLogo.Shared.Extensions;
 
 namespace AtendeLogo.TestCommon.Mocks;
@@ -47,7 +46,7 @@ public class ServiceProviderMock<TRoleProvider> : AbstractTestOutputServiceProvi
     private void InitializeJsonLocalizerCache(ServiceProvider serviceProvider)
     {
         var LocalizerCache = serviceProvider.GetRequiredService<IJsonStringLocalizerCache>();
-        var task = LocalizerCache.EnsureDefaultCultureAsync();
+        var task = LocalizerCache.EnsureSystemLanguageLoadedAsync();
         task.Wait();
     }
 }

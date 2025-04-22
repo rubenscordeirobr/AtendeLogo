@@ -5,17 +5,37 @@ namespace AtendeLogo.Common.Helpers;
 
 public static class LanguageHelper
 {
-    public static Language DefaultLanguage => Language.English;
-     
-    public static Language Normalize(Language language)
+    public static Language SystemLanguage => Language.English;
+
+    public static Language Normalize(Culture culture, Language language)
     {
         return language == Language.Default
-          ? DefaultLanguage
+          ? CultureMapper.MapLanguage(culture)
           : language;
     }
 
     public static Language GetLanguage(string? languageCode)
     {
-        return LanguageMapper.MapLanguage(languageCode);
+        var language = LanguageMapper.MapLanguage(languageCode);
+        if (language.HasValue)
+        {
+            return language.Value;
+        }
+
+        var culture = CultureMapper.MapCulture(languageCode);
+        if (culture.HasValue)
+        {
+            return CultureHelper.GetLanguage(culture.Value);
+        }
+        return SystemLanguage;
+    }
+
+    public static bool IsLanguageCodeSupported(string? languageCode)
+    {
+        if (languageCode is null || languageCode.Length < 2)
+            return false;
+
+        var language = LanguageMapper.MapLanguage(languageCode);
+        return language != null;
     }
 }

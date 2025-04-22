@@ -4,38 +4,27 @@ using AtendeLogo.Shared.Helpers;
 
 namespace AtendeLogo.Shared.Localization;
 
-public class JsonStringLocalizer<T> : IJsonStringLocalizer<T>
+public class JsonStringLocalizer<T> : JsonStringLocalizerBase, IJsonStringLocalizer<T>
 {
-    private readonly IJsonStringLocalizerCache _cache;
-    private readonly ICultureProvider _cultureProvider;
-
     private readonly string _resourceKey;
 
     public JsonStringLocalizer(
         IJsonStringLocalizerCache localizationCache,
-        ICultureProvider cultureProvider)
+        ICultureProvider cultureProvider) 
+        : base(localizationCache, cultureProvider)
     {
-        Guard.NotNull(localizationCache);
-        Guard.NotNull(cultureProvider);
-
         _resourceKey = LocalizationHelper.GetResourceKey<T>();
-        _cache = localizationCache;
-        _cultureProvider = cultureProvider;
     }
-
-    public string this[string localizationKey, string defaultValue, params object[] args]
+  
+    protected override string GetLocalizedString(string localizationKey, string defaultValue, object[] args)
     {
-        get
-        {
-            var language = _cultureProvider.Language;
-            var localizationString = _cache.GetLocalizedString(
-                language,
-                _resourceKey,
-                localizationKey,
-                defaultValue);
+        var language = CultureProvider.Language;
+        var localizationString = Cache.GetLocalizedString(
+            language,
+            _resourceKey,
+            localizationKey,
+            defaultValue);
 
-            return StringFormatUtils.Format(localizationString, args);
-        }
+        return StringFormatUtils.Format(localizationString, args);
     }
-
 }

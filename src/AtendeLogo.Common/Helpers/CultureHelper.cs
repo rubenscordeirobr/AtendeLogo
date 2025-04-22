@@ -1,4 +1,5 @@
-﻿using AtendeLogo.Common.Mappers;
+﻿using System.Diagnostics.CodeAnalysis;
+using AtendeLogo.Common.Mappers;
 using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.Common.Helpers;
@@ -13,18 +14,20 @@ public static class CultureHelper
         {
             return culture;
         }
-        return CultureMapper.MapCulture(cultureCode) ?? Culture.Default;
+        return CultureMapper.MapCulture(cultureCode) ?? DefaultCulture;
     }
 
     public static Culture GetCultureFromUrl(string requestUrl)
     {
         var firstSegment = requestUrl?.Split('/').FirstOrDefault();
-        return CultureMapper.MapCulture(firstSegment) ?? Culture.Default;
+        return CultureMapper.MapCulture(firstSegment) ?? DefaultCulture;
     }
 
-    public static bool IsCultureCodeSupported(string? cultureCode)
+    public static bool IsCultureCodeSupported(
+        [NotNullWhen(true)]
+        string? cultureCode)
     {
-        if (cultureCode is null || cultureCode.Length != 2)
+        if (cultureCode is null || cultureCode.Length < 2)
             return false;
 
         var culture = CultureMapper.MapCulture(cultureCode);
@@ -51,14 +54,7 @@ public static class CultureHelper
         }
         return null;
     }
-
-    public static Culture Normalize(Culture culture)
-    {
-        return culture == Culture.Default
-            ?  DefaultCulture
-            : culture;
-    }
-
+     
     public static string BuildDefaultCulturePathWithQuery(string path, string? queryString)
     {
         Guard.NotNullOrWhiteSpace(path);
@@ -69,19 +65,20 @@ public static class CultureHelper
 
     public static string BuildCulturePathWithQuery(string cultureCode, string path, string? queryString)
     {
+        Guard.NotNull(cultureCode);
+
         if (!IsCultureCodeSupported(cultureCode))
         {
             throw new InvalidOperationException(
                 $"Culture '{cultureCode}' is not supported.");
         }
 
-        var result = $"/{cultureCode}/{path?.TrimEnd('/')}";
+        var result = $"/{cultureCode.ToLowerInvariant()}/{path?.TrimEnd('/')}";
         if (!string.IsNullOrEmpty(queryString))
         {
             return $"{result}?{queryString}";
         }
         return result;
-
     }
 
     public static Country GetCountry(Culture culture)

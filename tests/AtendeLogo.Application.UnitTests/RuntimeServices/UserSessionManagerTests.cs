@@ -51,6 +51,7 @@ public class UserSessionManagerTests
             "john@example.com",
             "1234567890",
             Guid.NewGuid(),
+            Language.Default,
             UserRole.Admin,
             UserType.AdminUser,
             DateTime.UtcNow.AddHours(1));
@@ -104,6 +105,7 @@ public class UserSessionManagerTests
             "jane@example.com",
             "0987654321",
             sessionId,
+            Language.Default,
             UserRole.Owner,
             UserType.TenantUser,
             DateTime.UtcNow.AddHours(1));
@@ -171,6 +173,7 @@ public class UserSessionManagerTests
             "david@example.com",
             "0001112222",
             existingSessionId,
+            Language.Default,
             UserRole.Owner,
             UserType.TenantUser,
             DateTime.UtcNow.AddHours(1));

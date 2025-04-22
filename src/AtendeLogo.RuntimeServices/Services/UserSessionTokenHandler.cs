@@ -56,6 +56,7 @@ public class UserSessionTokenHandler : IUserSessionTokenHandler
             new Claim(ClaimTypes.Name, userSessionClaims.Name),
             new Claim(ClaimTypes.Email, userSessionClaims.Email),
             new Claim(ClaimTypes.MobilePhone, userSessionClaims.PhoneNumber),
+            new Claim(UserSessionClaimTypes.Language, userSessionClaims.Language.ToString()),
             new Claim(UserSessionClaimTypes.SessionId, userSessionClaims.Session_Id.ToString()),
             new Claim(ClaimTypes.Role, userSessionClaims.UserRole.ToString()),
             new Claim(UserSessionClaimTypes.UserType, userSessionClaims.UserType.ToString()),

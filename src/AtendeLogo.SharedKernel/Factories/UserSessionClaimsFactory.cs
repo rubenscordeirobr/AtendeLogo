@@ -20,6 +20,7 @@ public static class UserSessionClaimsFactory
             user.Email,
             user.PhoneNumber.Number,
             userSession.Id,
+            userSession.Language,
             userSession.UserRole,
             userSession.UserType,
             null);
@@ -36,6 +37,7 @@ public static class UserSessionClaimsFactory
         var email = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         var phoneNumber = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone)?.Value;
         var sessionId = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.SessionId)?.Value;
+        var language = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.Language)?.Value;
         var userRole = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
         var userType = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.UserType)?.Value;
          
@@ -44,6 +46,7 @@ public static class UserSessionClaimsFactory
            email: email,
            phoneNumber: phoneNumber,
            sessionIdString: sessionId,
+           languageString: language,
            userRoleString: userRole,
            userTypeString: userType,
            expiration: expiration);
@@ -54,6 +57,7 @@ public static class UserSessionClaimsFactory
         string? email,
         string? phoneNumber,
         string? sessionIdString,
+        string? languageString,
         string? userRoleString,
         string? userTypeString,
         DateTime? expiration)
@@ -94,6 +98,15 @@ public static class UserSessionClaimsFactory
                     $"Failed to parse Guid from string: {sessionIdString}"));
         }
 
+        if (!EnumUtils.TryParse<Language>(languageString, out var language))
+        {
+            return Result.Failure<UserSessionClaims>(
+                new ParserError(
+                    null,
+                    "UserSessionClaims.Create",
+                    $"Failed to parse Language from string: {languageString}"));
+        }
+
         if (!EnumUtils.TryParse<UserType>(userTypeString, out var userType))
         {
             return Result.Failure<UserSessionClaims>(
@@ -130,7 +143,7 @@ public static class UserSessionClaimsFactory
                     $"Expiration is in the past"));
         }
 
-        return Result.Success(Create(name, email, phoneNumber, session_Id, userRole, userType, expiration));
+        return Result.Success(Create(name, email, phoneNumber, session_Id, language, userRole, userType, expiration));
 
     }
 
@@ -139,6 +152,7 @@ public static class UserSessionClaimsFactory
         string email,
         string phoneNumber,
         Guid session_Id,
+        Language language,
         UserRole userRole,
         UserType userType,
         DateTime? expiration)
@@ -148,6 +162,7 @@ public static class UserSessionClaimsFactory
           email,
           phoneNumber,
           session_Id,
+          language,
           userRole,
           userType,
           expiration);

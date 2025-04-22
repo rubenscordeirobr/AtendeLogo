@@ -6,8 +6,6 @@ public static class LanguageMapper
     {
         return culture switch
         {
-            Culture.Default => Language.Default,
-
             // North America
             Culture.EnUs => Language.English,
             Culture.EnCa => Language.English,
@@ -38,10 +36,10 @@ public static class LanguageMapper
         };
     }
 
-    public static Language MapLanguage(string? languageCode)
+    public static Language? MapLanguage(string? languageCode)
     {
-        if (string.IsNullOrWhiteSpace(languageCode))
-            return Language.Default;
+        if (languageCode is null)
+            return null;
         
         return languageCode.ToLowerInvariant() switch
         {
@@ -53,9 +51,10 @@ public static class LanguageMapper
             "pt-pt" => Language.PortuguesePortugal,
             "es-es" => Language.Spanish,
             "es-419" => Language.LatinSpanish,
-            _ => throw new NotImplementedException($"MapToLanguage {languageCode} not implemented")
+            _ => null
         };
     }
+
     public static Culture MapCulture(Language language, Country country)
     {
         return (language, country) switch
@@ -87,7 +86,7 @@ public static class LanguageMapper
             (Language.French, _) => Culture.FrFr,
             (Language.German, _) => Culture.DeDe,
             (Language.Italian, _) => Culture.ItIt,
-            _ => Culture.Default
+            _ => CultureHelper.DefaultCulture
         };
     }
 

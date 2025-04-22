@@ -29,6 +29,7 @@ public class UserSessionTokenHandlerTests
         Email: "john@example.com",
         PhoneNumber: "1234567890",
         Session_Id: Guid.NewGuid(),
+        Language: Language.Default,
         UserRole: UserRole.Admin,
         UserType: UserType.AdminUser,
         Expiration: DateTime.UtcNow.AddHours(1)
@@ -110,6 +111,7 @@ public class UserSessionTokenHandlerTests
             Email: "jane@example.com",
             PhoneNumber: "000000000",
             Session_Id: Guid.NewGuid(),
+            Language: Language.Default,
             UserRole: (UserRole)999, // Invalid role
             UserType: (UserType)999, // Invalid type
             Expiration: DateTime.UtcNow.AddHours(1)

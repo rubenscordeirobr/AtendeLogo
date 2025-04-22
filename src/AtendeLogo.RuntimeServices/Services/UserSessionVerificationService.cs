@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.Application.Abstractions.Persistence.Identities;
 using AtendeLogo.Application.Extensions;
-using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Infos;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.Shared.Configuration;
@@ -28,17 +27,18 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
 
     public async Task<IUserSession> VerifyAsync()
     {
-        await EnsureLanguageLoadedAsync(_httpContextSessionAccessor.Language);
-     
+        await EnsureLanguageLoadedAsync();
+ 
         var userSession = await GetValidUserSessionAsync();
         _httpContextSessionAccessor.UserSession = userSession;
 
-        await EnsureLanguageLoadedAsync(userSession.Language);
+        await EnsureLanguageLoadedAsync();
         return userSession;
     }
 
-    private async Task EnsureLanguageLoadedAsync(Language language)
+    private async Task EnsureLanguageLoadedAsync()
     {
+        var language = LanguageHelper.Normalize(CultureHelper.DefaultCulture, _httpContextSessionAccessor.Language);
         await _localizerCache.EnsureLanguageLoadedAsync(language);
     }
 
@@ -173,7 +173,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         if (needsRefreshToken)
         {
             var user = await _unitWork.GetUserAsync(userSessionEntity.User_Id, userSessionEntity.UserType);
-            if(user is null)
+            if (user is null)
             {
                 throw new CriticalNotFoundException("User not found.");
             }

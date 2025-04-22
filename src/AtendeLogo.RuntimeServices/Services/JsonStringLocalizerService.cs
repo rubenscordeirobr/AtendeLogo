@@ -105,7 +105,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
             return Result.Success(new OperationResponse());
         }
 
-        if (!language.IsDefaultLanguage() && !_configuration.AutoTranslate)
+        if (!language.IsSystemLanguage() && !_configuration.AutoTranslate)
         {
             return Result.Success(new OperationResponse());
         }
@@ -225,7 +225,7 @@ public sealed class JsonStringLocalizerService : IJsonStringLocalizerService, ID
     }
     private async Task<Result<string>> GetTranslatedValueAsync(Language language, string defaultValue)
     {
-        if (language.IsDefaultLanguage())
+        if (language.IsSystemLanguage())
         {
             return Result.Success(defaultValue);
         }

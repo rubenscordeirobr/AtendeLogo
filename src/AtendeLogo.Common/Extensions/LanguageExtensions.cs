@@ -4,10 +4,9 @@ namespace AtendeLogo.Common.Extensions;
 
 public static class LanguageExtensions
 {
-    public static bool IsDefaultLanguage(this Language language)
+    public static bool IsSystemLanguage(this Language language)
     {
-        return language == Language.Default ||
-            language ==  LanguageHelper.DefaultLanguage;
+        return language ==  LanguageHelper.SystemLanguage;
     }
 
     public static string GetLanguageCode(this Language language)

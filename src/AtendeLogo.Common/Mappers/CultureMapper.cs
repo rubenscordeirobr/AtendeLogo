@@ -6,7 +6,6 @@ public static class CultureMapper
     {
         return culture switch
         {
-            Culture.Default => "en-US",
             // North America
             Culture.EnUs => "en-US",
             Culture.EnCa => "en-CA",
@@ -75,7 +74,6 @@ public static class CultureMapper
 
     public static Country MapCountry(Culture culture)
     {
-        culture = CultureHelper.Normalize(culture);
         return culture switch
         {
             // North America
@@ -145,7 +143,6 @@ public static class CultureMapper
     {
         return culture switch
         {
-            Culture.Default => Language.Default,
             // North America
             Culture.EnUs => Language.English,
             Culture.EnCa => Language.English,

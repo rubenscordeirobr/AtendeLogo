@@ -5,6 +5,7 @@ public record UserSessionClaims(
     string Email,
     string PhoneNumber,
     Guid Session_Id,
+    Language Language,
     UserRole UserRole,
     UserType UserType,
     DateTime? Expiration = null

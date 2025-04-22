@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using AtendeLogo.Shared.Abstractions;
+﻿using AtendeLogo.Shared.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -26,12 +25,14 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
 
     public async Task EnsureLanguageLoadedAsync(Language language)
     {
+        if(language== Language.Default)
+        {
+            throw new ArgumentException("Language cannot be default.", nameof(language));
+        }
+
         try
         {
             await _cacheLock.WaitAsync();
-
-            language = LanguageHelper.Normalize(language);
-
             if (_localizedStringsCache.ContainsKey(language))
                 return;
 
@@ -69,10 +70,13 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         string localizationKey,
         string defaultValue)
     {
+        if (language == Language.Default)
+        {
+            throw new ArgumentException("Language cannot be default.", nameof(language));
+        }
         Guard.NotNullOrWhiteSpace(resourceIdentifier);
-        language = LanguageHelper.Normalize(language);
 
-        EnsureLanguageCacheReady(language);
+        CheckLanguageCacheLoaded(language);
 
         if (_localizedStringsCache.TryGetValue(language, out var resourceMap))
         {
@@ -80,7 +84,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
             {
                 if (localizationMap.TryGetValue(localizationKey, out var localizedString))
                 {
-                    if (language.IsDefaultLanguage() && defaultValue != localizedString)
+                    if (language.IsSystemLanguage() && defaultValue != localizedString)
                     {
                         _ = UpdateDefaultLocalizedStringIfNeededAsync(resourceIdentifier, localizationKey, defaultValue);
                     }
@@ -92,7 +96,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         return defaultValue;
     }
 
-    private void EnsureLanguageCacheReady(Language language)
+    private void CheckLanguageCacheLoaded(Language language)
     {
         if (_localizedStringsCache.ContainsKey(language))
             return;
@@ -143,13 +147,13 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
        LocalizationResourceMap targetMap,
        Language language)
     {
-        if (language.IsDefaultLanguage())
+        if (language.IsSystemLanguage())
         {
             return;
         }
 
         var seeder = new MissingLocalizationSeeder(localizerService, language);
-        if (_localizedStringsCache.TryGetValue(LanguageHelper.DefaultLanguage, out var sourceMap))
+        if (_localizedStringsCache.TryGetValue(LanguageHelper.SystemLanguage, out var sourceMap))
         {
             await seeder.SeedAsync(sourceMap, targetMap);
         }

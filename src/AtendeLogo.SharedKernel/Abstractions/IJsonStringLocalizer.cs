@@ -7,5 +7,6 @@ public interface IJsonStringLocalizer
 }
 public interface IJsonStringLocalizer<out T> : IJsonStringLocalizer
 {
-    
+
 }
+

@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using AtendeLogo.ClientGateway.Abstractions;
 using AtendeLogo.Shared.Factories;
 using AtendeLogo.Shared.Models.Security;
 using Microsoft.Extensions.Logging;

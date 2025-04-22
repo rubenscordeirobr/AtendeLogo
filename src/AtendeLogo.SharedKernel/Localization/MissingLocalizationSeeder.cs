@@ -9,20 +9,26 @@ internal class MissingLocalizationSeeder
 
     public MissingLocalizationSeeder(
         IJsonStringLocalizerService localizerService,
-        Language target)
+        Language targetLangauge)
     {
+        if (targetLangauge == Language.Default)
+        {
+            throw new ArgumentException(
+                "Target language cannot be default.", nameof(targetLangauge));
+        }
+
         _localizerService = localizerService;
-        _targetLanguage = LanguageHelper.Normalize(target);
+        _targetLanguage = targetLangauge;
     }
 
     public async Task<bool> SeedAsync(LocalizationResourceMap targetMap)
     {
-        if (_targetLanguage == LanguageHelper.DefaultLanguage)
+        if (_targetLanguage == LanguageHelper.SystemLanguage)
         {
             return false;
         }
 
-        var sourceMap = await GetDefaultResourceMapAsync();
+        var sourceMap = await LoadSystemLanguageResourceMapAsync();
         return await SeedAsync(sourceMap, targetMap);
     }
 
@@ -30,7 +36,7 @@ internal class MissingLocalizationSeeder
         LocalizationResourceMap sourceMap,
         LocalizationResourceMap targetMap)
     {
-        if (_targetLanguage == LanguageHelper.DefaultLanguage)
+        if (_targetLanguage == LanguageHelper.SystemLanguage)
         {
             return false;
         }
@@ -55,16 +61,16 @@ internal class MissingLocalizationSeeder
         return anyResourceChanged;
     }
 
-    private async Task<LocalizationResourceMap> GetDefaultResourceMapAsync()
+    private async Task<LocalizationResourceMap> LoadSystemLanguageResourceMapAsync()
     {
         var result = await _localizerService.GetLocalizationResourceMapAsync(
-           LanguageHelper.DefaultLanguage,
+           LanguageHelper.SystemLanguage,
            CancellationToken.None);
 
         if (result.IsFailure)
         {
             throw new InvalidOperationException(
-                $"Failed to load default localization resource map. " +
+                $"Failed to load system language localization resource map. " +
                 $"Error: {result.Error.Message}");
         }
         return result.Value;

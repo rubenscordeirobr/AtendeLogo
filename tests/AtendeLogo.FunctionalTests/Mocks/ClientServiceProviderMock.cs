@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using AtendeLogo.ClientGateway.Abstractions;
 using AtendeLogo.Shared.Abstractions;
 using AtendeLogo.Shared.Enums;
 using AtendeLogo.UseCases.Identities.Authentications.Commands;

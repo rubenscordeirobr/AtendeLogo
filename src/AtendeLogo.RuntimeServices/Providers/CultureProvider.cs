@@ -22,6 +22,16 @@ public class CultureProvider : ICultureProvider
         => CultureMapper.MapCountry(Culture);
 
     public Language Language
-        => _sessionAccessor.Language;
+        => GetLanguageInternal();
+
+    private Language GetLanguageInternal()
+    {
+        var language = _sessionAccessor.UserSessionClaims?.Language;
+        if (language.HasValue && language != Language.Default)
+        {
+            return language.Value;
+        }
+        return CultureHelper.GetLanguage(Culture);
+    }
 }
 
