@@ -7,3 +7,5 @@ global using AtendeLogo.ClientGateway.Common.Attributes;
 global using AtendeLogo.ClientGateway.Common.Abstractions;
 global using AtendeLogo.UseCases.Identities.Shared;
 global using AtendeLogo.Shared;
+global using AtendeLogo.ClientGateway.Abstractions;
+global using AtendeLogo.Shared.Enums;

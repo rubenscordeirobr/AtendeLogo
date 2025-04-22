@@ -1,6 +1,6 @@
 ﻿using AtendeLogo.Shared.Models.Security;
 
-namespace AtendeLogo.ClientGateway.Common.Abstractions;
+namespace AtendeLogo.ClientGateway.Abstractions;
 
 public interface IClientAuthorizationTokenManager
 {

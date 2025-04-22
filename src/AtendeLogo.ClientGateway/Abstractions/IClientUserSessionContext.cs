@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using AtendeLogo.Shared.Models.Security;
 
-namespace AtendeLogo.ClientGateway.Common.Abstractions;
+namespace AtendeLogo.ClientGateway.Abstractions;
 
-public interface IClientAdminUserSessionContext
+public interface IClientUserSessionContext
 {
     [MemberNotNullWhen(true, nameof(UserSessionClaims))]
     [MemberNotNullWhen(true, nameof(UserSession))]
@@ -14,13 +14,6 @@ public interface IClientAdminUserSessionContext
     UserSessionClaims? UserSessionClaims { get; }
 
     UserSessionResponse? UserSession { get; }
-
     UserResponse? User { get; }
-
-    void SetSessionContext(
-        UserSessionClaims userSessionClaims,
-        UserSessionResponse userSession,
-        UserResponse user);
-
     void ClearSessionContext();
 }

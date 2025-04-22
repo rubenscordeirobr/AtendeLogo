@@ -1,6 +1,5 @@
 ﻿using AtendeLogo.ClientGateway.Common;
 using AtendeLogo.ClientGateway.Identities;
-using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Shared.Abstractions;
 using AtendeLogo.Shared.Extensions;
@@ -72,6 +71,6 @@ public static class ClientGatewayServiceConfiguration
       this IServiceProvider serviceProvider)
     {
         var cache = serviceProvider.GetRequiredService<IJsonStringLocalizerCache>();
-        await cache.EnsureLanguageLoadedAsync(Language.Default);
+        await cache.EnsureLanguageLoadedAsync(LanguageHelper.SystemLanguage);
     }
 }

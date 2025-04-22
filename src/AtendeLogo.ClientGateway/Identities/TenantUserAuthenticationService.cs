@@ -1,5 +1,4 @@
-﻿using AtendeLogo.Shared.Enums;
-using AtendeLogo.UseCases.Identities.Authentications.Commands;
+﻿using AtendeLogo.UseCases.Identities.Authentications.Commands;
 
 namespace AtendeLogo.ClientGateway.Identities;
 
