@@ -50,7 +50,7 @@ public static class MockConfigurationExtensions
     {
         return services
             .AddSingleton<IActivityRepository, ActivityRepositoryMock>()
-            .AddIdentyRepositoryServices();
+            .AddIdentityRepositoryServices();
     }
 
     public static IServiceCollection AddLoggerServiceMock(

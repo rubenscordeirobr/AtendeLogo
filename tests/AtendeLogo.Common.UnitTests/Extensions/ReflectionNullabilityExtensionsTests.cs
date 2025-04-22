@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using AtendeLogo.Common.Exceptions;
 
-namespace AtendeLogo.Common.UnitTests.Exceptions;
+namespace AtendeLogo.Common.UnitTests.Extensions;
 
 public class ReflectionNullabilityExtensionsTests
 {

@@ -25,6 +25,7 @@ public interface ITenantService : ICommunicationService
 
     #endregion
 }
+
 public interface ITenantAddressService : ICommunicationService
 {
     Task<Result<OperationResponse>> UpdateDefaultAddressAsync(

@@ -1,4 +1,5 @@
-﻿using AtendeLogo.UseCases.Identities.Authentications.Commands;
+﻿using AtendeLogo.ClientGateway.Abstractions;
+using AtendeLogo.UseCases.Identities.Authentications.Commands;
 
 namespace AtendeLogo.FunctionalTests.Identities;
 

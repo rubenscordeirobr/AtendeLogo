@@ -3,7 +3,7 @@ using AtendeLogo.Domain.Entities.Identities.Events;
 using AtendeLogo.Domain.Entities.Identities.Factories;
 using AtendeLogo.UseCases.Identities.UserSessions.Events;
 
-namespace AtendeLogo.UseCases.UnitTests.Identities.UserSessionContexts;
+namespace AtendeLogo.UseCases.UnitTests.Identities.UserSessions.Events;
 
 public class UserSessionTerminatedEventHandlerTests
      : IClassFixture<ServiceProviderMock<AnonymousRole>>

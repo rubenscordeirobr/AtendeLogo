@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Extensions;
-
-namespace AtendeLogo.ArchitectureTests;
+﻿namespace AtendeLogo.ArchitectureTests;
 
 public class RegisteredServiceValidationTests
     : IClassFixture<ApplicationServiceProvider>,
