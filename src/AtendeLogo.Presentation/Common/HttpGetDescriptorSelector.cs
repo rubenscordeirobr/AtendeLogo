@@ -56,7 +56,7 @@ internal static class HttpGetDescriptorSelector
             var descriptorOperationKeys = descriptor.OperationParameterToKeyMap.Values.ToArray();
           
             int commonKeysCount = operationKeys.Intersect(descriptorOperationKeys, StringComparer.OrdinalIgnoreCase).Count();
-            int keyCountDiff = Math.Abs(operationKeys.Count - descriptorOperationKeys.Length);
+            int keyCountDiff = Math.Abs(operationKeys.Length - descriptorOperationKeys.Length);
 
             if (commonKeysCount > bestScore ||
                 (commonKeysCount == bestScore && keyCountDiff < bestKeyCountDiff))

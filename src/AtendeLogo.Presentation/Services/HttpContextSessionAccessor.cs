@@ -1,6 +1,7 @@
 ﻿using AtendeLogo.Common.Enums;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Shared.Abstractions;
+using AtendeLogo.Shared.Constants;
 using AtendeLogo.Shared.Interfaces.Identities;
 using AtendeLogo.Shared.Models.Security;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ namespace AtendeLogo.Presentation.Services;
 
 public class HttpContextSessionAccessor : IHttpContextSessionAccessor
 {
-    private const string UserSessionCookieKey = nameof(UserSessionCookieKey);
+
     private readonly HttpContext _httpContext;
     private readonly ILogger<HttpContextSessionAccessor> _logger;
 
@@ -35,14 +36,13 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
     public Culture Culture { get; }
 
     public Language Language
-        => UserSession?.Language
-            ?? CultureHelper.GetLanguage(Culture);
-
+        => NormalizeLanguage();
+    
     public string RequestUrl
         => _httpContext.Request.GetDisplayUrl();
 
     public Guid? UserSession_Id
-        => UserSessionClaims?.Session_Id ?? _httpContext.TryGetCookieGuid(UserSessionCookieKey);
+        => UserSessionClaims?.Session_Id ?? _httpContext.TryGetCookieGuid(UserSessionConstants.UserSessionIdCookieKey);
 
     public string? AuthorizationToken
     {
@@ -62,7 +62,7 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
         set
         {
             SetHttpContextItem(HttpContextItemsConstants.UserSession, value);
-            _httpContext.SetCookie(UserSessionCookieKey, value?.Id.ToString());
+            _httpContext.SetCookie(UserSessionConstants.UserSessionIdCookieKey, value?.Id.ToString());
         }
     }
 
@@ -111,6 +111,15 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
         return CultureHelper.GetCultureFromUrl(RequestUrl);
     }
 
+    private Language NormalizeLanguage()
+    {
+        return LanguageHelper.Normalize(
+            Culture,
+            UserSession?.Language
+            ?? UserSessionClaims?.Language
+            ?? Language.Default);
+    }
+     
     private static class HttpContextItemsConstants
     {
         public const string UserSession = "UserSession";

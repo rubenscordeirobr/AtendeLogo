@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿namespace AtendeLogo.Http.Extensions;
 
-namespace AtendeLogo.Presentation.Extensions;
-
-internal static class HttpRequestExtensions
+public static class HttpRequestExtensions
 {
-    internal static List<string> GetOperationKeys(this HttpRequest request)
+    public static string[] GetOperationKeys(this HttpRequest request)
     {
+        Guard.NotNull(request);
+
         var query = request.Query;
         if (query?.Count > 0)
         {
@@ -19,9 +19,11 @@ internal static class HttpRequestExtensions
         return [];
     }
 
-    internal static string GetPathAndQueryString(
+    public static string GetPathAndQueryString(
         this HttpRequest httpRequest)
     {
+        Guard.NotNull(httpRequest);
+
         var path = httpRequest.Path.Value;
         var queryString = httpRequest.QueryString.Value;
         return $"{path}{queryString}";

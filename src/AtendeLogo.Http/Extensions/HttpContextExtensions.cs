@@ -1,7 +1,6 @@
-﻿using AtendeLogo.Shared.Constants;
-using Microsoft.AspNetCore.Http;
+﻿using AtendeLogo.Common.Utils;
 
-namespace AtendeLogo.Presentation.Extensions;
+namespace AtendeLogo.Http.Extensions;
 
 public static class HttpContextExtensions
 {
@@ -13,7 +12,7 @@ public static class HttpContextExtensions
         var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
         var userAgent = context.Request.Headers[HttpHeaderConstants.UserAgent].ToString() ?? "Unknown";
         var applicationName = context.Request.Headers[HttpHeaderConstants.ApplicationName].ToString() ?? "Unknown";
-        var authorizationHeader = context.Request.Headers.Authorization.ToString();
+        var authorizationHeader = context.Request.Headers[HttpHeaderConstants.Authorization].ToString();
         var authorizationToken = JwtUtils.ExtractTokenFromAuthorizationHeader(authorizationHeader);
 
         return new ClientRequestHeaderInfo
@@ -37,6 +36,7 @@ public static class HttpContextExtensions
         }
         return cookieValue;
     }
+
     public static Guid? TryGetCookieGuid(
       this HttpContext context,
       string cookieKey)
