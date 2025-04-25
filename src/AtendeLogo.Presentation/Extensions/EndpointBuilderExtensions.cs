@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 using AtendeLogo.Common.Helpers;
 using AtendeLogo.Presentation.Common.Exceptions;
 using AtendeLogo.Presentation.Common.Validators;
@@ -111,6 +112,16 @@ public static class EndpointBuilderExtensions
             var executor = new HttpRequestExecutorFallback(context);
             await executor.ProcessRequestAsync();
        
+        });
+    }
+
+    public static void MapPing(this IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("/ping", async context =>
+        {
+            var response = DateTime.UtcNow.Ticks.ToString();
+            context.Response.ContentType = "text/plain; charset=utf-8";
+            await context.Response.WriteAsync(response, encoding: Encoding.UTF8);
         });
     }
 }

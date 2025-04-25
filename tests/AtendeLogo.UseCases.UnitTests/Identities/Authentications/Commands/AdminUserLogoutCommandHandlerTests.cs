@@ -90,7 +90,7 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
             eventMediator.ExecutedDomainEvents
                 .Should().NotBeEmpty()
                 .And.Contain(result => result.DomainEvent is UserLoggedOutEvent &&
-                                        result.HandlerType == typeof(UserLoggedOutEventHandler));
+                                       result.HandlerType == typeof(UserLoggedOutEventHandler));
 
             var terminatedUserSession = eventMediator.CapturedEvents
                 .OfType<UserSessionTerminatedEvent>()
@@ -147,6 +147,5 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
 
         }
     }
- 
 }
 

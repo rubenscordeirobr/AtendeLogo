@@ -3,7 +3,7 @@
 public sealed record UserSessionStartedEvent(
         UserSession UserSession) : IDomainEvent;
 
-public sealed record UserSessionEvents(
+public sealed record UserSessionTerminatedEvent(
         UserSession UserSession,
         SessionTerminationReason Reason) : IDomainEvent;
 

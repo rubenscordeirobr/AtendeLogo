@@ -75,7 +75,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         TerminatedAt = DateTime.UtcNow;
         TerminationReason = reason;
 
-        _events.Add(new UserSessionEvents(this, reason));
+        _events.Add(new UserSessionTerminatedEvent(this, reason));
 
         if (UserType == UserType.TenantUser)
         {
