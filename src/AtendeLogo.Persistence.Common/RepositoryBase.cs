@@ -18,7 +18,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
     protected virtual int DefaultMaxRecords
         => RepositoryConstants.DefaultMaxRecords;
-     
+
     protected IUserSession UserSession
         => _userSessionAccessor.GetRequiredUserSession();
 
@@ -47,7 +47,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
         return await CreateQuery(includeExpressions)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<TEntity?> FindAsync(
@@ -70,6 +70,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
         return await CreateQuery(includeExpressions)
             .Where(filterExpression)
+            .Take(DefaultMaxRecords)
             .ToListAsync(cancellationToken);
     }
 
@@ -78,11 +79,12 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         params Expression<Func<TEntity, object?>>[] includeExpressions)
     {
         return await CreateQuery(includeExpressions)
+            .Take(DefaultMaxRecords)
             .ToListAsync(cancellationToken);
     }
-     
+
     #endregion
-     
+
     public async Task<TEntity> RefreshAsync(
         TEntity entity,
         CancellationToken cancellationToken = default)
@@ -116,7 +118,6 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
 
         await entry.ReloadAsync(cancellationToken);
         return entity;
-
     }
 
     #region validations
@@ -160,11 +161,15 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
     protected virtual IQueryable<TEntity> CreateQuery(
         Expression<Func<TEntity, object?>>[]? includeExpressions)
     {
-        var query = _dbContext.Set<TEntity>()
-              .ApplyTracking(_trackingOption)
-              .Take(DefaultMaxRecords);
+        // Warning: Never use Skip or Take before the filters.
+        // If you don’t, EF Core will wrap your query in a subquery
+        // It can hurt performance and lead to unexpected results.
 
-        if (includeExpressions is not null)
+        var query = _dbContext.Set<TEntity>()
+              .AsQueryable()
+              .ApplyTracking(_trackingOption);
+
+        if (includeExpressions is not null && includeExpressions.Length > 0)
         {
             query = includeExpressions.Aggregate(query, (current, include) => current.Include(include));
         }
@@ -172,7 +177,6 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
         if (_isImplementTenantOwnedInterface &&
             ShouldFilterTenantOwned())
         {
-
             query = query.Cast<ITenantOwned>()
                .Where(x => x.Tenant_Id == UserSession.Tenant_Id)
                .Cast<TEntity>();
@@ -184,6 +188,7 @@ public abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where T
                 .Where(x => !x.IsDeleted)
                 .Cast<TEntity>();
         }
+
         return query;
     }
 
