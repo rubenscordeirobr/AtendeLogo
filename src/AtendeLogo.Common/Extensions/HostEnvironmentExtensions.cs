@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace AtendeLogo.Application.Extensions;
+namespace AtendeLogo.Common.Extensions;
 
 public static class HostEnvironmentExtensions
 {
     public static bool IsDockerCompose(this IHostEnvironment hostEnvironment)
     {
         Guard.NotNull(hostEnvironment);
+
         if (!hostEnvironment.IsDevelopment())
         {
             return false;
@@ -89,6 +90,7 @@ public static class HostEnvironmentExtensions
     public static string GetDevelopmentSecretsPath(this IHostEnvironment hostEnvironment)
     {
         Guard.NotNull(hostEnvironment);
+
         if (!hostEnvironment.IsDevelopment())
         {
             throw new InvalidOperationException($"The method {nameof(GetDevelopmentSecretsPath)} can only be used in development environment.");
@@ -102,5 +104,4 @@ public static class HostEnvironmentExtensions
         var devDirectory = hostEnvironment.GetDevelopmentSrcOrTestsDirectory();
         return Path.GetFullPath(Path.Combine(devDirectory.FullName, "../.secrets"));
     }
-
 }
