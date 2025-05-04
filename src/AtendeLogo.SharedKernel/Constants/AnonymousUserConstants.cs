@@ -47,7 +47,7 @@ public static class AnonymousUserConstants
             ipAddress: headInfo.IpAddress,
             userAgent: headInfo.UserAgent,
             isActive: true,
-            keepSession: true,
+            isPersistent: true,
             lastActivity: DateTime.UtcNow,
             startedAt: DateTime.UtcNow,
             terminatedAt: null,

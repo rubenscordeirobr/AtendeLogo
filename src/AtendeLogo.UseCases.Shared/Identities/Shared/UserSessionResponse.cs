@@ -7,7 +7,7 @@ public sealed record UserSessionResponse : IUserSession, IResponse
     public required string IpAddress { get; init; }
     public required string UserAgent { get; init; }
     public required bool IsActive { get; init; }
-    public required bool KeepSession { get; init; }
+    public required bool IsPersistent { get; init; }
     public required DateTime StartedAt { get; init; }
     public required DateTime? TerminatedAt { get; init; }
     public required DateTime LastActivity { get; init; }

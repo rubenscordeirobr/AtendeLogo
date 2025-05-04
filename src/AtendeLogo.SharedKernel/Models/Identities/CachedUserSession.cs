@@ -10,7 +10,7 @@ public class CachedUserSession : IUserSession
     public string IpAddress { get; }
     public string UserAgent { get; }
     public bool IsActive { get; }
-    public bool KeepSession { get; }
+    public bool IsPersistent { get; }
     public DateTime LastActivity { get; }
     public DateTime StartedAt { get; }
     public DateTime? TerminatedAt { get; }
@@ -30,7 +30,7 @@ public class CachedUserSession : IUserSession
          string ipAddress,
          string userAgent,
          bool isActive,
-         bool keepSession,
+         bool isPersistent,
          DateTime lastActivity,
          DateTime startedAt,
          DateTime? terminatedAt,
@@ -49,7 +49,7 @@ public class CachedUserSession : IUserSession
         IpAddress = ipAddress;
         UserAgent = userAgent;
         IsActive = isActive;
-        KeepSession = keepSession;
+        IsPersistent = isPersistent;
         LastActivity = lastActivity;
         StartedAt = startedAt;
         TerminatedAt = terminatedAt;
@@ -73,7 +73,7 @@ public class CachedUserSession : IUserSession
             ipAddress: session.IpAddress,
             userAgent: session.UserAgent,
             isActive: session.IsActive,
-            keepSession: session.KeepSession,
+            isPersistent: session.IsPersistent,
             lastActivity: session.LastActivity,
             startedAt: session.StartedAt,
             terminatedAt: session.TerminatedAt,
@@ -94,7 +94,7 @@ public class CachedUserSession : IUserSession
          string ipAddress,
          string userAgent,
          bool isActive,
-         bool keepSession,
+         bool isPersistent,
          DateTime lastActivity,
          DateTime startedAt,
          DateTime? terminatedAt,
@@ -113,7 +113,7 @@ public class CachedUserSession : IUserSession
             ipAddress,
             userAgent,
             isActive,
-            keepSession,
+            isPersistent,
             lastActivity,
             startedAt,
             terminatedAt,

@@ -1,6 +1,5 @@
 ﻿namespace AtendeLogo.Shared.Constants;
 
-
 public static class UserSessionClaimTypes
 {
     public const string Language = "https://atendelogo.com/claims/language";

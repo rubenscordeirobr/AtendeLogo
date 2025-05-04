@@ -7,7 +7,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
     public string IpAddress { get; private set; }
     public string UserAgent { get; private set; }
     public bool IsActive { get; private set; }
-    public bool KeepSession { get; private set; }
+    public bool IsPersistent { get; private set; }
     public DateTime LastActivity { get; private set; }
     public DateTime StartedAt { get; private set; }
     public DateTime? TerminatedAt { get; private set; }
@@ -28,7 +28,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         string ipAddress,
         string userAgent,
         bool isActive,
-        bool keepSession,
+        bool isPersistent,
         AuthenticationType authenticationType,
         Language language,
         UserRole userRole,
@@ -39,7 +39,7 @@ public sealed class UserSession : EntityBase, IUserSession, IEventAggregate
         ApplicationName = applicationName;
         IpAddress = ipAddress;
         UserAgent = userAgent;
-        KeepSession = keepSession;
+        IsPersistent = isPersistent;
         AuthenticationType = authenticationType;
         Language = language;
         UserRole = userRole;

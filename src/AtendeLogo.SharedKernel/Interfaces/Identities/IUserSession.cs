@@ -6,7 +6,7 @@ public interface IUserSession
     string IpAddress { get; }
     string UserAgent { get; }
     bool IsActive { get; }
-    bool KeepSession { get; }
+    bool IsPersistent { get; }
     DateTime StartedAt { get; }
     DateTime? TerminatedAt { get; }
     DateTime LastActivity { get; }

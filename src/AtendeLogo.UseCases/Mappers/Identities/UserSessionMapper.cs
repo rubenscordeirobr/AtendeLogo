@@ -13,7 +13,7 @@ internal static class UserSessionMapper
             IpAddress = userSession.IpAddress,
             UserAgent = userSession.UserAgent,
             IsActive = userSession.IsActive,
-            KeepSession = userSession.KeepSession,
+            IsPersistent = userSession.IsPersistent,
             StartedAt = userSession.StartedAt,
             TerminatedAt = userSession.TerminatedAt,
             LastActivity = userSession.LastActivity,

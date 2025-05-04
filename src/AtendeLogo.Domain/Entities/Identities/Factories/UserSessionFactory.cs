@@ -8,7 +8,7 @@ public static class UserSessionFactory
         IUser user,
         ClientRequestHeaderInfo clientHeaderInfo,
         AuthenticationType authenticationType,
-        bool keepSession,
+        bool isPersistent,
         Guid? tenant_id)
     {
         Guard.NotNull(user);
@@ -23,7 +23,7 @@ public static class UserSessionFactory
              ipAddress: clientHeaderInfo.IpAddress,
              userAgent: clientHeaderInfo.UserAgent,
              isActive: true,
-             keepSession: keepSession,
+             isPersistent: isPersistent,
              authenticationType: authenticationType,
              language: user.Language,
              userRole: user.Role,

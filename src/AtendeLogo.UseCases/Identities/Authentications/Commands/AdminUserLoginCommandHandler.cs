@@ -95,7 +95,7 @@ public class AdminUserLoginCommandHandler : CommandHandler<AdminUserLoginCommand
             user: user,
             clientHeaderInfo: headerInfo,
             authenticationType: AuthenticationType.Credentials,
-            keepSession: command.KeepSession,
+            isPersistent: command.IsPersistent,
             tenant_id: null);
 
         _unitOfWork.Add(newUserSession);

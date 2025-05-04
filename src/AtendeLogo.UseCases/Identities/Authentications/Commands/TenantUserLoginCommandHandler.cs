@@ -107,7 +107,7 @@ public class TenantUserLoginCommandHandler : CommandHandler<TenantUserLoginComma
             user: user,
             clientHeaderInfo: headerInfo,
             authenticationType: AuthenticationType.Credentials,
-            keepSession: command.KeepSession,
+            isPersistent: command.IsPersistent,
             tenant_id: user.Tenant_Id);
 
         _unitOfWork.Add(newUserSession);

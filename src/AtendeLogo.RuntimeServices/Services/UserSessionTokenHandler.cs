@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using AtendeLogo.Application.Abstractions.Security;
 using AtendeLogo.Shared.Configuration;
+using AtendeLogo.Shared.Extensions;
 using AtendeLogo.Shared.Factories;
 using AtendeLogo.Shared.Models.Security;
 using Microsoft.Extensions.Logging;
@@ -45,23 +46,12 @@ public class UserSessionTokenHandler : IUserSessionTokenHandler
         };
     }
 
-    public string WriteToken(UserSessionClaims userSessionClaims, bool keepSession)
+    public string WriteToken(UserSessionClaims userSessionClaims, bool isPersistent)
     {
         Guard.NotNull(userSessionClaims);
 
-        var expirationTime = UserSessionConfig.GetSessionExpiration(keepSession);
-
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, userSessionClaims.Name),
-            new Claim(ClaimTypes.Email, userSessionClaims.Email),
-            new Claim(ClaimTypes.MobilePhone, userSessionClaims.PhoneNumber),
-            new Claim(UserSessionClaimTypes.Language, userSessionClaims.Language.ToString()),
-            new Claim(UserSessionClaimTypes.SessionId, userSessionClaims.Session_Id.ToString()),
-            new Claim(ClaimTypes.Role, userSessionClaims.UserRole.ToString()),
-            new Claim(UserSessionClaimTypes.UserType, userSessionClaims.UserType.ToString()),
-
-        };
+        var expirationTime = UserSessionConfig.GetSessionExpiration(isPersistent);
+        var claims = userSessionClaims.GetClaims();
 
         var token = new JwtSecurityToken(
             issuer: _validationParameters.ValidIssuer,

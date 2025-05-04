@@ -15,11 +15,12 @@ public static class UserSessionClaimsFactory
         Guard.NotNull(userSession);
         Guard.NotNull(user);
 
-        return Create(
+        return CreateInternal(
+            userSession.Id,
             user.Name,
             user.Email,
             user.PhoneNumber.Number,
-            userSession.Id,
+            userSession.IsPersistent,
             userSession.Language,
             userSession.UserRole,
             userSession.UserType,
@@ -33,19 +34,22 @@ public static class UserSessionClaimsFactory
         Guard.NotNull(claims);
 
         var claimsList = claims as IList<Claim> ?? [.. claims];
+        
+        var sessionId = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.SessionId)?.Value;
         var name = claimsList.FirstOrDefault(static c => c.Type == ClaimTypes.Name)?.Value;
         var email = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         var phoneNumber = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone)?.Value;
-        var sessionId = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.SessionId)?.Value;
+        var isPersistent = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.IsPersistent)?.Value;
         var language = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.Language)?.Value;
         var userRole = claimsList.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
         var userType = claimsList.FirstOrDefault(c => c.Type == UserSessionClaimTypes.UserType)?.Value;
          
         return Create(
+           sessionIdString: sessionId,
            name: name,
            email: email,
            phoneNumber: phoneNumber,
-           sessionIdString: sessionId,
+           isPersistentString: isPersistent,
            languageString: language,
            userRoleString: userRole,
            userTypeString: userType,
@@ -53,10 +57,11 @@ public static class UserSessionClaimsFactory
     }
 
     private static Result<UserSessionClaims> Create(
+        string? sessionIdString,
         string? name,
         string? email,
         string? phoneNumber,
-        string? sessionIdString,
+        string? isPersistentString,
         string? languageString,
         string? userRoleString,
         string? userTypeString,
@@ -87,6 +92,24 @@ public static class UserSessionClaimsFactory
                     null,
                     "UserSessionClaims.Create",
                     "PhoneNumber is null or empty"));
+        }
+
+        if (string.IsNullOrWhiteSpace(isPersistentString))
+        {
+            return Result.Failure<UserSessionClaims>(
+                new ParserError(
+                    null,
+                    "UserSessionClaims.Create",
+                    "IsPersistent is null or empty"));
+        }
+
+        if (!bool.TryParse(isPersistentString, out var isPersistent))
+        {
+            return Result.Failure<UserSessionClaims>(
+                new ParserError(
+                    null,
+                    "UserSessionClaims.Create",
+                    $"IsPersistent: Failed to parse bool from string: {isPersistentString}"));
         }
 
         if (!Guid.TryParse(sessionIdString, out var session_Id))
@@ -143,28 +166,40 @@ public static class UserSessionClaimsFactory
                     $"Expiration is in the past"));
         }
 
-        return Result.Success(Create(name, email, phoneNumber, session_Id, language, userRole, userType, expiration));
+        var userSessionClaims = CreateInternal(session_Id,
+            name,
+            email,
+            phoneNumber,
+            isPersistent,
+            language,
+            userRole,
+            userType,
+            expiration);
+
+        return Result.Success(userSessionClaims);
 
     }
 
-    public static UserSessionClaims Create(
+    private static UserSessionClaims CreateInternal(
+        Guid session_Id,
         string name,
         string email,
         string phoneNumber,
-        Guid session_Id,
+        bool isPersistent,
         Language language,
         UserRole userRole,
         UserType userType,
         DateTime? expiration)
     {
         return new UserSessionClaims(
-          name,
-          email,
-          phoneNumber,
-          session_Id,
-          language,
-          userRole,
-          userType,
-          expiration);
+            session_Id,
+            name,
+            email,
+            phoneNumber,
+            isPersistent,
+            language,
+            userRole,
+            userType,
+            expiration);
     }
 }

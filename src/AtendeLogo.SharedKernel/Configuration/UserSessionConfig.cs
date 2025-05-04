@@ -10,22 +10,28 @@ public static class UserSessionConfig
     private static readonly TimeSpan PersistentSessionRefreshThreshold = TimeSpan.FromDays(7);
     private static readonly TimeSpan DefaultSessionRefreshThreshold = TimeSpan.FromMinutes(5);
 
-    public static TimeSpan GetSessionExpiration(bool keepSession)
+    public static TimeSpan GetSessionExpiration(bool isPersistent)
     {
-        return keepSession
+        return isPersistent
             ? PersistentSessionExpiration
             : DefaultSessionExpiration;
     }
-     
-    public static bool NeedsRefreshSession(DateTime expiration, bool keepSession)
+
+    public static DateTime GetSessionExpirationDateUtc(bool isPersistent)
     {
-        var refreshThreshold = GetRefreshThreshold(keepSession);
+        var expiration = GetSessionExpiration(isPersistent);
+        return DateTime.UtcNow.Add(expiration);
+    }
+
+    public static bool NeedsRefreshSession(DateTime expiration, bool isPersistent)
+    {
+        var refreshThreshold = GetRefreshThreshold(isPersistent);
         return expiration.IsCloseTo(refreshThreshold);
     }
 
-    private static TimeSpan GetRefreshThreshold(bool keepSession)
+    private static TimeSpan GetRefreshThreshold(bool isPersistent)
     {
-        return keepSession
+        return isPersistent
             ? PersistentSessionRefreshThreshold
             : DefaultSessionRefreshThreshold;
     }

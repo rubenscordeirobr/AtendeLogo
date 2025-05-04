@@ -4,6 +4,6 @@ public record AdminUserLoginCommand : CommandRequest<AdminUserLoginResponse>
 {
     public required string EmailOrPhoneNumber { get; init; }
     public required string Password { get; init; }
-    public required bool KeepSession { get; init; }
+    public required bool IsPersistent { get; init; }
 }
 

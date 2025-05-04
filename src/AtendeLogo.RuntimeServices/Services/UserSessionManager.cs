@@ -45,14 +45,14 @@ public sealed class UserSessionManager : IUserSessionManager
         return await _userSessionCacheService.GetSessionAsync(UserSession_Id.Value);
     }
 
-    public async Task SetSessionAsync(IUserSession userSession, IUser user)
+    public async Task SetSessionAsync(IUserSession userSession, IUser user )
     {
         try
         {
             Guard.NotNull(userSession);
 
             var claims = UserSessionClaimsFactory.Create(userSession, user);
-            var authorizationToken = _userSessionTokenHandler.WriteToken(claims, userSession.KeepSession);
+            var authorizationToken = _userSessionTokenHandler.WriteToken(claims, userSession.IsPersistent);
 
             _httpContextSessionAccessor.UserSession = userSession;
             _httpContextSessionAccessor.UserSessionClaims = claims;

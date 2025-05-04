@@ -28,7 +28,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
     public async Task<IUserSession> VerifyAsync()
     {
         await EnsureLanguageLoadedAsync();
- 
+
         var userSession = await GetValidUserSessionAsync();
         _httpContextSessionAccessor.UserSession = userSession;
 
@@ -93,6 +93,8 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         if (terminationReason.HasValue)
         {
             var userSessionEntity = await GetUserSessionEntity(userSession);
+
+            _httpContextSessionAccessor.UserSession = userSessionEntity;
             await TerminateSessionAsync(userSessionEntity, terminationReason.Value);
             return;
         }
@@ -188,7 +190,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
         {
             throw new InvalidOperationException("Expiration is null");
         }
-        return UserSessionConfig.NeedsRefreshSession(expiration.Value, session.KeepSession);
+        return UserSessionConfig.NeedsRefreshSession(expiration.Value, session.IsPersistent);
     }
 
     private async Task<UserSession> CreateAnonymousSessionAsync()
@@ -200,7 +202,7 @@ public class UserSessionVerificationService : IUserSessionVerificationService, I
               user: anonymousUser,
               clientHeaderInfo: headerInfo,
               authenticationType: AuthenticationType.Anonymous,
-              keepSession: true,
+              isPersistent: true,
               tenant_id: null);
 
         _unitWork.Add(userSession);

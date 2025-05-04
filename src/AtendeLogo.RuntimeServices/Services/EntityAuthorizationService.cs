@@ -66,14 +66,21 @@ public class EntityAuthorizationService : IEntityAuthorizationService
         if (entityChangeState == EntityChangeState.Created)
         {
             return entity is Tenant or TenantUser or UserSession;
-
         }
+
+        if (entity is UserSession)
+        {
+            return userSession.Id == AnonymousUserConstants.Session_Id;
+        }
+
         if (entityChangeState == EntityChangeState.Updated)
         {
             return entity.CreatedSession_Id == userSession.Id;
         }
+         
         return false;
 
+    
     }
 
     private void ValidateRole(
