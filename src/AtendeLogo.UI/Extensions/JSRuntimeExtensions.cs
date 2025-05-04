@@ -6,11 +6,14 @@ public static class JSRuntimeExtensions
 {
     public static bool IsJsRuntimeInitialized(this IJSRuntime instance)
     {
-        var isInitializedField = instance?.GetType()
+        if (instance is null)
+            return false;
+
+        var isInitializedField = instance.GetType()
             .GetField("_isInitialized",
             bindingAttr:ReflectionUtils.AllInstanceBindingFlags);
 
-        var isInitializedProperty = instance?.GetType()
+        var isInitializedProperty = instance.GetType()
             .GetProperty("IsInitialized",
             bindingAttr: ReflectionUtils.AllInstanceBindingFlags);
 

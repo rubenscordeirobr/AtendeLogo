@@ -6,17 +6,17 @@ namespace AtendeLogo.ClientGateway.Identities;
 public class AdminUserAuthenticationService : IAdminUserAuthenticationService
 {
     private readonly IClientAuthorizationTokenManager _tokenAuthorizationTokenManager;
-    private readonly IClientAdminUserSessionContext _clientUserSessionContext;
+    private readonly IClientAdminUserSessionContext _sessionContextService;
     private readonly IHttpClientMediator<AdminUserAuthenticationService> _mediator;
 
     public AdminUserAuthenticationService(
         IClientAuthorizationTokenManager clientAuthorizationTokenManager,
-        IClientAdminUserSessionContext clientUserSessionContext,
+        IClientAdminUserSessionContext sessionContextService,
         IHttpClientMediator<AdminUserAuthenticationService> mediator)
     {
         _mediator = mediator;
         _tokenAuthorizationTokenManager = clientAuthorizationTokenManager;
-        _clientUserSessionContext = clientUserSessionContext;
+        _sessionContextService = sessionContextService;
     }
 
     public async Task<Result<AdminUserLoginResponse>> LoginAsync(
@@ -32,7 +32,7 @@ public class AdminUserAuthenticationService : IAdminUserAuthenticationService
 
             await _tokenAuthorizationTokenManager.SetAuthorizationTokenAsync(
                 response.AuthorizationToken,
-                command.KeepSession);
+                command.IsPersistent);
 
             var claims = _tokenAuthorizationTokenManager.GetUserSessionClaims();
             if (claims is null)
@@ -51,10 +51,13 @@ public class AdminUserAuthenticationService : IAdminUserAuthenticationService
                         "User type is invalid"));
             }
 
-            _clientUserSessionContext.SetSessionContext(
+            var sessionContext = new AdminUserSessionContext(
                 claims,
                 response.UserSession,
                 response.User);
+
+            await _sessionContextService.SetSessionContextAsync(sessionContext);
+                 
         }
         return result;
     }
@@ -70,7 +73,7 @@ public class AdminUserAuthenticationService : IAdminUserAuthenticationService
         if (result.IsSuccess)
         {
             await _tokenAuthorizationTokenManager.RemoveAuthorizationTokenAsync();
-            _clientUserSessionContext.ClearSessionContext();
+            await _sessionContextService.ClearSessionContextAsync();
         }
         return result;
     }

@@ -1,20 +1,17 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using AtendeLogo.Shared.Models.Security;
+﻿using AtendeLogo.Shared.Models.Security;
 
 namespace AtendeLogo.ClientGateway.Abstractions;
 
-public interface IClientTenantUserSessionContext : IClientUserSessionContext
+public interface IClientTenantUserSessionContextService: IClientUserSessionContextService
 {
+    TenantUserSessionContext? SessionContext { get; }
+    Task<TenantUserSessionContext?> GetSessionContextAsync();
 
-    [MemberNotNullWhen(true, nameof(Tenant))]
-    new bool IsAuthenticated { get; }
-
-    TenantResponse? Tenant { get; }
-
-    void SetSessionContext(
-        UserSessionClaims userSessionClaims,
-        UserSessionResponse userSession,
-        UserResponse user,
-        TenantResponse tenant);
-
+    Task SetSessionContextAsync(TenantUserSessionContext sessionContext, bool isPersistent);
 }
+
+public sealed record TenantUserSessionContext(
+        UserSessionClaims UserSessionClaims,
+        UserSessionResponse UserSession,
+        UserResponse User,
+        TenantResponse Tenant);

@@ -2,11 +2,15 @@
 
 namespace AtendeLogo.ClientGateway.Abstractions;
 
-public interface IClientAdminUserSessionContext : IClientUserSessionContext
+public interface IClientAdminUserSessionContext : IClientUserSessionContextService
 {
-    
-    void SetSessionContext(
-        UserSessionClaims userSessionClaims,
-        UserSessionResponse userSession,
-        UserResponse user);
+    AdminUserSessionContext SessionContext { get; }
+    Task<AdminUserSessionContext> GetSessionContextAsync(); 
+
+    Task SetSessionContextAsync(AdminUserSessionContext sessionContext);
 }
+
+public sealed record AdminUserSessionContext(
+        UserSessionClaims UserSessionClaims,
+        UserSessionResponse UserSession,
+        UserResponse user);

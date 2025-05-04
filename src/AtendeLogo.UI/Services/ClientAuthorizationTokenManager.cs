@@ -1,8 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using AtendeLogo.ClientGateway.Common.Abstractions;
+using AtendeLogo.ClientGateway.Abstractions;
 using AtendeLogo.Shared.Models.Security;
-using AtendeLogo.UI.Extensions;
-using Blazored.LocalStorage;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
@@ -14,46 +12,65 @@ public class ClientAuthorizationTokenManager : IClientAuthorizationTokenManager
 
     private readonly JwtSecurityTokenHandler _tokenHandler = new();
     private readonly IJSRuntime _jsRuntime;
-    private readonly ILocalStorageService _localStorageService;
+    private readonly IStorageService _storageService;
     private readonly ILogger<ClientAuthorizationTokenManager> _logger;
 
-    private UserSessionClaims? _currentUserSessionClaims;
+    private UserSessionState? _currentUserSessionState;
+
+    public event EventHandlerAsync<AuthorizationTokenUpdatedEventArgs>? UserSessionStateUpdated;
 
     public ClientAuthorizationTokenManager(
         IJSRuntime jsRuntime,
-        ILocalStorageService localStorageService,
+        IStorageService localStorageService,
         ILogger<ClientAuthorizationTokenManager> logger)
     {
-        _localStorageService = localStorageService;
+        _storageService = localStorageService;
         _logger = logger;
         _jsRuntime = jsRuntime;
     }
 
     public UserSessionClaims? GetUserSessionClaims()
     {
-        return _currentUserSessionClaims;
+        return _currentUserSessionState?.UserSessionClaims;
+    }
+
+    public UserSessionState? GetUserSessionState()
+    {
+        return _currentUserSessionState;
+    }
+
+    public async Task EnsureUserSessionStateAsync()
+    {
+        if (_currentUserSessionState is null)
+        {
+            var authorizationToken = await GetAuthorizationTokenAsync();
+            if (authorizationToken is null)
+            {
+                return;
+            }
+            RefreshUserSessionState(authorizationToken);
+        }
     }
 
     public async Task<string?> GetAuthorizationTokenAsync()
     {
-        if (_jsRuntime is null || !_jsRuntime.IsJsRuntimeInitialized())
+        if (!_jsRuntime.IsJsRuntimeInitialized())
         {
             return null;
         }
-        return await _localStorageService.GetItemAsync<string>(AuthorizationTokenKey);
+        return await _storageService.GetItemAsync<string>(AuthorizationTokenKey);
     }
 
-    public async Task SetAuthorizationTokenAsync(string authorizationToken, bool keepSession)
+    public async Task SetAuthorizationTokenAsync(string authorizationToken, bool isPersistent)
     {
         Guard.NotNullOrWhiteSpace(authorizationToken);
-   
-        await _localStorageService.SetItemAsync(AuthorizationTokenKey, authorizationToken);
-        UpdateUserSessionClaims(authorizationToken);
+        await _storageService.SetItemAsync(AuthorizationTokenKey, authorizationToken, isPersistent);
+        RefreshUserSessionState(authorizationToken);
     }
 
     public async Task ValidateAuthorizationHeaderAsync(string? responseAuthorizationHeader)
     {
-        if (_jsRuntime is null)
+        if (!_jsRuntime.IsJsRuntimeInitialized())
         {
             return;
         }
@@ -66,23 +83,58 @@ public class ClientAuthorizationTokenManager : IClientAuthorizationTokenManager
         }
         await SetAuthorizationTokenAsync(authorizationToken, true);
     }
-     
+
     public async Task RemoveAuthorizationTokenAsync()
     {
-        await _localStorageService.RemoveItemAsync(AuthorizationTokenKey);
-        _currentUserSessionClaims = null;
+        await _storageService.RemoveItemAsync(AuthorizationTokenKey);
+        RefreshUserSessionState(null);
     }
 
-    private void UpdateUserSessionClaims(string token)
+    private void RefreshUserSessionState(string? token)
+    {
+        if (ShouldRefreshUserSessionState(token))
+        {
+            var userSessionState = GetUserSessionStateFromToken(token);
+            if (_currentUserSessionState != userSessionState)
+            {
+                _currentUserSessionState = userSessionState;
+
+                var args = new AuthorizationTokenUpdatedEventArgs(_currentUserSessionState);
+                UserSessionStateUpdated?.InvokeAsync(this, args);
+            }
+        }
+    }
+
+    private bool ShouldRefreshUserSessionState(string? token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return _currentUserSessionState is not null;
+        }
+        return _currentUserSessionState?.AuthorizationToken != token;
+    }
+
+    private UserSessionState? GetUserSessionStateFromToken(string? token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return null;
+
+        var userSessionClaims = TryReadToken(token);
+        if (userSessionClaims is null)
+            return null;
+
+        return new UserSessionState(userSessionClaims, token);
+    }
+    private UserSessionClaims? TryReadToken(string token)
     {
         try
         {
-            _currentUserSessionClaims = ReadToken(token);
+            return ReadToken(token);
         }
         catch (Exception ex)
         {
-            _currentUserSessionClaims = null;
             _logger.LogError(ex, "Error reading client session token. {ClientToken}", token);
+            return null;
         }
     }
 

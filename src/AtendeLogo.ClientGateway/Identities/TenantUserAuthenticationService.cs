@@ -6,17 +6,17 @@ namespace AtendeLogo.ClientGateway.Identities;
 public class TenantUserAuthenticationService : ITenantUserAuthenticationService
 {
     private readonly IClientAuthorizationTokenManager _tokenAuthorizationTokenManager;
-    private readonly IClientTenantUserSessionContext _clientUserSessionContext;
+    private readonly IClientTenantUserSessionContextService _sessionContextService;
     private readonly IHttpClientMediator<TenantUserAuthenticationService> _mediator;
 
     public TenantUserAuthenticationService(
         IClientAuthorizationTokenManager clientAuthorizationTokenManager,
-        IClientTenantUserSessionContext clientUserSessionContext,
+        IClientTenantUserSessionContextService sessionContextService,
         IHttpClientMediator<TenantUserAuthenticationService> mediator)
     {
         _mediator = mediator;
         _tokenAuthorizationTokenManager = clientAuthorizationTokenManager;
-        _clientUserSessionContext = clientUserSessionContext;
+        _sessionContextService = sessionContextService;
     }
 
     public async Task<Result<TenantUserLoginResponse>> LoginAsync(
@@ -32,10 +32,10 @@ public class TenantUserAuthenticationService : ITenantUserAuthenticationService
 
             await _tokenAuthorizationTokenManager.SetAuthorizationTokenAsync(
                 response.AuthorizationToken,
-                command.KeepSession);
+                command.IsPersistent);
 
-            var claims = _tokenAuthorizationTokenManager.GetUserSessionClaims();
-            if (claims is null)
+            var userSessionClaims = _tokenAuthorizationTokenManager.GetUserSessionClaims();
+            if (userSessionClaims is null)
             {
                 return Result.Failure<TenantUserLoginResponse>(
                     new AuthenticationError(
@@ -43,19 +43,21 @@ public class TenantUserAuthenticationService : ITenantUserAuthenticationService
                         "Failed to set authorization token"));
             }
 
-            if(claims.UserType != UserType.TenantUser)
+            if(userSessionClaims.UserType != UserType.TenantUser)
             {
                 return Result.Failure<TenantUserLoginResponse>(
                     new AuthenticationError(
                         "IClientAuthorizationTokenManager.UserTypeInvalid",
                         "User type is invalid"));
             }
-             
-            _clientUserSessionContext.SetSessionContext(
-                claims,
+
+            var sessionContext = new TenantUserSessionContext(
+                userSessionClaims,
                 response.UserSession,
                 response.User,
                 response.Tenant);
+
+            await _sessionContextService.SetSessionContextAsync(sessionContext, command.IsPersistent);
         }
         return result;
     }
@@ -71,7 +73,7 @@ public class TenantUserAuthenticationService : ITenantUserAuthenticationService
         if (result.IsSuccess)
         {
             await _tokenAuthorizationTokenManager.RemoveAuthorizationTokenAsync();
-            _clientUserSessionContext.ClearSessionContext();
+            await _sessionContextService.ClearSessionContextAsync();
         }
         return result;
     }
