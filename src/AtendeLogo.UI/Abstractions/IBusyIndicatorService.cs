@@ -10,4 +10,11 @@ public interface IBusyIndicatorService
     void Busy();
     void Release();
 
+ 
+
+    Task<Result<T>> RunWithBusyIndicatorAsync<T>(
+        Func<Task<Result<T>>> operation,
+        CancellationToken cancellationToken = default)
+        where T : notnull;
+
 }
