@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.Common.Exceptions;
+﻿namespace AtendeLogo.Common.Extensions;
 
 public static class DirectoryInfoExtensions
 {
@@ -21,7 +21,7 @@ public static class DirectoryInfoExtensions
         this DirectoryInfo directory,
         string directoryName)
     {
-        DirectoryInfo? current = directory;
+        var current = directory;
         while (current != null && !current.Name.Equals(directoryName, StringComparison.OrdinalIgnoreCase))
         {
             current = current.Parent;
