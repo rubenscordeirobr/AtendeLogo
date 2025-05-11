@@ -47,10 +47,11 @@ public class UserSessionManagerTests
         // Arrange
         var validToken = "validToken";
         var expectedClaims = new UserSessionClaims(
+            Guid.NewGuid(),
             "John Doe",
             "john@example.com",
             "1234567890",
-            Guid.NewGuid(),
+            IsPersistent: false,
             Language.Default,
             UserRole.Admin,
             UserType.AdminUser,
@@ -98,13 +99,14 @@ public class UserSessionManagerTests
     {
         // Arrange
         _httpContextSessionAccessorMock.Object.UserSession = null;
-       
+
         var sessionId = Guid.NewGuid();
         var dummyClaims = new UserSessionClaims(
+            sessionId,
             "Jane Doe",
             "jane@example.com",
             "0987654321",
-            sessionId,
+            IsPersistent: true,
             Language.Default,
             UserRole.Owner,
             UserType.TenantUser,
@@ -126,8 +128,7 @@ public class UserSessionManagerTests
 
         _userSessionCacheServiceMock.Setup(x => x.GetSessionAsync(sessionId, default))
             .ReturnsAsync(cachedSession);
- 
-
+         
         var manager = new UserSessionManager(
             _httpContextSessionAccessorMock.Object,
             _userSessionTokenHandlerMock.Object,
@@ -162,21 +163,23 @@ public class UserSessionManagerTests
         result.Should().BeNull();
         _userSessionCacheServiceMock.Verify(x => x.GetSessionAsync(It.IsAny<Guid>(), default), Times.Never);
     }
-  
+
     [Fact]
     public async Task RemoveSessionAsync_WithDifferentSessionId_DoesNotClearAuthorizationToken_ButRemovesSession()
     {
         // Arrange
         var existingSessionId = Guid.NewGuid();
         var dummyClaims = new UserSessionClaims(
+            existingSessionId,
             "David",
             "david@example.com",
             "0001112222",
-            existingSessionId,
+            IsPersistent: false,
             Language.Default,
             UserRole.Owner,
             UserType.TenantUser,
             DateTime.UtcNow.AddHours(1));
+
         _httpContextSessionAccessorMock.Object.UserSessionClaims = dummyClaims;
         _httpContextSessionAccessorMock.Object.AuthorizationToken = "existingToken";
 
@@ -195,7 +198,5 @@ public class UserSessionManagerTests
         _httpContextSessionAccessorMock.Object.AuthorizationToken.Should().Be("existingToken");
         _userSessionCacheServiceMock.Verify(x => x.RemoveSessionAsync(differentSessionId, default), Times.Once);
     }
-      
-
 }
 

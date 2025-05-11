@@ -25,10 +25,11 @@ public class UserSessionTokenHandlerTests
     }
 
     private static UserSessionClaims CreateValidClaims() => new(
+        Session_Id: Guid.NewGuid(),
         Name: "John Doe",
         Email: "john@example.com",
         PhoneNumber: "1234567890",
-        Session_Id: Guid.NewGuid(),
+        IsPersistent: true,
         Language: Language.Default,
         UserRole: UserRole.Admin,
         UserType: UserType.AdminUser,
@@ -43,7 +44,7 @@ public class UserSessionTokenHandlerTests
         var claims = CreateValidClaims();
 
         // Act
-        var token = handler.WriteToken(claims, keepSession: true);
+        var token = handler.WriteToken(claims, isPersistent: true);
 
         // Assert
         token.Should().NotBeNullOrWhiteSpace();
@@ -57,7 +58,7 @@ public class UserSessionTokenHandlerTests
         var handler = new UserSessionTokenHandler(_secureConfigMock.Object, _loggerMock.Object);
         var originalClaims = CreateValidClaims();
 
-        var token = handler.WriteToken(originalClaims, keepSession: false);
+        var token = handler.WriteToken(originalClaims, isPersistent: false);
 
         // Act
         var parsedClaims = handler.ReadToken(token);
@@ -107,17 +108,18 @@ public class UserSessionTokenHandlerTests
 
         // Create a claim with invalid UserType (string that won’t parse to enum)
         var invalidClaims = new UserSessionClaims(
+            Session_Id: Guid.NewGuid(),
             Name: "Jane",
             Email: "jane@example.com",
             PhoneNumber: "000000000",
-            Session_Id: Guid.NewGuid(),
+            IsPersistent: false,
             Language: Language.Default,
             UserRole: (UserRole)999, // Invalid role
             UserType: (UserType)999, // Invalid type
             Expiration: DateTime.UtcNow.AddHours(1)
         );
 
-        var token = handler.WriteToken(invalidClaims, keepSession: true);
+        var token = handler.WriteToken(invalidClaims, isPersistent: true);
 
         // Act
         var result = handler.ReadToken(token);

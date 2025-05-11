@@ -6,12 +6,12 @@ namespace AtendeLogo.ClientGateway.Identities;
 public class AdminUserAuthenticationService : IAdminUserAuthenticationService
 {
     private readonly IClientAuthorizationTokenManager _tokenAuthorizationTokenManager;
-    private readonly IClientAdminUserSessionContext _sessionContextService;
+    private readonly IClientAdminUserSessionContextService _sessionContextService;
     private readonly IHttpClientMediator<AdminUserAuthenticationService> _mediator;
 
     public AdminUserAuthenticationService(
         IClientAuthorizationTokenManager clientAuthorizationTokenManager,
-        IClientAdminUserSessionContext sessionContextService,
+        IClientAdminUserSessionContextService sessionContextService,
         IHttpClientMediator<AdminUserAuthenticationService> mediator)
     {
         _mediator = mediator;
@@ -56,7 +56,7 @@ public class AdminUserAuthenticationService : IAdminUserAuthenticationService
                 response.UserSession,
                 response.User);
 
-            await _sessionContextService.SetSessionContextAsync(sessionContext);
+            await _sessionContextService.SetSessionContextAsync(sessionContext, claims.IsPersistent);
                  
         }
         return result;

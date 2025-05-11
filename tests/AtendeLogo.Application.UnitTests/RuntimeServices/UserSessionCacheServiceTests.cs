@@ -66,7 +66,7 @@ public class UserSessionCacheServiceTests
             user,
             headerInfo,
             AuthenticationType.Anonymous,
-            keepSession: true,
+            isPersistent: true,
             tenant_id: tenant_Id);
 
         expectedSession.SetPropertyValue(p => p.Id, session_Id);
@@ -116,7 +116,7 @@ public class UserSessionCacheServiceTests
             anonymousUser,
             headerInfo,
             AuthenticationType.Anonymous,
-            keepSession: true,
+            isPersistent: true,
             tenant_id: null);
              
 
@@ -148,7 +148,7 @@ public class UserSessionCacheServiceTests
             anonymousUser,
             headerInfo,
             AuthenticationType.Anonymous,
-            keepSession: true,
+            isPersistent: true,
             tenant_id: null);
 
         // Act

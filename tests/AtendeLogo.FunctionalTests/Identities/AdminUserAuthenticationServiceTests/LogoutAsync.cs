@@ -39,10 +39,10 @@ public partial class AdminUserAuthenticationServiceTests
         public async Task LogoutAsync_WhenValidCredentials_ShouldBeSuccessful()
         {
             // Arrange
-            var userSessionAccessor = _clientServiceProvider.GetRequiredService<IClientAdminUserSessionContext>();
-            var userSession = userSessionAccessor.UserSession;
+            var userSessionAccessor = _clientServiceProvider.GetRequiredService<IClientAdminUserSessionContextService>();
+            var userSessionContext = userSessionAccessor.SessionContext;
 
-            var command = new AdminUserLogoutCommand(userSession!.Id);
+            var command = new AdminUserLogoutCommand(userSessionContext!.UserSession.Id);
 
             //// Act
             var result = await _clientService.LogoutAsync(command);

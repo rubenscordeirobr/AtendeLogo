@@ -31,7 +31,7 @@ public class UserSessionTerminatedEventHandlerTests
             user: user,
             clientHeaderInfo: ClientRequestHeaderInfo.System,
             authenticationType: AuthenticationType.System,
-            keepSession: false,
+            isPersistent: false,
             tenant_id: null);
 
         var createdEvent = new UserSessionTerminatedEvent(userSession, SessionTerminationReason.SessionExpired);

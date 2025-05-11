@@ -22,7 +22,7 @@ public static class UserSessionExtensions
             return false;
         }
 
-        var expirationTime = UserSessionConfig.GetSessionExpiration(userSession.KeepSession);
+        var expirationTime = UserSessionConfig.GetSessionExpiration(userSession.IsPersistent);
         return DateTime.Now > userSession.LastActivity.Add(expirationTime);
     }
 

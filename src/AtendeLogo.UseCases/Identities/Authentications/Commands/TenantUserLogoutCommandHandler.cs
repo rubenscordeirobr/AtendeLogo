@@ -37,7 +37,7 @@ public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCom
                         "The provided session ID does not match the current active session."));
 
         }
-
+ 
         var userSession = await _unitOfWork.UserSessions
             .GetByIdWithUserAsync(
                 command.Session_Id,
@@ -79,4 +79,3 @@ public class TenantUserLogoutCommandHandler : CommandHandler<TenantUserLogoutCom
         return Result.Success(new OperationResponse());
     }
 }
-

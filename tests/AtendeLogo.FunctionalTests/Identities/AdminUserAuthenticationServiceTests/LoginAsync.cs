@@ -18,7 +18,7 @@ public partial class AdminUserAuthenticationServiceTests
         {
             EmailOrPhoneNumber = email,
             Password = testPassword,
-            KeepSession = true
+            IsPersistent = true
         };
 
         // Act
@@ -39,7 +39,7 @@ public partial class AdminUserAuthenticationServiceTests
         {
             EmailOrPhoneNumber = invalidEmail,
             Password = testPassword,
-            KeepSession = true
+            IsPersistent = true
         };
 
         // Act
@@ -62,7 +62,7 @@ public partial class AdminUserAuthenticationServiceTests
         {
             EmailOrPhoneNumber = email,
             Password = invalidPassword,
-            KeepSession = true
+            IsPersistent = true
         };
 
         // Act
@@ -83,7 +83,7 @@ public partial class AdminUserAuthenticationServiceTests
         {
             EmailOrPhoneNumber = email,
             Password = invalidPassword,
-            KeepSession = true
+            IsPersistent = true
         };
 
         // Act

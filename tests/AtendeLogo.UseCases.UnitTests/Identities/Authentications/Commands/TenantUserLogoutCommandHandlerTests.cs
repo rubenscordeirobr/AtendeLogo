@@ -128,7 +128,7 @@ public class TenantUserLogoutCommandHandlerTests : IClassFixture<ServiceProvider
             {
                 EmailOrPhoneNumber = SystemTenantConstants.Email,
                 Password = SystemTenantConstants.TestPassword,
-                KeepSession = true
+                IsPersistent = true
             };
 
             var loginResult = await mediator.RunAsync(loginCommand);

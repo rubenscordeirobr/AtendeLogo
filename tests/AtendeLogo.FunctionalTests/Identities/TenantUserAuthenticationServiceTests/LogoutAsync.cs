@@ -39,10 +39,10 @@ public partial class TenantUserAuthenticationServiceTests
         public async Task LogoutAsync_WhenValidCredentials_ShouldBeSuccessful()
         {
             // Arrange
-            var userSessionAccessor = _clientServiceProvider.GetRequiredService<IClientTenantUserSessionContext>();
-            var userSession = userSessionAccessor.UserSession;
+            var userSessionService = _clientServiceProvider.GetRequiredService<IClientTenantUserSessionContextService>();
+            var userSessionContext = userSessionService.SessionContext;
 
-            var command = new TenantUserLogoutCommand(userSession!.Id);
+            var command = new TenantUserLogoutCommand(userSessionContext!.UserSession.Id);
 
             //// Act
             var result = await _clientService.LogoutAsync(command);

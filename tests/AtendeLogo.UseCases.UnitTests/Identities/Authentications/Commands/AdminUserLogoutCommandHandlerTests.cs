@@ -128,7 +128,7 @@ public class AdminUserLogoutCommandHandlerTests : IClassFixture<ServiceProviderM
             {
                 EmailOrPhoneNumber = DefaultAdminUserConstants.Email,
                 Password = DefaultAdminUserConstants.TestPassword,
-                KeepSession = true
+                IsPersistent = true
             };
 
             var loginResult = await mediator.RunAsync(loginCommand);

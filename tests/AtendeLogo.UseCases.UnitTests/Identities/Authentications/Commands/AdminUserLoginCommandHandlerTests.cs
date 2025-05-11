@@ -20,7 +20,7 @@ public class AdminUserLoginCommandHandlerTests : IClassFixture<ServiceProviderMo
         {
             EmailOrPhoneNumber = DefaultAdminUserConstants.Email,
             Password = DefaultAdminUserConstants.TestPassword,
-            KeepSession = true
+            IsPersistent = true
         };
     }
 

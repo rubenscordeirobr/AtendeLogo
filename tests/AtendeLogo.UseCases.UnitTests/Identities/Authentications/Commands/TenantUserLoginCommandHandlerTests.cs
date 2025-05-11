@@ -19,7 +19,7 @@ public class TenantUserLoginCommandHandlerTests : IClassFixture<ServiceProviderM
         {
             EmailOrPhoneNumber = SystemTenantConstants.Email,
             Password = SystemTenantConstants.TestPassword,
-            KeepSession = true
+            IsPersistent = true
         };
     }
 

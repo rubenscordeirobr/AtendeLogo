@@ -113,7 +113,7 @@ public class EntityAuthorizationServiceTests
         public string IpAddress { get; set; } = string.Empty;
         public string UserAgent { get; set; } = string.Empty;
         public bool IsActive { get; set; }
-        public bool KeepSession { get; set; }
+        public bool IsPersistent { get; set; }
         public DateTime StartedAt { get; set; }
         public DateTime? TerminatedAt { get; set; }
         public DateTime LastActivity { get; set; }

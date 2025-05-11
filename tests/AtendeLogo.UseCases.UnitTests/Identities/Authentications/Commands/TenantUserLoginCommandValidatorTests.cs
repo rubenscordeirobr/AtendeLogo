@@ -23,7 +23,7 @@ public class TenantUserLoginCommandValidatorTests : IClassFixture<ServiceProvide
         {
             EmailOrPhoneNumber = SystemTenantConstants.Email,
             Password = "TenantAdmin@Teste%#",
-            KeepSession = true
+            IsPersistent = true
         };
     }
 
