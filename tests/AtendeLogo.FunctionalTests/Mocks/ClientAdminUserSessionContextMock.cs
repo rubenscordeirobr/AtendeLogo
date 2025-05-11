@@ -1,43 +1,30 @@
 ﻿using AtendeLogo.ClientGateway.Abstractions;
-using AtendeLogo.Shared.Models.Security;
-using AtendeLogo.UseCases.Identities.Shared;
 
 namespace AtendeLogo.FunctionalTests.Mocks;
 
-public class ClientAdminUserSessionContextMock : IClientAdminUserSessionContext
+public class ClientAdminUserSessionContextMock : IClientAdminUserSessionContextService
 {
-    private UserSessionResponse? _userSession;
-    private UserResponse? _user;
-    private UserSessionClaims? _userSessionClaims;
+    public AdminUserSessionContext? SessionContext { get; private set; }
 
-    public bool IsAuthenticated =>
-        _userSession is not null &&
-        _user is not null &&
-        _userSessionClaims is not null;
-
-    public UserSessionClaims? UserSessionClaims
-        => _userSessionClaims;
-
-    public UserSessionResponse? UserSession
-        => _userSession;
-
-    public UserResponse? User
-        => _user;
-
-    public void ClearSessionContext()
+    public Task<AdminUserSessionContext?> GetSessionContextAsync()
     {
-        _userSession = null;
-        _user = null;
-        _userSessionClaims = null;
+        return Task.FromResult(SessionContext);
     }
 
-    public void SetSessionContext(
-        UserSessionClaims userSessionClaims,
-        UserSessionResponse userSession,
-        UserResponse user)
+    public Task SetSessionContextAsync(AdminUserSessionContext sessionContext, bool isPersistent)
     {
-        _userSessionClaims = userSessionClaims;
-        _userSession = userSession;
-        _user = user;
+        SessionContext = sessionContext;
+        return Task.CompletedTask;
+    }
+
+    public Task EnsureSessionContextAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task ClearSessionContextAsync()
+    {
+        SessionContext = null;
+        return Task.CompletedTask;
     }
 }
