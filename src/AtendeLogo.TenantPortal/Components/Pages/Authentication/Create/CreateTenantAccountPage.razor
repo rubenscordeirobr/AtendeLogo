@@ -1,0 +1,167 @@
+﻿@page "/{culture}/create-tenant-account"
+
+@inherits AuthPageBase
+
+@inject CreateTenantAccountViewModel ViewModel;
+@inject IJsonStringLocalizer<CreateTenantAccountPage> Localizer
+@inject IJsonStringLocalizer<BusinessType> LocalizerBusinessType
+
+<EditForm EditContext="ViewModel.EditContext"
+          OnValidSubmit="HandleCreateAccountAsync">
+
+    <FluentValidationValidator @ref="_validator" />
+    <FluentStack Orientation="Orientation.Vertical"
+                 VerticalGap="GapSizes.Medium">
+
+        <Title>
+            @Localizer["CreateAccountTitle", "Create a Atende Logo Account"]
+        </Title>
+
+        <div>
+            <p>
+
+                @Localizer["PromptText", "Don't have an account? You can create one now."]
+                @Localizer["ExistingUserText", "If you already have an account, please"]
+
+                <FluentAnchor Href="#" OnClick="NavigateToLogin"
+                              Appearance="Appearance.Hypertext">
+                    @Localizer["LoginLink", "log in"]
+                </FluentAnchor>.
+
+            </p>
+        </div>
+
+        <ValidationSummary />
+
+        <!-- Full Name -->
+        <FluentTextField Style="width:450px"
+                         Label="@Localizer["FullNameLabel", "Full name"]"
+                         @bind-Value="ViewModel.FullName"
+                         Appearance="FluentInputAppearance.Filled"
+                         Placeholder="@Localizer["FullNamePlaceholder", "Enter your full name"]" />
+
+        <ValidationMessage For="(() => ViewModel.FullName)" />
+
+        <!-- Business Name -->
+
+        <FluentTextField Style="width:450px"
+                         Label="@Localizer["BusinessNameLabel", "Business Name"]"
+                         @bind-Value="ViewModel.BusinessName"
+                         Appearance="FluentInputAppearance.Filled"
+                         Placeholder="@Localizer["TenantNamePlaceholder", "Enter your business name"]" />
+
+
+        <ValidationMessage For="(() => ViewModel.BusinessName)" />
+
+        <!-- E-mail -->
+        <FluentTextField Style="width:450px"
+                         Label="@Localizer["EmailLabel", "E-mail"]"
+                         @bind-Value="ViewModel.Email"
+                         Appearance="FluentInputAppearance.Filled"
+                         Placeholder="@Localizer["EmailPlaceholder", "your@email.com"]" />
+
+        <ValidationMessage For="(() => ViewModel.Email)" />
+
+        <!-- PhoneNumber-->
+        <PhoneNumberInput Style="width:450px"
+                          Label="@Localizer["PhoneNumberLabel", "PhoneNumber"]"
+                          @bind-Value="ViewModel.PhoneNumber"
+                          Appearance="FluentInputAppearance.Filled"
+                          Placeholder="@Localizer["PhoneNumberPlaceholder", "Enter your phone number"]" />
+
+        <ValidationMessage For="(() => ViewModel.PhoneNumber)" />
+
+        <!-- Password-->
+        <FluentTextField Label="@Localizer["PasswordLabel", "Password"]"
+                         Style="width:450px"
+                         @bind-Value="ViewModel.Password"
+                         Appearance="FluentInputAppearance.Filled"
+                         TextFieldType="TextFieldType.Password"
+                         Placeholder="@Localizer["PasswordPlaceholder", "Your strong password"]" />
+
+        <ValidationMessage style="min-height:2rem" For="@(() => ViewModel.Password)" />
+
+        <!-- Confirm Password-->
+        <FluentTextField Label="@Localizer["ConfirmPasswordLabel", "Confirm Password"]"
+                         Style="width:450px"
+                         @bind-Value="ViewModel.ConfirmPassword"
+                         Appearance="FluentInputAppearance.Filled"
+                         TextFieldType="TextFieldType.Password"
+                         Placeholder="@Localizer["ConfirmPasswordPlaceholder", "Confirm your password"]" />
+
+        <ValidationMessage style="min-height:2rem" For="@(() => ViewModel.ConfirmPassword)" />
+
+        <!-- Fiscal Code -->
+
+        <FluentTextField Style="width:450px"
+                         Label="@Localizer["FiscalCodeLabel", "Fiscal Code"]"
+                         @bind-Value="ViewModel.FiscalCode"
+                         Appearance="FluentInputAppearance.Filled"
+                         Placeholder="@Localizer["FiscalCodePlaceholder", "Enter your fiscal code"]" />
+
+        <ValidationMessage For="(() => ViewModel.FiscalCode)" />
+
+        <!-- Country -->
+
+        <FluentSelect Width="450px"
+                      Label="@Localizer["BusinessTypeLabel", "Business Type"]"
+                      Items="@(EnumUtils.GetSelectableEnumValues<BusinessType>())"
+                      OptionText="@(x => LocalizerBusinessType[x])"
+                      @bind-SelectedOption="@ViewModel.BusinessType">
+
+        </FluentSelect>
+
+
+        <FluentCheckbox Label="@Localizer["PersistentLabel", "Make my account persistent"]"
+                        @bind-Value="ViewModel.IsPersistent" />
+
+
+        <VerticalSpace Height="GapSizes.Large
+" />
+        <!-- Submit -->
+        <FluentStack Orientation="Orientation.Horizontal"
+                     HorizontalAlignment="HorizontalAlignment.Center">
+
+            <FluentButton Appearance="Appearance.Accent"
+                          Style="min-width:10rem"
+                          Type="ButtonType.Submit">
+
+                @Localizer["CreateButtonLabel", "Create Account"]
+
+            </FluentButton>
+        </FluentStack>
+
+
+    </FluentStack>
+
+</EditForm>
+
+@code {
+
+    private FluentValidationValidator _validator;
+
+    private async Task HandleCreateAccountAsync()
+    {
+        if (!await _validator.ValidateAsync())
+        {
+            return;
+        }
+
+        var result = await this.ViewModel.CreateAccountAsync();
+        if (result.IsSuccess)
+        {
+            if (this.ViewModel.IsPersistent)
+            {
+                NavigationManager.NavigateTo<Home>();
+                return;
+            }
+            NavigationManager.NavigateTo<LoginPage>();
+        }
+    }
+
+    private void NavigateToLogin()
+    {
+        NavigationManager.NavigateTo<LoginPage>();
+    }
+}
+
