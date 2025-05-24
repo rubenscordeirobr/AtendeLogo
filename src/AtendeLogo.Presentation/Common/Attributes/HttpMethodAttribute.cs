@@ -11,7 +11,7 @@ public abstract class HttpMethodAttribute : Attribute
     public HttpStatusCode SuccessStatusCode { get; }
 
     public abstract HttpVerb HttpVerb { get; }
-
+     
     public string[] HttpMethods
         => [HttpVerb.ToString().ToUpperInvariant()];
       

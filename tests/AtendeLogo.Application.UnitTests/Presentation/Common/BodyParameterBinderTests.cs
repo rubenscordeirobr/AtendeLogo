@@ -3,6 +3,7 @@ using System.Text;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Attributes;
 using AtendeLogo.Presentation.Common.Binders;
+using AtendeLogo.Presentation.Extensions;
 using AtendeLogo.Shared.Abstractions;
 using Microsoft.AspNetCore.Http;
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
@@ -11,7 +12,8 @@ public class BodyParameterBinderTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
-        return new HttpMethodDescriptor(method);
+        var endpointDescriptor = new HttpEndpointDescriptor(method!);
+        return endpointDescriptor.GetRequiredMethodDescriptor(method);
     }
 
     private HttpContext CreateHttpContext(string? jsonBody = null)

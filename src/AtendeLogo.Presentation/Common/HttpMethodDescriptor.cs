@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AtendeLogo.Presentation.Common;
 
-internal sealed class HttpMethodDescriptor
+public sealed class HttpMethodDescriptor
 {
+    public HttpEndpointDescriptor HttpEndpointDescriptor { get; }
     public MethodInfo Method { get; }
     public HttpMethodAttribute Attribute { get; }
     public bool HasCancellationToken { get; }
@@ -39,11 +40,14 @@ internal sealed class HttpMethodDescriptor
             ? Parameters.FirstOrDefault()?.ParameterType
             : null;
 
-    internal HttpMethodDescriptor(MethodInfo method)
+    internal HttpMethodDescriptor(
+        HttpEndpointDescriptor endpointDescriptor,
+        MethodInfo method)
     {
         var parameters = method.GetParameters();
         var lastParameter = parameters.LastOrDefault();
 
+        HttpEndpointDescriptor = endpointDescriptor;
         Method = method;
         Attribute = method.GetCustomAttribute<HttpMethodAttribute>()
             ?? throw new HttpTemplateException("Method must have an HttpMethodAttribute.");
@@ -94,9 +98,9 @@ internal sealed class HttpMethodDescriptor
     private string GetRouteTemplate()
     {
         if (string.IsNullOrWhiteSpace(Attribute.RouteTemplate) &&
-            Attribute is HttpFormAttribute _)
+            HttpEndpointDescriptor.ShouldGenerateRoute(Method))
         {
-            return RouteHelper.CreateValidationRoute(Method.Name);
+            return RouteHelper.CreateRoute(Method.Name);
         }
         return Attribute.RouteTemplate;
     }

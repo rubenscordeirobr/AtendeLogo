@@ -1,5 +1,6 @@
 ﻿using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Attributes;
+using AtendeLogo.Presentation.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Reflection;
@@ -10,7 +11,8 @@ public class HttpGetDescriptorSelectorTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
-        return new HttpMethodDescriptor(method);
+        var endpointDescriptor = new HttpEndpointDescriptor(method!);
+        return endpointDescriptor.GetRequiredMethodDescriptor(method);
     }
 
     [Fact]

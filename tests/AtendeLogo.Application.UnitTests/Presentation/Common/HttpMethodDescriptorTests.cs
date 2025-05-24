@@ -1,12 +1,20 @@
-﻿using AtendeLogo.Presentation.Common.Exceptions;
+﻿using System.Reflection;
 using AtendeLogo.Presentation.Common;
-using AtendeLogo.Shared.Abstractions;
+using AtendeLogo.Presentation.Extensions;
 using AtendeLogo.Presentation.Common.Attributes;
+using AtendeLogo.Presentation.Common.Exceptions;
+using AtendeLogo.Shared.Abstractions;
 
 namespace AtendeLogo.Application.UnitTests.Presentation.Common;
 
 public class HttpMethodDescriptorTests
 {
+    private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
+    {
+        var endpointDescriptor = new HttpEndpointDescriptor(method!);
+        return endpointDescriptor.GetRequiredMethodDescriptor(method);
+    }
+
     [Fact]
     public void ValidDescriptor_ShouldExtractRouteAndQueryParameters()
     {
@@ -15,7 +23,7 @@ public class HttpMethodDescriptorTests
         method.Should().NotBeNull();
 
         // Act
-        var descriptor = new HttpMethodDescriptor(method!);
+        var descriptor = CreateDescriptor(method!);
 
         // Assert
         // Expect one route parameter: "id"
@@ -37,7 +45,7 @@ public class HttpMethodDescriptorTests
         method.Should().NotBeNull();
 
         // Act & Assert
-        Action act = () => new HttpMethodDescriptor(method!);
+        Action act = () => CreateDescriptor(method!);
         act.Should().Throw<RouteTemplateException>()
            .WithMessage("*does not match any parameter*")
            .And.Message.Should().Contain("{nonexistent}");
@@ -51,7 +59,7 @@ public class HttpMethodDescriptorTests
         method.Should().NotBeNull();
 
         // Act & Assert
-        Action act = () => new HttpMethodDescriptor(method!);
+        Action act = () => CreateDescriptor(method!);
         act.Should().Throw<OperationTemplateException>()
            .WithMessage("*the key-value pair*")
            .And.Message.Should()
@@ -66,11 +74,11 @@ public class HttpMethodDescriptorTests
         method.Should().NotBeNull();
 
         // Act & Assert
-        Action act = () => new HttpMethodDescriptor(method!);
+        Action act = () => CreateDescriptor(method!);
         act.Should().Throw<OperationTemplateException>()
            .WithMessage("*the parameter 'missing'*");
     }
-  
+
     [Fact]
     public void ParameterMappedInBothRouteAndQuery_ShouldThrowHttpTemplateException()
     {
@@ -79,7 +87,7 @@ public class HttpMethodDescriptorTests
         method.Should().NotBeNull();
 
         // Act & Assert
-        Action act = () => new HttpMethodDescriptor(method!);
+        Action act = () => CreateDescriptor(method!);
         act.Should().Throw<OperationTemplateException>();
     }
 
@@ -91,7 +99,7 @@ public class HttpMethodDescriptorTests
         method.Should().NotBeNull();
 
         // Act & Assert: no exception should be thrown.
-        Action act = () => new HttpMethodDescriptor(method!);
+        Action act = () => CreateDescriptor(method!);
         act.Should().NotThrow();
     }
 
@@ -101,9 +109,9 @@ public class HttpMethodDescriptorTests
         // Arrange
         var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.Parameters));
         method.Should().NotBeNull();
-        
+
         // Act
-        var descriptor = new HttpMethodDescriptor(method!);
+        var descriptor = CreateDescriptor(method!);
         var result = descriptor.OperationTemplate;
 
         // Assert
@@ -117,11 +125,11 @@ public class HttpMethodDescriptorTests
         // Arrange
         var method = typeof(TestEndpoint).GetMethod(nameof(TestEndpoint.CreateItem));
         method.Should().NotBeNull();
-        
+
         // Act
-        var descriptor = new HttpMethodDescriptor(method!);
+        var descriptor = CreateDescriptor(method!);
         var result = descriptor.IsBodyParameter;
-        
+
         // Assert
         result.Should().BeTrue();
     }
@@ -131,6 +139,8 @@ public class HttpMethodDescriptorTests
 // Test endpoint used for testing.
 public class TestEndpoint
 {
+#pragma warning disable S1186 // Methods should not be empty
+
     // Valid: route "items/{id}" and query "filter={filter}"
     [HttpGet("items/{id}", "filter={filter}")]
     public void GetItem(int id, string filter) { }
@@ -161,13 +171,15 @@ public class TestEndpoint
     // Valid scenario: single parameter implementing IRequest<> should bypass additional validation.
     [HttpPost("items")]
     public void CreateItem(TestRequest request) { }
-     
+
+#pragma warning restore S1186 
+
     [HttpGet]
     public int Parameters(int parameter1, double parameter2, string parameter3)
     {
         return 0;
     }
-     
+
 }
 
 public class TestRequest : IRequest<IResponse>

@@ -29,7 +29,7 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
 
         RequestHeaderInfo = _httpContext.GetRequestHeaderInfo();
         AuthorizationToken = RequestHeaderInfo.AuthorizationToken;
-        Culture = ExtractCultureFromRequest();
+        Culture = ExtractCultureFromRequestUri();
     }
 
     public ClientRequestHeaderInfo RequestHeaderInfo { get; }
@@ -106,9 +106,9 @@ public class HttpContextSessionAccessor : IHttpContextSessionAccessor
         }
     }
 
-    private Culture ExtractCultureFromRequest()
+    private Culture ExtractCultureFromRequestUri()
     {
-        return CultureHelper.GetCultureFromUrl(RequestUrl);
+        return LocalizedUriUtils.GetCultureFromUri(RequestUrl);
     }
 
     private Language NormalizeLanguage()

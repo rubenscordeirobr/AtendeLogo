@@ -49,14 +49,9 @@ public static class EndpointBuilderExtensions
         }
 
         var routePrefix = endpointAttr.RoutePrefix;
+        var endpointDescriptor = new HttpEndpointDescriptor(endpointType);
 
-        var methodDescriptors = endpointType
-            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Where(m => m.GetCustomAttribute<HttpMethodAttribute>() != null)
-            .Select(m => new HttpMethodDescriptor(m))
-            .ToArray();
-
-        var routeGroups = methodDescriptors
+        var routeGroups = endpointDescriptor.MethodDescriptors
             .GroupBy(x => (x.RouteTemplate, x.HttpVerb))
             .ToList();
 

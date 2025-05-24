@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AtendeLogo.Http\AtendeLogo.Http.csproj" />
     <ProjectReference Include="..\AtendeLogo.UseCases\AtendeLogo.UseCases.csproj" />
   </ItemGroup>
  

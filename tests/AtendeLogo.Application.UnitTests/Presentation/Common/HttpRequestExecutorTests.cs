@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Attributes;
+using AtendeLogo.Presentation.Extensions;
 using AtendeLogo.TestCommon.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using AtendeLogo.Application.Abstractions.Security;
@@ -21,7 +22,8 @@ public class HttpRequestExecutorTests
 
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
-        return new HttpMethodDescriptor(method);
+        var endpointDescriptor = new HttpEndpointDescriptor(method);
+        return endpointDescriptor.GetRequiredMethodDescriptor(method);
     }
 
     private HttpContext CreateHttpContext(IServiceProvider serviceProvider)

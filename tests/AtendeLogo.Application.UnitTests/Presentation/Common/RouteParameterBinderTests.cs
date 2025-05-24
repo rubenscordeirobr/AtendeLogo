@@ -1,5 +1,6 @@
 ﻿using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Binders;
+using AtendeLogo.Presentation.Extensions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Reflection;
@@ -9,7 +10,13 @@ public class RouteParameterBinderTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
-        return new HttpMethodDescriptor(method);
+        var endpointDescriptor = new HttpEndpointDescriptor(method!);
+        return endpointDescriptor.GetRequiredMethodDescriptor(method);
+    }
+
+    public RouteParameterBinderTests()
+    {
+
     }
 
     [Fact]

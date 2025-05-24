@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using AtendeLogo.Presentation.Common;
 using AtendeLogo.Presentation.Common.Binders;
+using AtendeLogo.Presentation.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Primitives;
@@ -11,7 +12,8 @@ public class OperatorParameterBinderTests
 {
     private HttpMethodDescriptor CreateDescriptor(MethodInfo method)
     {
-        return new HttpMethodDescriptor(method);
+        var endpointDescriptor = new HttpEndpointDescriptor(method!);
+        return endpointDescriptor.GetRequiredMethodDescriptor(method);
     }
 
     [Fact]

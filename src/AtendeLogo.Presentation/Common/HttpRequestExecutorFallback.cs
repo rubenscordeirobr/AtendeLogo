@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,9 @@ internal class HttpRequestExecutorFallback
 
         _httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
+#if DEBUG
+        Debugger.Break();
+#endif
         var responseError= new ErrorResponse($"HttpRequestExecutorFallback.RouteNotFound", route);
         await WriteResponseAsync(responseError, _httpContext.RequestAborted);
 
