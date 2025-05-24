@@ -1,0 +1,12 @@
+﻿
+@inject LocalizedNavigationManager NavigationManager
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        var returnUrl = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).ToString();
+        var url = $"login?returnUrl={Uri.EscapeDataString(returnUrl)}";
+        NavigationManager.NavigateTo(url, forceLoad: true);
+    }
+}

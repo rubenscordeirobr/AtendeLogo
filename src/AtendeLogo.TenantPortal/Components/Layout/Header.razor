@@ -1,0 +1,70 @@
+﻿@using AtendeLogo.UseCases.Identities.Authentications.Commands
+
+@inject IJsonStringLocalizer<Header> Localizer
+@inject IJsonStringLocalizer<Language> LocalizerLanguage
+@inject ICultureProvider CultureProvider
+@inject IThemeService ThemeService
+@inject IBusyIndicatorService BusyIndicatorService
+@inject ITenantUserAuthenticationService AuthenticationService
+@inject IClientAuthorizationTokenManager TokenManager
+@inject LocalizedNavigationManager NavigationManager
+
+<FluentStack Orientation="Orientation.Horizontal"
+             VerticalAlignment="VerticalAlignment.Center"
+             Width="100%">
+
+    <FluentLabel>AtendeLogo.TenantPortal.BlazorServer</FluentLabel>
+
+    <FluentSpacer />
+
+    <FluentLabel>
+        @Localizer["LanguageLabel", "Language:"]
+    </FluentLabel>
+
+    <FluentSelect Width="250px"
+                  Items="@(Enum.GetValues<Language>())"
+                  OptionText="@(x => LocalizerLanguage[x])"
+                  @bind-SelectedOption="@SelectedLanguage">
+
+    </FluentSelect>
+
+    <FluentSwitch Label="@(Localizer["DarkModeSwitchLabel", "Dark Mode"])"
+                  @bind-Value="@ThemeService.IsDarkMode"
+                  Appearance="@Appearance.Accent" />
+
+    <FluentButton OnClick="HandleLogout">
+        @Localizer["LogoutButtonLabel", "Logout"]
+    </FluentButton>
+
+</FluentStack>
+
+@code {
+
+    private Language SelectedLanguage { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SelectedLanguage = CultureProvider.Language;
+    }
+
+    private void HandleLogout()
+    {
+        _ = BusyIndicatorService.RunWithBusyIndicatorAsync(HandleLogoutAsync);
+    }
+
+    private async Task HandleLogoutAsync()
+    {
+        await Task.Delay(2000);
+
+        await TokenManager.EnsureUserSessionStateAsync();
+        var session_Id = TokenManager.GetUserSessionClaims()?.Session_Id;
+
+        Guard.NotEmpty(session_Id);
+
+        var logoutCommand = new TenantUserLogoutCommand(session_Id.Value);
+        var result = await AuthenticationService.LogoutAsync(logoutCommand);
+
+        NavigationManager.NavigateTo<LoginPage>();
+    }
+}

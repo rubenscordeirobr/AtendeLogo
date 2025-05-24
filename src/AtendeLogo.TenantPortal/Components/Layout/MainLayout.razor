@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+@attribute [Authorize]
+
+@layout RootLayout
+
+@inject IJsonStringLocalizer<MainLayout> Localizer
+@inject ICultureProvider CultureProvider
+
+
+<FluentLayout>
+    <FluentHeader Style=" background-color:transparent; vertical-align: middle">
+
+        <Header />
+
+    </FluentHeader>
+
+    <FluentStack Class="main"
+                 Orientation="Orientation.Horizontal" Width="100%">
+        <NavMenu />
+        <FluentBodyContent Class="body-content">
+            <div class="content">
+                @Body
+            </div>
+        </FluentBodyContent>
+    </FluentStack>
+    <FluentFooter>
+
+    </FluentFooter>
+</FluentLayout>
+
+

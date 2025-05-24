@@ -1,0 +1,146 @@
+﻿@using AtendeLogo.Common.Helpers
+@inherits LayoutComponentBase
+
+@layout RootLayout
+
+@inject IJsonStringLocalizer<AuthLayout> Localizer
+@inject IJsonStringLocalizer<Language> LocalizerLanguage
+@inject IJsonStringLocalizer<Country> LocalizerCountry
+@inject IAssetsService AssetsService
+@inject IThemeService ThemeService
+@inject ICultureProvider CultureProvider
+@inject IBusyIndicatorService BusyIndicatorService
+@inject LocalizedNavigationManager NavigationManager
+
+<div class="login-layout">
+
+    <FluentLayout>
+        <FluentHeader Style="background-color:transparent; vertical-align: middle">
+
+            <FluentStack Orientation="Orientation.Horizontal"
+                         HorizontalAlignment="HorizontalAlignment.Right"
+                         VerticalAlignment="VerticalAlignment.Center">
+
+                <FluentLabel> @Localizer["CountryLabel", "Country"]: </FluentLabel>
+
+                <FluentSelect Width="250px"
+                              Items="@(EnumUtils.GetValues<Country>())"
+                              OptionText="@(x => LocalizerCountry[x])"
+                              @bind-SelectedOption="@SelectedCountry">
+
+                </FluentSelect>
+
+                <FluentLabel> @Localizer["LanguageLabel", "Language"]:: </FluentLabel>
+
+                <FluentSelect Width="250px"
+                              Items="@(EnumUtils.GetValues<Language>())"
+                              OptionText="@(x => LocalizerLanguage[x])"
+                              @bind-SelectedOption="@SelectedLanguage">
+
+                </FluentSelect>
+
+                <FluentSwitch Label="@Localizer["DarkModeSwitchLabel", "Dark Mode"]"
+                              @bind-Value="@ThemeService.IsDarkMode" />
+
+            </FluentStack>
+
+        </FluentHeader>
+        <FluentBodyContent Style="width:100%; height:100%;">
+
+
+            <FluentGrid Style="width:100%; height: 100%; display: flex;" Spacing="0">
+
+                <FluentGridItem md="6"
+                                HiddenWhen="GridItemHidden.SmAndDown"
+                                Style="height:100%;">
+
+                    <div class="logo-container">
+                        <img class="logo-img"
+                             src="@AssetsService.LogoPath"
+                             alt="@Localizer["LogoImageAlt", "Text alt about the logo image"]" />
+                    </div>
+
+
+                </FluentGridItem>
+                <FluentGridItem md="6" xs="12"
+                                Style="height:100%">
+                    <div class="body-container">
+                        @Body
+                    </div>
+                </FluentGridItem>
+
+            </FluentGrid>
+
+        </FluentBodyContent>
+        <FluentFooter Style="height:30px; background-color:transparent">
+
+        </FluentFooter>
+    </FluentLayout>
+</div>
+
+@code {
+
+    private Country _country;
+    private Language _language;
+
+
+    private Country SelectedCountry
+    {
+        get => _country;
+        set
+        {
+            if (_country == value)
+                return;
+
+            if (!EnumUtils.IsDefined(value))
+                return;
+
+            _country = value;
+            OnCountryChanged(value);
+        }
+    }
+
+    private Language SelectedLanguage
+    {
+        get => _language;
+        set
+        {
+            if (_language == value)
+                return;
+
+            _language = value;
+            OnLanguageChanged(value);
+        }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        SelectedLanguage = CultureProvider.Language;
+        SelectedCountry = CultureProvider.GetCountry();
+    }
+
+    private async void OnCountryChanged(Country country)
+    {
+        if (!BusyIndicatorService.IsInitialized)
+            return;
+
+        BusyIndicatorService.Busy();
+        await CultureProvider.SetCountryAsync(country);
+        BusyIndicatorService.Release();
+        NavigationManager.Refresh();
+    }
+
+    private async void OnLanguageChanged(Language language)
+    {
+        if (!BusyIndicatorService.IsInitialized)
+            return;
+
+        BusyIndicatorService.Busy();
+        await CultureProvider.SetLanguageAsync(language);
+        BusyIndicatorService.Release();
+        NavigationManager.Refresh();
+    }
+}
