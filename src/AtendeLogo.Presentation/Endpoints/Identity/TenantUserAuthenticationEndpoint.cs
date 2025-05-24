@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.UseCases.Identities.Authentications.Commands;
+using AtendeLogo.UseCases.Identities.Tenants.Commands;
 using Microsoft.AspNetCore.Authorization;
 
 namespace AtendeLogo.Presentation.Endpoints.Identity;
@@ -14,7 +15,7 @@ public class TenantUserAuthenticationEndpoint : ApiEndpointBase, ITenantUserAuth
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost()]
     [AllowAnonymous]
     public Task<Result<TenantUserLoginResponse>> LoginAsync(
         TenantUserLoginCommand command,
@@ -23,9 +24,18 @@ public class TenantUserAuthenticationEndpoint : ApiEndpointBase, ITenantUserAuth
         return _mediator.RunAsync(command, cancellationToken);
     }
 
-    [HttpPost(IdentityRouteConstants.Logout)]
+    [HttpPost()]
     public Task<Result<OperationResponse>> LogoutAsync(
         TenantUserLogoutCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        return _mediator.RunAsync(command, cancellationToken);
+    }
+
+    [HttpPost()]
+    [AllowAnonymous]
+    public Task<Result<CreateTenantAccountResponse>> CreateTenantAccountAsync(
+        CreateTenantAccountCommand command,
         CancellationToken cancellationToken = default)
     {
         return _mediator.RunAsync(command, cancellationToken);

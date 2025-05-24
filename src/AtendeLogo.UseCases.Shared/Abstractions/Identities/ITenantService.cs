@@ -11,8 +11,8 @@ public interface ITenantService : ICommunicationService
 
     #region Commands
 
-    Task<Result<CreateTenantResponse>> CreateAsync(
-        CreateTenantCommand command,
+    Task<Result<CreateTenantAccountResponse>> CreateAsync(
+        CreateTenantAccountCommand command,
         CancellationToken cancellationToken = default);
 
     Task<Result<OperationResponse>> UpdateAsync(

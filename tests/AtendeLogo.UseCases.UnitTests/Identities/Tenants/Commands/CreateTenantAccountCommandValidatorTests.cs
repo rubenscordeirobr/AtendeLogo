@@ -5,27 +5,28 @@ using Moq;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
+public class CreateTenantAccountCommandValidatorTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly IValidator<CreateTenantCommand> _validator;
-    private readonly CreateTenantCommand _validadCommand;
+    private readonly IValidator<CreateTenantAccountCommand> _validator;
+    private readonly CreateTenantAccountCommand _validCommand;
 
-    public CreateTenantCommandValidatorTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
+    public CreateTenantAccountCommandValidatorTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
 
         _serviceProvider = serviceProviderMock;
-        _validator = serviceProviderMock.GetRequiredService<IValidator<CreateTenantCommand>>();
+        _validator = serviceProviderMock.GetRequiredService<IValidator<CreateTenantAccountCommand>>();
 
-        _validadCommand = new CreateTenantCommand
+        _validCommand = new CreateTenantAccountCommand
         {
             Name = "Tenant name",
             FiscalCode = new FiscalCode("04866748940"),
-            TenantName = "Tenant name",
+            BusinessName = "Tenant name",
             Email = "tenant1@atendelogo.com",
             Password = "Password123!",
+            IsPersistent= false,
             Country = Country.Brazil,
             Language = Language.PortugueseBrazil,
             Currency = Currency.BRL,
@@ -38,7 +39,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     [Fact]
     public void Validator_ShouldBe_CreateTenantCommandValidator()
     {
-        _validator.Should().BeOfType<CreateTenantCommandValidator>();
+        _validator.Should().BeOfType<CreateTenantAccountCommandValidator>();
     }
 
     [Fact]
@@ -48,7 +49,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
         var randowEmail = Guid.NewGuid().ToString().Substring(0, 8) + "@atendelogo.com";
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
         var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             Email = randowEmail,
             FiscalCode = new FiscalCode(fakeCpf),
@@ -75,7 +76,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_Name_IsInvalid(string? name)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             Name = name!
         };
@@ -96,16 +97,16 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
         string? tenantName)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
-            TenantName = tenantName!
+            BusinessName = tenantName!
         };
 
         // Act
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.TenantName);
+        result.ShouldHaveValidationErrorFor(x => x.BusinessName);
     }
 
     [Theory]
@@ -118,7 +119,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_Email_IsInvalid(string? email)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             Email = email!
         };
@@ -139,7 +140,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_FiscalCode_IsInvalid(string? fiscalCode)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             FiscalCode = new FiscalCode(fiscalCode!)
         };
@@ -159,7 +160,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_PhoneNumber_IsInvalid(string? phoneNumber)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             PhoneNumber = new PhoneNumber(phoneNumber!)
         };
@@ -168,7 +169,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.PhoneNumber.Number);
+        result.ShouldHaveValidationErrorFor(x => x.PhoneNumber);
     }
 
     [Theory]
@@ -178,7 +179,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_Country_IsInvalid(Country? country)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             Country = country.GetValueOrDefault()
         };
@@ -196,7 +197,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_Language_IsInvalid(Language? culture)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             Language = culture.GetValueOrDefault()
         };
@@ -215,7 +216,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_Currency_IsInvalid(Currency? currency)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             Currency = currency.GetValueOrDefault()
         };
@@ -234,7 +235,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_BusinessType_IsInvalid(BusinessType? businessType)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             BusinessType = businessType.GetValueOrDefault()
         };
@@ -252,7 +253,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldHaveError_When_TenantType_IsInvalid(TenantType? tenantType)
     {
         // Arrange
-        var command = _validadCommand with
+        var command = _validCommand with
         {
             TenantType = tenantType.GetValueOrDefault()
         };
@@ -266,7 +267,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldEmailBeUnique()
     {
         // Arrange
-        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantCommand>>();
+        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantAccountCommand>>();
 
         var tenantValidationSetup = new Mock<ITenantValidationService>();
 
@@ -280,12 +281,12 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
         tenantValidationSetup.Setup(x => x.IsPhoneNumberUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        var validator = new CreateTenantCommandValidator(
+        var validator = new CreateTenantAccountCommandValidator(
             tenantValidationSetup.Object,
             localizer);
 
         // Act
-        var result = await validator.TestValidateAsync(_validadCommand);
+        var result = await validator.TestValidateAsync(_validCommand);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email);
@@ -295,7 +296,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldFiscalCodeBeUnique()
     {
         // Arrange
-        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantCommand>>();
+        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantAccountCommand>>();
 
         var tenantValidationSetup = new Mock<ITenantValidationService>();
 
@@ -310,12 +311,12 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
             .Setup(x => x.IsPhoneNumberUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        var validator = new CreateTenantCommandValidator(
+        var validator = new CreateTenantAccountCommandValidator(
             tenantValidationSetup.Object,
             localizer);
          
         // Act
-        var result = await validator.TestValidateAsync(_validadCommand);
+        var result = await validator.TestValidateAsync(_validCommand);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.FiscalCode);
@@ -325,7 +326,7 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
     public async Task ValidationResult_ShouldPhoneNumberBeUnique()
     {
         // Arrange
-        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantCommand>>();
+        var localizer = _serviceProvider.GetRequiredService<IJsonStringLocalizer<CreateTenantAccountCommand>>();
 
         var tenantValidationSetup = new Mock<ITenantValidationService>();
 
@@ -340,12 +341,12 @@ public class CreateTenantCommandValidatorTests : IClassFixture<ServiceProviderMo
             .Setup(x => x.IsEmailUniqueAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        var validator = new CreateTenantCommandValidator(
+        var validator = new CreateTenantAccountCommandValidator(
             tenantValidationSetup.Object,
             localizer);
 
         // Act
-        var result = await validator.TestValidateAsync(_validadCommand);
+        var result = await validator.TestValidateAsync(_validCommand);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.PhoneNumber);

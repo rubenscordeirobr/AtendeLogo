@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Events;
 
-internal class TenantCreatedEventHandler : IDomainEventHandler<TenantCreatedEvent>
+internal class TenantAccountCreatedEventHandler : IDomainEventHandler<TenantCreatedEvent>
 {
-    private readonly ILogger<TenantCreatedEventHandler> _logger;
+    private readonly ILogger<TenantAccountCreatedEventHandler> _logger;
  
-    public TenantCreatedEventHandler(
-        ILogger<TenantCreatedEventHandler> logger)
+    public TenantAccountCreatedEventHandler(
+        ILogger<TenantAccountCreatedEventHandler> logger)
     {
         _logger = logger;
     }

@@ -30,8 +30,8 @@ public class TenantService : ITenantService
 
     #region Commands
 
-    public Task<Result<CreateTenantResponse>> CreateAsync(
-        CreateTenantCommand command,
+    public Task<Result<CreateTenantAccountResponse>> CreateAsync(
+        CreateTenantAccountCommand command,
         CancellationToken cancellationToken = default)
     {
         return _mediator.PostAsync(

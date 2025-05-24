@@ -2,12 +2,12 @@
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Commands;
 
-public class CreateTenantCommandHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
+public class CreateTenantAccountCommandHandlerTests : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly CreateTenantCommand _validadeCommand;
+    private readonly CreateTenantAccountCommand _validadeCommand;
 
-    public CreateTenantCommandHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
+    public CreateTenantAccountCommandHandlerTests(ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
         serviceProviderMock.AddTestOutput(testOutput);
@@ -18,13 +18,14 @@ public class CreateTenantCommandHandlerTests : IClassFixture<ServiceProviderMock
         var fakeEmail = FakeUtils.GenerateFakeEmail();
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
 
-        _validadeCommand = new CreateTenantCommand
+        _validadeCommand = new CreateTenantAccountCommand
         {
             Name = "Tenant name",
             FiscalCode = new FiscalCode(fakeCpf),
-            TenantName = "Tenant name",
+            BusinessName = "Tenant name",
             Email = fakeEmail,
             Password = "Password123!",
+            IsPersistent = false,
             Country = Country.Brazil,
             Language = Language.PortugueseBrazil,
             Currency = Currency.BRL,
@@ -44,7 +45,7 @@ public class CreateTenantCommandHandlerTests : IClassFixture<ServiceProviderMock
         var handlerType = mediator!.GetRequestHandler(_validadeCommand);
 
         // Assert
-        handlerType.Should().BeOfType<CreateTenantCommandHandler>();
+        handlerType.Should().BeOfType<CreateTenantAccountCommandHandler>();
     } 
 
     [Fact]

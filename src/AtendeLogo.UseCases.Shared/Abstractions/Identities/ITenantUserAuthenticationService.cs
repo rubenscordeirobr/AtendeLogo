@@ -11,4 +11,9 @@ public interface ITenantUserAuthenticationService : ICommunicationService
     Task<Result<OperationResponse>> LogoutAsync(
         TenantUserLogoutCommand command,
         CancellationToken cancellationToken = default);
+
+    Task<Result<CreateTenantAccountResponse>> CreateTenantAccountAsync(
+       CreateTenantAccountCommand command,
+       CancellationToken cancellationToken = default);
+
 }

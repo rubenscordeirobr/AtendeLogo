@@ -109,7 +109,7 @@ public class CreateTenantUserCommandValidatorTests : IClassFixture<ServiceProvid
         // Act
         var result = await _validator.TestValidateAsync(command);
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.PhoneNumber.Number);
+        result.ShouldHaveValidationErrorFor(x => x.PhoneNumber);
     }
 
     [Theory]

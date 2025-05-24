@@ -26,15 +26,13 @@ public class TenantsEndpoint : ApiEndpointBase, ITenantService
 
     [HttpPost]
     [AllowAnonymous]
-    public Task<Result<CreateTenantResponse>> CreateAsync(
-        CreateTenantCommand command,
+    public Task<Result<CreateTenantAccountResponse>> CreateAsync(
+        CreateTenantAccountCommand command,
         CancellationToken cancellationToken = default)
     {
         return _mediator.RunAsync(command, cancellationToken);
     }
-
-  
-
+     
     [HttpPut]
     public Task<Result<OperationResponse>> UpdateAsync(
         UpdateTenantCommand command,

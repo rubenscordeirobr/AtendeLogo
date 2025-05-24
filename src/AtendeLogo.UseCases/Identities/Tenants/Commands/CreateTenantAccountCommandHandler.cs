@@ -2,13 +2,13 @@
 
 namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
-public sealed class CreateTenantCommandHandler
-    : CommandHandler<CreateTenantCommand, CreateTenantResponse>
+public sealed class CreateTenantAccountCommandHandler
+    : CommandHandler<CreateTenantAccountCommand, CreateTenantAccountResponse>
 {
     private readonly IIdentityUnitOfWork _unitOfWork;
     private readonly ISecureConfiguration _secureConfiguration;
 
-    public CreateTenantCommandHandler(
+    public CreateTenantAccountCommandHandler(
         IIdentityUnitOfWork unitOfWork,
         ISecureConfiguration secureConfiguration )
     {
@@ -16,8 +16,8 @@ public sealed class CreateTenantCommandHandler
         _secureConfiguration = secureConfiguration;
     }
 
-    protected override async Task<Result<CreateTenantResponse>> HandleAsync(
-        CreateTenantCommand command, 
+    protected override async Task<Result<CreateTenantAccountResponse>> HandleAsync(
+        CreateTenantAccountCommand command, 
         CancellationToken cancellationToken)
     {
         Guard.NotNull(command);
@@ -27,11 +27,11 @@ public sealed class CreateTenantCommandHandler
 
         if (!password.IsSuccess)
         {
-            return Result.Failure<CreateTenantResponse>(password.Error);
+            return Result.Failure<CreateTenantAccountResponse>(password.Error);
         }
 
         var tenant = new Tenant(
-            name: command.TenantName,
+            name: command.BusinessName,
             fiscalCode: command.FiscalCode,
             email: command.Email,
             businessType: command.BusinessType,
@@ -69,7 +69,7 @@ public sealed class CreateTenantCommandHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            var response = new CreateTenantResponse(tenant.Id);
+            var response = new CreateTenantAccountResponse(tenant.Id);
             return Result.Success(response);
         }
         catch (Exception ex)
@@ -78,7 +78,7 @@ public sealed class CreateTenantCommandHandler
 
             var error = HttpErrorMapper.MapExceptionToError(ex,
                 "CreateTenantCommandHandler.HandleAsync");
-            return Result.Failure<CreateTenantResponse>(error);
+            return Result.Failure<CreateTenantAccountResponse>(error);
         }
     }
 }

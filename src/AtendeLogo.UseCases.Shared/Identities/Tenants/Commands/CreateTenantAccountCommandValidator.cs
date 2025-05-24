@@ -1,12 +1,12 @@
 ﻿namespace AtendeLogo.UseCases.Identities.Tenants.Commands;
 
-public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenantCommand>
+public sealed class CreateTenantAccountCommandValidator : CommandValidator<CreateTenantAccountCommand>
 {
     private readonly ITenantValidationService _tenantValidationService;
 
-    public CreateTenantCommandValidator(
+    public CreateTenantAccountCommandValidator(
         ITenantValidationService tenantValidationService,
-        IJsonStringLocalizer<CreateTenantCommand> localizer)
+        IJsonStringLocalizer<CreateTenantAccountCommand> localizer)
         : base(localizer)
     {
         Guard.NotNull(tenantValidationService);
@@ -16,7 +16,7 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
 
         RuleFor(x=> x.Name)
             .NotEmpty()
-            .WithMessage(localizer["Tenant.NameRequired", "Name is required."])
+            .WithMessage(localizer["Tenant.NameRequired", "Full Name is required."])
             .MinimumLength(ValidationConstants.NameMinLength)
             .WithMessage(localizer["Tenant.NameTooShort", "Name cannot be shorter than {MinLength} characters."])
             .MaximumLength(ValidationConstants.NameMaxLength)
@@ -24,9 +24,9 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
             .FullName()
             .WithMessage(localizer["Tenant.InvalidFullname", "Name must contain first name and last name."]);
 
-        RuleFor(x => x.TenantName)
+        RuleFor(x => x.BusinessName)
             .NotEmpty()
-            .WithMessage(localizer["Tenant.TenantNameRequired", "Tenant name is required."])
+            .WithMessage(localizer["Tenant.BusinessNameRequired", "Business name is required."])
             .MinimumLength(ValidationConstants.NameMinLength)
             .WithMessage(localizer["Tenant.TenantNameTooShort", "Tenant name cannot be shorter than {MinLength} characters."])
             .MaximumLength(ValidationConstants.NameMaxLength)
@@ -37,8 +37,10 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
             .MaximumLength(ValidationConstants.EmailMaxLength)
             .EmailAddressValid()
             .WithMessage(localizer["Tenant.InvalidEmail", "Invalid email address."]);
- 
+
         RuleFor(x => x.PhoneNumber)
+            .NotNull()
+            .WithMessage(localizer["Tenant.PhoneNumberRequired", "Phone number is required."])
             .PhoneNumber(localizer);
 
         RuleFor(x => x.Password)
@@ -97,7 +99,7 @@ public sealed class CreateTenantCommandValidator : CommandValidator<CreateTenant
 
     private async Task<bool> IsPhoneNumberAsync(PhoneNumber phoneNumber, CancellationToken token)
     {
-        return await _tenantValidationService.IsPhoneNumberUniqueAsync(phoneNumber.Number, token);
+        return await _tenantValidationService.IsPhoneNumberUniqueAsync(phoneNumber.FullNumber, token);
     }
 
     private async Task<bool> IsEmailUniqueAsync(string email, CancellationToken token)

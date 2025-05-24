@@ -1,4 +1,5 @@
 ﻿using AtendeLogo.UseCases.Identities.Authentications.Commands;
+using AtendeLogo.UseCases.Identities.Tenants.Commands;
 
 namespace AtendeLogo.ClientGateway.Identities;
 
@@ -18,14 +19,17 @@ public class TenantUserAuthenticationService : ITenantUserAuthenticationService
         _tokenAuthorizationTokenManager = clientAuthorizationTokenManager;
         _sessionContextService = sessionContextService;
     }
-
+     
     public async Task<Result<TenantUserLoginResponse>> LoginAsync(
         TenantUserLoginCommand command,
         CancellationToken cancellationToken = default)
     {
         Guard.NotNull(command);
 
-        var result = await _mediator.PostAsync(command, cancellationToken);
+        var result = await _mediator.PostAsync(command, 
+            IdentityRouteConstants.Login, 
+            cancellationToken);
+
         if (result.IsSuccess)
         {
             var response = result.Value;
@@ -43,7 +47,7 @@ public class TenantUserAuthenticationService : ITenantUserAuthenticationService
                         "Failed to set authorization token"));
             }
 
-            if(userSessionClaims.UserType != UserType.TenantUser)
+            if (userSessionClaims.UserType != UserType.TenantUser)
             {
                 return Result.Failure<TenantUserLoginResponse>(
                     new AuthenticationError(
@@ -61,7 +65,7 @@ public class TenantUserAuthenticationService : ITenantUserAuthenticationService
         }
         return result;
     }
-
+     
     public async Task<Result<OperationResponse>> LogoutAsync(
         TenantUserLogoutCommand command,
         CancellationToken cancellationToken = default)
@@ -74,6 +78,35 @@ public class TenantUserAuthenticationService : ITenantUserAuthenticationService
         {
             await _tokenAuthorizationTokenManager.RemoveAuthorizationTokenAsync();
             await _sessionContextService.ClearSessionContextAsync();
+        }
+        return result;
+    }
+
+    public async Task<Result<CreateTenantAccountResponse>> CreateTenantAccountAsync(
+        CreateTenantAccountCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        Guard.NotEmpty(command);
+
+        var result = await _mediator.PostAsync(
+            command,
+            IdentityRouteConstants.CreateTenantAccount,
+            cancellationToken);
+
+        if (result.IsSuccess && command.IsPersistent)
+        {
+            var loginCommand = new TenantUserLoginCommand
+            {
+                EmailOrPhoneNumber = command.Email,
+                Password = command.Password,
+                IsPersistent = command.IsPersistent
+            };
+
+            var loginResult = await LoginAsync(loginCommand,  cancellationToken);
+            if (loginResult.IsFailure)
+            {
+                return Result.Failure<CreateTenantAccountResponse>(loginResult.Error);
+            }
         }
         return result;
     }

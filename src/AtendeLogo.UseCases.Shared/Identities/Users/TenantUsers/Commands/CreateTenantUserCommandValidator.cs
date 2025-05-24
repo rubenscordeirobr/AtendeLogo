@@ -13,11 +13,11 @@ public class CreateTenantUserCommandValidator : CommandValidator<CreateTenantUse
         Guard.NotNull(localizer);
 
         _validationService = validationService;
-         
+
         RuleFor(x => x.Tenant_Id)
             .NotEmptyGuid()
             .WithMessage(localizer["Tenant.IdRequired", "Id is required."]);
-     
+
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage(localizer["TenantUser.NameRequired", "Name is required."])
@@ -25,7 +25,7 @@ public class CreateTenantUserCommandValidator : CommandValidator<CreateTenantUse
             .WithMessage(localizer["TenantUser.NameTooShort", "Name cannot be shorter than {MinLength} characters."])
             .MaximumLength(ValidationConstants.NameMaxLength)
             .WithMessage(localizer["TenantUser.NameTooLong", "Name cannot be longer than {MaxLength} characters."]);
-        
+
         RuleFor(x => x.Email)
             .NotEmpty()
             .MaximumLength(ValidationConstants.EmailMaxLength)
@@ -33,8 +33,8 @@ public class CreateTenantUserCommandValidator : CommandValidator<CreateTenantUse
             .WithMessage(localizer["TenantUser.InvalidEmail", "Invalid email address."]);
 
         RuleFor(x => x.PhoneNumber)
-            .PhoneNumber(localizer);
-        
+            .PhoneNumber( localizer);
+
         RuleFor(x => x.Password)
             .CreatePassword(localizer);
 
@@ -53,7 +53,7 @@ public class CreateTenantUserCommandValidator : CommandValidator<CreateTenantUse
     }
 
     private async Task<bool> IsEmailUniqueAsync(
-        string email, 
+        string email,
         CancellationToken cancellationToken)
     {
         return await _validationService.IsEmailUniqueAsync(email, cancellationToken);
@@ -64,7 +64,7 @@ public class CreateTenantUserCommandValidator : CommandValidator<CreateTenantUse
         CancellationToken cancellationToken)
     {
         return await _validationService.IsPhoneNumberUniqueAsync(
-            phoneNumber.Number,
+            phoneNumber.FullNumber,
             cancellationToken);
     }
 }

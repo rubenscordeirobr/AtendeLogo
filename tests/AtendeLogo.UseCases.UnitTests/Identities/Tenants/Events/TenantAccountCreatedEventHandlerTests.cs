@@ -3,13 +3,13 @@ using AtendeLogo.UseCases.Identities.Tenants.Events;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.Tenants.Events;
 
-public class TenantCreatedEventHandlerTests
+public class TenantAccountCreatedEventHandlerTests
      : IClassFixture<ServiceProviderMock<AnonymousRole>>
 {
     private readonly Fixture _figure = new();
     private readonly IEventMediator _eventMediator;
 
-    public TenantCreatedEventHandlerTests(
+    public TenantAccountCreatedEventHandlerTests(
         ServiceProviderMock<AnonymousRole> serviceProviderMock,
         ITestOutputHelper testOutput)
     {
@@ -34,6 +34,6 @@ public class TenantCreatedEventHandlerTests
         // Assert
         eventContext
             .ShouldHaveExecutedEvent(createdEvent)
-            .WithHandler<TenantCreatedEventHandler>();
+            .WithHandler<TenantAccountCreatedEventHandler>();
     }
 }
