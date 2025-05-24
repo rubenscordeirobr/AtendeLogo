@@ -1,0 +1,75 @@
+﻿@using System.Globalization
+@using System.Reflection
+@using AtendeLogo.Common.Helpers
+@using AtendeLogo.Common.Utils
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Routing
+@inject LocalizedNavigationManager NavigationManager
+@inject ICultureProvider CultureProvider
+
+@code {
+
+    [Parameter]
+    public Assembly AppAssembly { get; set; } = default!;
+
+}
+
+<Router AppAssembly="@AppAssembly"
+        AdditionalAssemblies="new[] { typeof(MainLayout).Assembly }"
+        OnNavigateAsync="HandleNavigationAsync">
+
+    <Found Context="routeData">
+  
+        <AuthorizeRouteView RouteData="@routeData"
+                            DefaultLayout="@GetLayout(routeData.PageType)">
+            <NotAuthorized>
+
+                @if (!context.User.Identity?.IsAuthenticated ?? false)
+                {
+                    <RedirectToLogin />
+                }
+                else
+                {
+                    <p>You are not authorized to access this resource.</p>
+                }
+
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+
+    private Type GetLayout(Type pageType)
+    {
+        var layoutAttribute = pageType.GetCustomAttribute<LayoutAttribute>();
+        if (layoutAttribute != null)
+        {
+            return layoutAttribute.LayoutType;
+        }
+        return typeof(MainLayout);
+    }
+
+    private async Task HandleNavigationAsync(NavigationContext args)
+    {
+        if (!LocalizedUriUtils.IsLocalizedUri(args.Path))
+        {
+            NavigationManager.NavigateTo(args.Path);
+        }
+        else
+        {
+            var cultureCode = LocalizedUriUtils.GetCultureCodeFromUri(args.Path);
+            var languageCode = LocalizedUriUtils.GetLanguageCodeFromQuery(args.Path);
+            await CultureProvider.SetCultureAndLanguageAsync(cultureCode, languageCode);
+        }
+        await Task.CompletedTask;
+    }
+     
+     
+}
