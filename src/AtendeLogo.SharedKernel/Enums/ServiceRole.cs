@@ -3,7 +3,7 @@
 public enum ServiceRole
 {
     [UndefinedValue]
-    None = 0,
+    Undefined = 0,
     Default,
     Authentication,
     Validation,

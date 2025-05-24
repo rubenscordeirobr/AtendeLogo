@@ -3,7 +3,7 @@
 public enum UserState
 {
     [UndefinedValue]
-    Unknown = 0,
+    Undefined = 0,
     New = 1,
     Active,
     Inactive ,
