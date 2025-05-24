@@ -37,4 +37,15 @@ public static class TypeHelper
         }
         return typeMappings;
     }
+
+    public static T GetUnderlyingDefaultValue<T>()
+    {
+        var type = typeof(T);
+        var underlyingType = Nullable.GetUnderlyingType(type);
+        if (underlyingType != null)
+        {
+            return (T)Activator.CreateInstance(underlyingType)!;
+        }
+        return default!;
+    }
 }
