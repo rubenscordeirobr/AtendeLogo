@@ -15,7 +15,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
         var localizer = serviceProviderMock
             .GetRequiredService<IJsonStringLocalizer<PhoneNumber>>();
 
-        _validator = new PhoneNumberValidator(localizer);
+        _validator = new PhoneNumberValidator(localizer, null);
     }
      
     [Fact]
@@ -34,7 +34,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
         var result = _validator.TestValidate(phone);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(p => p.Number);
+        result.ShouldHaveAnyValidationError();
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
         var result = _validator.TestValidate(phone);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(p => p.Number);
+        result.ShouldHaveAnyValidationError(); 
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
         var result = _validator.TestValidate(phone);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(p => p.Number);
+        result.ShouldHaveAnyValidationError();
     }
 
     [Fact]

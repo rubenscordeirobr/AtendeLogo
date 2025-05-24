@@ -31,6 +31,6 @@ public class PhoneNumberConverterTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Number.Should().Be(phoneNumberValue);
+        result.FullNumber.Should().Be(phoneNumberValue);
     }
 }

@@ -15,7 +15,7 @@ public class PhoneNumberSerializationTests
 
         // Assert
         json.Should()
-           .MatchRegex(@$"""number""\s*:\s*""{expectedValue}""");
+           .MatchRegex(@$"""fullNumber""\s*:\s*""{expectedValue}""");
     }
 
     [Fact]
@@ -24,13 +24,13 @@ public class PhoneNumberSerializationTests
         // Arrange
         var phoneNumberInput = "+5511987651234";
         // The JsonConstructor expects a property named "number" (case-insensitive by default).
-        var json = $"{{\"number\":\"{phoneNumberInput}\"}}";
+        var json = $"{{\"fullNumber\":\"{phoneNumberInput}\"}}";
 
         // Act
         var phoneNumber = JsonUtils.Deserialize<PhoneNumber>(json);
 
         // Assert
         phoneNumber.Should().NotBeNull();
-        phoneNumber!.Number.Should().Be(phoneNumberInput);
+        phoneNumber!.FullNumber.Should().Be(phoneNumberInput);
     }
 }

@@ -38,7 +38,7 @@ public class GetAdminUserByPhoneNumberQueryHandlerTests : IClassFixture<ServiceP
 
         Guard.NotNull(superAdminUser);
 
-        var query = new GetAdminUserByPhoneNumberQuery(superAdminUser.PhoneNumber.Number);
+        var query = new GetAdminUserByPhoneNumberQuery(superAdminUser.PhoneNumber.FullNumber);
 
         // Act
         var result = await mediator.GetAsync(query, CancellationToken.None);

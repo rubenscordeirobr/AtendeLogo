@@ -39,7 +39,7 @@ public class GetTenantUserByPhoneNumberQueryHandlerTests : IClassFixture<Service
 
         Guard.NotNull(tenantUser);
 
-        var query = new GetTenantUserByPhoneNumberQuery(tenantUser.PhoneNumber.Number);
+        var query = new GetTenantUserByPhoneNumberQuery(tenantUser.PhoneNumber.FullNumber);
 
         // Act
         var result = await mediator.GetAsync(query, CancellationToken.None);

@@ -1,16 +1,17 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Data;
+using System.Text.Json.Serialization;
 using AtendeLogo.Common.Infos;
 
 namespace AtendeLogo.Shared.ValueObjects;
 
 public record PhoneNumber : ValueObjectBase
 {
-
+    [JsonIgnore]
     private readonly PhoneNumberInfo _phoneNumberInfo;
 
     [JsonIgnore]
-    public Country CountryCode 
-        => _phoneNumberInfo.CountryCode;
+    public Country Country
+        => _phoneNumberInfo.Country;
 
     [JsonIgnore]
 
@@ -19,33 +20,38 @@ public record PhoneNumber : ValueObjectBase
 
     [JsonIgnore]
 
-    public string NationalNumber 
+    public string NationalNumber
         => _phoneNumberInfo.NationalNumber;
 
     [JsonIgnore]
-    public string AreaCode 
+    public string AreaCode
         => _phoneNumberInfo.AreaCode;
-   
-    public string Number
+
+    public string FullNumber
          => _phoneNumberInfo.FullNumber;
-    
+
     public PhoneNumber()
     {
         _phoneNumberInfo = PhoneNumberInfo.Unknown(string.Empty);
     }
 
     [JsonConstructor]
-    public PhoneNumber(string number)
+    public PhoneNumber(string fullNumber)
     {
-        _phoneNumberInfo = PhoneNumberInfoParser.Parse(number);
+        _phoneNumberInfo = PhoneNumberInfoParser.Parse(fullNumber);
+    }
+
+    public PhoneNumber(InternationalDialingCode dialingCode, string nationalNumber)
+    {
+        _phoneNumberInfo = PhoneNumberInfoParser.Parse(dialingCode, nationalNumber);
     }
 
     private PhoneNumber(PhoneNumberInfo phoneNumberInfo)
     {
         _phoneNumberInfo = phoneNumberInfo;
     }
-    
-    public static Result<PhoneNumber> Create(string number)
+
+    public static Result<PhoneNumber> Create(string? number)
     {
         var result = PhoneNumberInfo.Create(number);
         if (result.IsFailure)
@@ -53,5 +59,15 @@ public record PhoneNumber : ValueObjectBase
             return result.AsFailure<PhoneNumber>();
         }
         return Result.Success(new PhoneNumber(result.Value!));
+    }
+
+    public sealed override string ToString()
+    {
+        return FullNumber;
+    }
+
+    public override int GetHashCode()
+    {
+        return FullNumber.GetHashCode();
     }
 }

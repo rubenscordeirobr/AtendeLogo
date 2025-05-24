@@ -66,7 +66,7 @@ public class GetTenantUserByEmailOrPhoneNumberQueryHandlerTests : IClassFixture<
 
         Guard.NotNull(tenantUser);
 
-        var query = new GetTenantUserByEmailOrPhoneNumberQuery(tenantUser.PhoneNumber.Number);
+        var query = new GetTenantUserByEmailOrPhoneNumberQuery(tenantUser.PhoneNumber.FullNumber);
 
         // Act
         var result = await mediator.GetAsync(query, CancellationToken.None);
