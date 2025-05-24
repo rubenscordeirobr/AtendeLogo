@@ -3,16 +3,11 @@ public static class InternationalDialingCodeExtensions
 {
     public static string GetDialingCode(this InternationalDialingCode code)
     {
-        return ((int)code).ToString();
-    }
-
-    public static string GetDialingCodeString(this InternationalDialingCode code)
-    {
-        return code.GetDialingCode().ToString();
-    }
-
-    public static string ToE164Format(this InternationalDialingCode code)
-    {
-        return $"+{(int)code}";
+        var dialingCodeAttribute = code.GetCustomAttribute<DialingCodeAttribute>();
+        if (dialingCodeAttribute is null)
+        {
+            throw new MissingAttributeException(typeof(DialingCodeAttribute).Name, code.GetType().Name);
+        }
+        return dialingCodeAttribute.Code;
     }
 }

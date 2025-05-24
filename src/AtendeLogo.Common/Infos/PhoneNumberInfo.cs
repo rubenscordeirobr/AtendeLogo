@@ -3,7 +3,7 @@
 namespace AtendeLogo.Common.Infos;
 
 public partial record PhoneNumberInfo(
-    Country CountryCode,
+    Country Country,
     InternationalDialingCode InternationalDialingCode,
     string AreaCode,
     string NationalNumber,
@@ -18,7 +18,7 @@ public partial record PhoneNumberInfo
     {
         return new PhoneNumberInfo
         (
-            CountryCode : Country.Unknown,
+            Country: Country.Unknown,
             InternationalDialingCode: InternationalDialingCode.Unknown,
             NationalNumber: numbers,
             AreaCode: string.Empty,
@@ -26,11 +26,11 @@ public partial record PhoneNumberInfo
         );
     }
 
-    public static Result<PhoneNumberInfo> Create (string fullPhoneNumber)
+    public static Result<PhoneNumberInfo> Create(string? fullPhoneNumber)
     {
         var phoneNumberInfo = PhoneNumberInfoParser.Parse(fullPhoneNumber);
 
-        if (phoneNumberInfo.CountryCode == Country.Unknown)
+        if (phoneNumberInfo.Country == Country.Unknown)
         {
             return Result.ValidationFailure<PhoneNumberInfo>(
                 "PhoneNumberInfo.InvalidCountryCode",
@@ -51,7 +51,10 @@ public partial record PhoneNumberInfo
                 "National number is not valid.");
         }
 
-        var isNationalNumberValid = PhoneNumberUtils.IsNationalNumberValid(phoneNumberInfo.CountryCode, phoneNumberInfo.NationalNumber);
+        var isNationalNumberValid = PhoneNumberValidationUtils.IsNationalNumberValid(
+            phoneNumberInfo.Country, 
+            phoneNumberInfo.NationalNumber);
+
         if (!isNationalNumberValid)
         {
             return Result.ValidationFailure<PhoneNumberInfo>(

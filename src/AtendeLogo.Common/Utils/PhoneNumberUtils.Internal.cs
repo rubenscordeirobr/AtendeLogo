@@ -16,6 +16,8 @@ internal static partial class PhoneNumberUtilsInternal
 
     private static readonly Dictionary<InternationalDialingCode, Country> _mappings = new() {
             { InternationalDialingCode.Unknown, Country.Unknown },
+            { InternationalDialingCode.UnitedStates, Country.UnitedStates },
+            { InternationalDialingCode.Canada, Country.Canada },
             { InternationalDialingCode.Mexico, Country.Mexico },
             { InternationalDialingCode.Argentina, Country.Argentina },
             { InternationalDialingCode.Bolivia, Country.Bolivia },
@@ -62,41 +64,42 @@ internal static partial class PhoneNumberUtilsInternal
     }
 
     internal static Country GetCountryCodeInternal(
-        InternationalDialingCode internationalDialingCode,
-        string fullNumber)
+        InternationalDialingCode internationalDialingCode )
     {
-        if (internationalDialingCode == InternationalDialingCode.UnitedStatesOrCanada)
-        {
-            var areaCode = fullNumber.GetOnlyNumbers().Substring(1, 3);
-            if (_canadianAreaCodes.Contains(areaCode))
-            {
-                return Country.Canada;
-            }
-            return Country.UnitedStates;
-        }
-
         return _mappings.TryGetValue(internationalDialingCode, out var countryCode)
              ? countryCode
              : Country.Unknown;
     }
 
-    internal static InternationalDialingCode GetInternationalDialingCodeInternal(string numbers)
+    internal static InternationalDialingCode GetInternationalDialingCodeInternal(string fullNumber)
     {
-        numbers = numbers.Substring(1);
+        if (fullNumber is null || !fullNumber.TrimStart().StartsWith('+'))
+            return InternationalDialingCode.Unknown;
 
-        if (EnumUtils.TryParse<InternationalDialingCode>(numbers[..3], out var result) )
+        var numbers = fullNumber.GetOnlyNumbers();
+        if (numbers.Length > 2)
         {
-            return result;
+            if (EnumUtils.TryParse<InternationalDialingCode>(numbers[..3], out var result))
+            {
+                return result;
+            }
         }
-
-        if (EnumUtils.TryParse<InternationalDialingCode>(numbers[..2], out var result2))
+        if (numbers.Length > 1)
         {
-            return result2;
+            if (EnumUtils.TryParse<InternationalDialingCode>(numbers[..2], out var result2))
+            {
+                return result2;
+            }
         }
-
+       
         if (numbers.StartsWith('1'))
         {
-            return InternationalDialingCode.UnitedStatesOrCanada;
+            var areaCode = numbers[1..3];
+            if (_canadianAreaCodes.Contains(areaCode))
+            {
+                return InternationalDialingCode.Canada;
+            }
+            return InternationalDialingCode.UnitedStates;
         }
         return InternationalDialingCode.Unknown;
     }

@@ -25,12 +25,12 @@ public static class ValidationUtils
     }
     public static bool IsNationalNumberValid(Country country, [NotNullWhen(true)] string? phoneNumber)
     {
-        return PhoneNumberUtils.IsNationalNumberValid(country, phoneNumber);
+        return PhoneNumberValidationUtils.IsNationalNumberValid(country, phoneNumber);
     }
 
     public static bool IsFullPhoneNumberValid([NotNullWhen(true)] string? phoneNumber)
     {
-        return PhoneNumberUtils.IsFullPhoneNumberValid(phoneNumber);
+        return PhoneNumberValidationUtils.IsFullPhoneNumberValid(phoneNumber);
     }
 
     public static bool IsSha256(string? value)
@@ -77,4 +77,6 @@ public static class ValidationUtils
             return false;
         return Guid.TryParse(value, out _);
     }
+
+ 
 }

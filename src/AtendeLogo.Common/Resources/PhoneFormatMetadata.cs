@@ -13,7 +13,7 @@ internal static class PhoneNumberFormatRegistry
     {
         { Country.UnitedStates,  new PhoneNumberFormatInfo {
             CountryCode = Country.UnitedStates,
-            InternationalDialingCode = InternationalDialingCode.UnitedStatesOrCanada,
+            InternationalDialingCode = InternationalDialingCode.UnitedStates,
             InternationalDialingCodeLength = 1,
             MinAreaCodeLength = 3,
             MaxAreaCodeLength = 3,
@@ -24,7 +24,7 @@ internal static class PhoneNumberFormatRegistry
         }},
         { Country.Canada, new PhoneNumberFormatInfo {
             CountryCode = Country.Canada,
-            InternationalDialingCode = InternationalDialingCode.UnitedStatesOrCanada,
+            InternationalDialingCode = InternationalDialingCode.Canada,
             InternationalDialingCodeLength = 1,
             MinAreaCodeLength = 3,
             MaxAreaCodeLength = 3,
