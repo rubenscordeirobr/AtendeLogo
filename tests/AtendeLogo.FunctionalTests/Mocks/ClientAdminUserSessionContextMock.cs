@@ -17,7 +17,7 @@ public class ClientAdminUserSessionContextMock : IClientAdminUserSessionContextS
         return Task.CompletedTask;
     }
 
-    public Task EnsureSessionContextAsync()
+    public Task InitializeAsync()
     {
         return Task.CompletedTask;
     }

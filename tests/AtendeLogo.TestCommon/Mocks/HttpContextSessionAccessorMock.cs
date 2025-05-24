@@ -43,7 +43,7 @@ public abstract class HttpContextSessionAccessorMock : IHttpContextSessionAccess
 
     private ClientRequestHeaderInfo CreateRequestHeaderInfo()
     {
-        var token = _tokenHandler.WriteToken(UserSessionClaims!, UserSession!.KeepSession);
+        var token = _tokenHandler.WriteToken(UserSessionClaims!, UserSession!.IsPersistent);
         return new ClientRequestHeaderInfo(
             UserSession.IpAddress,
             UserSession.UserAgent,
@@ -103,7 +103,7 @@ public class TenantOwnerUserSessionAccessorMock : HttpContextSessionAccessorMock
             ownerUser,
             headerInfo,
             AuthenticationType.System,
-            keepSession: true,
+            isPersistent: true,
             SystemTenantConstants.Tenant_Id);
 
         userSession.SetPropertyValue(x => x.Id, GuidHelper.NewGuidZeroPrefixed());
@@ -130,7 +130,7 @@ public class AminUserSessionAccessorMock : HttpContextSessionAccessorMock
             user: superAdminUser,
             clientHeaderInfo: headerInfo,
             authenticationType: AuthenticationType.System,
-            keepSession: true,
+            isPersistent: true,
             tenant_id: null);
 
         userSession.SetPropertyValue(x => x.Id, GuidHelper.NewGuidZeroPrefixed());

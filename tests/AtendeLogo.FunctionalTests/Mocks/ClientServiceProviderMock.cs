@@ -36,8 +36,8 @@ public class ClientServiceProviderMock<TRoleProvider>
             .AddScoped<IConnectionStatusNotifier, ConnectionStatusNotifierMock>()
             .AddScoped<IRequestErrorNotifier, RequestErrorNotifierMock>()
             .AddScoped<IClientAuthorizationTokenManager, ClientAuthorizationTokenManagerMock>()
-            .AddScoped<IClientTenantUserSessionContext, ClientTenantUserSessionContextMock>()
-            .AddScoped<IClientAdminUserSessionContext, ClientAdminUserSessionContextMock>();
+            .AddScoped<IClientTenantUserSessionContextService, ClientTenantUserSessionContextMock>()
+            .AddScoped<IClientAdminUserSessionContextService, ClientAdminUserSessionContextMock>();
 
         _serviceProvider = servicesCollection.BuildServiceProvider();
     }
@@ -85,7 +85,7 @@ public class ClientServiceProviderMock<TRoleProvider>
         {
             EmailOrPhoneNumber = email,
             Password = testPassword,
-            KeepSession = true
+            IsPersistent = true
         };
 
         var result = await authenticationService.LoginAsync(command);
@@ -104,7 +104,7 @@ public class ClientServiceProviderMock<TRoleProvider>
         {
             EmailOrPhoneNumber = email,
             Password = testPassword,
-            KeepSession = true
+            IsPersistent = true
         };
 
         var result = await authenticationService.LoginAsync(command);

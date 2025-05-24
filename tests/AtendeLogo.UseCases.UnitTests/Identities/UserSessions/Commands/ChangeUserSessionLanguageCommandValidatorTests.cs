@@ -1,4 +1,4 @@
-﻿using AtendeLogo.UseCases.Identities.UserSessions.Commands;
+﻿using AtendeLogo.UseCases.Identities.UserSessions;
 
 namespace AtendeLogo.UseCases.UnitTests.Identities.UserSessions.Commands;
 

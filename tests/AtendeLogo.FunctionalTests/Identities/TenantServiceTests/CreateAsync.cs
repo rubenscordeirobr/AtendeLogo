@@ -14,13 +14,14 @@ public partial class TenantServiceTests
         var fakeEmail = FakeUtils.GenerateFakeEmail();
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
 
-        var createCommand = new CreateTenantCommand
+        var createCommand = new CreateTenantAccountCommand
         {
             Name = "Tenant name",
             FiscalCode = new FiscalCode(fakeCpf),
-            TenantName = "Tenant name",
+            BusinessName = "Tenant name",
             Email = fakeEmail,
             Password = "Password123!",
+            IsPersistent= false,
             Country = Country.Brazil,
             Language = Language.PortugueseBrazil,
             Currency = Currency.BRL,
@@ -46,13 +47,14 @@ public partial class TenantServiceTests
         var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
 
-        var createCommand = new CreateTenantCommand
+        var createCommand = new CreateTenantAccountCommand
         {
             Name = "Tenant name",
             FiscalCode = new FiscalCode(fakeCpf),
-            TenantName = "Tenant name",
+            BusinessName = "Tenant name",
             Email = string.Empty,
             Password = "Password123!",
+            IsPersistent= false,
             Country = Country.Brazil,
             Language = Language.PortugueseBrazil,
             Currency = Currency.BRL,

@@ -1,5 +1,5 @@
 ﻿using AtendeLogo.Application.Models.Secrets;
-using AtendeLogo.Common.Exceptions;
+using AtendeLogo.Common.Extensions;
 using AtendeLogo.Common.Utils;
 
 namespace AtendeLogo.TestCommon.Mocks.Infrastructure;

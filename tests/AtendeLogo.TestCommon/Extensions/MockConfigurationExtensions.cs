@@ -1,5 +1,5 @@
 ﻿using AtendeLogo.Application.Extensions;
-using AtendeLogo.Common.Exceptions;
+using AtendeLogo.Common.Extensions;
 using AtendeLogo.Shared.Localization;
 using AtendeLogo.TestCommon.Mocks;
 using Microsoft.Extensions.Logging;

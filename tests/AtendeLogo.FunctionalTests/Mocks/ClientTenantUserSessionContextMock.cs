@@ -19,7 +19,7 @@ public class ClientTenantUserSessionContextMock : IClientTenantUserSessionContex
         return Task.CompletedTask;
     }
 
-    public Task EnsureSessionContextAsync()
+    public Task InitializeAsync()
     {
         return Task.CompletedTask;
     }

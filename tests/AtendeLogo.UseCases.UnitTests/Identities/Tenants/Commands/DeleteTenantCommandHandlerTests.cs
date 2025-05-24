@@ -42,13 +42,14 @@ public class DeleteTenantCommandHandlerTests : IClassFixture<ServiceProviderMock
         var fakePhoneNumber = BrazilianFakeUtils.GenerateFakePhoneNumber();
         var fakeEmail = FakeUtils.GenerateFakeEmail();
         var fakeCpf = BrazilianFakeUtils.GenerateCpf();
-        var createCommand = new CreateTenantCommand
+        var createCommand = new CreateTenantAccountCommand
         {
             Name = "Tenant name",
             FiscalCode = new FiscalCode(fakeCpf),
-            TenantName = "Tenant name",
+            BusinessName = "Tenant name",
             Email = fakeEmail,
             Password = "Password123!",
+            IsPersistent = false,
             Country = Country.Brazil,
             Language = Language.PortugueseBrazil,
             Currency = Currency.BRL,

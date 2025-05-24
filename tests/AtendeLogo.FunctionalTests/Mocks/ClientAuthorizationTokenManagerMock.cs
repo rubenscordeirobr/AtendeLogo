@@ -12,16 +12,31 @@ public class ClientAuthorizationTokenManagerMock : IClientAuthorizationTokenMana
     private readonly ILogger<ClientAuthorizationTokenManagerMock> _logger;
 
     private readonly JwtSecurityTokenHandler _tokenHandler = new();
- 
+    public event EventHandlerAsync<AuthorizationTokenUpdatedEventArgs>? UserSessionStateUpdated;
+
     public ClientAuthorizationTokenManagerMock(ILogger<ClientAuthorizationTokenManagerMock> logger)
     {
         _logger = logger;
-
     }
 
-    public Task SetAuthorizationTokenAsync(string authorizationToken, bool keepSession)
+    public UserSessionState? GetUserSessionState()
+    {
+        if (_authorizationToken is null)
+            return null;
+
+        var claims = GetUserSessionClaims();
+        return new UserSessionState(claims, _authorizationToken);
+    }
+
+    public Task EnsureUserSessionStateAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task SetAuthorizationTokenAsync(string authorizationToken, bool isPersistent)
     {
         _authorizationToken = authorizationToken;
+        UserSessionStateUpdated?.Invoke(this, new AuthorizationTokenUpdatedEventArgs(GetUserSessionState()));
         return Task.CompletedTask;
     }
 
@@ -54,7 +69,7 @@ public class ClientAuthorizationTokenManagerMock : IClientAuthorizationTokenMana
         {
             return null;
         }
-         
+
         if (!_tokenHandler.CanReadToken(authorizationToken))
         {
             return null;
