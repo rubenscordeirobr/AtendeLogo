@@ -60,7 +60,7 @@ internal class IdentityDbSeeder
             user: anonymousUser,
             clientHeaderInfo: headerInfo,
             authenticationType: AuthenticationType.Anonymous,
-            keepSession: true,
+            isPersistent: true,
             tenant_id: null);
 
         anonymousUserSession.SetAnonymousSystemSessionId();

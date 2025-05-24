@@ -5,6 +5,7 @@ using AtendeLogo.Persistence.Identity.Seed;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace AtendeLogo.Persistence.Identity;
 
@@ -12,15 +13,17 @@ public static class IdentityPersistenceServiceConfiguration
 {
     public static IServiceCollection AddIdentityPersistenceServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IHostEnvironment environment)
     {
-        return services.AddNpgsqlIdentityDbContext(configuration)
+        return services.AddNpgsqlIdentityDbContext(configuration, environment)
             .AddIdentityRepositoryServices();
     }
 
     private static IServiceCollection AddNpgsqlIdentityDbContext(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IHostEnvironment environment)
     {
         var connectionString = configuration.GetConnectionString("IdentityPostgresql");
 
@@ -35,10 +38,13 @@ public static class IdentityPersistenceServiceConfiguration
                 .AddInterceptors(new DefaultSaveChangesInterceptor());
 
 #if DEBUG
-            optionsBuilder.EnableSensitiveDataLogging();
+            if (environment.IsDevelopment())
+            {
+                optionsBuilder.EnableSensitiveDataLogging();
+            }
 #endif
 
-        }, 
+        },
         contextLifetime: ServiceLifetime.Scoped,
         optionsLifetime: ServiceLifetime.Singleton
         );

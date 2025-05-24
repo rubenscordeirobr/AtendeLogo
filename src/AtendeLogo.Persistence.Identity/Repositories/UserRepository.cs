@@ -21,7 +21,7 @@ internal abstract class UserRepository<TUserEntity> : RepositoryBase<TUserEntity
         => FindAsync(x => x.Email == email, cancellationToken);
 
     public Task<TUserEntity?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
-        => FindAsync(x => x.PhoneNumber.Number == phoneNumber, cancellationToken);
+        => FindAsync(x => x.PhoneNumber.FullNumber == phoneNumber, cancellationToken);
 
     public Task<TUserEntity?> GetByEmailOrPhoneNumberAsync(
         string emailOrPhoneNumber, 
@@ -42,10 +42,10 @@ internal abstract class UserRepository<TUserEntity> : RepositoryBase<TUserEntity
         => AnyAsync(x => x.Email == email && x.Id != user_Id, cancellationToken);
 
     public Task<bool> PhoneNumberExistsAsync(string phoneNumber, CancellationToken cancellationToken = default)
-        => AnyAsync(x => x.PhoneNumber.Number == phoneNumber, cancellationToken);
+        => AnyAsync(x => x.PhoneNumber.FullNumber == phoneNumber, cancellationToken);
 
     public Task<bool> PhoneNumberExistsAsync(string phoneNumber, Guid user_Id, CancellationToken cancellationToken = default)
-        => AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != user_Id, cancellationToken);
+        => AnyAsync(x => x.PhoneNumber.FullNumber == phoneNumber && x.Id != user_Id, cancellationToken);
 
     public Task<bool> EmailOrPhoneNumberExistsAsync(
         string emailOrPhoneNumber,

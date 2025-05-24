@@ -15,7 +15,7 @@ public partial class InitialMigration : Migration
         migrationBuilder.AlterDatabase()
             .Annotation("Npgsql:CollationDefinition:case_accent_insensitive", "und-u-ks-level1,und-u-ks-level1,icu,False")
             .Annotation("Npgsql:Enum:authentication_type", "anonymous,credentials,facebook,google,microsoft,sms,system,unknown,whats_app")
-            .Annotation("Npgsql:Enum:business_type", "civil_registry_office,system,unknown")
+            .Annotation("Npgsql:Enum:business_type", "civil_registry_office,system,undefined")
             .Annotation("Npgsql:Enum:country", "argentina,bolivia,brazil,canada,chile,colombia,ecuador,france,germany,guyana,italy,mexico,paraguay,peru,portugal,spain,suriname,united_kingdom,united_states,unknown,uruguay,venezuela")
             .Annotation("Npgsql:Enum:culture", "de_de,en_ca,en_gb,en_gy,en_us,es_ar,es_bo,es_cl,es_co,es_ec,es_es,es_mx,es_pe,es_uy,es_ve,fr_ca,fr_fr,gn_py,it_it,nl_sr,pt_br,pt_pt,undefined")
             .Annotation("Npgsql:Enum:currency", "brl,eur,unknown,usd")
@@ -24,9 +24,9 @@ public partial class InitialMigration : Migration
             .Annotation("Npgsql:Enum:tenant_state", "cancelled,closed,new,onboarding,operational,system,trial,unknown")
             .Annotation("Npgsql:Enum:tenant_status", "active,archived,inactive,pending,suspended,unknown")
             .Annotation("Npgsql:Enum:tenant_type", "company,individual,system,undefined")
-            .Annotation("Npgsql:Enum:user_role", "admin,anonymous,chat_agent,none,operator,owner,system_admin,viewer")
-            .Annotation("Npgsql:Enum:user_state", "active,blocked,deleted,inactive,new,pending_verification,suspended,unknown")
-            .Annotation("Npgsql:Enum:user_status", "anonymous,away,busy,do_not_disturb,new,offline,online,system,unknown")
+            .Annotation("Npgsql:Enum:user_role", "admin,anonymous,chat_agent,operator,owner,system_admin,undefined,viewer")
+            .Annotation("Npgsql:Enum:user_state", "active,blocked,deleted,inactive,new,pending_verification,suspended,undefined")
+            .Annotation("Npgsql:Enum:user_status", "anonymous,away,busy,do_not_disturb,new,offline,online,system,undefined")
             .Annotation("Npgsql:Enum:user_type", "admin_user,anonymous,system_user,tenant_user,undefined")
             .Annotation("Npgsql:Enum:verification_state", "not_verified,undefined,verified")
             .Annotation("Npgsql:PostgresExtension:uuid-ossp", ",,");
@@ -74,7 +74,7 @@ public partial class InitialMigration : Migration
                 ip_address = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false, collation: "case_accent_insensitive"),
                 user_agent = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false, collation: "case_accent_insensitive"),
                 is_active = table.Column<bool>(type: "boolean", nullable: false),
-                keep_session = table.Column<bool>(type: "boolean", nullable: false),
+                is_persistent = table.Column<bool>(type: "boolean", nullable: false),
                 last_activity = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                 started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
                 terminated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),

@@ -26,7 +26,7 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "authentication_type", new[] { "anonymous", "credentials", "facebook", "google", "microsoft", "sms", "system", "unknown", "whats_app" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "business_type", new[] { "civil_registry_office", "system", "unknown" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "business_type", new[] { "civil_registry_office", "system", "undefined" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "country", new[] { "argentina", "bolivia", "brazil", "canada", "chile", "colombia", "ecuador", "france", "germany", "guyana", "italy", "mexico", "paraguay", "peru", "portugal", "spain", "suriname", "united_kingdom", "united_states", "unknown", "uruguay", "venezuela" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "culture", new[] { "de_de", "en_ca", "en_gb", "en_gy", "en_us", "es_ar", "es_bo", "es_cl", "es_co", "es_ec", "es_es", "es_mx", "es_pe", "es_uy", "es_ve", "fr_ca", "fr_fr", "gn_py", "it_it", "nl_sr", "pt_br", "pt_pt", "undefined" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "currency", new[] { "brl", "eur", "unknown", "usd" });
@@ -35,9 +35,9 @@ namespace AtendeLogo.Persistence.Identity.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_state", new[] { "cancelled", "closed", "new", "onboarding", "operational", "system", "trial", "unknown" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_status", new[] { "active", "archived", "inactive", "pending", "suspended", "unknown" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tenant_type", new[] { "company", "individual", "system", "undefined" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_role", new[] { "admin", "anonymous", "chat_agent", "none", "operator", "owner", "system_admin", "viewer" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_state", new[] { "active", "blocked", "deleted", "inactive", "new", "pending_verification", "suspended", "unknown" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_status", new[] { "anonymous", "away", "busy", "do_not_disturb", "new", "offline", "online", "system", "unknown" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_role", new[] { "admin", "anonymous", "chat_agent", "operator", "owner", "system_admin", "undefined", "viewer" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_state", new[] { "active", "blocked", "deleted", "inactive", "new", "pending_verification", "suspended", "undefined" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_status", new[] { "anonymous", "away", "busy", "do_not_disturb", "new", "offline", "online", "system", "undefined" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "admin_user", "anonymous", "system_user", "tenant_user", "undefined" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "verification_state", new[] { "not_verified", "undefined", "verified" });
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
@@ -505,9 +505,9 @@ namespace AtendeLogo.Persistence.Identity.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_active");
 
-                    b.Property<bool>("KeepSession")
+                    b.Property<bool>("IsPersistent")
                         .HasColumnType("boolean")
-                        .HasColumnName("keep_session");
+                        .HasColumnName("is_persistent");
 
                     b.Property<Language>("Language")
                         .HasColumnType("language")

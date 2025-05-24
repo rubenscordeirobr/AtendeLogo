@@ -54,7 +54,7 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
         string phoneNumber,
         CancellationToken token)
     {
-        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber, token);
+        return AnyAsync(x => x.PhoneNumber.FullNumber == phoneNumber, token);
     }
 
     public Task<bool> PhoneNumberExitsAsync(
@@ -62,6 +62,6 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
         Guid currentTenant_Id,
         CancellationToken token)
     {
-        return AnyAsync(x => x.PhoneNumber.Number == phoneNumber && x.Id != currentTenant_Id, token);
+        return AnyAsync(x => x.PhoneNumber.FullNumber == phoneNumber && x.Id != currentTenant_Id, token);
     }
 }
