@@ -7,6 +7,14 @@ public static class LanguageHelper
 {
     public static Language SystemLanguage => Language.English;
 
+    public static Language? Normalize(Culture culture, Language? language)
+    {
+        if(language is null)
+            return null;
+
+        return Normalize(culture, language.Value);
+    }
+
     public static Language Normalize(Culture culture, Language language)
     {
         return language == Language.Default
