@@ -1,12 +1,12 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace AtendeLogo.UI.Services;
 public class BusyIndicatorService : IBusyIndicatorService
 {
-    public event Func<Task>? OnBusyAsync;
-    public event Func<Task>? OnIdleAsync;
-
+    private Func<Task>? OnBusyAsync;
+    private Func<Task>? OnReleaseAsync;
     private readonly ILogger _logger;
 
     public BusyIndicatorService(
@@ -15,14 +15,29 @@ public class BusyIndicatorService : IBusyIndicatorService
         _logger = logger;
     }
 
+    [MemberNotNullWhen(true, nameof(OnBusyAsync), nameof(OnReleaseAsync))]
+    public bool IsInitialized { get; private set; }
+
+    public void Initialize(Func<Task>? onBusyAsync, Func<Task>? onReleaseAsync)
+    {
+        Guard.NotNull(onBusyAsync);
+        Guard.NotNull(onReleaseAsync);
+
+        OnBusyAsync = onBusyAsync;
+        OnReleaseAsync = onReleaseAsync;
+        IsInitialized = true;
+    }
+
     public void Busy()
     {
-        OnBusyAsync?.Invoke();
+        ThrowIfNotInitialized();
+        OnBusyAsync.Invoke();
     }
 
     public void Release()
     {
-        OnIdleAsync?.Invoke();
+        ThrowIfNotInitialized();
+        OnReleaseAsync.Invoke();
     }
 
     public async Task<Result<T>> RunWithBusyIndicatorAsync<T>(
@@ -44,7 +59,7 @@ public class BusyIndicatorService : IBusyIndicatorService
         {
             var errorCode = this.GetErrorCode(nameof(RunWithBusyIndicatorAsync));
             var error = new UnknownError(ex, errorCode, ex.Message);
-             
+
             _logger.LogError(ex,
                     "An error occurred while executing the operation. Error code: {ErrorCode}. Message: {Message}",
                     errorCode,
@@ -55,6 +70,17 @@ public class BusyIndicatorService : IBusyIndicatorService
         finally
         {
             this.Release();
+        }
+    }
+
+    [MemberNotNull(nameof(OnBusyAsync), nameof(OnReleaseAsync))]
+    private void ThrowIfNotInitialized()
+    {
+        if (!IsInitialized)
+        {
+            throw new InvalidOperationException(
+                "The BusyIndicatorService has not been initialized. " +
+                "Please, please Make sure call Busy or Release only after the service has been initialized.");
         }
     }
 }

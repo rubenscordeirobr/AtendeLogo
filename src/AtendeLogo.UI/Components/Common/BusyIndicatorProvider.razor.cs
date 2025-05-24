@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.UI.Components.Common;
+﻿using AtendeLogo.UI.Services;
+
+namespace AtendeLogo.UI.Components.Common;
 
 public partial class BusyIndicatorProvider  
 {
@@ -11,25 +13,30 @@ public partial class BusyIndicatorProvider
  
     protected override void OnInitialized()
     {
+        BusyIndicatorService.Initialize(BusyAsync, ReleaseAsync);
         base.OnInitialized();
-
-        BusyIndicatorService.OnBusyAsync += BusyAsync;
-        BusyIndicatorService.OnIdleAsync += IdleAsync;
     }
 
-    private async Task IdleAsync()
-    {
-        Interlocked.Decrement(ref _busyCount);
-        StateHasChanged();
-        await Task.CompletedTask;
-    }
-
+   
     private Task BusyAsync()
     {
         Interlocked.Increment(ref _busyCount);
         StateHasChanged();
         return Task.CompletedTask;
     }
-   
+
+    private async Task ReleaseAsync()
+    {
+        Interlocked.Decrement(ref _busyCount);
+        if(_busyCount<0)
+        {
+            throw new InvalidOperationException(
+                "Busy count cannot be negative. \r\n" +
+                "Make sure to call ReleaseAsync() only when BusyAsync() has been called.");
+        }
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
 }
 

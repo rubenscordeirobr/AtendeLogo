@@ -3,14 +3,11 @@ namespace AtendeLogo.UI.Abstractions;
 
 public interface IBusyIndicatorService
 {
-    
-    public event Func<Task>? OnBusyAsync;
-    public event Func<Task>? OnIdleAsync;
-
+    bool IsInitialized { get; }
     void Busy();
     void Release();
 
- 
+    void Initialize(Func<Task>? onBusyAsync, Func<Task>? onReleaseAsync);
 
     Task<Result<T>> RunWithBusyIndicatorAsync<T>(
         Func<Task<Result<T>>> operation,
