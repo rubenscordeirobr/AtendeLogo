@@ -28,4 +28,15 @@ public static class HttpRequestExtensions
         var queryString = httpRequest.QueryString.Value;
         return $"{path}{queryString}";
     }
+
+    public static string GetBaseUrl(
+        this HttpRequest httpRequest)
+    {
+        Guard.NotNull(httpRequest);
+
+        var scheme = httpRequest.Scheme;
+        var host = httpRequest.Host.Value;
+        var pathBase = httpRequest.PathBase.Value;
+        return $"{scheme}://{host}{pathBase}";
+    }
 }
