@@ -1,5 +1,8 @@
 <Solution>
-  <Folder Name="/infra/" />
+  <Folder Name="/infra/">
+    <Project Path="src/AtendeLogo.AppHost/AtendeLogo.AppHost.csproj" />
+    <Project Path="src/AtendeLogo.ServiceDefaults/AtendeLogo.ServiceDefaults.csproj" />
+  </Folder>
   <Folder Name="/scripts/" Id="e660ad3f-39f6-4607-bb7b-4030369cf622">
     <File Path="scripts/Generate-CompilerConfig.ps1" />
     <File Path="scripts/Set-WhatsAppEnvVars.ps1" />
@@ -22,6 +25,8 @@
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/01-UI/" Id="717f1626-31b9-8664-f7bb-6f3cf30fa3ca">
+    <Project Path="src/AtendeLogo.TenantPortal.BlazorServer/AtendeLogo.TenantPortal.BlazorServer.csproj" />
+    <Project Path="src/AtendeLogo.TenantPortal/AtendeLogo.TenantPortal.csproj" />
     <Project Path="src/AtendeLogo.UI/AtendeLogo.UI.csproj" />
   </Folder>
   <Folder Name="/src/02-API/" Id="02ea681e-c7d8-13c7-8484-4ac65e1b71e8">
@@ -38,6 +43,7 @@
   <Folder Name="/src/05-Core/" Id="575d36c4-fccc-3e0a-e8ab-1f4fea846db0">
     <Project Path="src/AtendeLogo.Application/AtendeLogo.Application.csproj" />
     <Project Path="src/AtendeLogo.Domain/AtendeLogo.Domain.csproj" />
+    <Project Path="src/AtendeLogo.Http/AtendeLogo.Http.csproj" Id="7449128c-e8d2-438a-bcd8-d5a61123f635" />
     <Project Path="src/AtendeLogo.SharedKernel/AtendeLogo.SharedKernel.csproj" />
   </Folder>
   <Folder Name="/src/06-Infrastructure/" Id="1f87a12e-d750-680c-2313-99ae4bc9444d">

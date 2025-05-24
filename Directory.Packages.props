@@ -48,6 +48,7 @@
         <PackageVersion Include="Blazored.LocalStorage" Version="4.5.0" />
         <PackageVersion Include="Blazored.FluentValidation" Version="2.2.0" />
         <PackageVersion Include="DartSassBuilder" Version="1.1.0" />
+        <PackageVersion Include="Microsoft.TypeScript.MSBuild" Version="5.8.3" />
    
         <!-- 🔀 Object Mapping & Validation -->
         <PackageVersion Include="FluentValidation" Version="11.11.0" />

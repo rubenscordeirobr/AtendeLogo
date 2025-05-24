@@ -10,7 +10,6 @@
         <InternalsVisibleTo Include="AtendeLogo.FunctionalTests" />
     </ItemGroup>
     <ItemGroup>
-        
         <ProjectReference Include="..\AtendeLogo.Common\AtendeLogo.Common.csproj" />
     </ItemGroup>
 

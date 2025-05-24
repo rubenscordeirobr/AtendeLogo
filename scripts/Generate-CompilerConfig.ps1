@@ -34,6 +34,7 @@ foreach ($sourceDir in $sourceDirectories) {
             inputFile  = $relativeInput
             outputFile = $outputFile
             minify     = @{ enabled = $false }
+            IsIgnorar     = $true
         }
     }
 }

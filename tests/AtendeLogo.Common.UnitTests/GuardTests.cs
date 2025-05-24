@@ -87,7 +87,7 @@ public class GuardTests
     public void NotEmpty_ShouldNotThrow_WhenValueIsNotEmptyGuid()
     {
         Guid value = Guid.NewGuid();
-        Action act = () => Guard.NotEmpty(value, nameof(value));
+        Action act = () => Guard.NotEmpty(value);
 
         act.Should().NotThrow();
     }
@@ -97,7 +97,7 @@ public class GuardTests
     {
         int value = default;
 
-        Action act = () => Guard.MustBeEmpty(value, nameof(value));
+        Action act = () => Guard.MustBeEmpty(value);
 
         act.Should().NotThrow();
     }
@@ -107,7 +107,7 @@ public class GuardTests
     [InlineData(100)]
     public void MustBeEmpty_ShouldThrowArgumentException_WhenValueIsNotEmptyInt(int value)
     {
-        Action act = () => Guard.MustBeEmpty(value, nameof(value));
+        Action act = () => Guard.MustBeEmpty(value);
 
         act.Should().Throw<ArgumentException>();
     }
@@ -117,7 +117,7 @@ public class GuardTests
     {
         Guid value = Guid.Empty;
          
-        Action act = () => Guard.MustBeEmpty(value, nameof(value));
+        Action act = () => Guard.MustBeEmpty(value);
 
         act.Should().NotThrow();
     }
@@ -126,7 +126,7 @@ public class GuardTests
     public void MustBeEmpty_ShouldThrowArgumentException_WhenValueIsNotEmptyGuid()
     {
         Guid value = Guid.NewGuid();
-        Action act = () => Guard.MustBeEmpty(value, nameof(value));
+        Action act = () => Guard.MustBeEmpty(value);
 
         act.Should().Throw<ArgumentException>();
     }

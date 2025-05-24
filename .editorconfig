@@ -176,12 +176,17 @@ dotnet_diagnostic.IDE0083.severity = warning;
 dotnet_diagnostic.IDE0046.severity = none; 
 dotnet_diagnostic.IDE0011.severity = none; 
 dotnet_diagnostic.IDE0055.severity = none; 
- 
-
-
+  
 # Code Analysis
 # CS8618: Non-nullable field is uninitialized. Consider declaring as nullable.
 dotnet_diagnostic.CS8618.severity = silent;
+
+# CA1003: Use generic event handler instances
+dotnet_diagnostic.CA1003.severity = silent
+
+# CA1055: Uri return values should not be strings
+dotnet_diagnostic.CA1055.severity = silent
+
 
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = silent
@@ -227,6 +232,12 @@ dotnet_diagnostic.CA1031.severity = none
 
 # CA1812: 
 dotnet_diagnostic.CA1812.severity = suggestion
+
+# CA1819: Properties should not return arrays
+dotnet_diagnostic.CA1819.severity = none
+
+#CA2234: Pass system uri objects instead of strings
+dotnet_diagnostic.CA2234.severity = none
 
 # SonarLint
 

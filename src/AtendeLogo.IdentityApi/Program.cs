@@ -1,5 +1,5 @@
-﻿
-using AtendeLogo.Application.Extensions;
+﻿using AtendeLogo.Common.Extensions;
+using AtendeLogo.ServiceDefaults;
 using AtendeLogo.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,13 +10,17 @@ builder.InitializeEnvironmentSettings()
     .AddEssentialServices();
 
 var configuration = builder.Configuration;
-
 if (!environment.IsTest())
 {
     builder.Services
         .AddInfrastructureServices(configuration, environment)
-        .AddIdentityPersistenceServices(configuration)
+        .AddIdentityPersistenceServices(configuration, environment)
         .AddActivityPersistenceServices(configuration);
+
+    if (environment.IsAspire())
+    {
+        builder.AddServiceDefaults();
+    }
 }
 
 builder.Services
@@ -29,18 +33,19 @@ builder.Services
 
 var app = builder.Build();
 
-#pragma warning disable S125
-/* builder.AddServiceDefaults(); */
-#pragma warning restore S125
-
 app.UseHttpsRedirection()
    .UseAuthorization();
 
-app.MapControllers();
-
 app.UsePresentationServices();
+
 app.MapPresentationEndPoints();
 app.MapFallback();
+app.MapPing();
+
+if (environment.IsAspire())
+{
+    app.MapDefaultEndpoints();
+}
 
 if (environment.IsDevelopment() && !environment.IsTest())
 {

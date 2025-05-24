@@ -10,7 +10,6 @@
     <DockerServiceName>identity-api</DockerServiceName>
     <DockerComposeProjectName>atende-logo</DockerComposeProjectName>
     <DockerRemoveContainersOnDebugStop>false</DockerRemoveContainersOnDebugStop>
-    
   </PropertyGroup>
   <ItemGroup>
     <None Remove="scripts\**" />
@@ -21,5 +20,6 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    
   </ItemGroup>
 </Project>

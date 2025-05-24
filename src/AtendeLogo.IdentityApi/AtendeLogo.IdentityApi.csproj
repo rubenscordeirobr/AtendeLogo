@@ -13,14 +13,18 @@
         <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
     </PropertyGroup>
     <ItemGroup>
+      <Compile Remove="temp\**" />
+      <Content Remove="temp\**" />
+      <EmbeddedResource Remove="temp\**" />
       <None Remove="temp\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Remove="temp\Controllers\WAWebHookController.cs" />
     </ItemGroup>
 
     <ItemGroup>
         <Content Remove="Web.config" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings.Development.Aspire.json.bkp" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,6 +47,7 @@
         <ProjectReference Include="..\AtendeLogo.Presentation\AtendeLogo.Presentation.csproj" />
         <ProjectReference Include="..\AtendeLogo.Persistence.Identity\AtendeLogo.Persistence.Identity.csproj" />
         <ProjectReference Include="..\AtendeLogo.RuntimeServices\AtendeLogo.RuntimeServices.csproj" />
+        <ProjectReference Include="..\AtendeLogo.ServiceDefaults\AtendeLogo.ServiceDefaults.csproj" />
     </ItemGroup>
 
 

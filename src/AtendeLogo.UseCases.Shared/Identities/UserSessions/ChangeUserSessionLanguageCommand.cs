@@ -1,4 +1,4 @@
-﻿namespace AtendeLogo.UseCases.Identities.UserSessions.Commands;
+﻿namespace AtendeLogo.UseCases.Identities.UserSessions;
 
 public record class ChangeUserSessionLanguageCommand(
     Guid UserSession_Id,

@@ -9,6 +9,5 @@ global using AtendeLogo.Persistence.Identity;
 global using AtendeLogo.Presentation;
 global using AtendeLogo.Presentation.Extensions;
 global using AtendeLogo.RuntimeServices;
-global using AtendeLogo.Shared.Constants;
 global using AtendeLogo.UseCases;
 global using Microsoft.AspNetCore.Mvc.ApplicationModels;

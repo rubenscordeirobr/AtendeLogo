@@ -56,7 +56,7 @@ public class ApplicationServiceCollection : ServiceCollection
             .AddUserCasesSharedServices()
             .AddPresentationServices()
             .AddInfrastructureServices(fakeConfiguration, fakeHostEnvironment)
-            .AddIdentityPersistenceServices(fakeConfiguration)
+            .AddIdentityPersistenceServices(fakeConfiguration, fakeHostEnvironment)
             .AddActivityPersistenceServices(fakeConfiguration);
 
         AddMockDependency(fakeConfiguration);

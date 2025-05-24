@@ -21,5 +21,8 @@
     public const string TenantUsersRoute = $"{IdentityBase}/tenant-users";
     public const string AdminUsersRoute = $"{IdentityBase}/admin-users";
 
+    //TenantUserAuthenticationService
+    public const string Login = "login";
     public const string Logout = "logout";
+    public const string CreateTenantAccount = "create-tenant-account";
 }
