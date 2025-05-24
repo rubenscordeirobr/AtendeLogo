@@ -30,10 +30,14 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
             throw new ArgumentException("Language cannot be default.", nameof(language));
         }
 
+        if (_localizedStringsCache.ContainsKey(language))
+            return;
+
         try
         {
             await _cacheLock.WaitAsync();
-            if (_localizedStringsCache.ContainsKey(language))
+
+          if (_localizedStringsCache.ContainsKey(language))
                 return;
 
             await using var scope = _serviceProvider.CreateAsyncScope();
@@ -112,8 +116,14 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         string localizationKey,
         string defaultValue)
     {
+        
         if (_configuration.AutoSeedMissingLocalization)
         {
+            Guard.EnumNotDefined(language);
+            Guard.NotNullOrWhiteSpace(resourceIdentifier);
+            Guard.NotNullOrWhiteSpace(localizationKey);
+            Guard.NotNullOrWhiteSpace(defaultValue);
+
             await using var scope = _serviceProvider.CreateAsyncScope();
             var localizerService = scope.ServiceProvider.GetRequiredService<IJsonStringLocalizerService>();
 
