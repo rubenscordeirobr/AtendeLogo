@@ -1,0 +1,17 @@
+﻿@inherits MainPage
+
+@page "/{culture}"
+
+<PageTitle>Home</PageTitle>
+ 
+<AuthorizeView>
+    <Authorizing>
+        <h1>Loading... 2</h1>
+    </Authorizing>
+    <Authorized>
+        <p>Hello, @context.User.Identity?.Name!</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>You're not logged in.</p>
+    </NotAuthorized>
+</AuthorizeView>
