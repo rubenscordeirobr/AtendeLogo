@@ -5,6 +5,25 @@ namespace AtendeLogo.Common.Utils;
 
 public static class EnumUtils
 {
+    public static T[] GetSelectableEnumValues<T>()
+       where T : struct, Enum
+    {
+        var values = Enum.GetValues<T>()
+            .Where(value => ShouldFilterValue(value, skipUndefined: false, skipSystemValue: true))
+            .ToArray();
+        return values;
+    }
+
+    public static T[] GetValues<T>(bool skipUndefined = true, bool skipSystemValue = false)
+        where T : struct, Enum
+    {
+        var values = Enum.GetValues<T>()
+            .Where(value => ShouldFilterValue(value, skipUndefined, skipSystemValue))
+            .ToArray();
+
+        return values;
+    }
+
     public static bool TryParse<TEnum>(
         [NotNullWhen(true)] string? value, out TEnum result)
         where TEnum : struct, Enum
@@ -39,29 +58,22 @@ public static class EnumUtils
             return false;
         }
 
-        var member = enumType.GetMember(value!.ToString()!)
-            .FirstOrDefault();
-
+        var member = enumType.GetMember(value.ToString()!, MemberTypes.Field, BindingFlags.Public | BindingFlags.Static)
+               .FirstOrDefault();
         if (member is null)
             return false;
 
-        return member.GetCustomAttribute<UndefinedValueAttribute>() == null;
+        return member.GetCustomAttribute<UndefinedValueAttribute>() is null;
     }
 
     public static bool IsDefined<TEnum>(TEnum value)
-         where TEnum : struct, Enum
+        where TEnum : struct, Enum
     {
         if (!Enum.IsDefined(value))
         {
             return false;
         }
-        var member = typeof(TEnum).GetMember(value!.ToString()!)
-            .FirstOrDefault();
-
-        if (member is null)
-            return false;
-
-        return member.GetCustomAttribute<UndefinedValueAttribute>() == null;
+        return ShouldFilterValue(value, skipUndefined: true);
     }
 
     public static T Random<T>()
@@ -74,4 +86,24 @@ public static class EnumUtils
 #pragma warning restore CA5394 
         return values[randomIndex];
     }
+
+    private static bool ShouldFilterValue<TEnum>(
+        TEnum value,
+        bool skipUndefined = true,
+        bool skipSystemValue = false)
+        where TEnum : struct, Enum
+    {
+        if (skipUndefined)
+        {
+            if (value.GetCustomAttribute<UndefinedValueAttribute>() is not null)
+                return false;
+        }
+
+        if (skipSystemValue)
+        {
+            return value.GetCustomAttribute<SystemValueAttribute>() is null;
+        }
+        return true;
+    }
+
 }
