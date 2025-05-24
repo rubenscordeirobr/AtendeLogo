@@ -1,0 +1,15 @@
+﻿global using AtendeLogo.Common;
+global using AtendeLogo.Common.Extensions;
+global using AtendeLogo.Common.Utils;
+global using AtendeLogo.Shared.Abstractions;
+global using AtendeLogo.Shared.Enums;
+global using AtendeLogo.Shared.Extensions;
+global using AtendeLogo.Shared.Resolvers;
+global using AtendeLogo.Shared.Utils;
+global using AtendeLogo.Shared.ValueObjects;
+global using AtendeLogo.UI.Abstractions;
+global using AtendeLogo.UI.Core;
+global using AtendeLogo.UI.Extensions;
+global using AtendeLogo.UseCases.Abstractions.Identities;
+global using FluentValidation;
+global using Microsoft.Extensions.Logging;
