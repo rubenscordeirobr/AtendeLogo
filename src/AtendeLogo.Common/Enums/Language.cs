@@ -1,33 +1,35 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace AtendeLogo.Common.Enums;
 
 public enum Language
 {
-    [Display(Name = "Default")]
+    [SystemValue]
+    [Description("Default")]
     Default,
 
-    [Display(Name = "Portuguese (Brazil)")]
+    [Description("Portuguese (Brazil)")]
     PortugueseBrazil,
 
-    [Display(Name = "Portuguese (Portugal)")]
+    [Description("Portuguese (Portugal)")]
     PortuguesePortugal,
 
-    [Display(Name = "English (Standard)")]
+    [Description("English (Standard)")]
     English,
 
-    [Display(Name = "Spanish (Latin America)")]
+    [Description("Spanish (Latin America)")]
     LatinSpanish,
 
-    [Display(Name = "Spanish (Spain)")]
+    [Description(   "Spanish (Spain)")]
     Spanish,
 
-    [Display(Name = "French")]
+    [Description("French")]
     French,
 
-    [Display(Name = "German")]
+    [Description("German")]
     German,
 
-    [Display(Name = "Italian")]
+    [Description("Italian")]
     Italian,
 }
