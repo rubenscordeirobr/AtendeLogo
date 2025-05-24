@@ -2,8 +2,20 @@
 
 public static class UriAvailabilityUtils
 {
-    private static readonly HttpClient SharedHttpClient = new();
+    private static HttpClient? _sharedHttpClient;
+
+    private static HttpClient SharedHttpClient
+        => _sharedHttpClient ??= CreateHttpClient();
+     
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(5);
+
+    public static Task<string> GetFirstAvailableBaseUrlAsync(params string[] baseUrls)
+    {
+        return GetFirstAvailableBaseUrlAsync(
+            baseUrls,
+            BuildPingUri,
+            DefaultTimeout);
+    }
 
     public static Task<string> GetFirstAvailableBaseUrlAsync(
         IEnumerable<string> baseUrls,
@@ -25,14 +37,18 @@ public static class UriAvailabilityUtils
     {
         Guard.NotNull(checkUriBuilder);
 
-        var checks = baseUrls
-            .Select(address => CheckAsync(address, checkUriBuilder, timeout ?? DefaultTimeout, cancellationToken))
+        var checkFactories = baseUrls
+                .Select(url => CreateCheckTask(url, checkUriBuilder, timeout ?? DefaultTimeout, cancellationToken))
+                .ToList();
+
+        var checkTasks = checkFactories
+            .Select(factory => factory())
             .ToList();
 
-        while (checks.Count > 0)
+        while (checkTasks.Count > 0)
         {
-            var finished = await Task.WhenAny(checks);
-            checks.Remove(finished);
+            var finished = await Task.WhenAny(checkTasks);
+            checkTasks.Remove(finished);
 
             var (address, available) = await finished;
             if (available)
@@ -43,25 +59,33 @@ public static class UriAvailabilityUtils
 
         throw new InvalidOperationException("No reachable base URL found in the provided list.");
     }
-
-    private static async Task<(string address, bool available)> CheckAsync(
-        string address,
+    private static Func<Task<(string address, bool available)>> CreateCheckTask(
+        string baseAddress,
         Func<Uri, Uri> checkUriBuilder,
         TimeSpan timeout,
         CancellationToken cancellationToken)
     {
-        if (!Uri.TryCreate(address, UriKind.Absolute, out var uri))
+        if (!Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
         {
-            return (address, false);
+            return () => Task.FromResult((baseAddress, false));
         }
-        
-        var pingUri = checkUriBuilder(uri);
+
+        var checkUri = checkUriBuilder(uri);
+        return () => CheckAsync(baseAddress, checkUri, timeout, cancellationToken);
+    }
+
+    private static async Task<(string address, bool available)> CheckAsync(
+        string address,
+        Uri checkUri,
+        TimeSpan timeout,
+        CancellationToken cancellationToken)
+    {
         try
         {
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             cts.CancelAfter(timeout);
 
-            var response = await SharedHttpClient.GetAsync(pingUri, cts.Token);
+            var response = await SharedHttpClient.GetAsync(checkUri, cts.Token);
             return (address, response.IsSuccessStatusCode);
         }
         catch (HttpRequestException)
@@ -72,12 +96,12 @@ public static class UriAvailabilityUtils
         {
             return (address, false);
         }
-        catch(Exception)
+        catch (Exception)
         {
             return (address, false);
         }
     }
-     
+
     private static Uri BuildPingUri(Uri baseUri)
     {
         var builder = new UriBuilder(baseUri)
@@ -87,6 +111,30 @@ public static class UriAvailabilityUtils
         };
 
         return builder.Uri;
+    }
+
+    private static HttpClient CreateHttpClient()
+    {
+        if (EnvironmentHelper.IsXUnitTesting())
+        {
+            throw new InvalidOperationException(
+                "XUnit testing environment detected. \r\n" +
+                "HttpClient must be set up in the test project.");
+        }
+        return new HttpClient();
+    }
+
+    internal static void SetTestHttpClient(HttpClient httpClient)
+    {
+        if (!EnvironmentHelper.IsXUnitTesting())
+        {
+            throw new InvalidOperationException(
+                "Test HttpClient can only be set in XUnit testing environment.");
+        }
+            
+        Guard.NotNull(httpClient);
+
+        _sharedHttpClient = httpClient;
     }
 
 }
