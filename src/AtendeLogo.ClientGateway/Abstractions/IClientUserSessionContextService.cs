@@ -3,7 +3,7 @@ namespace AtendeLogo.ClientGateway.Abstractions;
 
 public interface IClientUserSessionContextService
 {
-    Task EnsureSessionContextAsync();
+    Task InitializeAsync();
  
     Task ClearSessionContextAsync();
 }

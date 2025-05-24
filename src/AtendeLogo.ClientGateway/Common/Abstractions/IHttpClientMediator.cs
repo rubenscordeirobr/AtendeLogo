@@ -43,17 +43,28 @@ public interface IHttpClientMediator<TService>
     #region Commands
 
     // POST
-    Task<Result<TResponse>> PostAsync<TResponse>(
+    Task<Result<TResponse>> CreateAsync<TResponse>(
+       ICommandRequest<TResponse> command,
+       CancellationToken cancellationToken = default)
+       where TResponse : IResponse;
+
+    Task<Result<TResponse>> PostDirectAsync<TResponse>(
         ICommandRequest<TResponse> command,
         CancellationToken cancellationToken = default)
         where TResponse : IResponse;
 
+    Task<Result<TResponse>> PostAsync<TResponse>(
+        ICommandRequest<TResponse> command,
+        CancellationToken cancellationToken = default,
+        [CallerMemberName] string callerMethodName = "")
+        where TResponse : IResponse;
+  
     Task<Result<TResponse>> PostAsync<TResponse>(
         ICommandRequest<TResponse> command,
         string? route,
         CancellationToken cancellationToken = default)
         where TResponse : IResponse;
-
+     
     // PUT
     Task<Result<TResponse>> PutAsync<TResponse>(
         ICommandRequest<TResponse> command,

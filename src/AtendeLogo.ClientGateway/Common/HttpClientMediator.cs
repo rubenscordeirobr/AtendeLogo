@@ -83,12 +83,30 @@ public class HttpClientMediator<TService> : IHttpClientMediator<TService>
     #region Commands
 
     // POST
-    public Task<Result<TResponse>> PostAsync<TResponse>(
-             ICommandRequest<TResponse> command,
-             CancellationToken cancellationToken = default)
-             where TResponse : IResponse
+    public Task<Result<TResponse>> CreateAsync<TResponse>(
+      ICommandRequest<TResponse> command,
+      CancellationToken cancellationToken = default)
+      where TResponse : IResponse
     {
         return SendAsync(HttpMethod.Post, null, command, cancellationToken);
+    }
+
+    public Task<Result<TResponse>> PostDirectAsync<TResponse>(
+        ICommandRequest<TResponse> command,
+        CancellationToken cancellationToken = default)
+        where TResponse : IResponse
+    {
+        return SendAsync(HttpMethod.Post, null, command, cancellationToken);
+    }
+
+    public Task<Result<TResponse>> PostAsync<TResponse>(
+             ICommandRequest<TResponse> command,
+             CancellationToken cancellationToken = default,
+             [CallerMemberName] string callerMethodName = "")
+             where TResponse : IResponse
+    {
+        var route = RouteHelper.CreateRoute(callerMethodName);
+        return SendAsync(HttpMethod.Post, route, command, cancellationToken);
     }
 
     public Task<Result<TResponse>> PostAsync<TResponse>(
@@ -146,7 +164,7 @@ public class HttpClientMediator<TService> : IHttpClientMediator<TService>
        CancellationToken cancellationToken = default,
        [CallerMemberName] string callerMethodName = "")
     {
-        var route = RouteHelper.CreateValidationRoute(callerMethodName);
+        var route = RouteHelper.CreateRoute(callerMethodName);
         return IsValidAsync(parameterNames, parameterValues, route, cancellationToken);
     }
 
@@ -196,7 +214,7 @@ public class HttpClientMediator<TService> : IHttpClientMediator<TService>
        [CallerMemberName] string callerMethodName = "")
        where TResponse : notnull
     {
-        var route = RouteHelper.CreateValidationRoute(callerMethodName);
+        var route = RouteHelper.CreateRoute(callerMethodName);
         return FormAsync<TResponse>(parameterNames, parameterValues, route, cancellationToken);
     }
 
