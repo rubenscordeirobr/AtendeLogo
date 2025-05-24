@@ -73,13 +73,16 @@ public static class StringExtensions
     {
         if (value is null)
             return string.Empty;
+       
         if (startIndex < 0)
             startIndex = 0;
+
         if (startIndex > value.Length)
             return string.Empty;
-        return value.Substring(startIndex);
 
+        return value.Substring(startIndex);
     }
+
     public static string SafeSubstring(this string? value, int startIndex, int length)
     {
         if (value is null)

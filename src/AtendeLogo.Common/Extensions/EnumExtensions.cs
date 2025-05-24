@@ -5,7 +5,22 @@ namespace AtendeLogo.Common.Extensions;
 
 public static class EnumExtensions
 {
+    public static bool IsSystemValue(this Enum value)
+    {
+        Guard.NotEmpty(value);
+        return value.GetCustomAttribute<SystemValueAttribute>() != null;
+    }
+
     public static string GetDescription(this Enum value)
+    {
+        Guard.NotNull(value);
+
+        var attribute = value.GetCustomAttribute<DescriptionAttribute>();
+        return attribute?.Description ?? value.ToString();
+    }
+
+    public static TAttribute? GetCustomAttribute<TAttribute>(this Enum value)
+        where TAttribute : Attribute
     {
         Guard.NotNull(value);
 
@@ -13,11 +28,10 @@ public static class EnumExtensions
             .GetField(value.ToString());
 
         if (field is null)
-            return string.Empty;
+            return null;
 
-        var attribute = field.GetCustomAttribute<DescriptionAttribute>();
-        return attribute?.Description ?? string.Empty;
+        return field.GetCustomAttribute<TAttribute>();
     }
- 
+
 }
 

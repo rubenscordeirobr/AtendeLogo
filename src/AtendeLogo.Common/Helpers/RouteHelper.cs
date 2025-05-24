@@ -17,7 +17,7 @@ public static class RouteHelper
         return $"/{combined}";
     }
 
-    public static string CreateValidationRoute(string methodName)
+    public static string CreateRoute(string methodName)
     {
         Guard.NotNullOrWhiteSpace(methodName);
 

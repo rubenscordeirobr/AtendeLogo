@@ -136,10 +136,9 @@ public static class CultureMapper
             Culture.PtPt => Currency.EUR,
             _ => throw new NotImplementedException($"Currency for culture {culture} not implemented in CultureMapper")
         };
-
     }
 
-    internal static Language MapLanguage(Culture culture)
+    public static Language MapLanguage(Culture culture)
     {
         return culture switch
         {
@@ -171,6 +170,39 @@ public static class CultureMapper
             Culture.PtPt => Language.PortuguesePortugal,
 
             _ => throw new NotImplementedException($"Language for culture {culture} not implemented in CultureMapper")
+        };
+    }
+
+    public static Culture MapCultureFromCountry(Country country)
+    {
+        return country switch
+        {
+            // North America
+            Country.UnitedStates => Culture.EnUs,
+            Country.Canada => Culture.EnCa,
+            Country.Mexico => Culture.EsMx,
+            // South America
+            Country.Argentina => Culture.EsAr,
+            Country.Bolivia => Culture.EsBo,
+            Country.Brazil => Culture.PtBr,
+            Country.Chile => Culture.EsCl,
+            Country.Colombia => Culture.EsCo,
+            Country.Ecuador => Culture.EsEc,
+            Country.Guyana => Culture.EnGy,
+            Country.Peru => Culture.EsPe,
+            Country.Paraguay => Culture.GnPy,
+            Country.Suriname => Culture.NlSr,
+            Country.Uruguay => Culture.EsUy,
+            Country.Venezuela => Culture.EsVe,
+            // Europe
+            Country.Spain => Culture.EsEs,
+            Country.Germany => Culture.DeDe,
+            Country.France => Culture.FrFr,
+            Country.UnitedKingdom => Culture.EnGb,
+            Country.Italy => Culture.ItIt,
+            Country.Portugal => Culture.PtPt,
+
+            _ => throw new NotImplementedException($"Culture for country {country} not implemented in CultureMapper")
         };
     }
 }
