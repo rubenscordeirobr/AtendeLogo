@@ -8,9 +8,12 @@
     </PropertyGroup>
 
     <Target Name="PreBuildCompilerConfig" BeforeTargets="BeforeBuild" Condition="'$(OS)' == 'Windows_NT'">
-        <Exec 
-            Command="powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\scripts\Generate-CompilerConfig.ps1 -ProjectPath $(MSBuildProjectDirectory) " />
+        <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\scripts\Generate-CompilerConfig.ps1 -ProjectPath $(MSBuildProjectDirectory) " />
     </Target>
+
+    <ItemGroup>
+      <None Include="wwwroot\css\color-variable-list.css" />
+    </ItemGroup>
    
     <ItemGroup>
         <SupportedPlatform Include="browser" />
@@ -31,11 +34,19 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 
         <PackageReference Include="DartSassBuilder" />
-        <PackageReference Include="Blazored.LocalStorage" />
         <PackageReference Include="Blazored.FluentValidation" />
+
+        <!--<PackageReference Include="Microsoft.TypeScript.MSBuild">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>-->
+        
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\AtendeLogo.ClientGateway\AtendeLogo.ClientGateway.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="wwwroot\js\" />
     </ItemGroup>
  
 </Project>

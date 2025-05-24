@@ -1,5 +1,4 @@
 ﻿using AtendeLogo.ClientGateway.Common.Abstractions;
-using AtendeLogo.UI.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 

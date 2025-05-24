@@ -9,7 +9,7 @@ public static class FluentValidationExtensions
         Func<T, TCommand> commandFactory,
         IValidator<TCommand> validator)
     {
-        ruleBuilder.CustomAsync(async (model, context, cancellation) =>
+       ruleBuilder.CustomAsync(async (model, context, cancellation) =>
       {
           var result = await validator.ValidateAsync(commandFactory(model), cancellation);
           if (!result.IsValid)

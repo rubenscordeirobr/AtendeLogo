@@ -1,6 +1,11 @@
 ﻿@inherits LayoutComponentBase
+
+@inject IClientUserSessionContextService SessionContextService
 @inject IThemeService ThemeService
+@inject ICultureProvider CultureProvider
 @inject IJsonStringLocalizer<RootLayout> Localizer
+@inject LocalizedNavigationManager NavigationManager
+
 
 <FluentDesignTheme Mode="@Mode"
                    OfficeColor="@OfficeColor">
@@ -23,6 +28,8 @@
 
     public OfficeColor? OfficeColor { get; set; } = DefaultLayoutConstants.DefaultOfficeColor;
 
+    private string CultureCode { get; set; } = "en-us";
+
     private bool IsDarkMode
     {
         get => Mode == DesignThemeModes.Dark;
@@ -32,6 +39,9 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        await SessionContextService.InitializeAsync();
+        await CultureProvider.InitializeAsync();
         await ThemeService.InicializeAsync();
 
         Mode = ThemeService.ThemeMode;
@@ -40,7 +50,17 @@
         ThemeService.OnThemeModeChanged += OnThemeModeChanged;
         ThemeService.OnOfficeColorChanged += OnOfficeColorChanged;
     }
-     
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await SessionContextService.InitializeAsync();
+        }
+    }
+
 
     private void OnThemeModeChanged()
     {
