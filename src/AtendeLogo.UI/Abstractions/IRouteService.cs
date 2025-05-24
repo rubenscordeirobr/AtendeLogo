@@ -2,5 +2,5 @@
 
 public interface IRouteService
 {
-    string BuildLocalizedRoute(string route);
+    string GetLocalizedUri(string? uri);
 }

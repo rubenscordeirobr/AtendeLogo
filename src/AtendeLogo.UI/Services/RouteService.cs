@@ -1,4 +1,6 @@
-﻿using AtendeLogo.Shared.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web;
+using AtendeLogo.Shared.Extensions;
 
 namespace AtendeLogo.UI.Services;
 
@@ -11,8 +13,40 @@ public class RouteService : IRouteService
         _cultureProvider = cultureProvider;
     }
 
-    public string BuildLocalizedRoute(string route)
+    public string GetLocalizedUri(string? uri)
     {
-        return $"{_cultureProvider.GetCultureCode()}/{route}";
+        var localizedUri = GetLocalizedUriInternal(uri);
+        if (_cultureProvider.IsLanguageMatchingCulture())
+        {
+            return localizedUri;
+        }
+
+        Guard.NotNull(localizedUri);
+
+        var languageCode = _cultureProvider.GetLanguageCode();
+        var parts = localizedUri.Split('?');
+        var baseUri = parts[0];
+        var queryString = parts.Length > 1 ? parts[1] : string.Empty;
+
+        var queryParams = HttpUtility.ParseQueryString(queryString);
+        queryParams["lang"] = languageCode;
+        return $"{baseUri}?{queryParams}";
+    }
+
+    private string GetLocalizedUriInternal(string? uri)
+    {
+        var cultureCode = _cultureProvider.GetCultureCode();
+        if (uri is null)
+        {
+            return $"/{cultureCode}";
+        }
+
+        var currentCulture = LocalizedUriUtils.ExtractCultureCodeFromUri(uri);
+        if (cultureCode.Equals(currentCulture, StringComparison.OrdinalIgnoreCase))
+        {
+            return uri;
+        }
+
+        return LocalizedUriUtils.BuildLocalizedUri(uri, cultureCode!);
     }
 }
