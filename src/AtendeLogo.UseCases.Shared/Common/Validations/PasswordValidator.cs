@@ -34,6 +34,7 @@ public static partial class DefaultValidationsExtensions
                 .WithMessage(localizer["PasswordNumber", "Password must contain at least one number"])
             .Matches("[^a-zA-Z0-9]")
                 .WithMessage(localizer["PasswordSpecialCharacter", "Password must contain at least one special character"]);
+
         return options;
     }
 }
