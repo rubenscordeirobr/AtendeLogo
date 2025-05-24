@@ -1,0 +1,94 @@
+﻿@page "/{culture}/login"
+
+@inherits AuthPageBase
+
+@inject LoginViewModel ViewModel;
+@inject IJsonStringLocalizer<LoginPage> Localizer
+
+<EditForm EditContext="ViewModel.EditContext"
+          OnValidSubmit="HandleLoginAsync">
+
+    <FluentValidationValidator @ref="_validator" />
+    <FluentStack Orientation="Orientation.Vertical"
+                 VerticalGap="GapSizes.Medium">
+
+        <Title> @Localizer["LoginTitle", "Login"]  </Title>
+
+        <ValidationSummary />
+
+        <FluentTextField Style="width:450px"
+                         Label="@Localizer["EmailLabel", "E-mail or phone number"]"
+                         @bind-Value="ViewModel.EmailOrPhoneNumber"
+                         Appearance="FluentInputAppearance.Filled"
+                         Placeholder="@Localizer["EmailPlaceholder", "your@email.com"]" />
+
+        <ValidationMessage For="(() => ViewModel.EmailOrPhoneNumber)" />
+
+        <VerticalSpace />
+
+        <FluentTextField Label="@Localizer["PasswordLabel", "Password"]"
+                         Style="width:450px"
+                         @bind-Value="ViewModel.Password"
+                         Appearance="FluentInputAppearance.Filled"
+                         TextFieldType="TextFieldType.Password" />
+
+        <ValidationMessage style="min-height:2rem" For="@(() => ViewModel.Password)" />
+
+        <VerticalSpace />
+
+        <FluentCheckbox Label="@Localizer["RememberMeLabel", "Remember me"]"
+                        @bind-Value="ViewModel.IsPersistent" />
+
+
+        <VerticalSpace Height="GapSizes.Medium" />
+
+        <FluentButton Appearance="Appearance.Accent"
+                      Style="min-width:10rem"
+                      Type="ButtonType.Submit">
+
+            @Localizer["LoginButtonLabel", "Login"]
+
+        </FluentButton>
+
+        <VerticalSpace />
+
+        <FluentAnchor Href="forgot-password"
+                      Appearance="Appearance.Hypertext">
+            @Localizer["ForgotPasswordLabel", "Forgot password?"]
+
+        </FluentAnchor>
+
+        <VerticalSpace />
+
+        <FluentAnchor Href="#"
+                      OnClick="NavigateToCreateAccount"
+                      Appearance="Appearance.Hypertext">
+            @Localizer["CreateAccountLabel", "Create an account"]
+        </FluentAnchor>
+
+    </FluentStack>
+
+</EditForm>
+
+@code {
+
+    private FluentValidationValidator _validator;
+
+    private async Task HandleLoginAsync()
+    {
+        if (!await _validator.ValidateAsync())
+            return;
+             
+        var result = await ViewModel.LoginAsync();
+        if (result.IsSuccess)
+        {
+            NavigationManager.NavigateTo<Home>();
+        }
+    }
+
+    private void NavigateToCreateAccount()
+    {
+        NavigationManager.NavigateTo<Create.CreateTenantAccountPage>();
+    }
+}
+
