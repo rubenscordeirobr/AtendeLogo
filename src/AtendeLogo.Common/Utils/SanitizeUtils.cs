@@ -2,7 +2,7 @@
 
 public static class SanitizeUtils
 {
-    public static string SanitizeEmailOrPhoneNumber(string emailOrPhoneNumber)
+    public static string SanitizeEmailOrPhoneNumber(string? emailOrPhoneNumber)
     {
         if (string.IsNullOrEmpty(emailOrPhoneNumber))
         {
@@ -23,15 +23,15 @@ public static class SanitizeUtils
 
     }
 
-    public static string SanitizeEmail(string emailOrPhoneNumber)
+    public static string SanitizeEmail(string? email)
     {
-        if (string.IsNullOrEmpty(emailOrPhoneNumber))
+        if (string.IsNullOrEmpty(email))
             return string.Empty;
 
-        return emailOrPhoneNumber.Trim().ToLowerInvariant();
+        return email.Trim().ToLowerInvariant();
     }
 
-    public static string SanitizePhoneNumber(string phoneNumber)
+    public static string SanitizePhoneNumber(string? phoneNumber)
     {
         if (string.IsNullOrEmpty(phoneNumber))
             return string.Empty;
@@ -39,7 +39,7 @@ public static class SanitizeUtils
         return phoneNumber.GetOnlyNumbers('+');
     }
 
-    public static string SanitizeFiscalCode(string fiscalCode)
+    public static string SanitizeFiscalCode(string? fiscalCode)
     {
         if (string.IsNullOrEmpty(fiscalCode))
             return string.Empty;

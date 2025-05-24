@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Web;
 using AtendeLogo.Common.Mappers;
 
 namespace AtendeLogo.Common.Utils;
@@ -41,6 +41,27 @@ public static class LocalizedUriUtils
 
         return ExtractCultureCodeFromUri(uri)
             ?? DefaultCultureCode;
+    }
+
+    public static string? GetLanguageCodeFromQuery(string? path)
+    {
+        if (path is null)
+            return null;
+
+        var index = path.IndexOf('?');
+        if (index == -1)
+            return null;
+
+        var query = path.Substring(index + 1);
+        var queryParameters = HttpUtility.ParseQueryString(query);
+        if (!queryParameters.HasKeys())
+            return null;
+
+        var langCode = queryParameters["lang"];
+        if (string.IsNullOrEmpty(langCode))
+            return null;
+        
+        return langCode.ToLowerInvariant();
     }
 
     public static Culture? ExtractCultureUri(string? uri)
@@ -116,7 +137,9 @@ public static class LocalizedUriUtils
 
         if (UriUtils.IsAbsoluteUri(uri))
         {
+#pragma warning disable CS0618 
             var uriObj = new Uri(uri, dontEscape: true);
+#pragma warning restore CS0618 
 
             var path = $"/{cultureCode}/{uriObj.PathAndQuery.Trim('/')}";
             return uriObj.IsDefaultPort
@@ -167,7 +190,6 @@ public static class LocalizedUriUtils
             return uri;
         }
 
-
         var segments = uri.Split('/', StringSplitOptions.RemoveEmptyEntries);
         if (segments.Length > 0 && segments[0].Equals(currentCulture, StringComparison.OrdinalIgnoreCase))
         {
@@ -176,7 +198,6 @@ public static class LocalizedUriUtils
         }
         return uri;
     }
-
 
     public static bool IsCultureCodeSupported(
       [NotNullWhen(true)]

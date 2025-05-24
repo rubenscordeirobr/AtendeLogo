@@ -26,13 +26,16 @@ public static class FiscalCodeValidationUtils
 
         if (numbers.Length == 14)
         {
-            return IsBrazilianCNPJValid(numbers);
+            return IsValidBrazilianCNPJ(numbers);
         }
         return false;
     }
 
-    private static bool IsValidBrazilianCPF(string cpf)
+    public static bool IsValidBrazilianCPF(string? cpf)
     {
+        if (cpf is null)
+            return false;
+
         if (cpf.Length != 11)
             return false;
 
@@ -58,8 +61,11 @@ public static class FiscalCodeValidationUtils
         return cpf[9] - '0' == digitoVerificador1 && cpf[10] - '0' == digitoVerificador2;
     }
 
-    private static bool IsBrazilianCNPJValid(string cnpj)
+    public static bool IsValidBrazilianCNPJ(string? cnpj)
     {
+        if (cnpj is null)
+            return false;
+
         if (cnpj.Length != 14)
             return false;
 

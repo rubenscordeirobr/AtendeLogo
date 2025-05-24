@@ -15,7 +15,7 @@ public static class JwtUtils
         {
             return authorizationHeader.Substring(AuthenticationScheme.Length).Trim();
         }
-        return null;
+        return authorizationHeader;
     }
 
     public static bool IsBearerToken(string? authorizationHeader)
