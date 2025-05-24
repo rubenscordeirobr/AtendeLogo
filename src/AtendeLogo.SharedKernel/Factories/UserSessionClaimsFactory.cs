@@ -19,7 +19,7 @@ public static class UserSessionClaimsFactory
             userSession.Id,
             user.Name,
             user.Email,
-            user.PhoneNumber.Number,
+            user.PhoneNumber.FullNumber,
             userSession.IsPersistent,
             userSession.Language,
             userSession.UserRole,

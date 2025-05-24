@@ -1,10 +1,11 @@
 ﻿namespace AtendeLogo.Shared.Models.Security;
 
 public record UserSessionClaims(
+    Guid Session_Id,
     string Name,
     string Email,
     string PhoneNumber,
-    Guid Session_Id,
+    bool IsPersistent,
     Language Language,
     UserRole UserRole,
     UserType UserType,
