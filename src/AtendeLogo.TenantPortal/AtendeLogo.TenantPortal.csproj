@@ -9,7 +9,7 @@
         <ScopedCssEnabled>true</ScopedCssEnabled>
     </PropertyGroup>
 
-    <Target Name="PreBuildCompilerConfig" BeforeTargets="BeforeBuild">
+    <Target Name="PreBuildCompilerConfig" BeforeTargets="BeforeBuild"  Condition="'$(OS)' == 'Windows_NT'">
         <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\scripts\Generate-CompilerConfig.ps1 -ProjectPath $(MSBuildProjectDirectory) " />
     </Target>
 
