@@ -1,0 +1,12 @@
+﻿global using AtendeLogo.ClientGateway.Abstractions;
+global using AtendeLogo.Common.Extensions;
+global using AtendeLogo.Common.Helpers;
+global using AtendeLogo.Common.Utils;
+global using AtendeLogo.Http.Extensions;
+global using AtendeLogo.Shared.Abstractions;
+global using AtendeLogo.Shared.Constants;
+global using AtendeLogo.Shared.Extensions;
+global using AtendeLogo.Shared.Factories;
+global using AtendeLogo.UI.Extensions;
+global using AtendeLogo.UI.Abstractions;
+global using AtendeLogo.TenantPortal.Services;
