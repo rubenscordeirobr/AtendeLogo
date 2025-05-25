@@ -1,5 +1,5 @@
 <Solution>
-  <Folder Name="/infra/">
+  <Folder Name="/aspire/">
     <Project Path="src/AtendeLogo.AppHost/AtendeLogo.AppHost.csproj" />
     <Project Path="src/AtendeLogo.ServiceDefaults/AtendeLogo.ServiceDefaults.csproj" />
   </Folder>
@@ -36,7 +36,7 @@
     <Project Path="src/AtendeLogo.ClientGateway/AtendeLogo.ClientGateway.csproj" />
     <Project Path="src/AtendeLogo.Presentation/AtendeLogo.Presentation.csproj" />
   </Folder>
-  <Folder Name="/src/04-UseCases/" Id="bad4283d-b835-5bd4-5fb2-9f508aec391b">
+  <Folder Name="/src/04-UseCases/">
     <Project Path="src/AtendeLogo.UseCases.Shared/AtendeLogo.UseCases.Shared.csproj" />
     <Project Path="src/AtendeLogo.UseCases/AtendeLogo.UseCases.csproj" />
   </Folder>

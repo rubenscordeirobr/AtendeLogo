@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+	
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<Nullable>enable</Nullable>
+		<IsAspireHost>true</IsAspireHost>
+		<UserSecretsId>1bbc80ec-74f9-4a74-8021-610643091e73</UserSecretsId>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <Compile Remove="temp\**" />
+	</ItemGroup>
+ 
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.AppHost" />
+		<PackageReference Include="Aspire.Hosting.Redis" />
+		<PackageReference Include="Aspire.Hosting.PostgreSQL" />
+		<PackageReference Include="Aspire.Hosting.MongoDB" />
+		<PackageReference Include="Aspire.Hosting.RabbitMQ" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AtendeLogo.IdentityApi\AtendeLogo.IdentityApi.csproj" />
+		<ProjectReference Include="..\AtendeLogo.TenantPortal.BlazorServer\AtendeLogo.TenantPortal.BlazorServer.csproj" />
+	</ItemGroup>
+
+</Project>
