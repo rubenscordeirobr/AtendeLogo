@@ -1,0 +1,10 @@
+﻿{
+  "EmailLabel": "E-mail ou número de telefone",
+  "EmailPlaceholder": "your@email.com",
+  "PasswordLabel": "Senha",
+  "RememberMeLabel": "Lembre-se de mim",
+  "LoginButtonLabel": "Login",
+  "ForgotPasswordLabel": "Esqueceu a senha?",
+  "CreateAccountLabel": "Criar uma conta",
+  "LoginTitle": "Login"
+}

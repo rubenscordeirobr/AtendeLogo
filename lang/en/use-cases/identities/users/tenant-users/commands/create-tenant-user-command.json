@@ -15,5 +15,9 @@
   "PasswordSpecialCharacter": "Password must contain at least one special character",
   "TenantUser.InvalidRole": "Invalid role.",
   "TenantUser.EmailExists": "Email already exists.",
-  "TenantUser.PhoneNumberExists": "Phone number already exists."
+  "TenantUser.PhoneNumberExists": "Phone number already exists.",
+  "PhoneNumber.DialingCodeInvalid": "Invalid dialing code.",
+  "PhoneNumber.NumberInvalid": "Phone number cannot be empty.",
+  "PhoneNumber.InvalidNumberInvalid": "Invalid phone number.",
+  "PhoneNumber.AreaCodeInvalid": "Invalid area code"
 }

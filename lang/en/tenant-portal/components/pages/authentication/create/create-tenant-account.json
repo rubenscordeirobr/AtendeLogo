@@ -1,0 +1,23 @@
+﻿{
+  "BusinessNameLabel": "Business Name",
+  "EmailPlaceholder": "your@email.com",
+  "NameLabel": "Your Name",
+  "EmailLabel": "E-mail",
+  "PhoneNumberLabel": "PhoneNumber",
+  "CreateAccountTitle": "Create a Atende Logo Account",
+  "CreateButtonLabel": "Create Account",
+  "TenantNamePlaceholder": "Enter your business name",
+  "FullNameLabel": "Full name",
+  "FullNamePlaceholder": "Enter your full name",
+  "PhoneNumberPlaceholder": "Enter your phone number",
+  "PasswordLabel": "Password",
+  "FiscalCodeLabel": "Fiscal Code",
+  "FiscalCodePlaceholder": "Enter your fiscal code",
+  "BusinessTypeLabel": "Business Type",
+  "PasswordPlaceholder": "Your strong password",
+  "ConfirmPasswordLabel": "Confirm Password",
+  "ConfirmPasswordPlaceholder": "Confirm your password",
+  "PromptText": "Don't have an account? You can create one now.",
+  "ExistingUserText": "If you already have an account, please",
+  "LoginLink": "log in"
+}

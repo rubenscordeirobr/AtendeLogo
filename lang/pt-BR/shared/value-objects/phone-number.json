@@ -1,4 +1,8 @@
 ﻿{
   "PhoneNumber.Number": "O número de telefone não pode estar vazio.",
-  "PhoneNumber.TooLong": "O número de telefone não pode ter mais de {MaxLength} caracteres."
+  "PhoneNumber.TooLong": "O número de telefone não pode ter mais de {MaxLength} caracteres.",
+  "PhoneNumber.DialingCodeInvalid": "Código de discagem inválido.",
+  "PhoneNumber.NumberInvalid": "O número de telefone não pode estar vazio.",
+  "PhoneNumber.InvalidNumberInvalid": "Número de telefone inválido.",
+  "PhoneNumber.AreaCodeInvalid": "Código de área inválido"
 }

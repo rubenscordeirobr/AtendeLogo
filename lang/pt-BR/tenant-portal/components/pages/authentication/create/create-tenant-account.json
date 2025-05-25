@@ -1,0 +1,23 @@
+﻿{
+  "BusinessNameLabel": "Nome da empresa",
+  "EmailPlaceholder": "your@email.com",
+  "NameLabel": "Seu nome",
+  "EmailLabel": "E-mail",
+  "PhoneNumberLabel": "Número de telefone",
+  "CreateAccountTitle": "Crie uma conta no logotipo do Atende",
+  "CreateButtonLabel": "Criar conta",
+  "TenantNamePlaceholder": "Digite o nome da sua empresa",
+  "FullNameLabel": "Nome completo",
+  "FullNamePlaceholder": "Digite seu nome completo",
+  "PhoneNumberPlaceholder": "Digite seu número de telefone",
+  "PasswordLabel": "Senha",
+  "FiscalCodeLabel": "Código Fiscal",
+  "FiscalCodePlaceholder": "Insira seu código fiscal",
+  "BusinessTypeLabel": "Tipo de Negócio",
+  "PasswordPlaceholder": "Sua senha forte",
+  "ConfirmPasswordLabel": "Confirme a senha",
+  "ConfirmPasswordPlaceholder": "Confirme sua senha",
+  "PromptText": "Não tem uma conta? Você pode criar um agora.",
+  "ExistingUserText": "Se você já tem uma conta, por favor",
+  "LoginLink": "Iniciar sessão"
+}

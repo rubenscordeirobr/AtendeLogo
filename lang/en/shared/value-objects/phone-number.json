@@ -1,4 +1,8 @@
 ﻿{
   "PhoneNumber.Number": "Phone number cannot be empty.",
-  "PhoneNumber.TooLong": "Phone number cannot be longer than {MaxLength} characters."
+  "PhoneNumber.TooLong": "Phone number cannot be longer than {MaxLength} characters.",
+  "PhoneNumber.DialingCodeInvalid": "Invalid dialing code.",
+  "PhoneNumber.NumberInvalid": "Phone number cannot be empty.",
+  "PhoneNumber.InvalidNumberInvalid": "Invalid phone number.",
+  "PhoneNumber.AreaCodeInvalid": "Invalid area code"
 }
