@@ -3,3 +3,13 @@
     --success-color: #16a34a;
     --warning-color: #f97316;
 }
+
+.fill-color {
+    color: var(--fill-color) !important;
+    background-color: red !important;
+    border: 2px solid red !important;
+
+    .fluent-typography {
+        color: var(--fill-color) !important;
+    }
+}
