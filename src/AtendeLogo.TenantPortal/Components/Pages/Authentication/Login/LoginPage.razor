@@ -72,11 +72,12 @@
 
 @code {
 
-    private FluentValidationValidator _validator;
+    private FluentValidationValidator? _validator;
+
 
     private async Task HandleLoginAsync()
     {
-        if (!await _validator.ValidateAsync())
+        if (!await _validator!.ValidateAsync())
             return;
              
         var result = await ViewModel.LoginAsync();

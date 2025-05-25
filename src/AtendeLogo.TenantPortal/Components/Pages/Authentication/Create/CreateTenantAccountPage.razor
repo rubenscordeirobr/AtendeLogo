@@ -138,11 +138,11 @@
 
 @code {
 
-    private FluentValidationValidator _validator;
+    private FluentValidationValidator? _validator;
 
     private async Task HandleCreateAccountAsync()
     {
-        if (!await _validator.ValidateAsync())
+        if (!await _validator!.ValidateAsync())
         {
             return;
         }
