@@ -70,4 +70,11 @@ public record PhoneNumber : ValueObjectBase
     {
         return FullNumber.GetHashCode();
     }
+
+#pragma warning disable CA2225 
+
+    public static implicit operator PhoneNumber(string value) => new(value);
+
+#pragma warning restore CA2225 
+
 }

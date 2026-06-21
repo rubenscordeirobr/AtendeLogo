@@ -6,3 +6,5 @@ global using AtendeLogo.Shared.Enums;
 global using AtendeLogo.Shared.ValueObjects;
 global using AtendeLogo.Common.Attributes;
 global using AtendeLogo.Common.Extensions;
+global using AtendeLogo.Shared.Abstractions;
+global using AtendeLogo.Shared.Helpers;

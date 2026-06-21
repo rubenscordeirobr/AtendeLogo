@@ -22,5 +22,11 @@ public sealed record FiscalCode : ValueObjectBase
         }
         return Result.Success(new FiscalCode(value));
     }
+
+#pragma warning disable CA2225
+
+    public static implicit operator FiscalCode(string value) => new(value);
+
+#pragma warning restore CA2225 
 }
 
