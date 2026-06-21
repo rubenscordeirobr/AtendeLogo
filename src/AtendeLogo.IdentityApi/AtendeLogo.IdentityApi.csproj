@@ -8,6 +8,7 @@
         <RootNamespace>AtendeLogo.IdentityApi</RootNamespace>
         <UserSecretsId>2ea28a46-5c98-4621-bef9-15878d8929ed</UserSecretsId>
         <EnableMinimalApis>true</EnableMinimalApis>
+        <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
         <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>

@@ -29,7 +29,7 @@ indent_size = 4
 
 #Json
 [*.{json,json5,jsonc}]
-indent_size = 4
+indent_size = 2
 
 # Code files
 [*.{cs,csx,vb,vbx}]

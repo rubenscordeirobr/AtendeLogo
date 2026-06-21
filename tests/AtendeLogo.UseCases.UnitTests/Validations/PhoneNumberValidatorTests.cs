@@ -17,7 +17,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
 
         _validator = new PhoneNumberValidator(localizer, null);
     }
-     
+
     [Fact]
     public void Validator_ShouldBePhoneNumberValidatorType()
     {
@@ -34,7 +34,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
         var result = _validator.TestValidate(phone);
 
         // Assert
-        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrors();
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
         var result = _validator.TestValidate(phone);
 
         // Assert
-        result.ShouldHaveAnyValidationError(); 
+        result.ShouldHaveValidationErrors();
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class PhoneNumberValidatorTests : IClassFixture<ServiceProviderMock<Anony
         var result = _validator.TestValidate(phone);
 
         // Assert
-        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrors();
     }
 
     [Fact]

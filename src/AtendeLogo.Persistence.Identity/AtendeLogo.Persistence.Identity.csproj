@@ -13,4 +13,8 @@
     <ProjectReference Include="..\AtendeLogo.Persistence.Common\AtendeLogo.Persistence.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.Metadata;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace AtendeLogo.Presentation.Helpers;
 
@@ -20,17 +20,17 @@ internal static class MetadataHelpers
 
         return descriptor.BodyContentType switch
         {
-            BodyContentType.None => new AcceptsMetadata([], null, isOptional: true),
+            BodyContentType.None => new AcceptsMetadata(Array.Empty<string>(), null, isOptional: true),
 
             BodyContentType.Json => new AcceptsMetadata(
-                ["application/json"],
+                new[] { "application/json" },
                 descriptor.BodyType ?? throw new InvalidOperationException("BodyType cannot be null for JSON content.")
             ),
             BodyContentType.Form => new AcceptsMetadata(
-                ["application/x-www-form-urlencoded"]),
+                new[] { "application/x-www-form-urlencoded" }),
 
             BodyContentType.FormFile => new AcceptsMetadata(
-                ["multipart/form-data"]),
+                new[] { "multipart/form-data" }),
 
             _ => throw new NotSupportedException(
                     $"The body content type '{descriptor.BodyContentType}' is not supported.")
@@ -41,17 +41,17 @@ internal static class MetadataHelpers
       OpenApiOperation operation,
       HttpMethodDescriptor[] descriptors)
     {
-        operation.Parameters = MetadataHelpers.GetOperationParameters(descriptors);
+        operation.Parameters = GetOperationParameters(descriptors);
         if (descriptors[0].BodyContentType == BodyContentType.Form)
         {
-            operation.RequestBody = MetadataHelpers.GetRequestBodyForm(descriptors);
+            operation.RequestBody = GetRequestBodyForm(descriptors);
         }
     }
 
-    private static List<OpenApiParameter> GetOperationParameters(
+    private static IList<Microsoft.OpenApi.IOpenApiParameter> GetOperationParameters(
         HttpMethodDescriptor[] descriptors)
     {
-        var parameters = new List<OpenApiParameter>();
+        var parameters = new List<Microsoft.OpenApi.IOpenApiParameter>();
         var routeParameters = descriptors
             .SelectMany(d => d.RouteParameters)
              .GroupBy(p => p.Name);
@@ -59,14 +59,23 @@ internal static class MetadataHelpers
         foreach (var routeParameter in routeParameters)
         {
             var schemaType = JsonUtils.GetJsonSchemaType(routeParameter.First().ParameterType);
-            parameters.Add(new OpenApiParameter
+            parameters.Add((Microsoft.OpenApi.IOpenApiParameter)new OpenApiParameter
             {
                 Name = routeParameter.Key,
                 In = ParameterLocation.Path,
                 Required = true,
                 Schema = new OpenApiSchema
                 {
-                    Type = schemaType
+                    Type = schemaType switch
+                    {
+                        "object" => JsonSchemaType.Object,
+                        "array" => JsonSchemaType.Array,
+                        "string" => JsonSchemaType.String,
+                        "number" => JsonSchemaType.Number,
+                        "integer" => JsonSchemaType.Integer,
+                        "boolean" => JsonSchemaType.Boolean,
+                        _ => null
+                    }
                 }
             });
         }
@@ -96,14 +105,23 @@ internal static class MetadataHelpers
         {
             var schemaType = JsonUtils.GetJsonSchemaType(queryParameter.First().ParameterType);
 
-            parameters.Add(new OpenApiParameter
+            parameters.Add((Microsoft.OpenApi.IOpenApiParameter)new OpenApiParameter
             {
                 Name = queryParameter.Key,
                 In = ParameterLocation.Query,
                 Required = isRequired,
                 Schema = new OpenApiSchema
                 {
-                    Type = schemaType
+                    Type = schemaType switch
+                    {
+                        "object" => JsonSchemaType.Object,
+                        "array" => JsonSchemaType.Array,
+                        "string" => JsonSchemaType.String,
+                        "number" => JsonSchemaType.Number,
+                        "integer" => JsonSchemaType.Integer,
+                        "boolean" => JsonSchemaType.Boolean,
+                        _ => null
+                    }
                 }
             });
         }
@@ -119,16 +137,27 @@ internal static class MetadataHelpers
              .Select(p => p.First())
              .ToList();
 
-        var properties = parameters.ToDictionary(
-             p => p.Name!,
-             p => new OpenApiSchema
-             {
-                 Type = JsonUtils.GetJsonSchemaType(p.ParameterType)
-             });
+        var properties = new Dictionary<string, IOpenApiSchema>();
+        foreach (var p in parameters)
+        {
+            properties[p.Name!] = new OpenApiSchema
+            {
+                Type = JsonUtils.GetJsonSchemaType(p.ParameterType) switch
+                {
+                    "object" => JsonSchemaType.Object,
+                    "array" => JsonSchemaType.Array,
+                    "string" => JsonSchemaType.String,
+                    "number" => JsonSchemaType.Number,
+                    "integer" => JsonSchemaType.Integer,
+                    "boolean" => JsonSchemaType.Boolean,
+                    _ => null
+                }
+            };
+        }
 
         var schema = new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             Properties = properties
         };
 

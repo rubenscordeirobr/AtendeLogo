@@ -139,7 +139,7 @@ public class UpdateDefaultTenantAddressCommandValidatorTests : IClassFixture<Ser
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveAnyValidationError();
+        result.ShouldHaveValidationErrors();
     }
 }
 

@@ -14,6 +14,8 @@ bin
 *.scc
 *.dll
 *.css
+*.pfx
+*.bkp
 
 .secrets
 
@@ -21,16 +23,13 @@ bin
 compilerconfig.json
 test-resource-key.json
 
+AtendeLogo.AppHost/Settings/
+
 temp/
 copilot-instructions.md
-AtendeLogo.AppHost/
-AtendeLogo.ServiceDefaults/
-AtendeLogo.TenantPortal/
 tools/
 Web.config
 
-AtendeLogo.TenantPortal.BlazorServer/
 AtendeLogo.TenantPortal.BlazorWasm/
-AtendeLogo.TenantPortal/
-AtendeLogo.IdentityApi/
-lang/
+
+

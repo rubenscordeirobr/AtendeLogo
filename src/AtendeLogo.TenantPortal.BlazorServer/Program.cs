@@ -1,4 +1,5 @@
-﻿using AtendeLogo.ServiceDefaults;
+﻿//using AtendeLogo.ServiceDefaults;
+using AtendeLogo.ServiceDefaults;
 using AtendeLogo.TenantPortal;
 using AtendeLogo.TenantPortal.BlazorServer.Components;
 using AtendeLogo.TenantPortal.BlazorServer.Extensions;
@@ -82,7 +83,7 @@ app.MapRazorComponents<App>()
 
 if (environment.IsAspire())
 {
-    app.MapDefaultEndpoints();
+   app.MapDefaultEndpoints();
 }
 
 app.MapTenantPortalBlazorServerEndpoints();

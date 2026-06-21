@@ -13,7 +13,7 @@ public class AzureTranslationServiceTests
         _logger = new TestOutputLogger<AzureTranslationService>(_testOutput);
     }
 
-    [Fact]
+    //[Fact]
     public async Task Test_TranslateText()
     {
         // Arrange

@@ -67,7 +67,4 @@
     <Project Path="tests/AtendeLogo.Infrastructure.UnitTests/AtendeLogo.Infrastructure.UnitTests.csproj" Id="271d602f-57aa-4eaa-84ea-88a53cdddfaf" />
     <Project Path="tests/AtendeLogo.UseCases.UnitTests/AtendeLogo.UseCases.UnitTests.csproj" />
   </Folder>
-  <Project Path="docker-compose.dcproj">
-    <Build />
-  </Project>
 </Solution>
