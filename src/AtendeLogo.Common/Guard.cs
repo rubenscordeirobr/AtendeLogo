@@ -51,7 +51,7 @@ public static class Guard
         if (!ValidationUtils.IsSha256(value))
             throw new ArgumentException($"{paramName} must be a SHA-256 hash value.", paramName);
     }
-     
+
     public static void NotEmpty<T>(
         [NotNull] T value,
         [CallerArgumentExpression(nameof(value))] string paramName = "")
@@ -87,14 +87,14 @@ public static class Guard
         [NotNull] ICollection<T> value,
         [CallerArgumentExpression(nameof(value))] string paramName = "")
     {
-        if(value is null)
+        if (value is null)
             throw new ArgumentNullException(paramName, $"{paramName} cannot be null.");
 
         if (value.Count > 0)
             throw new ArgumentException($"{paramName} must be empty.", paramName);
     }
 
-    public static void EnumNotDefined<TEnum>(
+    public static void EnumDefined<TEnum>(
         [NotNull] TEnum value,
         [CallerArgumentExpression(nameof(value))] string paramName = "")
         where TEnum : struct, Enum

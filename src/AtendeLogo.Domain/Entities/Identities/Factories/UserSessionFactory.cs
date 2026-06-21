@@ -15,8 +15,8 @@ public static class UserSessionFactory
         Guard.NotNull(clientHeaderInfo);
         Guard.NotEmpty(user.Id);
 
-        Guard.EnumNotDefined(user.UserType);
-        Guard.EnumNotDefined(user.Role);
+        Guard.EnumDefined(user.UserType);
+        Guard.EnumDefined(user.Role);
 
         var newSession = new UserSession(
              applicationName: clientHeaderInfo.ApplicationName,
