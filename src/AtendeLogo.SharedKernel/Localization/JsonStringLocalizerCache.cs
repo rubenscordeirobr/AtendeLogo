@@ -119,7 +119,7 @@ public sealed class JsonStringLocalizerCache : IJsonStringLocalizerCache, IDispo
         
         if (_configuration.AutoSeedMissingLocalization)
         {
-            Guard.EnumNotDefined(language);
+            Guard.EnumDefined(language);
             Guard.NotNullOrWhiteSpace(resourceIdentifier);
             Guard.NotNullOrWhiteSpace(localizationKey);
             Guard.NotNullOrWhiteSpace(defaultValue);

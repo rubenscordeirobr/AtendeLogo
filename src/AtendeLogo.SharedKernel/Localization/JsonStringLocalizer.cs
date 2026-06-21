@@ -1,6 +1,4 @@
-﻿using AtendeLogo.Common.Utils;
-using AtendeLogo.Shared.Abstractions;
-using AtendeLogo.Shared.Helpers;
+﻿
 
 namespace AtendeLogo.Shared.Localization;
 
@@ -9,24 +7,18 @@ public class JsonStringLocalizer<T> : JsonStringLocalizerBase, IJsonStringLocali
     public JsonStringLocalizer(
         IJsonStringLocalizerCache localizationCache,
         ICultureProvider cultureProvider)
-        : base(localizationCache, cultureProvider, LocalizationHelper.GetResourceKey<T>())
+        : base(typeof(T), localizationCache, cultureProvider)
     {
     }
+}
 
-    public string this[T @enum]
+public class JsonStringLocalizer : JsonStringLocalizerBase
+{
+    public JsonStringLocalizer(
+        Type resourceType,
+        IJsonStringLocalizerCache localizationCache,
+        ICultureProvider cultureProvider)
+        : base(resourceType, localizationCache, cultureProvider)
     {
-        get
-        {
-            if (@enum is Enum enumValue)
-            {
-                var key = enumValue.ToString();
-                var defaultValue = enumValue.GetDescription();
-                return GetLocalizedString(key, defaultValue, []);
-            }
-
-            throw new NotSupportedException(
-                $"Localization key '{@enum}' is not supported. It must be an enum value." +
-                $"Use this[string localizationKey, string defaultValue, params object[] args) instead.");
-        }
     }
 }
