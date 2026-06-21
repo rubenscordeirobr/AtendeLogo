@@ -1,4 +1,6 @@
-﻿namespace AtendeLogo.Common.Utils;
+﻿using System.Diagnostics;
+
+namespace AtendeLogo.Common.Utils;
 
 public static class FiscalCodeValidationUtils
 {
@@ -13,7 +15,12 @@ public static class FiscalCodeValidationUtils
         if (country == Country.Brazil)
             return IsValidBrazilFiscalCode(fiscalCode);
 
-        throw new NotImplementedException($"FiscalCode validation for {country} is not implemented yet.");
+#if DEBUG
+        Trace.TraceError($"FiscalCode validation for {country} is not implemented yet.");
+#endif
+
+        return true;
+
     }
 
     private static bool IsValidBrazilFiscalCode(string fiscalCode)
