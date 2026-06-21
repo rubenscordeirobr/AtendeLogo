@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using AtendeLogo.Common.Enums;
+using AtendeLogo.Shared.Enums;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,7 +13,7 @@ public partial class InitialMigration : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
-        Guard.NotNull(migrationBuilder);
+        Guard.NotNull(migrationBuilder);    
 
         migrationBuilder.AlterDatabase()
             .Annotation("Npgsql:CollationDefinition:case_accent_insensitive", "und-u-ks-level1,und-u-ks-level1,icu,False")

@@ -17,11 +17,6 @@ internal class TenantUserRepository : UserRepository<TenantUser>, ITenantUserRep
         Expression<Func<TenantUser, object?>>[]? includeExpressions)
     {
         var query = base.CreateQuery(includeExpressions);
-
-        if (!UserSession.IsTenantUser() && !UserSession.IsSystemAdminUser())
-        {
-            return query.Take(1);
-        }
         return query;
     }
 

@@ -28,8 +28,8 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
     }
 
     public Task<bool> EmailExistsAsync(
-        string email, 
-        Guid currentTenant_Id, 
+        string email,
+        Guid currentTenant_Id,
         CancellationToken token)
     {
         return AnyAsync(x => x.Email == email && x.Id != currentTenant_Id, token);
@@ -39,22 +39,22 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
         string fiscalCode,
         CancellationToken token)
     {
-        return AnyAsync(x => x.FiscalCode.Value == fiscalCode, token);
+        return AnyAsync(x => x.FiscalCode == fiscalCode, token);
     }
 
     public Task<bool> FiscalCodeExistsAsync(
-        string fiscalCode, 
+        string fiscalCode,
         Guid currentTenant_Id,
         CancellationToken token)
     {
-        return AnyAsync(x => x.FiscalCode.Value == fiscalCode && x.Id != currentTenant_Id, token);
+        return AnyAsync(x => x.FiscalCode == fiscalCode && x.Id != currentTenant_Id, token);
     }
-     
+
     public Task<bool> PhoneNumberExitsAsync(
         string phoneNumber,
         CancellationToken token)
     {
-        return AnyAsync(x => x.PhoneNumber.FullNumber == phoneNumber, token);
+        return AnyAsync(x => x.PhoneNumber == phoneNumber, token);
     }
 
     public Task<bool> PhoneNumberExitsAsync(
@@ -62,6 +62,6 @@ internal class TenantRepository : RepositoryBase<Tenant>, ITenantRepository
         Guid currentTenant_Id,
         CancellationToken token)
     {
-        return AnyAsync(x => x.PhoneNumber.FullNumber == phoneNumber && x.Id != currentTenant_Id, token);
+        return AnyAsync(x => x.PhoneNumber == phoneNumber && x.Id != currentTenant_Id, token);
     }
 }

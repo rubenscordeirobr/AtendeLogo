@@ -15,7 +15,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AtendeLogo.Persistence.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250518141555_InitialMigration")]
+    [Migration("20250525194139_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
