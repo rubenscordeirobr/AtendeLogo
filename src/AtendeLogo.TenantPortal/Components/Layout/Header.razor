@@ -1,7 +1,6 @@
 ﻿@using AtendeLogo.UseCases.Identities.Authentications.Commands
 
 @inject IJsonStringLocalizer<Header> Localizer
-@inject IJsonStringLocalizer<Language> LocalizerLanguage
 @inject ICultureProvider CultureProvider
 @inject IThemeService ThemeService
 @inject IBusyIndicatorService BusyIndicatorService
@@ -23,7 +22,7 @@
 
     <FluentSelect Width="250px"
                   Items="@(Enum.GetValues<Language>())"
-                  OptionText="@(x => LocalizerLanguage[x])"
+                  OptionText="@(x => Localizer[x])"
                   @bind-SelectedOption="@SelectedLanguage">
 
     </FluentSelect>

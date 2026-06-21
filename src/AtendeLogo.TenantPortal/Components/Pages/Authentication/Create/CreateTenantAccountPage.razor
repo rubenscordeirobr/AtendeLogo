@@ -4,7 +4,6 @@
 
 @inject CreateTenantAccountViewModel ViewModel;
 @inject IJsonStringLocalizer<CreateTenantAccountPage> Localizer
-@inject IJsonStringLocalizer<BusinessType> LocalizerBusinessType
 
 <EditForm EditContext="ViewModel.EditContext"
           OnValidSubmit="HandleCreateAccountAsync">
@@ -106,7 +105,7 @@
         <FluentSelect Width="450px"
                       Label="@Localizer["BusinessTypeLabel", "Business Type"]"
                       Items="@(EnumUtils.GetSelectableEnumValues<BusinessType>())"
-                      OptionText="@(x => LocalizerBusinessType[x])"
+                      OptionText="@(x => Localizer[x])"
                       @bind-SelectedOption="@ViewModel.BusinessType">
 
         </FluentSelect>

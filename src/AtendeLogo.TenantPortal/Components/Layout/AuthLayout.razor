@@ -4,8 +4,6 @@
 @layout RootLayout
 
 @inject IJsonStringLocalizer<AuthLayout> Localizer
-@inject IJsonStringLocalizer<Language> LocalizerLanguage
-@inject IJsonStringLocalizer<Country> LocalizerCountry
 @inject IAssetsService AssetsService
 @inject IThemeService ThemeService
 @inject ICultureProvider CultureProvider
@@ -25,7 +23,7 @@
 
                 <FluentSelect Width="250px"
                               Items="@(EnumUtils.GetValues<Country>())"
-                              OptionText="@(x => LocalizerCountry[x])"
+                              OptionText="@(x => Localizer[x])"
                               @bind-SelectedOption="@SelectedCountry">
 
                 </FluentSelect>
@@ -34,7 +32,7 @@
 
                 <FluentSelect Width="250px"
                               Items="@(EnumUtils.GetValues<Language>())"
-                              OptionText="@(x => LocalizerLanguage[x])"
+                              OptionText="@(x => Localizer[x])"
                               @bind-SelectedOption="@SelectedLanguage">
 
                 </FluentSelect>

@@ -33,11 +33,13 @@ public class CreateTenantAccountViewModel : ViewModelBase
         if (Debugger.IsAttached)
         {
             FullName = "Teste Full Name";
-            Email = "test@test.com.br";
+            Email = $"test_{RandomUtils.GenerateRandomNumber(6)}@test.com.br";
             BusinessName = "BusinessName";
             Password = "Password10#";
             ConfirmPassword = "Password10#";
-            PhoneNumber = new PhoneNumber("+5511912345678");
+            FiscalCode = RandomUtils.GenerateRandomNumber(15);
+            PhoneNumber = new PhoneNumber($"+5511{RandomUtils.GenerateRandomNumber(9)}");
+            BusinessType = BusinessType.CivilRegistryOffice;
         }
     }
 
@@ -61,6 +63,7 @@ public class CreateTenantAccountViewModel : ViewModelBase
         var language = _cultureProvider.Language;
         var currency = _cultureProvider.GetCurrency();
         var tenantType = TenantTypeResolver.GetTenantType(country, fiscalCodeString);
+ 
 
         return new CreateTenantAccountCommand
         {
