@@ -71,10 +71,9 @@ public sealed class CreateTenantAccountCommandValidator : CommandValidator<Creat
         RuleFor(x => x.TenantType)
             .IsInEnumValue()
             .WithMessage(localizer["Tenant.InvalidTenantType", "Invalid tenant type."]);
-         
+
         RuleFor(x => x.FiscalCode)
-            .FiscalCode(x => x.Country, localizer)
-            .WithMessage(localizer["Tenant.InvalidFiscalCode", "Invalid fiscal code."]);
+            .FiscalCode(x => x.Country, localizer);
 
         //Async validation
         RuleFor(x => x.PhoneNumber)

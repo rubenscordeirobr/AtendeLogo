@@ -50,8 +50,7 @@ public class UpdateTenantCommandValidator : CommandValidator<UpdateTenantCommand
             .WithMessage(localizer["Tenant.InvalidTenantType", "Invalid tenant type."]);
 
         RuleFor(x => x.FiscalCode)
-            .FiscalCode(x => x.Country, localizer)
-            .WithMessage(localizer["Tenant.InvalidFiscalCode", "Invalid fiscal code."]);
+            .FiscalCode(x => x.Country, localizer);
 
         RuleFor(x => x.FiscalCode)
          .MustAsync(IsFiscalCodeUniqueAsync)

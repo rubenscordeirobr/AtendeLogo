@@ -25,7 +25,7 @@ public static partial class DefaultValidationsExtensions
             .SetValidator((instance, fiscalCode) => new FiscalCodeValidator(funcCountry(instance), localizer));
     }
 }
- 
+
 public class FiscalCodeValidator : AbstractValidator<FiscalCode>
 {
     public FiscalCodeValidator(
@@ -40,6 +40,6 @@ public class FiscalCodeValidator : AbstractValidator<FiscalCode>
             .MaximumLength(ValidationConstants.FiscalCodeMaxLength)
             .WithMessage(localizer["FiscalCode.MaxLength", "Fiscal code cannot be longer than {MaxLength} characters."])
             .Must((fiscalCode, value) => FiscalCodeValidationUtils.IsValid(value, country))
-            .WithMessage(localizer["FiscalCode.Invalid", "Invalid fiscal code."]);
+            .WithMessage(localizer["FiscalCode.Invalid", "Fiscal code is Invalid for '{Country}' .", localizer[country]]);
     }
 }
